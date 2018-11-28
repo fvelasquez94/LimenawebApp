@@ -12,18 +12,25 @@ namespace LimenawebApp.Controllers
         {
             return View();
         }
-
-        public ActionResult About()
+        public ActionResult Services()
         {
-            ViewBag.Message = "Your application description page.";
-
+            return View();
+        }
+        public ActionResult Brands()
+        {
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult AboutUs()
         {
-            ViewBag.Message = "Your contact page.";
-
+            return View();
+        }
+        public ActionResult Contactus()
+        {
+            return View();
+        }
+        public ActionResult UnderConstruction()
+        {
             return View();
         }
     }

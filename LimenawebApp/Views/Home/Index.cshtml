@@ -1,31 +1,167 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Distribuidora Limeña - Líderes en productos latinos";
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div class="herob">
+    <div class="hero-content">
+        <h1 class="hero-h1">La distribuidora líder en productos latinos</h1>
+        <h2 class="hero-h2-desktop">Almacenaje. Distribución. Third Party Logistics.</h2>
+        <h2 class="hero-h2-mobile">Almacenaje.<br>Distribución.<br>Third Party Logistics.</h2><a href="#ServiciosSection" class="hero-cta w-button">Más información</a>
+    </div>
 </div>
+<div id="ServiciosSection" class="sub-services">
+    <h2 class="h2 services">Nuestros servicios</h2>
+    <div class="services-content">
+        <div class="servicio">
+            <img src="~/Content/landingpage/images/Almacenaje.svg" width="100" class="icono-servicios">
+            <h2 class="h2-titulo-servicio">Almacenaje</h2>
+            <p class="service-p">Control de inventario, bodega en Nashville para almacenar tus productos.</p><a href="servicios.html" class="services-button w-button">Ver más</a>
+        </div>
+        <div class="servicio">
+            <img src="~/Content/landingpage/images/Distribucion.svg" width="100" class="icono-servicios camion">
+            <h2 class="h2-titulo-servicio">Distribución</h2>
+            <p class="service-p">Flota propia con cobertura de 7 estados y flota de terceros para cobertura nacional.</p><a href="servicios.html" class="services-button w-button">Ver más</a>
+        </div>
+        <div class="servicio">
+            <img src="~/Content/landingpage/images/3pl.svg" width="100" class="icono-servicios">
+            <h2 class="h2-titulo-servicio">3PL</h2>
+            <p class="service-p">Capacidad de almacenaje, entregas, manejo de inventarios, facturación y más.</p><a href="servicios.html" class="services-button w-button">Ver más</a>
+        </div>
+        <div class="servicio">
+            <img src="~/Content/landingpage/images/Logo-Outline.png" width="75" class="icono-servicios comercia">
+            <h2 class="h2-titulo-servicio">Comercial</h2>
+            <p class="service-p">Servicios de mercadeo y publicidad POP a través de nuestra compañía hermana.</p><a href="servicios.html" class="services-button w-button">Ver más</a>
+        </div>
+    </div>
+</div>
+<div class="sub-mapa-cobertura">
+    <div class="sub-div-cobertura">
+        <h2 class="h2">Llegamos donde necesites</h2>
+        <p class="mapa-parrafo">A través nuestro centro de operaciones en Nashville operamos a nivel nacional a través de flota propia o de terceros.<br><br><strong>Flota propia:</strong> Indiana, Ohio, Kentucky, Tennessee, Missouri, Alabama, Mississippi.<br><br><strong>Flota terceros:</strong> Cobertura nacional</p>
+    </div><img src="~/Content/landingpage/images/Mapa-Blanco-y-Verde.svg" width="500" class="mapa-cobertura-home">
+</div>
+<div class="subs-section">
+    <div class="sub-c">
+        <div class="sub-div content-img-b"></div>
+        <div class="sub-div">
+            <h2 class="h2">Un equipo comprometido con tu marca</h2>
+            <p class="service-p _20p-size">En Distribuidora Limeña contamos con equipo altamente calificado para hacer crecer tu marca. Personas con el más alto perfil, siempre están dispuestas a superar las expectativas.</p>
+        </div>
+    </div>
+    <div class="sub-b">
+        <div class="sub-div">
+            <h2 class="h2">Con más de 12 años de experiencia</h2>
+            <p class="service-p _20p-size">Nuestros numerosos años de experiencia en el rubro nos han permitido crecer y mejorar constantemente en lo que hacemos, brindando así las mejores soluciones para nuestros clientes.</p>
+        </div>
+        <div class="sub-div content-img-c"></div>
+    </div>
+    <div class="sub-c-mobile-only">
+        <div class="sub-div content-img-c"></div>
+        <div class="sub-div">
+            <h2 class="h2">Con más de 12 años de experiencia</h2>
+            <p class="service-p">Nuestros numerosos años de experiencia en el rubro nos han permitido crecer y mejorar constantemente en lo que hacemos, brindando así las mejores soluciones para nuestros clientes.</p>
+        </div>
+    </div>
+    <div class="sub-c">
+        <div class="sub-div content-img-d"></div>
+        <div class="sub-div">
+            <h2 class="h2">Expertos en el mercado latino</h2>
+            <p class="service-p _20p-size">Con raíces latinas y habiendo identificado un enorme potencial en el segmento, nos hemos especializado en el segmento latino en EE.UU.</p>
+        </div>
+    </div>
+</div>
+<div class="sub-clientes">
+    <div class="sub-clientes-content">
+        <h2 class="clientes-h2">Nuestras marcas</h2>
+        <div data-delay="5000" data-animation="slide" data-autoplay="1" data-duration="2500" data-infinite="1" class="slider-3 w-slider">
+            <div class="clientes-slider-mask w-slider-mask">
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/logo-bocadeli.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 2991px) 81vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Campero.jpg" srcset="/Content/landingpage/images/Logo-Campero-p-800.jpeg 800w, /Content/landingpage/images/Logo-Campero.jpg 1024w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 1024px, (max-width: 11377px) 9vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Cremimex.jpg" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Cuetara.jpg" srcset="/Content/landingpage/images/Logo-Cuetara-p-500.jpeg 500w, /Content/landingpage/images/Logo-Cuetara-p-800.jpeg 800w, /Content/landingpage/images/Logo-Cuetara.jpg 1006w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 1006px, (max-width: 11177px) 9vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-De-Mi-Pais.jpg" srcset="/Content/landingpage/images/Logo-De-Mi-Pais-p-500.jpeg 500w, /Content/landingpage/images/Logo-De-Mi-Pais-p-800.jpeg 800w, Content/landingpage/images/Logo-De-Mi-Pais-p-1080.jpeg 1080w, /Content/landingpage/images/Logo-De-Mi-Pais.jpg 1534w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Del-Frutal.JPG" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Diana.png" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/logo-ducal.png" srcset="/Content/landingpage/images/logo-ducal-p-500x387.png 500w, /Content/landingpage/images/logo-ducal-p-800x619.png 800w, /Content/landingpage/images/logo-ducal-p-1080x835.png 1080w, Content/landingpage/images/logo-ducal-p-1600x1237.png 1600w, Content/landingpage/images/logo-ducal-p-2000x1546.png 2000w, Content/landingpage/images/logo-ducal-p-2600x2010.png 2600w, Content/landingpage/images/logo-ducal-p-3200x2473.png 3200w, Content/landingpage/images/logo-ducal.png 3300w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/logo-el-viajero.png" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Goya.jpg" srcset="/Content/landingpage/images/Logo-Goya-p-1080.jpeg 1080w, /Content/landingpage/images/Logo-Goya-p-2000.jpeg 2000w, /Content/landingpage/images/Logo-Goya.jpg 2100w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Ina.jpg" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-INCAPARINA.jpg" srcset="/Content/landingpage/images/Logo-INCAPARINA-p-1080.jpeg 1080w, /Content/landingpage/images/Logo-INCAPARINA-p-1600.jpeg 1600w, /Content/landingpage/images/Logo-INCAPARINA-p-2000.jpeg 2000w, Content/landingpage/images/Logo-INCAPARINA-p-2600.jpeg 2600w, Content/landingpage/images/Logo-INCAPARINA.jpg 3075w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-mahler.jpg" srcset="/Content/landingpage/images/Logo-mahler-p-500.jpeg 500w, /Content/landingpage/images/Logo-mahler-p-800.jpeg 800w, /Content/landingpage/images/Logo-mahler.jpg 829w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 11vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Logo-Naturas-2.png" srcset="/Content/landingpage/images/Logo-Naturas-2-p-500.png 500w, /Content/landingpage/images/Logo-Naturas-2-p-800.png 800w, /Content/landingpage/images/Logo-Naturas-2-p-1080.png 1080w, Content/landingpage/images/Logo-Naturas-2-p-1600.png 1600w, Content/landingpage/images/Logo-Naturas-2.png 1674w" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/biosalud.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/fud.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/La%20Ricura%20Logo.jpg" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/la-chona.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/LOGO%20VIAJERO.jpg" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
 
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/logo_ricolino.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/logo_vero.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/logo-la-morenita2x.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/playero.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/salvavidas.png" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Verde-Valle.jpg" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+                <div class="slide-clientes w-slide">
+                    <div class="marca-container"><img src="~/Content/landingpage/images/Nuevo%20Logos%20Zambos.jpg" sizes="(max-width: 479px) 81vw, (max-width: 767px) 24vw, (max-width: 991px) 19vw, 12vw" class="logo-cliente"></div>
+                </div>
+            </div>
+            <div class="left-arrow w-slider-arrow-left">
+                <div class="slider-arrow w-icon-slider-left"></div>
+            </div>
+            <div class="right-arrow w-slider-arrow-right">
+                <div class="slider-arrow w-icon-slider-right"></div>
+            </div>
+            <div class="slide-nav w-slider-nav w-slider-nav-invert w-round"></div>
+        </div>
+    </div><a href="clientes.html" class="marcas-cta w-button">Ver más</a>
 </div>
