@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <title>Distribuidora Limena - @ViewBag.Title</title>
     @if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos")
     {
@@ -10,14 +10,14 @@
     }
     else
     {
-
+        @Html.Partial("~/Views/Shared/Style_main.cshtml")
 
 
     }
 
 
 </head>
-<body >
+<body class="fixed-nav top-nav" >
     @if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos")
     {
         @Html.Partial("~/Views/Shared/Menu_landingpage.cshtml")
@@ -26,9 +26,10 @@
     }
     else
     {
-
+        @Html.Partial("~/Views/Shared/Header_main.cshtml")
         @RenderBody()
-
+        @Html.Partial("~/Views/Shared/Footer_main.cshtml")
+        @Html.Partial("~/Views/Shared/RightSideBar_main.cshtml")
     }
 
 
@@ -41,7 +42,7 @@
 }
 else
 {
-
+    @Html.Partial("~/Views/Shared/Scripts_main.cshtml")
 
 
 }

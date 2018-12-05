@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="cbe4850a917044a4bdcd89eaffd60b74" Name="Diagram1">
+        <EntityTypeShape EntityType="dbLimenaModel.Sys_Companies" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbLimenaModel.Sys_Departments" Width="1.5" PointX="3" PointY="1.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbLimenaModel.Sys_Roles" Width="1.5" PointX="3" PointY="4" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbLimenaModel.Sys_Users" Width="1.5" PointX="3" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="dbLimenaModel.Tb_Resources" Width="1.5" PointX="5.25" PointY="6.25" IsExpanded="true" />
+        <AssociationConnector Association="dbLimenaModel.FK__Sys_Depar__ID_Co__5812160E" ManuallyRouted="false" />
+        <AssociationConnector Association="dbLimenaModel.FK__Sys_Roles__ID_Co__59063A47" ManuallyRouted="false" />
+        <AssociationConnector Association="dbLimenaModel.FK__Sys_Users__ID_Co__5165187F" ManuallyRouted="false" />
+        <AssociationConnector Association="dbLimenaModel.FK__Tb_Resour__ID_Co__59FA5E80" ManuallyRouted="false" />
+        <AssociationConnector Association="dbLimenaModel.FK__Tb_Resour__ID_Us__5AEE82B9" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="dbLimenaModel.Tb_Alerts" Width="1.5" PointX="5.375" PointY="0.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,61 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!--basic scripts-->
+<script src="~/Content/appcontent/assets/vendor/jquery/jquery.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/jquery-ui/jquery-ui.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/popper.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/jquery-dropdown-master/jquery.dropdown.js"></script>
+<script src="~/Content/appcontent/assets/vendor/m-custom-scrollbar/jquery.mCustomScrollbar.concat.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/icheck/skins/icheck.min.js"></script>
+<!--chartjs-->
+<script src="~/Content/appcontent/assets/vendor/chartjs/Chart.bundle.min.js"></script>
+<!--chartjs initialization-->
+@*<script src="~/Content/appcontent/assets/vendor/js-init/chartjs/init-creative-state-chart.js"></script>
+    <script src="~/Content/appcontent/assets/vendor/js-init/chartjs/init-doughnut-chart.js"></script>
+    <script src="~/Content/appcontent/assets/vendor/js-init/chartjs/init-doughnut-chart2.js"></script>
+    <script src="~/Content/appcontent/assets/vendor/js-init/chartjs/init-sales-overview-chart.js"></script>*@
+<!--vectormap-->
+<script src="~/Content/appcontent/assets/vendor/vector-map/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/vector-map/jquery-jvectormap-us-aea.js"></script>
+<!--vectormap initialization-->
+<script src="~/Content/appcontent/assets/vendor/js-init/vmap/init-vmap-usa.js"></script>
+<!--[if lt IE 9]>
+<script src="~/Content/appcontent/assets/vendor/modernizr.js"></script>
+<![endif]-->
+<!--basic scripts initialization-->
+<script src="~/Content/appcontent/assets/js/scripts.js"></script>
+<!--toastr-->
+<script src="~/Content/appcontent/assets/vendor/toastr-master/toastr.js"></script>
+
+<!--FOR MENU-->
+<script>
+    var string = @Html.Raw(ViewBag.lstDepartments);
+
+    console.log(string);
+    string.forEach(function (element) {
+        if (element == "Sales") {
+            document.getElementById("dep_menu").style.display = "block";
+        }
+        if (element == "Management") {
+            document.getElementById("manag_menu").style.display = "block";
+        }
+    });
+</script>
+<!--END-->
+<!--FOR ACTIVE MENU-->
+<script>
+
+          var idMenu = "@ViewBag.menunameid";
+    var menu = document.getElementById(idMenu);
+    menu.classList.add("active");
+
+    var idsubMenu = "@ViewBag.submenunameid";
+    var submenu = document.getElementById(idsubMenu);
+    submenu.classList.add("active");
+
+
+</script>

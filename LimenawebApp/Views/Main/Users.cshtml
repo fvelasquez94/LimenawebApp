@@ -1,0 +1,84 @@
+﻿@model IEnumerable<LimenawebApp.Models.Sys_Users>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Users";
+}
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Users</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+                                        <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                            <i class=" vl_ellipsis-fill-h"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+                                            <a class="dropdown-item" href="#"> Add new user</a>
+                                            <a class="dropdown-item" href="#"> Export list</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Telephone</th>
+                                            <th>Position</th>
+                                            <th>Departments</th>
+                                            <th>Roles</th>
+                                            <th>State</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var user in Model) {
+                                        <tr>
+                                            <td>@user.Name @user.Lastname</td>
+                                            <td>@user.Email</td>
+                                            <td>@user.Telephone</td>
+                                            <td>@user.Position</td>
+                                            <td>@user.Departments</td>
+                                            <td>@user.Roles</td>
+                                            <td>
+                                                @if (user.Active == true)
+                                                {
+                                                   <span class="text-success pl-3">ACTIVE</span>
+                                                }
+                                                else {
+                                                    <span class="text-warning pl-3">INACTIVE</span>
+                                                }
+                                            </td>
+                                            <td>
+           
+                                                <button type="button" class="btn btn-dark btn-sm form-pill"><i class="fa fa-edit"></i></button>
+                                                <button type="button" class="btn btn-dark btn-sm form-pill"><i class="fa fa-trash-o"></i></button>
+                             
+                                            </td>
+                                        </tr>
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

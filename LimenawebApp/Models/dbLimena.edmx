@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="dbLimenaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Sys_Companies">
+          <Key>
+            <PropertyRef Name="ID_Company" />
+          </Key>
+          <Property Name="ID_Company" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sys_Departments">
+          <Key>
+            <PropertyRef Name="ID_Department" />
+          </Key>
+          <Property Name="ID_Department" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sys_Roles">
+          <Key>
+            <PropertyRef Name="ID_Rol" />
+          </Key>
+          <Property Name="ID_Rol" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sys_Users">
+          <Key>
+            <PropertyRef Name="ID_User" />
+          </Key>
+          <Property Name="ID_User" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Lastname" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="Telephone" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Position" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Registration_Date" Type="date" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="Departments" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Roles" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_Alerts">
+          <Key>
+            <PropertyRef Name="ID_alert" />
+          </Key>
+          <Property Name="ID_alert" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="ID_user" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_Resources">
+          <Key>
+            <PropertyRef Name="ID_Resource" />
+          </Key>
+          <Property Name="ID_Resource" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Url" Type="text" Nullable="false" />
+          <Property Name="Last_Update" Type="date" Nullable="false" />
+          <Property Name="ID_User" Type="int" Nullable="false" />
+          <Property Name="ID_ResourceType" Type="int" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Sys_Depar__ID_Co__5812160E">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Sys_Departments" Type="Self.Sys_Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Sys_Departments">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sys_Roles__ID_Co__59063A47">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Sys_Roles" Type="Self.Sys_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Sys_Roles">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sys_Users__ID_Co__5165187F">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Sys_Users" Type="Self.Sys_Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Sys_Users">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tb_Resour__ID_Co__59FA5E80">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Tb_Resources" Type="Self.Tb_Resources" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Tb_Resources">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tb_Resour__ID_Us__5AEE82B9">
+          <End Role="Sys_Users" Type="Self.Sys_Users" Multiplicity="1" />
+          <End Role="Tb_Resources" Type="Self.Tb_Resources" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Users">
+              <PropertyRef Name="ID_User" />
+            </Principal>
+            <Dependent Role="Tb_Resources">
+              <PropertyRef Name="ID_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbLimenaModelStoreContainer">
+          <EntitySet Name="Sys_Companies" EntityType="Self.Sys_Companies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sys_Departments" EntityType="Self.Sys_Departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sys_Roles" EntityType="Self.Sys_Roles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_Alerts" EntityType="Self.Tb_Alerts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_Resources" EntityType="Self.Tb_Resources" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Sys_Depar__ID_Co__5812160E" Association="Self.FK__Sys_Depar__ID_Co__5812160E">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Sys_Departments" EntitySet="Sys_Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sys_Roles__ID_Co__59063A47" Association="Self.FK__Sys_Roles__ID_Co__59063A47">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Sys_Roles" EntitySet="Sys_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sys_Users__ID_Co__5165187F" Association="Self.FK__Sys_Users__ID_Co__5165187F">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Sys_Users" EntitySet="Sys_Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tb_Resour__ID_Co__59FA5E80" Association="Self.FK__Tb_Resour__ID_Co__59FA5E80">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Tb_Resources" EntitySet="Tb_Resources" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tb_Resour__ID_Us__5AEE82B9" Association="Self.FK__Tb_Resour__ID_Us__5AEE82B9">
+            <End Role="Sys_Users" EntitySet="Sys_Users" />
+            <End Role="Tb_Resources" EntitySet="Tb_Resources" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="dbLimenaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Sys_Companies">
+          <Key>
+            <PropertyRef Name="ID_Company" />
+          </Key>
+          <Property Name="ID_Company" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Sys_Departments" Relationship="Self.FK__Sys_Depar__ID_Co__5812160E" FromRole="Sys_Companies" ToRole="Sys_Departments" />
+          <NavigationProperty Name="Sys_Roles" Relationship="Self.FK__Sys_Roles__ID_Co__59063A47" FromRole="Sys_Companies" ToRole="Sys_Roles" />
+          <NavigationProperty Name="Sys_Users" Relationship="Self.FK__Sys_Users__ID_Co__5165187F" FromRole="Sys_Companies" ToRole="Sys_Users" />
+          <NavigationProperty Name="Tb_Resources" Relationship="Self.FK__Tb_Resour__ID_Co__59FA5E80" FromRole="Sys_Companies" ToRole="Tb_Resources" />
+        </EntityType>
+        <EntityType Name="Sys_Departments">
+          <Key>
+            <PropertyRef Name="ID_Department" />
+          </Key>
+          <Property Name="ID_Department" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Sys_Companies" Relationship="Self.FK__Sys_Depar__ID_Co__5812160E" FromRole="Sys_Departments" ToRole="Sys_Companies" />
+        </EntityType>
+        <EntityType Name="Sys_Roles">
+          <Key>
+            <PropertyRef Name="ID_Rol" />
+          </Key>
+          <Property Name="ID_Rol" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Sys_Companies" Relationship="Self.FK__Sys_Roles__ID_Co__59063A47" FromRole="Sys_Roles" ToRole="Sys_Companies" />
+        </EntityType>
+        <EntityType Name="Sys_Users">
+          <Key>
+            <PropertyRef Name="ID_User" />
+          </Key>
+          <Property Name="ID_User" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Lastname" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Position" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Registration_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Departments" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Roles" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Sys_Companies" Relationship="Self.FK__Sys_Users__ID_Co__5165187F" FromRole="Sys_Users" ToRole="Sys_Companies" />
+          <NavigationProperty Name="Tb_Resources" Relationship="Self.FK__Tb_Resour__ID_Us__5AEE82B9" FromRole="Sys_Users" ToRole="Tb_Resources" />
+        </EntityType>
+        <EntityType Name="Tb_Resources">
+          <Key>
+            <PropertyRef Name="ID_Resource" />
+          </Key>
+          <Property Name="ID_Resource" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Url" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Last_Update" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ID_User" Type="Int32" Nullable="false" />
+          <Property Name="ID_ResourceType" Type="Int32" Nullable="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Sys_Companies" Relationship="Self.FK__Tb_Resour__ID_Co__59FA5E80" FromRole="Tb_Resources" ToRole="Sys_Companies" />
+          <NavigationProperty Name="Sys_Users" Relationship="Self.FK__Tb_Resour__ID_Us__5AEE82B9" FromRole="Tb_Resources" ToRole="Sys_Users" />
+        </EntityType>
+        <Association Name="FK__Sys_Depar__ID_Co__5812160E">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Sys_Departments" Type="Self.Sys_Departments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Sys_Departments">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sys_Roles__ID_Co__59063A47">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Sys_Roles" Type="Self.Sys_Roles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Sys_Roles">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sys_Users__ID_Co__5165187F">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Sys_Users" Type="Self.Sys_Users" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Sys_Users">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tb_Resour__ID_Co__59FA5E80">
+          <End Role="Sys_Companies" Type="Self.Sys_Companies" Multiplicity="1" />
+          <End Role="Tb_Resources" Type="Self.Tb_Resources" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Companies">
+              <PropertyRef Name="ID_Company" />
+            </Principal>
+            <Dependent Role="Tb_Resources">
+              <PropertyRef Name="ID_Company" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Tb_Resour__ID_Us__5AEE82B9">
+          <End Role="Sys_Users" Type="Self.Sys_Users" Multiplicity="1" />
+          <End Role="Tb_Resources" Type="Self.Tb_Resources" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Sys_Users">
+              <PropertyRef Name="ID_User" />
+            </Principal>
+            <Dependent Role="Tb_Resources">
+              <PropertyRef Name="ID_User" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="dbLimenaEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Sys_Companies" EntityType="Self.Sys_Companies" />
+          <EntitySet Name="Sys_Departments" EntityType="Self.Sys_Departments" />
+          <EntitySet Name="Sys_Roles" EntityType="Self.Sys_Roles" />
+          <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" />
+          <EntitySet Name="Tb_Resources" EntityType="Self.Tb_Resources" />
+          <AssociationSet Name="FK__Sys_Depar__ID_Co__5812160E" Association="Self.FK__Sys_Depar__ID_Co__5812160E">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Sys_Departments" EntitySet="Sys_Departments" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sys_Roles__ID_Co__59063A47" Association="Self.FK__Sys_Roles__ID_Co__59063A47">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Sys_Roles" EntitySet="Sys_Roles" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sys_Users__ID_Co__5165187F" Association="Self.FK__Sys_Users__ID_Co__5165187F">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Sys_Users" EntitySet="Sys_Users" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tb_Resour__ID_Co__59FA5E80" Association="Self.FK__Tb_Resour__ID_Co__59FA5E80">
+            <End Role="Sys_Companies" EntitySet="Sys_Companies" />
+            <End Role="Tb_Resources" EntitySet="Tb_Resources" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Tb_Resour__ID_Us__5AEE82B9" Association="Self.FK__Tb_Resour__ID_Us__5AEE82B9">
+            <End Role="Sys_Users" EntitySet="Sys_Users" />
+            <End Role="Tb_Resources" EntitySet="Tb_Resources" />
+          </AssociationSet>
+          <EntitySet Name="Tb_Alerts" EntityType="dbLimenaModel.Tb_Alerts" />
+        </EntityContainer>
+        <EntityType Name="Tb_Alerts">
+          <Key>
+            <PropertyRef Name="ID_alert" />
+          </Key>
+          <Property Name="ID_alert" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="ID_user" Type="Int32" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="dbLimenaModelStoreContainer" CdmEntityContainer="dbLimenaEntities">
+          <EntitySetMapping Name="Sys_Companies">
+            <EntityTypeMapping TypeName="dbLimenaModel.Sys_Companies">
+              <MappingFragment StoreEntitySet="Sys_Companies">
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sys_Departments">
+            <EntityTypeMapping TypeName="dbLimenaModel.Sys_Departments">
+              <MappingFragment StoreEntitySet="Sys_Departments">
+                <ScalarProperty Name="ID_Department" ColumnName="ID_Department" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sys_Roles">
+            <EntityTypeMapping TypeName="dbLimenaModel.Sys_Roles">
+              <MappingFragment StoreEntitySet="Sys_Roles">
+                <ScalarProperty Name="ID_Rol" ColumnName="ID_Rol" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sys_Users">
+            <EntityTypeMapping TypeName="dbLimenaModel.Sys_Users">
+              <MappingFragment StoreEntitySet="Sys_Users">
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Lastname" ColumnName="Lastname" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Registration_Date" ColumnName="Registration_Date" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Departments" ColumnName="Departments" />
+                <ScalarProperty Name="Roles" ColumnName="Roles" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Resources">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_Resources">
+              <MappingFragment StoreEntitySet="Tb_Resources">
+                <ScalarProperty Name="ID_Resource" ColumnName="ID_Resource" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Last_Update" ColumnName="Last_Update" />
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="ID_ResourceType" ColumnName="ID_ResourceType" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Alerts">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_Alerts">
+              <MappingFragment StoreEntitySet="Tb_Alerts">
+                <ScalarProperty Name="ID_user" ColumnName="ID_user" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="ID_alert" ColumnName="ID_alert" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
