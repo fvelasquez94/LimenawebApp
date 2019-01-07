@@ -4,7 +4,7 @@ body .vertical-centered-box {
   width: 100%;
   height: 100%;
   text-align: center;
-  z-index:100;
+  z-index:2000;
   display:none;
 }
     body .vertical-centered-box:after {
@@ -13,7 +13,7 @@ body .vertical-centered-box {
         height: 100%;
         vertical-align: middle;
         margin-right: -0.25em;
-        z-index: 100;
+        z-index: 2000;
     }
     body .vertical-centered-box .content {
         -webkit-box-sizing: border-box;
@@ -28,7 +28,7 @@ body .vertical-centered-box {
         text-align: left;
         font-size: 0;
         opacity: 0;
-        z-index: 100;
+        z-index: 2000;
     }
 
 .loader-line-mask {

@@ -46,6 +46,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
@@ -56,6 +59,12 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Postal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=45719375b8b4d528, processorArchitecture=MSIL">
+      <HintPath>..\packages\Postal.Mvc5.1.2.0\lib\net45\Postal.dll</HintPath>
+    </Reference>
+    <Reference Include="RazorEngine, Version=3.4.1.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -150,12 +159,46 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\DSDController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MainController.cs" />
+    <Compile Include="Controllers\ManagementController.cs" />
+    <Compile Include="Controllers\CommercialController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Global_variables.cs" />
+    <Compile Include="Models\ActivitiesM.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActivitiesM_log.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ActivitiesM_types.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BI_Dim_Customer.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\BI_Dim_Products.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dbComercia.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbComercia.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dbComercia.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dbComercia.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbComercia.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Models\dbLimena.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -171,10 +214,55 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dbLimena.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\DLI_PRO.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DLI_PRO.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DLI_PRO.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\DLI_PRO.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DLI_PRO.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Dsd_Products.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FormsM.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\FormsM_details.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\form_resource_type.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ITM1.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OCRD.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Reports.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reports.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ResumeSO_DSD.cs" />
+    <Compile Include="Models\RoutesM.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Sys_Companies.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Sys_Departments.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Sys_LogCon.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Sys_Roles.cs">
@@ -186,14 +274,55 @@
     <Compile Include="Models\Tb_Alerts.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_InventoryDetailsTRDSD.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_InventoryTRDSD.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_OrdersDetailsDSD.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_OrdersDSD.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_PreOrdersDetailsDSD.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_PreOrdersDSD.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_Resources.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\UFD1.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VisitsM.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\VisitsM_representatives.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\Order_DSD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Order_DSD.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Resume_DSD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resume_DSD.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\appcontent\assets\css\floatingboxsettings.css" />
     <Content Include="Content\appcontent\assets\css\main.css" />
     <Content Include="Content\appcontent\assets\css\main.min.css" />
+    <Content Include="Content\appcontent\assets\js\signature_forFB.js" />
     <Content Include="Content\appcontent\assets\dev\js\scripts.js" />
     <Content Include="Content\appcontent\assets\img\404.svg" />
     <Content Include="Content\appcontent\assets\img\avatar\avatar-large1.jpg" />
@@ -264,6 +393,7 @@
     <Content Include="Content\appcontent\assets\img\Logo-limeña-web-blanco-p-500x192.png" />
     <Content Include="Content\appcontent\assets\img\LogoLimenaWebIcono_1-p-500x192.png" />
     <Content Include="Content\appcontent\assets\img\profile-banner.jpg" />
+    <Content Include="Content\appcontent\assets\img\store.png" />
     <Content Include="Content\appcontent\assets\img\watch%402x.png" />
     <Content Include="Content\appcontent\assets\img\watch.jpg" />
     <Content Include="Content\appcontent\assets\img\watch.png" />
@@ -271,6 +401,7 @@
     <Content Include="Content\appcontent\assets\img\WebIco256.png" />
     <Content Include="Content\appcontent\assets\js\scripts.js" />
     <Content Include="Content\appcontent\assets\js\scripts.min.js" />
+    <Content Include="Content\appcontent\assets\js\signature.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\amcharts.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\funnel.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\gantt.js" />
@@ -562,7 +693,10 @@
     <Content Include="Content\appcontent\assets\vendor\c3chart\c3.min.css" />
     <Content Include="Content\appcontent\assets\vendor\c3chart\c3.min.js" />
     <Content Include="Content\appcontent\assets\vendor\c3chart\d3.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\calendarrangepicker\css\daterangepicker.css" />
     <Content Include="Content\appcontent\assets\vendor\chartjs\Chart.bundle.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\calendarrangepicker\js\daterangepicker.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\calendarrangepicker\js\moment.min.js" />
     <Content Include="Content\appcontent\assets\vendor\colorpicker\css\bootstrap-colorpicker.css" />
     <Content Include="Content\appcontent\assets\vendor\colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="Content\appcontent\assets\vendor\colorpicker\js\bootstrap-colorpicker.js" />
@@ -924,6 +1058,7 @@
     <Content Include="Content\appcontent\assets\vendor\icheck\skins\square\yellow.css" />
     <Content Include="Content\appcontent\assets\vendor\icheck\skins\square\yellow.png" />
     <Content Include="Content\appcontent\assets\vendor\icheck\skins\square\_all.css" />
+    <Content Include="Content\appcontent\assets\vendor\inputnumber\bootstrap-input-spinner.js" />
     <Content Include="Content\appcontent\assets\vendor\jquery-dropdown-master\index.html" />
     <Content Include="Content\appcontent\assets\vendor\jquery-dropdown-master\jquery.dropdown.css" />
     <Content Include="Content\appcontent\assets\vendor\jquery-dropdown-master\jquery.dropdown.js" />
@@ -964,6 +1099,7 @@
     <Content Include="Content\appcontent\assets\vendor\js-init\init-calendar-external-events.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-datatable.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-dropzone.js" />
+    <Content Include="Content\appcontent\assets\vendor\js-init\init-form-wizardINTR.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-form-wizard.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-icheck.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-jstree.js" />
@@ -1338,6 +1474,7 @@
     <Content Include="Content\landingpage\images\logo-racor-p-800.jpeg" />
     <Content Include="Content\landingpage\images\logo-racor.JPG" />
     <Content Include="Content\landingpage\images\Logo-Señorial.png" />
+    <Content Include="Content\landingpage\images\logolimena.jpg" />
     <Content Include="Content\landingpage\images\LogoLimenaIcono.png" />
     <Content Include="Content\landingpage\images\LogoLimenaWebBlanco.png" />
     <Content Include="Content\landingpage\images\LogoLimenaWebIcono-p-500x192.png" />
@@ -1401,6 +1538,16 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
+    <Content Include="Models\dbComercia.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbComercia.edmx</DependentUpon>
+      <LastGenOutput>dbComercia.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\dbComercia.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbComercia.edmx</DependentUpon>
+      <LastGenOutput>dbComercia.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\dbLimena.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>dbLimena.Context.cs</LastGenOutput>
@@ -1411,8 +1558,6 @@
       <DependentUpon>dbLimena.edmx</DependentUpon>
       <LastGenOutput>dbLimena.cs</LastGenOutput>
     </Content>
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -1757,17 +1902,42 @@
     <Content Include="Content\login\vendor\bootstrap\css\bootstrap.css.map" />
     <Content Include="Content\login\vendor\bootstrap\css\bootstrap.min.css.map" />
     <Content Include="Content\login\less\style.less" />
-    <None Include="Scripts\jquery-1.10.2.intellisense.js" />
-    <Content Include="Scripts\jquery-1.10.2.js" />
-    <Content Include="Scripts\jquery-1.10.2.min.js" />
-    <None Include="Scripts\jquery.validate-vsdoc.js" />
-    <Content Include="Scripts\jquery.validate.js" />
-    <Content Include="Scripts\jquery.validate.min.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
-    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <EntityDeploy Include="Models\dbComercia.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>dbComercia.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\dbComercia.edmx.diagram">
+      <DependentUpon>dbComercia.edmx</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\DLI_PRO.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>DLI_PRO.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\DLI_PRO.edmx.diagram">
+      <DependentUpon>DLI_PRO.edmx</DependentUpon>
+    </Content>
+    <Content Include="Models\Reports.xsc">
+      <DependentUpon>Reports.xsd</DependentUpon>
+    </Content>
+    <None Include="Models\Reports.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>Reports.Designer.cs</LastGenOutput>
+    </None>
+    <Content Include="Models\Reports.xss">
+      <DependentUpon>Reports.xsd</DependentUpon>
+    </Content>
+    <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Models\DLI_PRO.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DLI_PRO.edmx</DependentUpon>
+      <LastGenOutput>DLI_PRO.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\DLI_PRO.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>DLI_PRO.edmx</DependentUpon>
+      <LastGenOutput>DLI_PRO.cs</LastGenOutput>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -1796,10 +1966,26 @@
     <Content Include="Views\Shared\RightSidebar_main.cshtml" />
     <Content Include="Views\Main\Dashboard_sales.cshtml" />
     <Content Include="Views\Home\Login.cshtml" />
-    <Content Include="Views\Main\Users.cshtml" />
+    <Content Include="Views\Management\Users.cshtml" />
+    <Content Include="Views\Reports\Reports_RC.cshtml" />
+    <Content Include="Views\Emails\_ViewStart.cshtml" />
+    <Content Include="Views\Emails\Web.config" />
+    <Content Include="Views\Emails\email_confirmation.cshtml" />
+    <Content Include="Views\Home\Reset_password.cshtml" />
+    <Content Include="Views\Emails\reset_password.cshtml" />
+    <Content Include="Views\Commercial\Marketing_activities.cshtml" />
+    <Content Include="Views\Commercial\Routes.cshtml" />
+    <Content Include="Views\Commercial\Activityon.cshtml" />
+    <Content Include="Views\Commercial\DSD.cshtml" />
+    <Content Include="Views\Shared\ActivityScripts.cshtml" />
+    <Content Include="Views\DSD\New_Customer.cshtml" />
+    <Content Include="Views\DSD\InventoryTR.cshtml" />
+    <Content Include="Views\Shared\Routes_calendarScript.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\images\temp_sign\" />
+    <Folder Include="Reports\pdf\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -1812,10 +1998,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+    <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Reports\Order_DSD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Order_DSD.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Resume_DSD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Resume_DSD.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

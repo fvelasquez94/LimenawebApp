@@ -17,6 +17,22 @@ Table of Contents
 /*------------------------------------
 type
 ------------------------------------*/
+.flexRadio {
+    display: flex !important;
+    /* Optional, if you want the DIVs 100% width: */
+    flex-wrap: wrap !important;
+    margin-right: -33.5px !important;
+    margin-left: -2.5px !important;
+}
+
+    .flexRadio > .hRadio {
+        order: 1;
+    }
+
+    .flexRadio > .fRadio {
+        order: 2;
+    }
+
 body {
     font-family: "Open Sans", sans-serif;
     font-size: 14px;
@@ -2877,9 +2893,10 @@ form wizard style
     list-style: none;
 }
 
-.stepy-tab ul li {
-    float: left;
-}
+    .stepy-tab ul li {
+        float: left;
+        pointer-events: none;
+    }
 
 .step legend {
     border: none;

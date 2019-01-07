@@ -336,7 +336,7 @@
 		nextLabel:		'Next &gt;',
 		titleClick:		false,
 		titleTarget:	undefined,
-		validate:		false,
+		validate:		true,
 		select: 		undefined
 	};
 

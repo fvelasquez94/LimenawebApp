@@ -22,6 +22,26 @@
           <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="ID_Company" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Sys_LogCon">
+          <Key>
+            <PropertyRef Name="ID_log" />
+          </Key>
+          <Property Name="ID_log" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_User" Type="int" Nullable="false" />
+          <Property Name="IP" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Hostname" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TypeH" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Continent_Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Country_Code" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Country_Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Region_Code" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Region_Name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="City" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Lat" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Long" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Sys_Roles">
           <Key>
             <PropertyRef Name="ID_Rol" />
@@ -58,6 +78,100 @@
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="ID_user" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_InventoryDetailsTRDSD">
+          <Key>
+            <PropertyRef Name="ID_Details" />
+          </Key>
+          <Property Name="ID_Details" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Product" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Product_Name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Units" Type="int" Nullable="false" />
+          <Property Name="UPC" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="ID_InventoryDSD" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_InventoryTRDSD">
+          <Key>
+            <PropertyRef Name="ID_InventoryDSD" />
+          </Key>
+          <Property Name="ID_InventoryDSD" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ID_User" Type="int" Nullable="false" />
+          <Property Name="User_name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+          <Property Name="docNum_SAP" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_OrdersDetailsDSD">
+          <Key>
+            <PropertyRef Name="ID_Details" />
+          </Key>
+          <Property Name="ID_Details" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Product" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Product_Name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Units" Type="int" Nullable="false" />
+          <Property Name="ReturnReasonID" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="ReturnReasonName" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SRP" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="UPC" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Total" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ID_OrderDSD" Type="int" Nullable="false" />
+          <Property Name="GroupDsd" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_OrdersDSD">
+          <Key>
+            <PropertyRef Name="ID_OrderDSD" />
+          </Key>
+          <Property Name="ID_OrderDSD" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_customer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CustomerName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="ID_payment" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Payment" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Doc_numP" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Doc_numCompany" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ID_User" Type="int" Nullable="false" />
+          <Property Name="User_name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+          <Property Name="docNum_SAP" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Sign" Type="text" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_PreOrdersDetailsDSD">
+          <Key>
+            <PropertyRef Name="ID_Details" />
+          </Key>
+          <Property Name="ID_Details" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_Product" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Product_Name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Units" Type="int" Nullable="false" />
+          <Property Name="ReturnReasonID" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="ReturnReasonName" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Price" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="SRP" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="UPC" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Total" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ID_OrderDSD" Type="int" Nullable="false" />
+          <Property Name="GroupDsd" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_PreOrdersDSD">
+          <Key>
+            <PropertyRef Name="ID_OrderDSD" />
+          </Key>
+          <Property Name="ID_OrderDSD" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_customer" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CustomerName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="ID_payment" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Payment" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Doc_numP" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Doc_numCompany" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="ID_User" Type="int" Nullable="false" />
+          <Property Name="User_name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_Company" Type="int" Nullable="false" />
+          <Property Name="docNum_SAP" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Comment" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Sign" Type="text" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_Resources">
           <Key>
@@ -134,9 +248,16 @@
         <EntityContainer Name="dbLimenaModelStoreContainer">
           <EntitySet Name="Sys_Companies" EntityType="Self.Sys_Companies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Departments" EntityType="Self.Sys_Departments" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sys_LogCon" EntityType="Self.Sys_LogCon" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Roles" EntityType="Self.Sys_Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Alerts" EntityType="Self.Tb_Alerts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_InventoryDetailsTRDSD" EntityType="Self.Tb_InventoryDetailsTRDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_InventoryTRDSD" EntityType="Self.Tb_InventoryTRDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_OrdersDetailsDSD" EntityType="Self.Tb_OrdersDetailsDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_OrdersDSD" EntityType="Self.Tb_OrdersDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_PreOrdersDetailsDSD" EntityType="Self.Tb_PreOrdersDetailsDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_PreOrdersDSD" EntityType="Self.Tb_PreOrdersDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Resources" EntityType="Self.Tb_Resources" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK__Sys_Depar__ID_Co__5812160E" Association="Self.FK__Sys_Depar__ID_Co__5812160E">
             <End Role="Sys_Companies" EntitySet="Sys_Companies" />
@@ -315,6 +436,13 @@
             <End Role="Tb_Resources" EntitySet="Tb_Resources" />
           </AssociationSet>
           <EntitySet Name="Tb_Alerts" EntityType="dbLimenaModel.Tb_Alerts" />
+          <EntitySet Name="Sys_LogCon" EntityType="dbLimenaModel.Sys_LogCon" />
+          <EntitySet Name="Tb_OrdersDetailsDSD" EntityType="dbLimenaModel.Tb_OrdersDetailsDSD" />
+          <EntitySet Name="Tb_OrdersDSD" EntityType="dbLimenaModel.Tb_OrdersDSD" />
+          <EntitySet Name="Tb_PreOrdersDetailsDSD" EntityType="dbLimenaModel.Tb_PreOrdersDetailsDSD" />
+          <EntitySet Name="Tb_PreOrdersDSD" EntityType="dbLimenaModel.Tb_PreOrdersDSD" />
+          <EntitySet Name="Tb_InventoryDetailsTRDSD" EntityType="dbLimenaModel.Tb_InventoryDetailsTRDSD" />
+          <EntitySet Name="Tb_InventoryTRDSD" EntityType="dbLimenaModel.Tb_InventoryTRDSD" />
         </EntityContainer>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -326,6 +454,120 @@
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Active" Type="Boolean" Nullable="false" />
           <Property Name="ID_user" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sys_LogCon">
+          <Key>
+            <PropertyRef Name="ID_log" />
+          </Key>
+          <Property Name="ID_log" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_User" Type="Int32" Nullable="false" />
+          <Property Name="IP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Hostname" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TypeH" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Continent_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Country_Code" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Country_Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Region_Code" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Region_Name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Lat" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Long" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_OrdersDetailsDSD">
+          <Key>
+            <PropertyRef Name="ID_Details" />
+          </Key>
+          <Property Name="ID_Details" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Product" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Product_Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Units" Type="Int32" Nullable="false" />
+          <Property Name="ReturnReasonID" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ReturnReasonName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="UPC" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ID_OrderDSD" Type="Int32" Nullable="false" />
+          <Property Name="GroupDsd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_OrdersDSD">
+          <Key>
+            <PropertyRef Name="ID_OrderDSD" />
+          </Key>
+          <Property Name="ID_OrderDSD" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_customer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ID_payment" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Payment" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_numP" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_numCompany" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_User" Type="Int32" Nullable="false" />
+          <Property Name="User_name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <Property Name="docNum_SAP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Sign" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_PreOrdersDetailsDSD">
+          <Key>
+            <PropertyRef Name="ID_Details" />
+          </Key>
+          <Property Name="ID_Details" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Product" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Product_Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Units" Type="Int32" Nullable="false" />
+          <Property Name="ReturnReasonID" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="ReturnReasonName" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="SRP" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="UPC" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Total" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ID_OrderDSD" Type="Int32" Nullable="false" />
+          <Property Name="GroupDsd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_PreOrdersDSD">
+          <Key>
+            <PropertyRef Name="ID_OrderDSD" />
+          </Key>
+          <Property Name="ID_OrderDSD" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_customer" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CustomerName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ID_payment" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Payment" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_numP" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Doc_numCompany" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_User" Type="Int32" Nullable="false" />
+          <Property Name="User_name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <Property Name="docNum_SAP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Comment" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Sign" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_InventoryDetailsTRDSD">
+          <Key>
+            <PropertyRef Name="ID_Details" />
+          </Key>
+          <Property Name="ID_Details" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_Product" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Product_Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Units" Type="Int32" Nullable="false" />
+          <Property Name="UPC" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ID_InventoryDSD" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_InventoryTRDSD">
+          <Key>
+            <PropertyRef Name="ID_InventoryDSD" />
+          </Key>
+          <Property Name="ID_InventoryDSD" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_User" Type="Int32" Nullable="false" />
+          <Property Name="User_name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Company" Type="Int32" Nullable="false" />
+          <Property Name="docNum_SAP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -402,6 +644,127 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Title" ColumnName="Title" />
                 <ScalarProperty Name="ID_alert" ColumnName="ID_alert" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sys_LogCon">
+            <EntityTypeMapping TypeName="dbLimenaModel.Sys_LogCon">
+              <MappingFragment StoreEntitySet="Sys_LogCon">
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Region_Name" ColumnName="Region_Name" />
+                <ScalarProperty Name="Region_Code" ColumnName="Region_Code" />
+                <ScalarProperty Name="Country_Name" ColumnName="Country_Name" />
+                <ScalarProperty Name="Country_Code" ColumnName="Country_Code" />
+                <ScalarProperty Name="Continent_Name" ColumnName="Continent_Name" />
+                <ScalarProperty Name="TypeH" ColumnName="TypeH" />
+                <ScalarProperty Name="Hostname" ColumnName="Hostname" />
+                <ScalarProperty Name="IP" ColumnName="IP" />
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="ID_log" ColumnName="ID_log" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_OrdersDetailsDSD">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_OrdersDetailsDSD">
+              <MappingFragment StoreEntitySet="Tb_OrdersDetailsDSD">
+                <ScalarProperty Name="GroupDsd" ColumnName="GroupDsd" />
+                <ScalarProperty Name="ID_OrderDSD" ColumnName="ID_OrderDSD" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="UPC" ColumnName="UPC" />
+                <ScalarProperty Name="SRP" ColumnName="SRP" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ReturnReasonName" ColumnName="ReturnReasonName" />
+                <ScalarProperty Name="ReturnReasonID" ColumnName="ReturnReasonID" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="ID_Details" ColumnName="ID_Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_OrdersDSD">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_OrdersDSD">
+              <MappingFragment StoreEntitySet="Tb_OrdersDSD">
+                <ScalarProperty Name="Sign" ColumnName="Sign" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="docNum_SAP" ColumnName="docNum_SAP" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+                <ScalarProperty Name="User_name" ColumnName="User_name" />
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Doc_numCompany" ColumnName="Doc_numCompany" />
+                <ScalarProperty Name="Doc_numP" ColumnName="Doc_numP" />
+                <ScalarProperty Name="Payment" ColumnName="Payment" />
+                <ScalarProperty Name="ID_payment" ColumnName="ID_payment" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ID_customer" ColumnName="ID_customer" />
+                <ScalarProperty Name="ID_OrderDSD" ColumnName="ID_OrderDSD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_PreOrdersDetailsDSD">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_PreOrdersDetailsDSD">
+              <MappingFragment StoreEntitySet="Tb_PreOrdersDetailsDSD">
+                <ScalarProperty Name="GroupDsd" ColumnName="GroupDsd" />
+                <ScalarProperty Name="ID_OrderDSD" ColumnName="ID_OrderDSD" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="UPC" ColumnName="UPC" />
+                <ScalarProperty Name="SRP" ColumnName="SRP" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="ReturnReasonName" ColumnName="ReturnReasonName" />
+                <ScalarProperty Name="ReturnReasonID" ColumnName="ReturnReasonID" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="ID_Details" ColumnName="ID_Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_PreOrdersDSD">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_PreOrdersDSD">
+              <MappingFragment StoreEntitySet="Tb_PreOrdersDSD">
+                <ScalarProperty Name="Sign" ColumnName="Sign" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="docNum_SAP" ColumnName="docNum_SAP" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+                <ScalarProperty Name="User_name" ColumnName="User_name" />
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Doc_numCompany" ColumnName="Doc_numCompany" />
+                <ScalarProperty Name="Doc_numP" ColumnName="Doc_numP" />
+                <ScalarProperty Name="Payment" ColumnName="Payment" />
+                <ScalarProperty Name="ID_payment" ColumnName="ID_payment" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="ID_customer" ColumnName="ID_customer" />
+                <ScalarProperty Name="ID_OrderDSD" ColumnName="ID_OrderDSD" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_InventoryDetailsTRDSD">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_InventoryDetailsTRDSD">
+              <MappingFragment StoreEntitySet="Tb_InventoryDetailsTRDSD">
+                <ScalarProperty Name="ID_InventoryDSD" ColumnName="ID_InventoryDSD" />
+                <ScalarProperty Name="UPC" ColumnName="UPC" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+                <ScalarProperty Name="ID_Product" ColumnName="ID_Product" />
+                <ScalarProperty Name="ID_Details" ColumnName="ID_Details" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_InventoryTRDSD">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_InventoryTRDSD">
+              <MappingFragment StoreEntitySet="Tb_InventoryTRDSD">
+                <ScalarProperty Name="docNum_SAP" ColumnName="docNum_SAP" />
+                <ScalarProperty Name="ID_Company" ColumnName="ID_Company" />
+                <ScalarProperty Name="User_name" ColumnName="User_name" />
+                <ScalarProperty Name="ID_User" ColumnName="ID_User" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="ID_InventoryDSD" ColumnName="ID_InventoryDSD" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -73,6 +73,11 @@
                                             <span class="input-group-text"><i class="mdi mdi-lock-outline"></i></span>
                                         </div>
                                         <input type="password" class="form-control" placeholder="Password" name="password" id="password" required>
+                                        <input type="text" id="date" name="date" hidden/>
+                                    </div>
+                                    <div class="input-groupp clearfix">
+                                        <a href="@Url.Action("Reset_password", "Home")" class="float-left forgot-link my-2 text-muted text-small text-right">Forgot Password ?</a>
+
                                     </div>
                                 </div>
                                 @*<div class="form-check form-check-flat mt-0">
@@ -111,7 +116,12 @@
 
     <script>
         $("#myform").submit(function (e) {
+            var now = new Date();
+            $("#date").val(now.toLocaleString("en-US", { hour12: true }));
             document.getElementById("loader").style.display = "block";
+       
+            return true;
+ 
         });
     </script>
 

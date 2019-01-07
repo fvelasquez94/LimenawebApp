@@ -114,39 +114,30 @@
                 </div>
                 <div>
                     <div class="dropdown-divider mb-0"></div>
-                    <a class="nav-link border-bottom px-0 py-3" href="#">
-                        <span class="text-primary">
-                            <span class="weight700 f12">
-                                <i class="vl_bell weight600 pr-2"></i>Weekly Update
-                            </span>
+                    @if (ViewBag.lstAlerts.Count > 0)
+    {
+        foreach (var alerts in ViewBag.lstAlerts)
+        {
+                <a class="nav-link border-bottom px-0 py-3" href="#">
+                    <span class="text-primary">
+                        <span class="weight700 f12">
+                            <i class="vl_bell weight600 pr-2"></i>@alerts.Title
                         </span>
-                        <span class="small float-right text-muted">03:14 AM</span>
-                        <div class="text-dark f12">
-                            This week project update report generated. All team members are requested to check the updates
-                        </div>
-                    </a>
-                    <a class="nav-link border-bottom px-0 py-3" href="#">
-                        <span class="text-danger">
-                            <span class="weight700 f12">
-                                <i class="vl_Download-circle weight600 pr-2"></i>Server Error
-                            </span>
-                        </span>
-                        <span class="small float-right text-muted">10:34 AM</span>
-                        <div class="text-dark f12">
-                            Unexpectedly server response stop. Responsible members are requested to fix it soon
-                        </div>
-                    </a>
-                    <a class="nav-link border-bottom px-0 py-3" href="#">
-                        <span class="text-success">
-                            <span class="weight700 f12">
-                                <i class="vl_screen weight600 pr-2"></i>Monthly Meeting
-                            </span>
-                        </span>
-                        <span class="small float-right text-muted">12:30 AM</span>
-                        <div class="text-dark f12">
-                            Our monthly meeting will be held on tomorrow sharp 12:30. All members are requested to attend this meeting.
-                        </div>
-                    </a>
+                    </span>
+                    <span class="small float-right text-muted">@Convert.ToDateTime(alerts.Date).ToShortDateString()</span>
+                    <div class="text-dark f12">
+                        @alerts.Description
+                    </div>
+                </a>
+}
+}
+else
+{
+                <label class="dropdown-item small">You don't have any notifications</label>
+}
+
+
+
                     <div class="text-center mt-3">
                         <a class="nav-link px-0" href="#">View all notification</a>
                     </div>

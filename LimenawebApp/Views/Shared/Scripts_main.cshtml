@@ -31,18 +31,89 @@
 <!--toastr-->
 <script src="~/Content/appcontent/assets/vendor/toastr-master/toastr.js"></script>
 
+<!--datatables-->
+<script src="~/Content/appcontent/assets/vendor/data-tables/jquery.dataTables.min.js"></script>
+<script src="~/Content/appcontent/assets/vendor/data-tables/dataTables.bootstrap4.min.js"></script>
+<!--init datatable-->
+<script src="~/Content/appcontent/assets/vendor/js-init/init-datatable.js"></script>
+
+<!--select2-->
+<script src="~/Content/appcontent/assets/vendor/select2/js/select2.full.js"></script>
+<!--init select2-->
+
+
+<!--Custom range date-->
+<script type="text/javascript" src="~/Content/appcontent/assets/vendor/calendarrangepicker/js/moment.min.js"></script>
+<script type="text/javascript" src="~/Content/appcontent/assets/vendor/calendarrangepicker/js/daterangepicker.min.js"></script>
+
+<!--toastr-->
+<script src="~/Content/appcontent/assets/vendor/toastr-master/toastr.js"></script>
+@*init toastr
+    <script src="~/Content/appcontent/assets/vendor/js-init/init-toastr.js"></script>*@
+
+
+<!--jquery validate-->
+<script src="~/Content/appcontent/assets/vendor/jquery-validation/jquery.validate.min.js"></script>
+<!--jquery steps-->
+<script src="~/Content/appcontent/assets/vendor/jquery-steps/jquery.steps.min.js"></script>
+
+<!--jquery stepy-->
+<script src="~/Content/appcontent/assets/vendor/jquery-steps/jquery.stepy.js"></script>
+
+<script src="~/Content/appcontent/assets/vendor/icheck/skins/icheck.min.js"></script>
+<!--init icheck-->
+<script src="~/Content/appcontent/assets/vendor/js-init/init-icheck.js"></script>
+
+@if (ViewBag.Title == "Distribuidora Limeña - DSD Order")
+{
+    <script src="~/Content/appcontent/assets/js/signature.js"></script>
+    <script src="~/Content/appcontent/assets/vendor/inputnumber/bootstrap-input-spinner.js"></script>
+    <!--init steps-->
+    <script src="~/Content/appcontent/assets/vendor/js-init/init-form-wizard.js"></script>
+}@if (ViewBag.Title == "Distribuidora Limeña - DSD Inventory")
+{
+
+    <script src="~/Content/appcontent/assets/vendor/inputnumber/bootstrap-input-spinner.js"></script>
+    <!--init steps-->
+    <script src="~/Content/appcontent/assets/vendor/js-init/init-form-wizardINTR.js"></script>
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Activity")
+{
+    <script src="~/Content/appcontent/assets/js/signature_forFB.js"></script>
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Routes")
+{
+    <!--calender-->
+    <script src='~/Content/appcontent/assets/vendor/fullcalendar-3.7.0/lib/moment.min.js'></script>
+    <script src='~/Content/appcontent/assets/vendor/fullcalendar-3.7.0/fullcalendar.js'></script>
+    <!--init calendar-->
+    <script src='~/Content/appcontent/assets/vendor/js-init/init-calendar-external-events.js'></script>
+}
+
 <!--FOR MENU-->
 <script>
     var string = @Html.Raw(ViewBag.lstDepartments);
-
-    console.log(string);
+    var roles = @Html.Raw(ViewBag.lstRoles);
     string.forEach(function (element) {
         if (element == "Sales") {
-            document.getElementById("dep_menu").style.display = "block";
+            document.getElementById("home_menu").style.display = "block";
+            document.getElementById("marketing_menu").style.display = "block";
+            document.getElementById("accr_menu").style.display = "block";
+            document.getElementById("oper_menu").style.display = "block";
+
+            roles.forEach(function (elementrol) {
+                if (elementrol == "DSD") {
+                    document.getElementById("dsd_menu").style.display = "block";
+                }
+            });
         }
         if (element == "Management") {
             document.getElementById("manag_menu").style.display = "block";
+            document.getElementById("dsd_menu").style.display = "block";
         }
+
+        //document.getElementById("reports_menu").style.display = "block";
     });
 </script>
 <!--END-->
@@ -54,8 +125,11 @@
     menu.classList.add("active");
 
     var idsubMenu = "@ViewBag.submenunameid";
-    var submenu = document.getElementById(idsubMenu);
-    submenu.classList.add("active");
+    if (idsubMenu != "") {
+        var submenu = document.getElementById(idsubMenu);
+        submenu.classList.add("active");
+    }
+
 
 
 </script>

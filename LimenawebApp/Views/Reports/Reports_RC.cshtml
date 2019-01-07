@@ -1,0 +1,197 @@
+﻿
+@{
+    ViewBag.Title = "Distribuidora Limeña - Reports";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            @if (ViewBag.lstUsers != null)
+    {
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-info">
+                            <div class="custom-title">Sales Representative</div>
+
+                        </div>
+                    </div>
+                    <div class="card-body">
+
+
+
+                        <div class="row">
+                            <div class="col-xl-12">
+                                @using (Html.BeginForm("Reports_RC", "Reports", FormMethod.Post))
+                        {
+                            <select class="form-control" onchange="this.form.submit()" name="ID_User" id="ID_User">
+                                <option value="0"></option>
+                                @foreach (var user in ViewBag.lstUsers)
+                        {
+                            if (user.ID_User == ViewBag.selUser)
+                            {
+                                <option value="@user.ID_User" selected>@user.Name @user.Lastname</option>
+                    }
+                    else
+                    {
+                        <option value="@user.ID_User">@user.Name @user.Lastname</option>
+            }
+
+        }
+
+                            </select>
+                }
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+            <!--sales statistical overview-->
+            @if (Convert.ToBoolean(ViewData["showSR_Resources"]) == true)
+    {
+        if (ViewBag.lstresources.Count > 0)
+        {
+            foreach (var item in ViewBag.lstresources)
+            {
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-info">
+                                    <div class="custom-title">@item.Description</div>
+                                    <div class=" widget-action-link">
+                                        <div class="dropdown">
+                                            <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                                <i class=" vl_ellipsis-fill-h"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+                                                <a class="dropdown-item" href="#"> Settings</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div id="iframePowerBI" style="height:750px; position:relative">
+                                            <iframe style="border:none; width:100%; height:700px; z-index:1" src="@item.Url" frameborder="0" allowfullscreen="false"></iframe>
+                                            <!--<img style="top:0px; right:0px; position:absolute;width:100%; height:670px; z-index:9; opacity:0" src="~/Content/images/MechandiserWeb.jpg">-->
+                                            @*<img style="top:663px; left:0px; position:absolute; z-index:9" src="~/Content/images/iframefooter.png" width="200" height="37">
+                                        <img style="top:663px; right:0px; position:absolute; z-index:9" src="~/Content/images/iframefooter.png" width="200" height="37">*@
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    }
+}
+else
+{
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-warning">
+                            <div class="custom-title">No data to show.</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+}
+
+            @if (Convert.ToBoolean(ViewData["showSS_Resources"]) == true)
+    {
+        if (ViewBag.lstresourcesSS.Count > 0)
+        {
+            foreach (var item in ViewBag.lstresourcesSS)
+            {
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-info">
+                                    <div class="custom-title">@item.Description</div>
+                                    <div class=" widget-action-link">
+                                        <div class="dropdown">
+                                            <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                                <i class=" vl_ellipsis-fill-h"></i>
+                                            </a>
+                                            <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+                                                <a class="dropdown-item" href="#"> Settings</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-xl-12">
+                                        <div id="iframePowerBI" style="height:750px; position:relative">
+                                            <iframe style="border:none; width:100%; height:700px; z-index:1" src="@item.Url" frameborder="0" allowfullscreen="false"></iframe>
+                                            <!--<img style="top:0px; right:0px; position:absolute;width:100%; height:670px; z-index:9; opacity:0" src="~/Content/images/MechandiserWeb.jpg">-->
+                                            @*<img style="top:663px; left:0px; position:absolute; z-index:9" src="~/Content/images/iframefooter.png" width="200" height="37">
+                                        <img style="top:663px; right:0px; position:absolute; z-index:9" src="~/Content/images/iframefooter.png" width="200" height="37">*@
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+    }
+}
+else
+{
+        <div class="row">
+            <div class="col-xl-12">
+                <div class="card card-shadow mb-4">
+                    <div class="card-header border-0">
+                        <div class="custom-title-wrap bar-warning">
+                            <div class="custom-title">No data to show.</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-xl-12">
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+
+}
+
+            <!--/sales statistical overview-->
+
+        </div>
+    </div>
+</div>
+<!--/main content wrapper-->

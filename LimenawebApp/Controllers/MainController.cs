@@ -11,68 +11,32 @@ namespace LimenawebApp.Controllers
     public class MainController : Controller
     {
         private dbLimenaEntities dblim = new dbLimenaEntities();
-
-        // GET: Main
+        private DLI_PROEntities dlipro = new DLI_PROEntities();
+        // GET: Main Dashboard_sales
         public ActionResult Dashboard_sales()
         {
-            if (Global_variables.active_user.Name != null)
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
             {
-                
+
                 //HEADER
-                //PAGINAS ACTIVAS
-                ViewData["Menu"] = "Departments";
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Home";
                 ViewData["Page"] = "Sales";
-                ViewBag.menunameid = "dep_menu";
-                ViewBag.submenunameid = "sales_submenu";
-                List<string> d = new List<string>(Global_variables.active_user.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
-                List<string> r = new List<string>(Global_variables.active_user.Roles.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-                //FIN HEADER
-                //Evaluamos si es supervisor o usuario normal para mostrar recursos o si es ambos o si es super admin
-
-                foreach (var item in r) {
-                    if (item == "Sales Representative") {
-                        ViewData["showSR_Resources"] = true;
-                       List<Tb_Resources> lstresources = (from a in dblim.Tb_Resources where (a.ID_User == Global_variables.active_user.ID_User) select a).ToList();
-                        ViewBag.lstresources = lstresources;
-                    }
-                    else if (item == "Sales Supervisor")
-                    {
-                        ViewData["showSS_Resources"] = true;
-
-                    }
-                }
-
-
-
-                return View();
-
-            }
-            else {
-
-                return RedirectToAction("Login", "Home", new { access = false });
-
-            }
-
-        }
-        public ActionResult Users()
-        {
-            if (Global_variables.active_user.Name != null)
-            {
-                //HEADER
-                //PAGINAS ACTIVAS
-                ViewData["Menu"] = "Management";
-                ViewData["Page"] = "Users";
-                ViewBag.menunameid = "manag_menu";
-                ViewBag.submenunameid = "users_submenu";
-                List<string> s = new List<string>(Global_variables.active_user.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.menunameid = "home_menu";
+                ViewBag.submenunameid = "";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x=>x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
 
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
-
-                List<Sys_Users> lstUsers = (from a in dblim.Sys_Users select a).ToList();
-                return View(lstUsers);
+                return View();
 
             }
             else
@@ -83,5 +47,7 @@ namespace LimenawebApp.Controllers
             }
 
         }
+
+
     }
 }

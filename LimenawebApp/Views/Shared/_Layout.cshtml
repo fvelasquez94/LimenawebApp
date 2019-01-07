@@ -11,13 +11,37 @@
     else
     {
         @Html.Partial("~/Views/Shared/Style_main.cshtml")
-
-
     }
+    <style>
+        .btnsel {
+            background-color: #fab63f !important;
+            color: black;
+        }
 
-
+        .btnsubsel {
+            background-color: #ddd !important;
+            color: black;
+        }
+    </style>
 </head>
-<body class="fixed-nav top-nav" >
+<body class="fixed-nav top-nav">
+    <div id="loader" class="vertical-centered-box">
+        <div class="content">
+            <div class="loader-circle"></div>
+            <div class="loader-line-mask one">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-mask two">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-mask three">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-mask four">
+                <div class="loader-line"></div>
+            </div>
+        </div>
+    </div>
     @if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos")
     {
         @Html.Partial("~/Views/Shared/Menu_landingpage.cshtml")
@@ -47,3 +71,719 @@ else
 
 }
 </html>
+
+<script>
+    $('#drop1').hover(function () {
+        $(document.body).find('#multi_menu').stop(true, true).delay(100).fadeIn(500);
+    }, function () {
+        $(document.body).find('#multi_menu').stop(true, true).delay(6600).fadeOut(500);
+    });
+
+    $('#drop2').hover(function () {
+        $(document.body).find('#multi_menu2').stop(true, true).delay(100).fadeIn(500);
+    }, function () {
+        $(document.body).find('#multi_menu2').stop(true, true).delay(6600).fadeOut(500);
+    });
+</script>
+
+<script>
+
+    (function ($) {
+        'use strict';
+        $('#deleteModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget);// Button that triggered the modal
+
+            var IDAct = button.data("id");// Extract info from data-* attributes
+            var DesAct = button.data("description");
+
+
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            //modal.find('.modal-title').text('Edit data: ' + recipient)
+            modal.find('.modal-body input[name="ID_activityD"]').val(IDAct);
+            $("#descriptionD").text(DesAct);
+
+        })
+    })(jQuery);
+
+</script>
+@if (ViewBag.Title == "Distribuidora Limeña - DSD Order")
+{
+    <script type="text/javascript">
+        (function ($) {
+            'use strict';
+            $('#addProductModal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);// Button that triggered the modal
+
+                var IDProd = button.data("id");// Extract info from data-* attributes
+                var Des = button.data("description");
+                var upc = button.data("upc");
+                var price = button.data("price");
+                var srp = button.data("srp");
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                //modal.find('.modal-title').text('Edit data: ' + recipient)
+                modal.find('.modal-body input[name="IDProd"]').val(IDProd);
+                modal.find('.modal-body input[name="upc"]').val(upc);
+                modal.find('.modal-body input[name="price"]').val(price);
+                modal.find('.modal-body input[name="srp"]').val(srp);
+                $("#descriptionD").text(Des);
+
+            })
+        })(jQuery);
+
+
+        function filter(clicked_id) {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(6).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+
+        }
+
+        function filter_clear() {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(6).search("").draw();
+            table.columns(5).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $('.btnsl').removeClass('btnsel');
+            $('.subbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(5).search("").draw();
+            $('.subbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(5).search("" + clicked_id + "", true, false, true).draw();
+        }
+
+    </script>
+
+    <script>
+
+        var list = [];
+        var total = 0.0;
+        function addproduct() {
+
+
+            var productId = $("#IDProd").val();
+            var productName = $("#descriptionD").text();
+            var $inputLoop = $("#units");
+            var Units = $inputLoop.val();
+            var returnReason = $("#returnReason").val();
+            var upc = $("#upc").val();
+            var srp = $("#srp").val();
+            var price = $("#price").val();
+            var returnReasonName = $("#returnReason option:selected").text();
+
+            if (productId === null || Units == 0) { toastr.warning("Please, select a valid product", "Warning"); } else {
+                var x = list.filter(x => x.id === productId);
+
+                if (x.length > 0) {
+                    toastr.warning("This product already exist", "Warning");
+                    //$("#units").val("0");
+                }
+
+                else if (Units < 0 && returnReason == 0) {
+                    document.getElementById("selectr").style.display = "block";
+                    toastr.warning("Please, select a return reason", "Warning");
+                }
+
+                else {
+
+
+                    document.getElementById("loader").style.display = "block";
+                    document.getElementById("selectr").style.display = "none";
+                    var newproduct = "";
+                    newproduct += '<li data-pid="' + productId + '">';
+                    newproduct += '<div class="media mb-4">';
+                    newproduct += '<div class="media-body list-widget-border">';
+                    newproduct += '<div class="float-left">';
+                    if (returnReason == "0") {
+                        returnReasonName = "";
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    } else {
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span><br/><span class="text-muted">' + returnReasonName + '</span>';
+                    }
+
+                    newproduct += '</div>';
+                    newproduct += '<div class=" float-right">';
+                    newproduct += '<strong>$' + round((price), 2) + '</strong>&nbsp;x <strong>' + Units + '</strong>&nbsp;<strong>=&nbsp;&nbsp;' + round((price * Units), 2) + '</strong> &nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-trash itemDelete"></i></a>';
+                    newproduct += '</div></div></div></li>';
+                    $("#finalproducts").append(newproduct);
+                    //$("#units").val("0");
+
+
+                    //Agregamos producto
+                    list.push({ id: productId, text: productName, units: Units, returnReasonID: returnReason, returnReasonName: returnReasonName, Price: price, UPC: upc, SRP: srp, total: (round((price * Units), 2)) });
+                    $("#listp").val(list);
+                    total += round((price * Units), 2);
+                    $("#total").text("Total: $ " + round(total, 2));
+                    //
+                    $('#addProductModal').modal('hide');
+                    $("#returnReason").val('0');
+                    document.getElementById("loader").style.display = "none";
+                    var idtr = "tr_" + productId;
+                    document.getElementById(idtr).style.color = "#ddd";
+
+                    var btnidtr = "btntd_" + productId;
+                    document.getElementById(btnidtr).style.display = "none";
+                }
+            }
+        };
+
+        $('#finalproducts').on('click', '.itemDelete', function () {
+            var pid = $(this).closest('li').data("pid");
+            $(this).closest('li').remove();
+
+            list = list.filter(function (el) {
+
+                return el.id != pid;
+            });
+
+            var length = list.length;
+            total = 0.0;
+            for (var i = 0; i < length; i++) {
+                // Do something with yourArray[i].
+
+                total += round((list[i].Price * list[i].units), 2);
+            }
+            var idtr = "tr_" + pid;
+            document.getElementById(idtr).style.color = "#6a7f9a";
+            $("#total").text("Total: $ " + round(total, 2));
+
+
+            var btnidtr = "btntd_" + pid;
+            document.getElementById(btnidtr).style.display = "block";
+
+        });
+
+        function round(value, exp) {
+            if (typeof exp === 'undefined' || +exp === 0)
+                return Math.round(value);
+
+            value = +value;
+            exp = +exp;
+
+            if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+                return NaN;
+
+            // Shift
+            value = value.toString().split('e');
+            value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+            // Shift back
+            value = value.toString().split('e');
+            return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+        };
+
+        //Ajax
+        $(function () {
+            $("#btnfinish").click(function () {
+
+                $(this).attr('disabled', 'disabled');
+
+                var selCustomer = $("#ID_customer").val();
+                var selCName = $("#ID_customer option:selected").text();
+
+                var selPayment = $("#ID_payment").val();
+                var selPName = $("#ID_payment option:selected").text();
+
+                var docnum = $("#doc_number").val();
+                var company = $("#doc_numberComp").val();
+
+                var canvas = document.getElementById("sig-canvas");
+                var dataUrl = canvas.toDataURL();
+
+                var comment = $("#comment").val();
+
+                var flag = 0;
+
+                if (selPayment == "0") {
+                    alert("Select a payment method");
+                    flag = 1;
+                }
+                //SS1
+                if (selPayment != "1") {
+                    if (docnum == "") {
+                        alert("Type a valid document number");
+                        flag = 1;
+                        $("#doc_number").css("border-color", "#dc3545");
+                    } else {
+                        $("#doc_number").css("border-color", "#ced4da");
+                    }
+                    if (company == "") {
+                        alert("Type a valid company name");
+                        flag = 1;
+                        $("#doc_numberComp").css("border-color", "#dc3545");
+                    } else {
+                        $("#doc_number").css("border-color", "#ced4da");
+                    }
+                }
+
+                if (flag == 0) {
+
+                    document.getElementById("loader").style.display = "block";
+                    $.ajax
+                        ({
+                            url: '/Commercial/addSalesOrderDSD',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                ID_customer: selCustomer,
+                                Customer: selCName,
+                                ID_payment: selPayment,
+                                Payment: selPName,
+                                Doc_numP: docnum,
+                                Doc_numCompany: company,
+                                objectsProducts: list,
+                                Comment: comment,
+                                Sign: dataUrl
+
+                            }),
+                            success: function (data) {
+
+                                if (data == "Success") {
+
+                                    toastr.success("Order created successfully.", "Success");
+
+                                    document.getElementById("loader").style.display = "none";
+
+                                    location.reload();
+                                } else {
+                                    document.getElementById("loader").style.display = "none";
+                                    toastr.warning(data, "Warning");
+                                    return false;
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                document.getElementById("loader").style.display = "none";
+                                var err = eval("(" + xhr.responseText + ")");
+                                toastr.error(err.Message, "Error");
+                                return false;
+                            },
+                        });
+                }
+
+            }
+            );
+        });
+
+        //PRE PRINT
+        //Ajax
+        $(function () {
+            $("#btnpreprint").click(function () {
+
+                //$(this).attr('disabled', 'disabled');
+                var idor = 1;
+                var selCustomer = $("#ID_customer").val();
+                var selCName = $("#ID_customer option:selected").text();
+
+                var selPayment = "";
+                var selPName = "";
+
+                var docnum = "";
+                var company = "";
+
+                var canvas = document.getElementById("sig-canvas");
+                var dataUrl = "";
+
+                var comment = "";
+
+                //var flag = 0;
+
+
+
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Commercial/editSalesOrderDSD',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            orderID: idor,
+                            ID_customer: selCustomer,
+                            Customer: selCName,
+                            ID_payment: selPayment,
+                            Payment: selPName,
+                            Doc_numP: docnum,
+                            Doc_numCompany: company,
+                            objectsProducts: list,
+                            Comment: comment,
+                            Sign: dataUrl
+
+                        }),
+                        success: function (data) {
+
+                            if (data == "Success") {
+
+
+
+                                document.getElementById("loader").style.display = "none";
+                                $('#preprintbtn')[0].click();
+
+
+                            } else {
+                                document.getElementById("loader").style.display = "none";
+                                toastr.warning(data, "Warning");
+                                return false;
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            document.getElementById("loader").style.display = "none";
+                            var err = eval(xhr.responseText);
+                            toastr.error(err.Message, "Error");
+                            return false;
+                        },
+                    });
+
+
+            }
+            );
+        });
+
+
+
+    </script>
+
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - DSD Inventory")
+{
+    <script type="text/javascript">
+        (function ($) {
+            'use strict';
+            $('#addProductModal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);// Button that triggered the modal
+
+                var IDProd = button.data("id");// Extract info from data-* attributes
+                var Des = button.data("description");
+                var upc = button.data("upc");
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                //modal.find('.modal-title').text('Edit data: ' + recipient)
+                modal.find('.modal-body input[name="IDProd"]').val(IDProd);
+                modal.find('.modal-body input[name="upc"]').val(upc);
+                $("#descriptionD").text(Des);
+
+            })
+        })(jQuery);
+
+
+        (function ($) {
+            'use strict';
+            $('#editProductModal').on('show.bs.modal', function (event) {
+
+                //var button = $(event.relatedTarget);// Button that triggered the modal
+
+                //var IDProd = button.data("id");// Extract info from data-* attributes
+                //var Des = button.data("description");
+                //var upc = button.data("upc");
+                //var price = button.data("price");
+                //var srp = button.data("srp");
+                //// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                //// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                //var modal = $(this);
+                ////modal.find('.modal-title').text('Edit data: ' + recipient)
+                //modal.find('.modal-body input[name="IDProd"]').val(IDProd);
+                //modal.find('.modal-body input[name="upc"]').val(upc);
+                //modal.find('.modal-body input[name="price"]').val(price);
+                //modal.find('.modal-body input[name="srp"]').val(srp);
+                //$("#descriptionD").text(Des);
+
+            })
+        })(jQuery);
+
+
+
+        function filter(clicked_id) {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(4).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+
+        }
+
+        function filter_clear() {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(4).search("").draw();
+            table.columns(3).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $('.btnsl').removeClass('btnsel');
+            $('.subbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(3).search("").draw();
+            $('.subbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table = $('#data_table').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(3).search("" + clicked_id + "", true, false, true).draw();
+        }
+
+    </script>
+
+    <script>
+
+        var list = [];
+        var total = 0.0;
+        function addproduct() {
+
+
+            var productId = $("#IDProd").val();
+            var productName = $("#descriptionD").text();
+            var $inputLoop = $("#units");
+            var Units = $inputLoop.val();
+
+            var upc = $("#upc").val();
+
+
+            if (productId === null || Units == 0) { toastr.warning("Please, select a valid product", "Warning"); } else {
+                var x = list.filter(x => x.id === productId);
+
+                if (x.length > 0) {
+                    toastr.warning("This product already exist", "Warning");
+                    //$("#units").val("0");
+                }
+
+                else {
+
+
+                    document.getElementById("loader").style.display = "block";
+                    document.getElementById("selectr").style.display = "none";
+                    var newproduct = "";
+                    newproduct += '<li data-pid="' + productId + '">';
+                    newproduct += '<div class="media mb-4">';
+                    newproduct += '<div class="media-body list-widget-border">';
+                    newproduct += '<div class="float-left">';
+                    if (returnReason == "0") {
+                        returnReasonName = "";
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    } else {
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    }
+
+                    newproduct += '</div>';
+                    newproduct += '<div class=" float-right">';
+                    newproduct += '<strong>' + Units + '</strong>&nbsp;&nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-trash itemDelete"></i></a>&nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-edit itemEdit"></i></a>';
+                    newproduct += '</div></div></div></li>';
+                    $("#finalproducts").append(newproduct);
+                    //$("#units").val("0");
+
+
+                    //Agregamos producto
+                    list.push({ id: productId, text: productName, units: Units, returnReasonID: '', returnReasonName: '', Price: 0, UPC: upc, SRP: 0, total: 0 });
+                    $("#listp").val(list);
+                    total += (+Units);
+                    $("#total").text("Total Units: " + total);
+                    //
+                    $('#addProductModal').modal('hide');
+
+                    document.getElementById("loader").style.display = "none";
+                    var idtr = "tr_" + productId;
+                    document.getElementById(idtr).style.color = "#ddd";
+
+                    var btnidtr = "btntd_" + productId;
+                    document.getElementById(btnidtr).style.display = "none";
+                }
+            }
+        };
+
+        $('#finalproducts').on('click', '.itemDelete', function () {
+            var pid = $(this).closest('li').data("pid");
+            $(this).closest('li').remove();
+
+            list = list.filter(function (el) {
+
+                return el.id != pid;
+            });
+
+            var length = list.length;
+            total = 0.0;
+            for (var i = 0; i < length; i++) {
+                // Do something with yourArray[i].
+
+                total += round((+list[i].units), 2);
+            }
+            var idtr = "tr_" + pid;
+            document.getElementById(idtr).style.color = "#6a7f9a";
+            $("#total").text("Total Units: " + total);
+
+
+            var btnidtr = "btntd_" + pid;
+            document.getElementById(btnidtr).style.display = "block";
+
+        });
+
+        $('#finalproducts').on('click', '.itemEdit', function () {
+            var pid = $(this).closest('li').data("pid");
+
+           var editp = list.filter(function (el) {
+
+                return el.id == pid;
+            });
+            $("#IDProdEdit").val(editp[0].id);
+            $("#descriptionDEdit").text(editp[0].text);
+            $('#editProductModal').modal('show');
+       
+        });
+        function round(value, exp) {
+            if (typeof exp === 'undefined' || +exp === 0)
+                return Math.round(value);
+
+            value = +value;
+            exp = +exp;
+
+            if (isNaN(value) || !(typeof exp === 'number' && exp % 1 === 0))
+                return NaN;
+
+            // Shift
+            value = value.toString().split('e');
+            value = Math.round(+(value[0] + 'e' + (value[1] ? (+value[1] + exp) : exp)));
+
+            // Shift back
+            value = value.toString().split('e');
+            return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
+        };
+
+        //Ajax
+        $(function () {
+            $("#btnfinish").click(function () {
+
+                $(this).attr('disabled', 'disabled');
+
+
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/DSD/addInventoryTR',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+
+                            objectsProducts: list
+
+
+                        }),
+                        success: function (data) {
+
+                            if (data == "Success") {
+
+                                toastr.success("Inventory created successfully.", "Success");
+
+                                document.getElementById("loader").style.display = "none";
+
+                                location.reload();
+                            } else {
+                                document.getElementById("loader").style.display = "none";
+                                toastr.warning(data, "Warning");
+                                return false;
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            document.getElementById("loader").style.display = "none";
+                            var err = eval("(" + xhr.responseText + ")");
+                            toastr.error(err.Message, "Error");
+                            return false;
+                        },
+                    });
+
+
+            }
+            );
+        });
+
+
+
+
+    </script>
+
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Routes")
+{
+    @Html.Partial("~/Views/Shared/Routes_calendarScript.cshtml")
+
+<script>
+
+    $(document).ready(function () {
+        var json = JSON.parse('@Html.Raw(ViewBag.usuarios)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#repmulti").select2({
+            multiple: true,
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        var json2 = JSON.parse('@Html.Raw(ViewBag.stores)')
+
+        var data2 = $.map(json2, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        $("#storesmulti").select2({
+            multiple: true,
+            placeholder: "Select...",
+            data: data2
+
+        });
+
+    });
+</script>
+}

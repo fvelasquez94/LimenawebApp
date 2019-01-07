@@ -1,0 +1,677 @@
+﻿
+@{
+    ViewBag.Title = "Distribuidora Limeña - Marketing activities";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            <!--sales monitor-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-turquoise">
+                                <div class="custom-title">VISIT INFO</div>
+                                <div class=" widget-action-link">
+                                    @*<label>From: To:</label>*@
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-xl-5 col-md-5">
+                                    <div class="mb-4">
+                                        <div class="progress-title">
+                                            <span>Forms</span>
+                                            <span id="forms_p1" class="float-right">0% (0/0)</span>
+                                        </div>
+                                        <div class="progress" style="height: 1px;">
+                                            <div id="forms_d1" class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                        </div>
+
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="progress-title">
+                                            <span>Audits</span>
+                                            <span id="audits_p1" class="float-right">0% (0/0)</span>
+                                        </div>
+                                        <div class="progress" style="height: 1px;">
+                                            <div id="audits_d1" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="progress-title">
+                                            <span>Sales Orders </span>
+                                            <span id="sales_p1" class="float-right">0% (0/0)</span>
+                                        </div>
+                                        <div class="progress" style="height: 1px;">
+                                            <div id="sales_d1" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <div class="progress-title">
+                                            <span>Demos</span>
+                                            <span id="demos_p1" class="float-right">0% (0/0)</span>
+                                        </div>
+                                        <div class="progress" style="height: 1px;">
+                                            <div id="sales_d1" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-7 col-md-7">
+                                    <div class="card card-shadow mb-4">
+                                        <div class="card-body">
+
+                                            <div class="text-center">
+                                                <div class="mt-4 mb-3">
+                                                    <img class="" src="~/Content/appcontent/assets/img/store.png" width="75" alt="" />
+                                                </div>
+                                                <h5 class="text-uppercase mb-0" id="storeName">STORE NAME</h5>
+                                                <p class="text-muted mb-0" id="storeAddress">STORE ADDRESS </p>
+                                                <div class="rattings mb-4">
+                                                    <i class="fa fa-star-o text-warning"></i>
+                                                    <i class="fa fa-star-o text-warning"></i>
+                                                    <i class="fa fa-star-o text-warning"></i>
+                                                    <i class="fa fa-star-o text-warning"></i>
+                                                    <i class="fa fa-star-o text-warning"></i>
+                                                </div>
+
+                                                <div class="mb-2">
+                                                    <a id="getdirections" href="#" class="btn btn-sm btn-pill btn-primary pl-4 pr-4"><i class="fa fa-map-o"></i> Get directions</a>
+                                                    <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/sales monitor-->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">ACTIVITIES LIST</div>
+
+                            </div>
+
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table id="data_table" class="table table-hover table-custom" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">TYPE</th>
+                                            <th scope="col">DESCRIPTION</th>
+                                            <th scope="col">CUSTOMER</th>
+                                            <th scope="col">STATE</th>
+                                            <th scope="col">ACTIONS</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody id="tbodyid"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- contact form start -->
+<div class="floating-form card card-shadow" id="contact_form">
+    <div class="contact-opener custom-title">Settings</div>
+    <div class="floating-form-heading  custom-title">Filters</div>
+    <hr />
+    <div id="contact_body">
+        <div class="form-group row">
+            <label class="col-sm-12 col-form-label col-form-label-sm">Date</label>
+            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                <i class="mdi mdi-calendar"></i>&nbsp;
+                <span></span> <i class="fa fa-caret-down"></i>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-12 col-form-label col-form-label-sm">User</label>
+            <div class="col-sm-12">
+                <select class="form-control" id="option_Users" name="option_Users" onchange="getStores()"></select>
+            </div>
+        </div>
+
+        <div class="form-group row">
+            <label class="col-sm-12 col-form-label col-form-label-sm">Store</label>
+            <div class="col-sm-12">
+                <select class="form-control" id="option_Stores" name="option_Stores" onchange="getVisitData()"></select>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- contact form end -->
+<!--CREATE ACTIVITY STARTS-->
+<div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel-4"><i class="fa fa-cloud"></i> ADD NEW ACTIVITY</h6>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Activity:</label>
+                        <select id="ID_form" name="ID_form" class="form-control" style="width:100%">
+                            <option value="0">Select an activity</option>
+                            <optgroup label="Demos">
+                                @foreach (var form in ViewBag.activeforms)
+                                {
+                                    if (form.ID_activity == 4)
+                                    {
+                                        <option value="@form.ID_form">@form.name</option>
+                                    }
+                                }
+                            </optgroup>
+                            <optgroup label="Forms"></optgroup>
+                            @foreach (var form in ViewBag.activeforms)
+                            {
+                                if (form.ID_activity == 1)
+                                {
+                                    <option value="@form.ID_form">@form.name</option>
+                                }
+                            }
+                            <optgroup label="Audits"></optgroup>
+                            @foreach (var form in ViewBag.activeforms)
+                            {
+                                if (form.ID_activity == 2)
+                                {
+                                    <option value="@form.ID_form">@form.name</option>
+                                }
+                            }
+                            <optgroup label="Sales Order">
+                                @foreach (var form in ViewBag.activeforms)
+                                {
+                                    if (form.ID_activity == 3)
+                                    {
+                                        <option value="@form.ID_form">@form.name</option>
+                                    }
+                                }
+                            </optgroup>
+                        </select>
+                    </div>
+                    @*<div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Set start date:</label>
+                            <input type="datetime-local" class="form-control" name="time" id="time" />
+                        </div>*@
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">User:</label>
+                        <select name="ID_rep" id="ID_rep" class="form-control" style="width:100%">
+                            <option value="0">Select an user</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Customer:</label>
+                        <select name="ID_customer" id="ID_customer" class="form-control" style="width:100%">
+                            <option value="0">Select a Customer</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="createActivity()" class="btn btn-info">Add</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--CREATE ACTIVITY ENDS-->
+<!--DELETE DATA STARTS-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-delete"></i> Delete Activity Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Are you sure you want to delete this activity?</label><br />
+                        <strong><label id="descriptionD" class="col-form-label"></label></strong>
+                        <input type="text" id="ID_activityD" name="ID_activityD" hidden />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="deleteActivity()" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--DELETE DATA ENDS-->
+
+
+<script type="text/javascript">
+    window.onload = function (e) {
+
+        var _scroll = true, _timer = false, _floatbox = $("#contact_form"), _floatbox_opener = $(".contact-opener");
+        _floatbox.css("right", "-322px"); //initial contact form position
+
+        //Contact form Opener button
+        _floatbox_opener.click(function () {
+            if (_floatbox.hasClass('visiable')) {
+                _floatbox.animate({ "right": "-322px" }, { duration: 300 }).removeClass('visiable');
+            } else {
+                _floatbox.animate({ "right": "0px" }, { duration: 300 }).addClass('visiable');
+            }
+        });
+
+        //Effect on Scroll
+        $(window).scroll(function () {
+            if (_scroll) {
+                _floatbox.animate({ "top": "30px" }, { duration: 300 });
+                _scroll = false;
+            }
+            if (_timer !== false) { clearTimeout(_timer); }
+            _timer = setTimeout(function () {
+                _scroll = true;
+                _floatbox.animate({ "top": "60px" }, { easing: "linear" }, { duration: 500 });
+            }, 400);
+        });
+
+        //DATETIMEPICKER
+        var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+
+            getStores();
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: true,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        //USERS
+        var dataUsers = @Html.Raw(ViewBag.lstUsers);
+
+        $('#option_Users').select2({
+            placeholder: "Select an user",
+            data: dataUsers
+        });
+
+        $('#ID_rep').select2({
+            placeholder: "Select an user",
+            data: dataUsers
+        });
+
+        //STORES
+        if (document.getElementById("option_Stores")) {
+            getStores();
+        } else {
+
+        }
+
+        //CUSTOMERS
+        var dataCustomers = @Html.Raw(ViewBag.lstCustomer);
+
+        $('#ID_customer').select2({
+            placeholder: "Select a Customer",
+            data: dataCustomers
+        });
+
+    }
+
+
+    function getStores() {
+        var UserId = $("#option_Users").val();
+        var st = new Date($('#reportrange').data('daterangepicker').startDate);
+        var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+        st = st.toLocaleDateString();
+        ed = ed.toLocaleDateString();
+        $.ajax
+            ({
+                url: '/Commercial/GetStores',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    UserId: UserId,
+                    start: st,
+                    end: ed
+                }),
+                success: function (result) {
+
+                    var dataStores = JSON.parse(result);
+                    $("#option_Stores").html("");
+
+                    $('#option_Stores').select2({
+                        placeholder: "No data to show",
+                        data: dataStores
+                    });
+
+                    if (dataStores.length > 0) {
+                        getVisitData();
+
+
+
+
+                    } else {
+                            var table = $('#data_table').DataTable();
+
+                            table
+                                .clear()
+                                .draw();
+
+                        $("#storeName").html("NO STORE SELECTED");
+                        $("#storeAddress").html("");
+                        $("#getdirections").attr("href", "#");
+                        $("#getdirections").attr('target', '_self');
+                        //STATS
+                        $("#forms_p1").html("0% (0/0)");
+                        $('#forms_d1').css('width', '0%');
+                        $("#audits_p1").html("0% (0/0)");
+                        $("#audits_d1").css('width', '0%');
+                        $("#sales_p1").html("0% (0/0)");
+                        $("#sales_d1").css('width', '0%');
+                        $("#demos_p1").html("0% (0/0)");
+                        $("#demos_d1").css('width', '0%');
+
+                    }
+
+
+
+
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong...")
+                },
+            });
+
+
+
+    }
+
+    function getVisitData() {
+
+
+        var UserId = $("#option_Users").val();
+        var VisitId = $("#option_Stores").val();
+            $.ajax
+                ({
+                    url: '/Commercial/GetVisitData',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        UserId: UserId,
+                        VisitId: VisitId
+                    }),
+                    success: function (result) {
+
+
+                        $("#storeName").html(result.resultV[0].storeName);
+                        $("#storeAddress").html(result.resultV[0].storeAddress);
+                        $("#getdirections").attr("href", "https://www.google.com/maps/place/" + result.resultV[0].storeAddress);
+                        $("#getdirections").attr('target', '_blank');
+                        var obj = JSON.parse(result.resultAct);
+
+                        var ftot = 0;
+                        var fcom = 0;
+                        var fpor = 0.0;
+
+                        var atot = 0;
+                        var acom = 0;
+                        var apor = 0.0;
+
+                        var stot = 0;
+                        var scom = 0;
+                        var spor = 0.0;
+
+                        var dtot = 0;
+                        var dcom = 0;
+                        var dpor = 0.0;
+
+                        if (obj.length > 0) {
+                            try {
+                                $("#tbodyid").empty();
+                                for (var i = 0; i < obj.length; i++) {
+
+                                    var url = '@Url.Action("Activityon", "Commercial", new { id = "ID_ACT"})';
+                                    url = url.replace('ID_ACT', obj[i]["ID_activity"]);
+
+                                    var tr = "<tr>";
+                                    tr += "<td>" + obj[i]["ID_activity"] + "</td>";
+                                    tr += "<td>" + obj[i]["ID_form"] + "</td>";
+                                    tr += "<td>" + obj[i]["description"] + "</td>";
+                                    tr += "<td>" + obj[i]["Customer"] + "</td>";
+                                    if (obj[i]["isfinished"] == true) {
+                                        tr += "<td>" + '<span class="badge badge-info form-pill px-3 py-1">Finished</span>' + "</td>";
+                                        tr += '<td><a  href="#" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-eye mr-2"></i>Preview</a>'
+                                    } else {
+                                        tr += "<td>" + '<span class="badge badge-warning form-pill px-3 py-1">Not finished</span>' + "</td>";
+                                        tr += '<td><a  href="' + url + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>'
+                                    }
+                                    tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#deleteModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Delete</button></td></tr > ';
+
+                                    $("#data_table").append(tr);
+
+                                    if (obj[i]["ID_activitytype"] == 1) {
+                                        ftot++;
+
+                                        if (obj[i]["isfinished"] == true) {
+                                            fcom++;
+                                        }
+                                    }
+                                    if (obj[i]["ID_activitytype"] == 2) {
+                                        atot++;
+
+                                        if (obj[i]["isfinished"] == true) {
+                                            acom++;
+                                        }
+                                    }
+                                    if (obj[i]["ID_activitytype"] == 3) {
+                                        stot++;
+
+                                        if (obj[i]["isfinished"] == true) {
+                                            scom++;
+                                        }
+                                    }
+                                    if (obj[i]["ID_activitytype"] == 4) {
+                                        dtot++;
+
+                                        if (obj[i]["isfinished"] == true) {
+                                            dcom++;
+                                        }
+                                    }
+
+                                }
+
+                                if (ftot > 0) {
+                                    fpor = Math.round(((fcom / ftot) * 100));
+                                }
+                                if (atot > 0) {
+                                    apor = Math.round(((acom / atot) * 100));
+                                }
+                                if (stot > 0) {
+                                    spor = Math.round(((scom / stot) * 100));
+                                }
+                                if (dtot > 0) {
+                                    dpor = Math.round(((dcom / dtot) * 100));
+                                }
+
+                                //STATS
+                                $("#forms_p1").html(fpor + "%" + " (" + fcom + "/" + ftot + ")");
+                                $('#forms_d1').css('width', '' + fpor + '%');
+                                $("#audits_p1").html(apor + "%" + " (" + acom + "/" + atot + ")");
+                                $("#audits_d1").css('width', '' + apor + '%');
+                                $("#sales_p1").html(spor + "%" + " (" + scom + "/" + stot + ")");
+                                $("#sales_d1").css('width', '' + spor + '%');
+                                $("#demos_p1").html(dpor + "%" + " (" + dcom + "/" + dtot + ")");
+                                $("#demos_d1").css('width', '' + dpor + '%');
+                            }
+                            catch (err) {
+
+                                console.log(err);
+                                var table = $('#data_table').DataTable();
+
+                                table
+                                    .clear()
+                                    .draw();
+                            }
+                        } else {
+                            var table = $('#data_table').DataTable();
+
+                            table
+                                .clear()
+                                .draw();
+                        }
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong...")
+                    },
+                });
+    }
+
+    function createActivity() {
+
+
+        var UserId = $("#ID_rep").val();
+        var VisitId = $("#option_Stores").val();
+
+        var CustomerId = $("#ID_customer").val();
+        var CustomerName = $("#ID_customer option:selected").text();
+        var FormId = $("#ID_form").val();
+
+        if (VisitId === null || UserId === null || CustomerId == "0" || FormId == "0") { toastr.warning("Please, select a store or complete all the information", "Warning"); } else {
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Commercial/CreateActivity',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ID_rep: UserId,
+                        ID_visita: VisitId,
+                        ID_customer: CustomerId,
+                        Customer: CustomerName,
+                        ID_form: FormId
+                    }),
+                    success: function (data) {
+                        document.getElementById("loader").style.display = "none";
+                        if (data == "Success") {
+
+                            toastr.success("Activity created successfully.", "Success");
+                            $('#createModal').modal('hide');
+                            getVisitData()
+
+                            $("#ID_rep").val('0');
+                            $("#ID_customer").val('0');
+                            $("#ID_form").val('0');
+
+
+                        } else {
+                            toastr.warning(data, "Warning");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        document.getElementById("loader").style.display = "none";
+                        var err = eval("(" + xhr.responseText + ")");
+                        toastr.error(err.Message, "Error");
+                    },
+                });
+        }
+
+
+    }
+
+    function deleteActivity() {
+
+        var ActivityId = $("#ID_activityD").val();
+
+        if (ActivityId === null || ActivityId == "") { toastr.warning("Please, select an activity", "Warning"); } else {
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Commercial/DeleteActivity',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        ID_activity: ActivityId
+
+                    }),
+                    success: function (data) {
+                        document.getElementById("loader").style.display = "none";
+                        if (data == "Success") {
+
+                            toastr.success("Activity deleted successfully.", "Success");
+                            $('#deleteModal').modal('hide');
+                            getVisitData()
+
+
+
+
+                        } else {
+                            toastr.warning(data, "Warning");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        document.getElementById("loader").style.display = "none";
+                        var err = eval("(" + xhr.responseText + ")");
+                        toastr.error(err.Message, "Error");
+                    },
+                });
+        }
+
+
+    }
+</script>
+
+
+

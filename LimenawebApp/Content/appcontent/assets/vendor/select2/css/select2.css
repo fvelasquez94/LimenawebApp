@@ -48,7 +48,7 @@
         -webkit-appearance: none; }
 
 .select2-dropdown {
-  background-color: white;
+ 
   border: 1px solid #aaa;
   border-radius: 4px;
   box-sizing: border-box;
@@ -56,10 +56,15 @@
   position: absolute;
   left: -100000px;
   width: 100%;
-  z-index: 1051; }
+  z-index: 1051; 
+  background-color:white;
+
+}
 
 .select2-results {
-  display: block; }
+  display: block; 
+
+}
 
 .select2-results__options {
   list-style: none;

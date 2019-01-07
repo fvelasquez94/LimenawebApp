@@ -1,0 +1,174 @@
+﻿@model IEnumerable<LimenawebApp.Models.Sys_Users>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Users";
+}
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Users</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+                                        <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                            <i class=" vl_ellipsis-fill-h"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+                                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createUserModal" data-whatever="mdo"> Add new user</a>
+
+                                            <a class="dropdown-item" href="#"> Export list</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Email</th>
+                                            <th>Telephone</th>
+                                            <th>Position</th>
+                                            <th>Departments</th>
+                                            <th>Roles</th>
+                                            <th>State</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var user in Model)
+                                        {
+                                            <tr>
+                                                <td>@user.Name @user.Lastname</td>
+                                                <td>@user.Email</td>
+                                                <td>@user.Telephone</td>
+                                                <td>@user.Position</td>
+                                                <td>@user.Departments</td>
+                                                <td>@user.Roles</td>
+                                                <td>
+                                                    @if (user.Active == true)
+                                                    {
+                                                        <span class="text-success pl-3">ACTIVE</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="text-warning pl-3">INACTIVE</span>
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (user.Roles == "Super Admin")
+                                                    {
+
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Edit"><i class="fa fa-edit"></i></a>
+                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                    }
+
+                                                </td>
+                                            </tr>
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--MODAL FORM CREATE USER-->
+<div class="modal fade" id="createUserModal"  role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel5">New user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="createUserForm" method="post">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="nameUserC" name="nameUserC" required>
+
+                        <label class="col-form-label">Last name:</label>
+                        <input type="text" class="form-control" id="lastnameUserC" name="lastnameUserC" required>
+
+                        <label class="col-form-label">Email:</label>
+                        <input type="email" class="form-control" id="emailUserC" name="emailUserC" required>
+
+                        <label class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" id="passwordUserC" name="passwordUserC" required>
+
+                        <label class="col-form-label">Telephone:</label>
+                        <input type="text" class="form-control" id="telephoneUserC" name="telephoneUserC" required>
+
+                        <label class="col-form-label">Position:</label>
+                        <input type="text" class="form-control" id="positionUserC" name="positionUserC">
+
+                        <label class="col-form-label">Departments:</label>
+                        <input type="text" class="form-control" id="departmentsUserC" name="departmentsUserC">
+
+                        <label class="col-form-label">Roles:</label>
+                        <input type="text" class="form-control" id="rolesUserC" name="rolesUserC">
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function () {
+        $('#createUserForm').submit(function (event) {
+            event.preventDefault();
+            document.getElementById("loader").style.display = "block";
+            $('#createUserModal').modal('hide');
+
+            $.ajax({
+                url: '/Management/CreateUser',
+                method: 'POST',
+                contentType: 'application/json',
+                datatype: 'application/json',
+                data: JSON.stringify({
+                    name: $('#nameUserC').val(), lastname: $('#lastnameUserC').val(),
+                    email: $('#emailUserC').val(), password: $('#passwordUserC').val(),
+                    position: $('#positionUserC').val(), telephone: $('#telephoneUserC').val(),
+                    departments: $('#departmentsUserC').val(), roles: $('#rolesUserC').val(),
+                }),
+               
+                success: function (data) {
+                    if (data.Result == "Success") {
+                      
+                        document.getElementById("loader").style.display = "none";
+                    } else {
+                        document.getElementById("loader").style.display = "none";
+                        alert(data.Result);
+                    }
+                }
+            });
+        })
+    }
+</script>

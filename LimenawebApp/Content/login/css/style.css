@@ -23264,8 +23264,10 @@ div.tagsinput {
   .auth.theme-two .banner-section .slide-content {
     width: 100%; }
     .auth.theme-two .banner-section .slide-content.bg-1 {
-      background: url("../../landingpage/images/10497-002-web-p-1080x721.jpeg");
-      background-size: cover; }
+        background: url("../../landingpage/images/10497-002-web-p-1080x721.jpeg");
+        background-size: cover;
+        background-position: center;
+    }
     .auth.theme-two .banner-section .slide-content.bg-2 {
       background: url("../images/auth/register_2.jpg") no-repeat center center;
       background-size: cover; }

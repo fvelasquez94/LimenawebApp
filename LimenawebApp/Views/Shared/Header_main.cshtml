@@ -49,65 +49,6 @@
             <!--header rightside links-->
             <ul class="navbar-nav header-links ml-auto hide-arrow">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle mr-lg-3" id="messagesDropdown" href="#" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">
-                        <i class="vl_chat-bubble"></i>
-                        <span class="d-lg-none">
-                            Messages
-                            <span class="badge badge-pill badge-primary">9 New</span>
-                        </span>
-                        <div class="notification-alarm">
-                            <span class="wave wave-danger"></span>
-                            <span class="dot"></span>
-                        </div>
-                    </a>
-                    <div class="dropdown-menu dropdown-menu-right header-right-dropdown-width pb-0" aria-labelledby="messagesDropdown">
-                        <h6 class="dropdown-header weight500 ">Messages</h6>
-                        <div class="dropdown-divider mb-0"></div>
-                        <a class="dropdown-item border-bottom msg-unread" href="#">
-                            <div class="float-left notificaton-thumb">
-                                <img class="rounded-circle" src="~/Content/appcontent/assets/img/avatar/avatar4.jpg" alt="" />
-                            </div>
-                            <span class="weight500">Andrew Flinton</span>
-                            <span class="small float-right text-muted">08:30 AM</span>
-                            <div class="dropdown-message">
-                                I hope that you will be there in time. See you then
-                            </div>
-                        </a>
-                        <a class="dropdown-item border-bottom msg-unread" href="#">
-                            <div class="float-left notificaton-thumb">
-                                <img class="rounded-circle" src="~/Content/appcontent/assets/img/avatar/avatar2.jpg" alt="" />
-                            </div>
-                            <span class="weight500">John Doe</span>
-                            <span class="small float-right text-muted">10:28 AM</span>
-                            <div class="dropdown-message">
-                                Hello this is an example message. Just want to show how it looks
-                            </div>
-                        </a>
-                        <a class="dropdown-item border-bottom" href="#">
-                            <div class="float-left notificaton-thumb">
-                                <img class="rounded-circle" src="~/Content/appcontent/assets/img/avatar/avatar3.jpg" alt="" />
-                            </div>
-                            <span class="weight500">Dash Don</span>
-                            <span class="small float-right text-muted">07:12 PM</span>
-                            <div class="dropdown-message">
-                                Hi, This is Dash Don form usa. I'm looking for someone who really good at design and frontend like mosaddek
-                            </div>
-                        </a>
-                        <a class="dropdown-item border-bottom" href="#">
-                            <div class="float-left notificaton-thumb">
-                                <img class="rounded-circle" src="~/Content/appcontent/assets/img/avatar/avatar1.jpg" alt="" />
-                            </div>
-                            <span class="weight500">dkmosa</span>
-                            <span class="small float-right text-muted">12:10 PM</span>
-                            <div class="dropdown-message">
-                                We build a beautiful dashboard admin panel for professional
-                            </div>
-                        </a>
-                        <a class="dropdown-item small" href="#">View all messages</a>
-                    </div>
-                </li>
-                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="alertsDropdown" href="#" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="vl_bell"></i>
@@ -115,47 +56,40 @@
                             Notification
                             <span class="badge badge-pill badge-warning">5 New</span>
                         </span>
-                        <div class="notification-alarm">
-                            <span class="wave wave-warning"></span>
-                            <span class="dot bg-warning"></span>
-                        </div>
+                        @if (ViewBag.lstAlerts.Count > 0)
+                        {
+                    <div class="notification-alarm">
+                        <span class="wave wave-warning"></span>
+                        <span class="dot bg-warning"></span>
+                    </div>
+                        }
                     </a>
                     <div class="dropdown-menu dropdown-menu-right header-right-dropdown-width pb-0" aria-labelledby="alertsDropdown">
                         <h6 class="dropdown-header weight500">Notification</h6>
                         <div class="dropdown-divider mb-0"></div>
+                        @if (ViewBag.lstAlerts.Count > 0)
+                        {
+                        foreach (var alerts in ViewBag.lstAlerts)
+                        {
+
                         <a class="dropdown-item border-bottom" href="#">
                             <span class="text-primary">
                                 <span class="weight500">
-                                    <i class="vl_bell weight600 pr-2"></i>Weekly Update
+                                    <i class="vl_bell weight600 pr-2"></i>@alerts.Title
                                 </span>
                             </span>
-                            <span class="small float-right text-muted">03:14 AM</span>
+                            <span class="small float-right text-muted">@Convert.ToDateTime(alerts.Date).ToShortDateString()</span>
                             <div class="dropdown-message f12">
-                                This week project update report generated. All team members are requested to check the updates
+                                @alerts.Description
                             </div>
                         </a>
-                        <a class="dropdown-item border-bottom" href="#">
-                            <span class="text-danger">
-                                <span class="weight500">
-                                    <i class="vl_Download-circle weight600 pr-2"></i>Server Error
-                                </span>
-                            </span>
-                            <span class="small float-right text-muted">10:34 AM</span>
-                            <div class="dropdown-message f12">
-                                Unexpectedly server response stop. Responsible members are requested to fix it soon
-                            </div>
-                        </a>
-                        <a class="dropdown-item border-bottom" href="#">
-                            <span class="text-success">
-                                <span class="weight500">
-                                    <i class="vl_screen weight600 pr-2"></i>Monthly Meeting
-                                </span>
-                            </span>
-                            <span class="small float-right text-muted">12:30 AM</span>
-                            <div class="dropdown-message f12">
-                                Our monthly meeting will be held on tomorrow sharp 12:30. All members are requested to attend this meeting.
-                            </div>
-                        </a>
+                        }
+                        }
+                        else {
+                            <label class="dropdown-item small">You don't have any notifications</label>
+                        }
+
+
                         <a class="dropdown-item small" href="#">View all notification</a>
                     </div>
                 </li>
@@ -163,14 +97,11 @@
                     <a class="nav-link dropdown-toggle mr-lg-3" id="userNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="user-thumb">
                             <img class="rounded-circle" src="~/Content/appcontent/assets/img/avatar/avatar1.jpg" alt="" />
-                            @Global_variables.active_user.Name @Global_variables.active_user.Lastname
+                            @ViewData["nameUser"]
                         </div>
                     </a>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userNav">
-                        <a class="dropdown-item" href="#">My Profile</a>
                         <a class="dropdown-item" href="#">Account Settings</a>
-                        <a class="dropdown-item" href="#">Inbox <span class="badge badge-primary">3</span></a>
-                        <a class="dropdown-item" href="#">Message <span class="badge badge-success">5</span></a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="@Url.Action("Log_out", "Home")">Sign Out</a>
                     </div>
@@ -189,21 +120,86 @@
     <div class="box-container">
         <div class="collapse navbar-collapse" id="navbarListResponsive">
             <!--header nav links-->
+
             <ul class="navbar-nav header-links">
-                <li class="nav-item dropdown" id="dep_menu" style="display:none">
-                    <a class="nav-link dropdown-toggle mr-lg-3" id="dashNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Departments
+                <li class="nav-item dropdown" id="home_menu" style="display:none">
+                    <a class="nav-link mr-lg-3" id="dashNav" href="@Url.Action("Dashboard_sales", "Main")" aria-haspopup="true" aria-expanded="false">
+                        Home
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="dashNav">
-                        <a id="sales_submenu" class="dropdown-item" href="@Url.Action("Dashboard_sales", "Main")">Sales</a>
+                </li>
+                <li class="nav-item dropdown" id="marketing_menu" style="display:none">
+                    <a class="nav-link dropdown-toggle mr-lg-3" id="markNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Commercial
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="markNav">
+                        <a id="markact_submenu" class="dropdown-item" href="@Url.Action("Marketing_activities", "Commercial")">Marketing Activities</a>
+                        @*<a id="markact_submenu" class="dropdown-item" href="#">Marketing Activities</a>*@
+                        <a id="routes_submenu" class="dropdown-item" href="@Url.Action("Routes", "Commercial")">Routes</a>
+                        @*<a id="routes_submenu" class="dropdown-item" href="#">Routes</a>*@
+                        <a id="drop1" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu">Reports</a>
+                        <ul class="collapse" id="multi_menu" data-parent="#accordion">
+                            <li>
+                                <a href="@Url.Action("Reports_RC", "Reports")" id="rep1_submenu" class="dropdown-item">Daily Routes Summary</a>
+                            </li>
+                        </ul>
+                        <a id="drop2" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu2">Sales Support</a>
+                        <ul class="collapse" id="multi_menu2" data-parent="#accordion">
+                            <li>
+                                <a href="#" class="dropdown-item">Credits Authorize</a>
+                            </li>
+                            <li>
+                                <a href="#" class="dropdown-item">Prices Request</a>
+                            </li>
+
+                        </ul>
                     </div>
                 </li>
+                <li class="nav-item dropdown" id="accr_menu" style="display:none">
+                    <a class="nav-link dropdown-toggle mr-lg-3" id="accNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Accounts Receivable
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="accNav">
+                        <a id="accorep_submenu" class="dropdown-item" href="#">Reports</a>
+
+                    </div>
+                </li>
+                <li class="nav-item dropdown" id="dsd_menu" style="display:none">
+                    <a class="nav-link dropdown-toggle mr-lg-3" id="dsdNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        DSD
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="dsdNav">
+                        <a id="dsdnew_submenu" class="dropdown-item" href="@Url.Action("InventoryTR", "DSD")">Inventory Transfer Request</a>
+                        <a id="dsdnew_submenu" class="dropdown-item" href="@Url.Action("New_Customer", "DSD")">New Customer</a>
+
+                        <a id="dsdneword_submenu" href="@Url.Action("DSD", "Commercial")" class="dropdown-item">Orders</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown" id="oper_menu" style="display:none">
+                    <a class="nav-link dropdown-toggle mr-lg-3" id="oper_nav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Operations
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="oper_nav">
+
+                       
+                        <a id="operrep_submenu" class="dropdown-item" href="#">Reports</a>
+
+                    </div>
+                </li>
+                @*<li class="nav-item dropdown" id="reports_menu" style="display:none">
+            <a class="nav-link dropdown-toggle mr-lg-3" id="rep1Nav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Reports
+            </a>
+            <div class="dropdown-menu" aria-labelledby="orderNav">
+                <a id="rep1_submenu" class="dropdown-item" href="@Url.Action("Reports_RC", "Reports")">Daily Routes Summary</a>
+            </div>
+        </li>*@
                 <li class="nav-item dropdown" id="manag_menu" style="display:none">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="orderNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Management
                     </a>
                     <div class="dropdown-menu" aria-labelledby="orderNav">
-                        <a id="users_submenu" class="dropdown-item" href="@Url.Action("Users", "Main")">Users</a>
+                        <a id="users_submenu" class="dropdown-item" href="@Url.Action("Users", "Management")">Users</a>
+
                     </div>
                 </li>
             </ul>

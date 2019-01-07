@@ -1,0 +1,455 @@
+﻿
+@{
+    ViewBag.Title = "Distribuidora Limeña - DSD Order";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            <!--sales statistical overview-->
+
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">New Sales Order</div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="stepy-tab">
+                                <ul id="default-titles" class="stepy-titles">
+                                    <li id="default-title-0" class="current-step">
+                                        <div>Customer</div>
+                                    </li>
+                                    <li id="default-title-1" class="">
+                                        <div>Details</div>
+                                    </li>
+                                    <li id="default-title-2" class="">
+                                        <div>Check</div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="" id="default">
+                                <fieldset title="Customer" class="step" id="default-step-0">
+                                    <legend> </legend>
+
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm">Customer *</label>
+                                        <div class="col-sm-6">
+                                            <select name="ID_customer" id="ID_customer" class="form-control" style="width:100%;">
+                                                <option value="0">Select a customer</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+
+                                </fieldset>
+                                <fieldset title="Details" class="step" id="default-step-1">
+                                    <legend> </legend>
+                                    <div class="row">
+                                        <div class="col-xl-6 col-md-6">
+                                            <div class="card card-shadow mb-4">
+                                                <div class="card-header border-0">
+                                                    <div class="custom-title-wrap bar-turquoise">
+                                                        <div class="custom-title">
+                                                            Products
+                                                        </div>
+                                                        <div class="custom-post-title">
+                                                            <div class=" mt-2">
+
+                                                                @foreach (var itemc in ViewBag.lstCategories)
+        {
+                                                        <button id="btn_@itemc" type="button" class="btn btn-outline-warning form-pill btnsl" onclick="filter('@itemc')">@itemc</button>
+}
+                                                                <button type="button" class="btn btn-outline-warning form-pill" onclick="filter_clear()">Clear filters</button>
+
+                                                            </div><hr />
+                                                                  <div id="mainsub">
+                                                                      <button  type="button" class="btn btn-light form-pill" onclick="subfilter_clear()">Clear Sub filters</button>
+                                                                      @foreach (var itemc in ViewBag.lstCategories)
+    {
+                                                                  <div class="mt-2" id="@itemc">
+                                                                      @foreach (var itemsc in ViewBag.lstsubCategories)
+    {
+        if (itemsc.category == itemc)
+        {
+                                                                      <button id="subbtn_@itemsc.id" type="button" class="btn btn-light form-pill subbtnsl" onclick="subfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+}
+                                                                  </div>}
+
+                                                                  </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body pt-5 pb-4">
+                                                    <div class="tab-content" id="pills-tabContent2">
+                                                        <div class="card-body p-0">
+                                                            <div class="table-responsive">
+                                                                <table id="data_table" class="table table-hover table-custom" cellspacing="0">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th scope="col" hidden>ID</th>
+                                                                            <th scope="col">PRODUCT</th>
+                                                                            <th scope="col">ACTIONS</th>
+                                                                            <th scope="col">PRICE</th>
+                                                                            <th scope="col">SRP</th>
+                                                                            <th scope="col">SUBCATEGORY</th>
+                                                                            <th scope="col">CATEGORY</th>
+
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tfoot>
+                                                                    </tfoot>
+                                                                    <tbody id="tbodyid">
+                                                                        @foreach (var item in ViewBag.lstProducts)
+                                            {
+                                                                        <tr id="tr_@item.id">
+                                                                            <td hidden>@item.id</td>
+                                                                            <td>@item.Product</td>
+                                                                            <td><button id="btntd_@item.id" type="button" data-toggle="modal" data-target="#addProductModal" data-ID="@item.id" data-description="@item.Product" data-price="@item.price" data-srp="@item.srp" data-upc="@item.upc" class="btn btn-sm bt-outline-dark">Add</button></td>
+                                                                            <td>@String.Format("{0:C}", item.price)</td>
+                                                                            <td>@String.Format("{0:C}", item.srp)</td>
+                                                                            <td>@Convert.ToString(item.subcategory).Replace("'", "")</td>
+                                                                            <td>@item.category</td>
+
+                                                                        </tr>
+                }
+
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-xl-6 col-md-6">
+                                            <div class="card card-shadow mb-4">
+                                                <div class="card-header border-0">
+                                                    <div class="custom-title-wrap bar-warning">
+                                                        <div class="custom-title">
+
+                                                        </div>
+                                                        <div class="custom-post-title"></div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body pt-5 pb-4">
+                                                    <div class="tab-content" id="pills-tabContent2">
+                                                        <div class="card-body p-0">
+                                                            <ul class="list-unstyled mb-0 list-widget" id="finalproducts"></ul>
+                                                            <div class=" float-right">
+                                                                <strong id="total"></strong><br /><br />
+                                                                <button id="btnpreprint" class="btn btn-outline-info"><i class="fa fa-print"></i>PRINT</button>
+                                                                <a href="@Url.Action("Pre_Print_OrderDSD", "DSD", new { id = "1" })" id="preprintbtn" hidden target="_blank">print</a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                     
+                                    </div>
+
+                                </fieldset>
+                                <fieldset title="Payment" class="step" id="default-step-2">
+                                    <legend> </legend>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm">Payment Type *</label>
+                                        <div class="col-sm-6">
+                                            <select name="ID_payment" id="ID_payment" class="form-control" style="width:100%">
+                                                <option value="0">Select a payment type</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm">Company </label>
+                                        <div class="col-sm-6">
+                                            <input id="doc_numberComp" name="doc_numberComp" type="text" class="required form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm">Payment Number </label>
+                                        <div class="col-sm-6">
+                                            <input id="doc_number" name="doc_number" type="text" class="required form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm">Comment </label>
+                                        <div class="col-sm-6">
+                                            <input id="comment" name="comment" type="text" class="required form-control">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label col-form-label-sm">Sign </label>
+                                        <div class="col-sm-6">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <canvas id="sig-canvas" style="width:260px !important;" class="canvas_1" data-id="dd" ontouchmove="event.preventDefault();">
+                                                        Get a better browser, bro.
+                                                    </canvas>
+
+                                                    <div class="row">
+                                                        <div class="col-md-12 text-center">
+                                                            <button class="btn btn-primary" id="sig-submitBtn" hidden>Submit Signature</button>
+                                                            <a href="#" class="btn btn-default" id="sig-clearBtn" onclick="return false">Clear</a>
+                                                        </div>
+                                                    </div>
+
+
+
+
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </fieldset>
+                                <input type="button" id="btnfinish" class="finish btn btn-danger" value="Finish" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--/member performance & support ticket-->
+                <!--issue fixing & profile info-->
+                <!--/issue fixing & profile info-->
+                <!--employee data table-->
+                <!--/employee data table-->
+                <!--notification & regional sales-->
+                <!--/notification & regional sales-->
+            </div>
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-success">
+                                <div class="custom-title">
+                                    Orders List
+                                    <a href="#" onclick="PrintResume()" class="btn btn-primary float-right ml-2">
+                                        <i class="fa fa-print"></i>
+                                    </a>
+
+
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group row col-xl-4">
+                            <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Date</label>
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                                <i class="mdi mdi-calendar"></i>&nbsp;
+                                <span></span> <i class="fa fa-caret-down"></i>
+                            </div>
+
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_table2" class="table table-hover table-custom" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">CUSTOMER</th>
+                                            <th scope="col">PAYMENT TYPE</th>
+                                            <th scope="col">PAYMENT NUMBER</th>
+                                            <th scope="col">COMPANY</th>
+                                            <th scope="col">DATE</th>
+                                            <th scope="col">TOTAL</th>
+                                            <th scope="col">ACTIONS</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var itemO in ViewBag.lstOrders)
+                    {
+                        <tr>
+                            <td>@itemO.ID_OrderDSD</td>
+                            <td>@itemO.CustomerName</td>
+                            <td>@itemO.Payment</td>
+                            <td>@itemO.Doc_numP</td>
+                            <td>@itemO.Doc_numCompany</td>
+                            <td>@Convert.ToDateTime(itemO.Date).ToShortDateString()</td>
+                            <td>$ @itemO.Comment</td>
+                            <td><a href="@Url.Action("Print_OrderDSD", "DSD", new { id = itemO.ID_OrderDSD})" target="_blank" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-print mr-2"></i>Print</a></td>
+                        </tr>
+}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+
+<!--/main content wrapper-->
+
+
+<div class="modal fade bd-example-modal-sm" id="addProductModal" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySmallModalLabel">Add product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="IDProd" name="IDProd" hidden />
+                <input id="upc" name="upc" hidden />
+                <input id="price" name="price" hidden />
+                <input id="srp" name="srp" hidden />
+                <p id="descriptionD" name="descriptionD"></p>
+                <input class="form-control" type="number" id="units" min="-100" value="0" />
+                <div id="selectr" style="display:none;">
+                    <select name="returnReason" id="returnReason" style=" width:100%" class="form-control">
+                        <option value="0">Select a return reason</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+           
+                <button type="button" class="btn btn-primary" onclick="addproduct()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.onload = function (e) {
+     
+        var flag = 0;
+        //CUSTOMERS
+        var dataCustomers = @Html.Raw(ViewBag.lstCustomers);
+
+        $('#ID_customer').select2({
+            placeholder: "Select a Customer",
+            data: dataCustomers
+        });
+
+
+                //Formas de pago
+        var dataFormasPago = @Html.Raw(ViewBag.lstFormasPago);
+
+        $('#ID_payment').select2({
+            placeholder: "Select a payment method",
+            data: dataFormasPago
+        });
+                        //Returns Reasons
+        var dataReturns = @Html.Raw(ViewBag.lstReturnsR);
+
+        $('#returnReason').select2({
+            placeholder: "Select a return reason",
+            data: dataReturns
+        });
+
+
+        $("#units").InputSpinner();
+
+        $("#mainsub > *").css('display', 'none')
+
+
+        $('.btnsl').on('click', function () {
+            $('.btnsl').removeClass('btnsel');
+            $(this).addClass('btnsel');
+        });
+
+        $('.subbtnsl').on('click', function () {
+            $('.subbtnsl').removeClass('btnsubsel');
+            $(this).addClass('btnsubsel');
+        });
+
+                //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+           
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = '@Url.Action("DSD", "Commercial", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+     
+            window.location.href = newurl;
+        };
+
+
+
+    }
+</script>
+<script>
+            function PrintResume() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = '@Url.Action("PrintResume", "DSD", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+            
+            window.location.href = newurl;
+        };
+</script>
+
