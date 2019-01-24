@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44350</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -161,6 +161,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DSDController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\CommercialController.cs" />
@@ -182,6 +183,18 @@
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\BI_Dim_Products.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C_DRIVERS.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C_DROUTE.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C_HELPERS.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C_TRUCKS.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\dbComercia.Context.cs">
@@ -247,6 +260,12 @@
     <Compile Include="Models\OCRD.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OpenSalesOrders.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OpenSalesOrders_Details.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Reports.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -286,6 +305,15 @@
     <Compile Include="Models\Tb_OrdersDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_Planning.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_PlanningSO.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_PlanningSO_details.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_PreOrdersDetailsDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
@@ -298,6 +326,9 @@
     <Compile Include="Models\UFD1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\View_dsd_suggestedinventory.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\VisitsM.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
@@ -305,6 +336,12 @@
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\Inventory_DSD.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Inventory_DSD.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Order_DSD.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -322,6 +359,8 @@
     <Content Include="Content\appcontent\assets\css\floatingboxsettings.css" />
     <Content Include="Content\appcontent\assets\css\main.css" />
     <Content Include="Content\appcontent\assets\css\main.min.css" />
+    <Content Include="Content\appcontent\assets\css\multi.css" />
+    <Content Include="Content\appcontent\assets\css\sweetalert.css" />
     <Content Include="Content\appcontent\assets\js\signature_forFB.js" />
     <Content Include="Content\appcontent\assets\dev\js\scripts.js" />
     <Content Include="Content\appcontent\assets\img\404.svg" />
@@ -711,10 +750,10 @@
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\Read Me.txt" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\dataTables.bootstrap4.min.css" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\dataTables.bootstrap4.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\data-tables\dataTables.editor.min.js" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\data\arrays.txt" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\data\row-details.txt" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\ids-objects.php" />
-    <Content Include="Content\appcontent\assets\vendor\data-tables\jquery.dataTables.min.css" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\jquery.dataTables.min.js" />
     <Content Include="Content\appcontent\assets\vendor\date-picker\css\bootstrap-datepicker.css" />
     <Content Include="Content\appcontent\assets\vendor\date-picker\css\bootstrap-datepicker.min.css" />
@@ -855,6 +894,14 @@
     <Content Include="Content\appcontent\assets\vendor\dropzone\dropzone.min.css" />
     <Content Include="Content\appcontent\assets\vendor\dropzone\dropzone.min.js" />
     <Content Include="Content\appcontent\assets\vendor\echarts\echarts-all-3.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid.css" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid_charts.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid_charts_ofc.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid_editors.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid_renderers.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid_utils.js" />
+    <Content Include="Content\appcontent\assets\vendor\Editor_tables\editablegrid_validators.js" />
     <Content Include="Content\appcontent\assets\vendor\flot\jquery.flot.min.js" />
     <Content Include="Content\appcontent\assets\vendor\flot\jquery.flot.pie.min.js" />
     <Content Include="Content\appcontent\assets\vendor\flot\jquery.flot.tooltip.min.js" />
@@ -1079,6 +1126,7 @@
     <Content Include="Content\appcontent\assets\vendor\js-init\amcharts\init-candle-stick.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\amcharts\init-d-value-axis.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\amcharts\init-line-chart.js" />
+    <Content Include="Content\appcontent\assets\vendor\js-init\bootstrap-number-input.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\c3chart\init-c3chart.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\chartjs\init-area-chart.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\chartjs\init-bubble-chart.js" />
@@ -1108,10 +1156,13 @@
     <Content Include="Content\appcontent\assets\vendor\js-init\init-summernote.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-toastr.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\init-todo-list.js" />
+    <Content Include="Content\appcontent\assets\vendor\js-init\jquery.sortable.js" />
+    <Content Include="Content\appcontent\assets\vendor\js-init\multi.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\pickers\init-color-picker.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\pickers\init-date-picker.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\pickers\init-datetime-picker.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\sparkline\init-sparkline.js" />
+    <Content Include="Content\appcontent\assets\vendor\js-init\sweetalert.min.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\vmap\init-vmap-usa.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\vmap\init-vmap-world.js" />
     <Content Include="Content\appcontent\assets\vendor\jstree\jstree.js" />
@@ -1938,7 +1989,9 @@
       <DependentUpon>DLI_PRO.edmx</DependentUpon>
       <LastGenOutput>DLI_PRO.cs</LastGenOutput>
     </Content>
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -1981,6 +2034,11 @@
     <Content Include="Views\DSD\New_Customer.cshtml" />
     <Content Include="Views\DSD\InventoryTR.cshtml" />
     <Content Include="Views\Shared\Routes_calendarScript.cshtml" />
+    <Content Include="Views\Invoices\Planning.cshtml" />
+    <Content Include="Views\Shared\Planning_calendarScript.cshtml" />
+    <Content Include="Views\Invoices\QualityControl.cshtml" />
+    <Content Include="Views\Shared\QualityControl_Script.cshtml" />
+    <Content Include="Views\Invoices\QualityControl_planning.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -2004,6 +2062,10 @@
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\Inventory_DSD.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Inventory_DSD.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Order_DSD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Order_DSD.cs</LastGenOutput>
@@ -2031,7 +2093,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49387</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49387/</IISUrl>
+          <IISUrl>https://localhost:44350/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

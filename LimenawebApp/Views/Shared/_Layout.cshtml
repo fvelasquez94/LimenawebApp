@@ -12,16 +12,80 @@
     {
         @Html.Partial("~/Views/Shared/Style_main.cshtml")
     }
+    @if (ViewBag.Title == "Distribuidora Limeña - Quality Control")
+    {
+        <style>
+
+
+            .tableEdit thead {
+                background-color: rgb(253, 199, 69);
+                background: -webkit-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+                background: -o-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+                background: -ms-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+                background: -moz-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+                background: linear-gradient(to bottom, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+            }
+
+            .tableEdit tbody td > span {
+                display: block;
+                padding-top: 1px;
+                padding-bottom: 1px;
+                padding-left: 1px;
+            }
+
+            .tableEdit tbody td > span {
+                margin: 3px 5px;
+            }
+
+            .table-condensed > thead > tr > th {
+                padding-left: 10px;
+            }
+
+            .input-sm, select.input-sm {
+                height: 25px;
+                padding: 3px 5px;
+            }
+
+            select.input-sm {
+                padding: 3px 1px;
+            }
+        </style>
+
+    }
     <style>
         .btnsel {
             background-color: #fab63f !important;
             color: black;
         }
 
+        .btnselSuccess {
+            background-color: #3dba6f !important;
+            color: white;
+        }
+
         .btnsubsel {
             background-color: #ddd !important;
             color: black;
         }
+
+
+
+        #sortable1, #sortable2 {
+            border: 1px solid #eee;
+            width: 100%;
+            min-height: 50%;
+            list-style-type: none;
+            margin: 0;
+            padding: 5px 0 0 0;
+            float: left;
+            margin-right: 10px;
+        }
+
+            #sortable1 li, #sortable2 li {
+                margin: 0 5px 5px 5px;
+                padding: 5px;
+                width: 100%;
+            }
     </style>
 </head>
 <body class="fixed-nav top-nav">
@@ -83,6 +147,12 @@ else
         $(document.body).find('#multi_menu2').stop(true, true).delay(100).fadeIn(500);
     }, function () {
         $(document.body).find('#multi_menu2').stop(true, true).delay(6600).fadeOut(500);
+        });
+
+    $('#drop3').hover(function () {
+        $(document.body).find('#multi_menu3').stop(true, true).delay(100).fadeIn(500);
+    }, function () {
+        $(document.body).find('#multi_menu3').stop(true, true).delay(6600).fadeOut(500);
     });
 </script>
 
@@ -596,6 +666,80 @@ else
                     document.getElementById("loader").style.display = "block";
                     document.getElementById("selectr").style.display = "none";
                     var newproduct = "";
+                    newproduct += '<li id="li_' + productId + '" data-pid="' + productId + '">';
+                    newproduct += '<div class="media mb-4">';
+                    newproduct += '<div class="media-body list-widget-border">';
+                    newproduct += '<div class="float-left">';
+                    if (returnReason == "0") {
+                        returnReasonName = "";
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    } else {
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    }
+
+                    newproduct += '</div>';
+                    newproduct += '<div class=" float-right">';
+                    newproduct += '<strong>' + Units + '</strong>&nbsp;&nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-trash itemDelete"></i></a>&nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-edit itemEdit"></i></a>';
+                    newproduct += '</div></div></div></li>';
+                    $("#finalproducts").append(newproduct);
+                    $("#units").val("1");
+
+
+                    //Agregamos producto
+                    list.push({ id: productId, text: productName, units: Units, returnReasonID: '', returnReasonName: '', Price: 0, UPC: upc, SRP: 0, total: 0 });
+                    $("#listp").val(list);
+                    total += (+Units);
+                    $("#total").text("Total Units: " + total);
+                    //
+                    $('#addProductModal').modal('hide');
+
+                    document.getElementById("loader").style.display = "none";
+                    var idtr = "tr_" + productId;
+                    document.getElementById(idtr).style.color = "#ddd";
+
+                    var btnidtr = "btntd_" + productId;
+                    document.getElementById(btnidtr).style.display = "none";
+                }
+            }
+        };
+        function editproduct() {
+
+            var productId = $("#IDProdEdit").val();
+            var productName = $("#descriptionDEdit").text();
+            var $inputLoop = $("#unitsEdit");
+            var Units = $inputLoop.val();
+
+            var upc = $("#upcEdit").val();
+            var pid = $("#IDProdEdit").val();
+
+            elementId = 'li_' + pid;
+            var element = document.getElementById(elementId);
+
+            element.parentNode.removeChild(element);
+
+
+
+            list = list.filter(function (el) {
+
+                return el.id != pid;
+            });
+
+            var length = list.length;
+            total = 0.0;
+            for (var i = 0; i < length; i++) {
+                // Do something with yourArray[i].
+
+                total += round((+list[i].units), 2);
+            }
+
+            if (Units == 0) { toastr.warning("Only values greater than zero.", "Warning"); } else {
+
+
+                    document.getElementById("loader").style.display = "block";
+                    document.getElementById("selectr").style.display = "none";
+                    var newproduct = "";
                     newproduct += '<li data-pid="' + productId + '">';
                     newproduct += '<div class="media mb-4">';
                     newproduct += '<div class="media-body list-widget-border">';
@@ -623,17 +767,84 @@ else
                     total += (+Units);
                     $("#total").text("Total Units: " + total);
                     //
-                    $('#addProductModal').modal('hide');
-
+                    $('#editProductModal').modal('hide');
+                try {
                     document.getElementById("loader").style.display = "none";
                     var idtr = "tr_" + productId;
                     document.getElementById(idtr).style.color = "#ddd";
 
                     var btnidtr = "btntd_" + productId;
                     document.getElementById(btnidtr).style.display = "none";
-                }
+                } catch{ }
+
+
+
             }
-        };
+        }
+
+        function loadS() {
+         var json = JSON.parse('@Html.Raw(ViewBag.suggested)')
+            document.getElementById("loader").style.display = "block";
+        $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+
+            var productId = obj.ItemCode;
+            var productName = obj.ItemName;
+
+            var Units = obj.Request;
+
+            var upc = obj.CodeBars;
+
+                var x = list.filter(x => x.id === productId);
+
+                if (x.length > 0) {
+                    toastr.warning("This product already exist", "Warning");
+                    //$("#units").val("0");
+                }
+
+                else {
+
+
+
+
+                    var newproduct = "";
+                    newproduct += '<li id="li_' + productId + '" data-pid="' + productId + '">';
+                    newproduct += '<div class="media mb-4">';
+                    newproduct += '<div class="media-body list-widget-border">';
+                    newproduct += '<div class="float-left">';
+                    if (returnReason == "0") {
+                        returnReasonName = "";
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    } else {
+                        newproduct += '<h6 class="text-uppercase mb-0">' + productName + '</h6><span class="text-muted">' + upc + '</span>';
+                    }
+
+                    newproduct += '</div>';
+                    newproduct += '<div class=" float-right">';
+                    newproduct += '<strong>' + Units + '</strong>&nbsp;&nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-trash itemDelete"></i></a>&nbsp;&nbsp;';
+                    newproduct += '<a><i class="fa fa-edit itemEdit"></i></a>';
+                    newproduct += '</div></div></div></li>';
+                    $("#finalproducts").append(newproduct);
+                    //$("#units").val("0");
+
+
+                    //Agregamos producto
+                    list.push({ id: productId, text: productName, units: Units, returnReasonID: '', returnReasonName: '', Price: 0, UPC: upc, SRP: 0, total: 0 });
+                    $("#listp").val(list);
+                    total += (+Units);
+                    $("#total").text("Total Units: " + total);
+                    //
+
+
+                }
+
+
+        });
+            document.getElementById("loader").style.display = "none";
+
+        }
 
         $('#finalproducts').on('click', '.itemDelete', function () {
             var pid = $(this).closest('li').data("pid");
@@ -651,13 +862,19 @@ else
 
                 total += round((+list[i].units), 2);
             }
-            var idtr = "tr_" + pid;
-            document.getElementById(idtr).style.color = "#6a7f9a";
+
             $("#total").text("Total Units: " + total);
+            try {
+
+                var idtr = "tr_" + pid;
+                document.getElementById(idtr).style.color = "#6a7f9a";
 
 
-            var btnidtr = "btntd_" + pid;
-            document.getElementById(btnidtr).style.display = "block";
+
+                var btnidtr = "btntd_" + pid;
+                document.getElementById(btnidtr).style.display = "block";
+            } catch{ }
+
 
         });
 
@@ -670,8 +887,9 @@ else
             });
             $("#IDProdEdit").val(editp[0].id);
             $("#descriptionDEdit").text(editp[0].text);
+            $("#upcEdit").val(editp[0].UPC);
             $('#editProductModal').modal('show');
-       
+            $("#unitsEdit").val(editp[0].units);
         });
         function round(value, exp) {
             if (typeof exp === 'undefined' || +exp === 0)
@@ -751,7 +969,7 @@ else
 {
     @Html.Partial("~/Views/Shared/Routes_calendarScript.cshtml")
 
-<script>
+    <script>
 
     $(document).ready(function () {
         var json = JSON.parse('@Html.Raw(ViewBag.usuarios)')
@@ -785,5 +1003,388 @@ else
         });
 
     });
-</script>
+    </script>
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Marketing activities")
+{
+    <script>
+        //CHECK IN
+        function checkinVisit() {
+
+            swal({
+                title: "Check in",
+                text: "Are you sure you want to check in to the store?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                confirmButtonText: 'Check in'
+
+            });
+        }
+
+
+        //CHECK OUT
+        function checkoutVisit() {
+            swal({
+                title: "Check out",
+                text: "Are you sure you want to check out to the store?",
+                showCancelButton: true,
+                confirmButtonColor: '#fe413b',
+                confirmButtonText: 'Check out'
+
+            });
+        }
+    </script>
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Planning")
+{
+    @Html.Partial("~/Views/Shared/Planning_calendarScript.cshtml")
+    <script>
+        function filterByCode() {
+            var input, filter, ul, li, a, i, txtValue;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("div")[1];
+                txtValue = a.textContent || a.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+        function myFunction() {
+            var input, filter, ul, li, a, i, txtValue;
+
+            filter = $("#officeFltr option:selected").text();
+
+            if (filter == "SELECT ALL ROUTES...") {
+                ul = document.getElementById("sortable1");
+                li = ul.getElementsByTagName("li");
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("small")[0];
+
+                    txtValue = a.textContent || a.innerText;
+
+
+                    li[i].style.display = "";
+
+                }
+            } else {
+                ul = document.getElementById("sortable1");
+                li = ul.getElementsByTagName("li");
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("small")[0];
+
+                    txtValue = a.textContent || a.innerText;
+                    txtValue = "Route: " + txtValue;
+                    if (txtValue.indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }
+            }
+
+        }
+
+        function myFunction2() {
+            var input, filter, ul, li, a, i, txtValue;
+
+            filter = $("#officeFltr2 option:selected").text();
+
+            if (filter == "SELECT ALL REPS...") {
+                ul = document.getElementById("sortable1");
+                li = ul.getElementsByTagName("li");
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("small")[1];
+
+                    txtValue = a.textContent || a.innerText;
+
+
+                    li[i].style.display = "";
+
+                }
+            } else {
+                ul = document.getElementById("sortable1");
+                li = ul.getElementsByTagName("li");
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("small")[1];
+
+                    txtValue = a.textContent || a.innerText;
+                    txtValue = "Sales Rep: " + txtValue;
+                    if (txtValue.indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }
+            }
+
+        }
+
+        function myFunction3() {
+            var input, filter, ul, li, a, i, txtValue;
+
+            filter = $("#officeFltr3 option:selected").text();
+
+            if (filter == "SELECT ALL CUSTOMERS...") {
+                ul = document.getElementById("sortable1");
+                li = ul.getElementsByTagName("li");
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("label")[0];
+
+                    txtValue = a.textContent || a.innerText;
+
+
+                    li[i].style.display = "";
+
+                }
+            } else {
+                ul = document.getElementById("sortable1");
+                li = ul.getElementsByTagName("li");
+                for (i = 0; i < li.length; i++) {
+                    a = li[i].getElementsByTagName("label")[0];
+
+                    txtValue = a.textContent || a.innerText;
+                    txtValue = ": " + txtValue;
+                    if (txtValue.indexOf(filter) > -1) {
+                        li[i].style.display = "";
+                    } else {
+                        li[i].style.display = "none";
+                    }
+                }
+            }
+
+        }
+
+        $('#pills-AZ').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer").text();
+                    var s2 = $(a).find("label.pillCustomer").text();
+
+                    
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+             
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-ZA').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer").text();
+                    var s2 = $(a).find("label.pillCustomer").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-Date').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    return (new Date($(a).find("small.pilldate").text()) > new Date($(b).find("small.pilldate").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-DateUp').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    //return $(b).find("small.pilldate").text().toUpperCase().localeCompare($(a).find("small.pilldate").text().toUpperCase());
+                    return (new Date($(a).find("small.pilldate").text()) < new Date($(b).find("small.pilldate").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-Price').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount").text()) > parseFloat($(b).find("small.pillAmount").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-PriceUp').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount").text()) < parseFloat($(b).find("small.pillAmount").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+    </script>
+
+    <script>
+
+    $(document).ready(function () {
+        var json = JSON.parse('@Html.Raw(ViewBag.drivers)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#lstDriver").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+        json = JSON.parse('@Html.Raw(ViewBag.routeleaders)')
+
+        data = $.map(json, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        $("#lstRLeader").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+        json = JSON.parse('@Html.Raw(ViewBag.trucks)')
+        data = $.map(json, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        $("#lstTruck").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        json = JSON.parse('@Html.Raw(ViewBag.mainroutes)')
+        data = $.map(json, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        $("#lstMaster").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+    });
+    </script>
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Quality Control")
+{
+    @Html.Partial("~/Views/Shared/QualityControl_Script.cshtml")
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Quality Control planning")
+{
+    <script>
+
+        function closeRoute(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to invoice this route?',
+                text: "You won't be able to revert this",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/closeRoute',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Route closed!',
+                                    'The Route has been deleted.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+    </script>
 }

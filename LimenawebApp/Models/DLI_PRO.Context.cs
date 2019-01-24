@@ -31,5 +31,12 @@ namespace LimenawebApp.Models
         public virtual DbSet<BI_Dim_Products> BI_Dim_Products { get; set; }
         public virtual DbSet<ITM1> ITM1 { get; set; }
         public virtual DbSet<Dsd_Products> Dsd_Products { get; set; }
+        public virtual DbSet<View_dsd_suggestedinventory> View_dsd_suggestedinventory { get; set; }
+        public virtual DbSet<OpenSalesOrders> OpenSalesOrders { get; set; }
+        public virtual DbSet<C_DROUTE> C_DROUTE { get; set; }
+        public virtual DbSet<C_HELPERS> C_HELPERS { get; set; }
+        public virtual DbSet<C_TRUCKS> C_TRUCKS { get; set; }
+        public virtual DbSet<C_DRIVERS> C_DRIVERS { get; set; }
+        public virtual DbSet<OpenSalesOrders_Details> OpenSalesOrders_Details { get; set; }
     }
 }

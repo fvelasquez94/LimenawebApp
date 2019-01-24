@@ -81,7 +81,15 @@
 
                                                 <div class="mb-2">
                                                     <a id="getdirections" href="#" class="btn btn-sm btn-pill btn-primary pl-4 pr-4"><i class="fa fa-map-o"></i> Get directions</a>
-                                                    <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
+                                                    @if (ViewBag.isAdmin == 1)
+                                                    {
+                                                        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a href="#" onclick="checkinVisit()" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-user-times"></i> Check in</a>
+                                                        <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
@@ -168,7 +176,7 @@
         <div class="modal-content">
             <form>
                 <div class="modal-header">
-                    <h6 class="modal-title" id="exampleModalLabel-4"><i class="fa fa-cloud"></i> ADD NEW ACTIVITY</h6>
+                    <h6 class="modal-title" id="exampleModalLabel-4"><i class="fa fa-file"></i> ADD NEW ACTIVITY</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span style="font-size: 40px" aria-hidden="true">&times;</span>
                     </button>
@@ -274,7 +282,39 @@
 </div>
 
 <!--DELETE DATA ENDS-->
+<!--COPY DATA STARTS-->
+<div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("copyActivity", "VisitsMs", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-delete"></i>Copy activity</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
 
+                    <div class="form-group">
+                        <label class="col-form-label">Are you sure you want to copy this activity?</label>
+                        <strong><label id="descriptionCopy" class="col-form-label"></label></strong>
+                        <input type="text" id="ID_activityCopy" name="ID_activityCopy" value="" hidden />
+                        <input type="text" id="ID_visitCopy" name="ID_visitCopy" value="" hidden />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" onClick="this.form.submit(); this.disabled=true; this.value='Copying…'; ">Copy</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--COPY DATA ENDS-->
 
 <script type="text/javascript">
     window.onload = function (e) {
@@ -459,7 +499,8 @@
                         $("#getdirections").attr("href", "https://www.google.com/maps/place/" + result.resultV[0].storeAddress);
                         $("#getdirections").attr('target', '_blank');
                         var obj = JSON.parse(result.resultAct);
-
+                        var flag = @Html.Raw(ViewBag.isAdmin);
+                        console.log(flag);
                         var ftot = 0;
                         var fcom = 0;
                         var fpor = 0.0;
@@ -496,40 +537,48 @@
                                         tr += "<td>" + '<span class="badge badge-warning form-pill px-3 py-1">Not finished</span>' + "</td>";
                                         tr += '<td><a  href="' + url + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>'
                                     }
-                                    tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#deleteModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Delete</button></td></tr > ';
+                                    tr += '<button class="btn btn-outline-warning btn-sm form-pill" data-toggle="modal" data-target="#copyModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-copy mr-2"></i>Copy</button>'
+                                    if (flag == 1)
+                                        {
+
+                                            tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#deleteModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Delete</button>'
+
+                                    }
+
+                                        tr += '</td ></tr > ';
 
                                     $("#data_table").append(tr);
 
-                                    if (obj[i]["ID_activitytype"] == 1) {
-                                        ftot++;
+                                        if (obj[i]["ID_activitytype"] == 1) {
+                                            ftot++;
 
-                                        if (obj[i]["isfinished"] == true) {
-                                            fcom++;
+                                            if (obj[i]["isfinished"] == true) {
+                                                fcom++;
+                                            }
                                         }
-                                    }
-                                    if (obj[i]["ID_activitytype"] == 2) {
-                                        atot++;
+                                        if (obj[i]["ID_activitytype"] == 2) {
+                                            atot++;
 
-                                        if (obj[i]["isfinished"] == true) {
-                                            acom++;
+                                            if (obj[i]["isfinished"] == true) {
+                                                acom++;
+                                            }
                                         }
-                                    }
-                                    if (obj[i]["ID_activitytype"] == 3) {
-                                        stot++;
+                                        if (obj[i]["ID_activitytype"] == 3) {
+                                            stot++;
 
-                                        if (obj[i]["isfinished"] == true) {
-                                            scom++;
+                                            if (obj[i]["isfinished"] == true) {
+                                                scom++;
+                                            }
                                         }
-                                    }
-                                    if (obj[i]["ID_activitytype"] == 4) {
-                                        dtot++;
+                                        if (obj[i]["ID_activitytype"] == 4) {
+                                            dtot++;
 
-                                        if (obj[i]["isfinished"] == true) {
-                                            dcom++;
+                                            if (obj[i]["isfinished"] == true) {
+                                                dcom++;
+                                            }
                                         }
-                                    }
 
-                                }
+                                    }
 
                                 if (ftot > 0) {
                                     fpor = Math.round(((fcom / ftot) * 100));
@@ -668,6 +717,7 @@
                     },
                 });
         }
+
 
 
     }

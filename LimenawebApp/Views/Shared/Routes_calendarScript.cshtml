@@ -4,6 +4,11 @@
 }
 
 <script>
+    var lastfilter = [];
+    var allEvents = [];
+    allEvents = @Html.Raw(ViewBag.calroutes);
+    var flag = 0;
+    var nothinge = [];
     (function ($) {
         'use strict';
         $(function () {
@@ -29,9 +34,87 @@
                     navLinks: false, // can click day/week names to navigate views
                     editable: true,
                     disableResizing: true,
+
+                    viewRender: function (view, element) {
+                        //console.log(view.start, view.end);
+                        //console.log($('#calendar').fullCalendar('getDate'));
+                        //console.log($('#calendar').fullCalendar('getView').intervalStart)
+                        //console.log($('#calendar').fullCalendar('getView').intervalEnd)
+
+                        var ndate = new Date($('#calendar').fullCalendar('getView').intervalStart); //Evaluar si le sumaremos un dia
+                        var fdate = new Date($('#calendar').fullCalendar('getView').intervalEnd);
+
+
+                        //var lastevents = $('#calendar').fullCalendar('clientEvents');
+
+                    
+                        if (flag == 0) {
+                            flag = 1;
+                            lastfilter.push({
+                                sd: ndate,
+                                ed: fdate
+                            });
+                            //console.log("no cargue nada porque es primera vez");
+                          
+                        } else {
+
+                            var editp = lastfilter.filter(function (el) {
+     
+                                return el.sd.getTime() === ndate.getTime();
+                            });
+
+           
+
+                            if (editp.length > 0) {
+                                //console.log("estos eventos ya fueron cargados");
+                            } else {
+                                lastfilter.push({
+                                    sd: ndate,
+                                    ed: fdate
+                                });
+
+                                document.getElementById("loader").style.display = "block";
+                                $.ajax
+                                    ({
+                                        url: '/Commercial/GetEvents',
+                                        type: 'POST',
+                                        datatype: 'application/json',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify({
+                                            startf: ndate,
+                                            endf: fdate
+                                        }),
+                                        success: function (result) {
+
+                                            $.each($.parseJSON(result), function (i, events) {
+                                                //IF EXISTE
+
+                                                //ELSE
+                                                var event = { id: events.id, title: events.title, start: events.start, end: events.end, className: ".fc-event" };
+
+                                                $('#calendar').fullCalendar('renderEvent', event, true);
+                                            }
+
+                                            ) //END EACH
+                                            document.getElementById("loader").style.display = "none";
+
+                                        },
+                                        error: function () {
+                                            alert("Whooaaa! Something went wrong..")
+                                            document.getElementById("loader").style.display = "none";
+                                        },
+                                    });
+                            }
+
+
+                        }
+
+
+                    },
+
                     //showNonCurrentDates: false,
-                    eventLimit: false, // allow "more" link when too many events
-                    events: @Html.Raw(ViewBag.calroutes),
+                    eventLimit: true, // allow "more" link when too many events
+                    events: allEvents,
                     eventDrop: function (event, delta, revertFunc) {
 
                         //alert("You change the date for the Route: " + event.title + ". The new date is: " + event.start.format());
@@ -106,10 +189,12 @@
 
                                 var count = 0;
                                 var theDiv = document.getElementById("appendDivVisits");
+                                var theDivReps = document.getElementById("appendDivReps");
                                 theDiv.innerHTML = "";
+                                theDivReps.innerHTML = "";
 
                                 var porcentaje = result.porcentaje;
-                                var url = '<a class="text-muted" href="@Url.Action("RoutesM_details", "Home", new { id = "IDDERUTA" })">' + calEvent.title + '</a>';
+                                var url = '<a class="text-muted" href="#">' + calEvent.title + '</a>';
                                 url = url.replace('IDDERUTA', id_route);
 
                                 document.getElementById("nameofroute").innerHTML = url;
@@ -132,15 +217,26 @@
 
                                     }
 
-                                    var url = '@Url.Action("Detailsa", "VisitsMs", new { id= "idvisit"})';
+                                    //var url = '@Url.Action("Detailsa", "VisitsMs", new { id= "idvisit"})';
                                   
-                                    url = url.replace('idvisit', visitas.id);
+                                    //url = url.replace('idvisit', visitas.id);
 
-                                    contents += '<div class="text-wrapper"><h6 class="d-block mb-1"><a href="' + url + '" class="text-muted">' + visitas.store + ' </a></h6><small class="text-gray d-block">' + visitas.address + '</small></div>';
+                                    contents += '<div class="text-wrapper"><h6 class="d-block mb-1"><a href="' + "#" + '" class="text-muted">' + visitas.store + ' </a></h6><small class="text-gray d-block">' + visitas.address + '</small></div>';
                                     contents += '</div>';
 
                                     theDiv.innerHTML += contents;
                                 });
+
+                                var contentReps = "";
+                                contentReps = '<div class="item-wrapper d-flex pb-4 border-bottom">';
+                                $.each($.parseJSON(result.result2), function (i, reps) {
+                                    
+                                    contentReps += '<div class="text-wrapper"><h6 class="d-block mb-1"><a href="' + "#" + '" class="text-muted">' + reps.Name + " " + reps.LastName + ' </a></h6></div>';
+                                   
+                                });
+                                contentReps += '</div>';
+                                theDivReps.innerHTML += contentReps;
+
                                 contents = '';
                                 contents += '<div class="status-wrapper d-flex align-items-start pr-3"><span class="bg-danger rounded-circle p-1 mt-2 "></span>&nbsp; Canceled</div>';
                                 contents += '<div class="status-wrapper d-flex align-items-start pr-3"><span class="bg-success rounded-circle p-1 mt-2 "></span>&nbsp; In progress</div>';

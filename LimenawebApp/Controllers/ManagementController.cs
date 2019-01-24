@@ -24,8 +24,10 @@ namespace LimenawebApp.Controllers
                 ViewData["Page"] = "Users";
                 ViewBag.menunameid = "manag_menu";
                 ViewBag.submenunameid = "users_submenu";
-                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;

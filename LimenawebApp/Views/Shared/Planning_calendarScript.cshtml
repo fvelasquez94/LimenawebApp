@@ -1,0 +1,506 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+    var lastfilter = [];
+    var allEvents = [];
+    allEvents = @Html.Raw(ViewBag.calroutes);
+    var flag = 0;
+    var nothinge = [];
+    (function ($) {
+        'use strict';
+        $(function () {
+            var style = getComputedStyle(document.body);
+            var today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            if ($('#calendar').length) {
+                $('#calendar').fullCalendar({
+                    header: {
+                        left: 'month, basicWeek',
+                        center: 'title',
+                        //right: 'month'
+                        //right: 'month,listWeek'
+                    },
+                    views: {
+                       month: { buttonText: 'Month' },
+                      
+                        basicWeek: { buttonText: 'Week' }
+
+                        //listDay: { buttonText: 'list day' }
+                    },
+                    defaultView: 'basicWeek',
+
+                    defaultDate: today,
+                    navLinks: false, // can click day/week names to navigate views
+                    editable: true,
+                    disableResizing: true,
+                    
+                    viewRender: function (view, element) {
+                        //console.log(view.start, view.end);
+                        //console.log($('#calendar').fullCalendar('getDate'));
+                        //console.log($('#calendar').fullCalendar('getView').intervalStart)
+                        //console.log($('#calendar').fullCalendar('getView').intervalEnd)
+
+                        var ndate = new Date($('#calendar').fullCalendar('getView').intervalStart); //Evaluar si le sumaremos un dia
+                        var fdate = new Date($('#calendar').fullCalendar('getView').intervalEnd);
+
+
+                        //var lastevents = $('#calendar').fullCalendar('clientEvents');
+
+                    
+                        if (flag == 0) {
+                            flag = 1;
+                            lastfilter.push({
+                                sd: ndate,
+                                ed: fdate
+                            });
+                            //console.log("no cargue nada porque es primera vez");
+                          
+                        } else {
+
+                            var editp = lastfilter.filter(function (el) {
+     
+                                return el.sd.getTime() === ndate.getTime();
+                            });
+
+           
+
+                            if (editp.length > 0) {
+                                //console.log("estos eventos ya fueron cargados");
+                            } else {
+                                lastfilter.push({
+                                    sd: ndate,
+                                    ed: fdate
+                                });
+
+                                document.getElementById("loader").style.display = "block";
+                                $.ajax
+                                    ({
+                                        url: '/Invoices/GetEvents',
+                                        type: 'POST',
+                                        datatype: 'application/json',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify({
+                                            startf: ndate,
+                                            endf: fdate
+                                        }),
+                                        success: function (result) {
+                                          
+                                            $.each($.parseJSON(result), function (i, events) {
+                                                var event = events;
+                                             
+                                                   $('#calendar').fullCalendar('renderEvent', event, true);
+                   
+                                            }
+
+                                            ) //END EACH
+
+         
+                                            document.getElementById("loader").style.display = "none";
+
+                                        },
+                                        error: function () {
+                                            alert("Whooaaa! Something went wrong..")
+                                            document.getElementById("loader").style.display = "none";
+                                        },
+                                    });
+                            }
+
+
+                        }
+
+
+                    },
+
+                    //showNonCurrentDates: false,
+                    eventLimit: true, // allow "more" link when too many events
+                    events: allEvents,
+                    eventDrop: function (event, delta, revertFunc) {
+
+                        //alert("You change the date for the Route: " + event.title + ". The new date is: " + event.start.format());
+
+                        if (!confirm("Are you sure about this change? All visits will change to the assigned date.")) {
+                            revertFunc();
+                        } else {
+                            //Hacemos el callback del procedimiento que cambiara todas las fechas
+                            
+                        //var id_route = event.title.substr(0, event.title.indexOf(' '));
+
+                        //Guardamos en server
+                        //$("#loading").show();
+                        //    $.ajax({
+                        //        url: '/Commercial/ChangeDates',
+                        //        type: 'POST',
+                        //        data: { 'route': id_route, 'nuevafecha': event.start.format() },
+                        //    cache: false,
+                        //    global: false,
+                        //    success: function (result) {
+                        //        $("#loading").hide();
+
+                        //        if (result.result == "success") {
+                        //            toastr.success("Data saved successfully.", "Success");
+                        //        } else {
+                        //            revertFunc();
+                        //            toastr.warning(result.result, "Warning");
+                        //        }
+
+                        //    },
+                        //    error: function (request) {
+                        //        $("#loading").hide();
+                        //        revertFunc();
+
+                        //    }
+                        //});
+                        }
+
+                    },
+                    eventRender: function (event, element) {
+                        element.find('.fc-title').html("<b>" + event.title + "</b>");;
+                        element.find('.fc-title').append("<br/>Driver:");
+                        element.find('.fc-title').append("<br/>" + event.driver);
+                        element.find('.fc-title').append("<br/>Route Leader:");
+                        element.find('.fc-title').append("<br/>" + event.route_leader);
+                        element.find('.fc-title').append("<br/>Truck:");
+                        element.find('.fc-title').append("<br/>" + event.truck);
+                        element.find('.fc-title').append("<br/>Departure:");
+                        element.find('.fc-title').append("<br/>" + event.departure);
+                        
+                    },
+                    eventAfterRender: function (event, element, view) {
+                        //element.css("background", "#fff");
+                        //element.css("border-color", "#000 !important");
+                        element.css("font-size", "10px");
+                        //element.css("border", "solid !important");
+    
+                 
+                    },
+                    eventResize: function (event, delta, revertFunc) {
+                        revertFunc();
+                        //alert(event.title + "start: " + event.start.format() + " end is now " + event.end.format());
+
+                        //if (!confirm("is this okay?")) {
+                        //    revertFunc();
+                        //}
+
+                    },
+
+                    eventClick: function (calEvent, jsEvent, view) {
+
+                        //Llamamos con AJAX
+
+                        var id_route = calEvent.title.substr(0, calEvent.title.indexOf(' '));
+                        $("#selectedOrdersTitle").html("Selected Orders for: " + calEvent.title);
+                        var date = new Date(calEvent.start);
+
+                        //Guardamos en server
+                        $("#loading").show();
+                        $.ajax({
+                            url: '/Invoices/GetSalesOrders',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                id: id_route,
+                                date: date
+                            }),
+                            cache: false,
+                            global: false,
+                            success: function (result) {
+                                $("#loading").hide();
+                                $("#selectedRoute").val(id_route);
+                                
+                                var count = 0;
+                                var theDiv = document.getElementById("sortable2"); //PARA SALES ORDERS YA SELECCIONADAS
+                                var theDivReps = document.getElementById("sortable1");
+                                theDiv.innerHTML = "";
+                                theDivReps.innerHTML = "";
+
+                                var contents = '';
+
+                                $.each($.parseJSON(result.result), function (i, selSO) {
+                                    count++;
+                                    var cCustomer = String(selSO.CardCode).charAt(0);
+
+                                    contents = '<li id="' + selSO.NumSO + '">';
+
+                                    contents += '<div class="media">';
+                                    if (cCustomer == "C") {
+                                        contents += '<div class="mr-4 rounded-circle bg-warning st-alphabet">' + selSO.NumSO + '</div>';
+                                    } else {
+                                        contents += '<div class="mr-4 rounded-circle bg-info st-alphabet">' + selSO.NumSO + '</div>';
+                                    }
+
+                                    contents += '<div class="media-body list-widget-border"><div class="float-left">';
+                                    contents += '<h6 class="text-uppercase">' + selSO.CardCode + " -" + selSO.CustomerName + '</h6>';
+                                    contents += '<small class="text-uppercase">Route: ' + selSO.DeliveryRoute + '</small><br/>';
+                                    contents += '<small class="text-uppercase">Sales Rep: ' + selSO.SalesPerson + '</small><br />';
+                                    //contents += '<small class="text-uppercase">Printed: ' + selSO.Printed + '</small><br />';
+
+                                    contents += '<small>Amount: $ </small><small class="pillAmount">' + selSO.OpenAmount.toFixed(2) + '</small><br>';
+                                    //contents += '<div class="float-right">';
+                                    //contents += '<br><small class="text-muted text-sm">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US')  + '</small>';
+                                    contents += '<small class="text-muted text-sm">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US')  + '</small>';
+                                    contents += '</div></div></div>';
+
+                                    contents += '</li>';
+
+                                    theDiv.innerHTML += contents;
+                                });
+
+                                var contentOpenSO = "";  //PARA SALES ORDERS ABIERTAS
+
+                                $.each($.parseJSON(result.result2), function (i, openSO) {
+                                    var cCustomer2 = String(openSO.CardCode).charAt(0);
+                                    contentOpenSO = '<li id="' + openSO.NumSO + '">';
+
+                                    contentOpenSO += '<div class="media">';
+                                    if (cCustomer2 == "C") {
+                                        contentOpenSO += '<div class="mr-4 rounded-circle bg-warning st-alphabet">' + openSO.NumSO + '</div>';
+                                    } else {
+                                        contentOpenSO += '<div class="mr-4 rounded-circle bg-info st-alphabet">' + openSO.NumSO + '</div>';
+                                    }
+
+                                    contentOpenSO += '<div class="media-body list-widget-border"><div class="float-left">';
+                                    contentOpenSO += '<span style="font-size:12px;"><strong>' + openSO.CardCode + "" + '  -  </strong></span><label style="font-size:12px;" class="text-uppercase pillCustomer text-black"><strong>' + openSO.CustomerName + '</strong></label><br>';
+                                    contentOpenSO += '<small class="text-uppercase pillRoute">Route: ' + openSO.DeliveryRoute + '</small><br />';
+                                    contentOpenSO += '<small class="text-uppercase">Sales Rep: ' + openSO.SalesPerson + '</small><br />';
+                                    if (openSO.Printed == "Y") {
+                                        contentOpenSO += '<small class="text-uppercase">Printed: ' + "YES" + '</small><br />';
+                                    } else {
+                                        contentOpenSO += '<small class="text-uppercase">Printed: ' + "NO" + '</small><br />';
+                                    }
+                                    
+                                    if (openSO.OpenAmount == openSO.TotalSO) {
+                                        contentOpenSO += '<small>Amount: $ </small><small class="pillAmount">' + openSO.OpenAmount.toFixed(2) + '</small><br>';
+
+                                    } else {
+                                        contentOpenSO += '<small>Amount: $ </small><small class="pillAmount">' + openSO.OpenAmount.toFixed(2) + '</small><small class="text-muted" style="font-size:10px;">   -   Total SO: $ ' + openSO.TotalSO.toFixed(2) + '</small><br>';
+
+                                    }
+
+                                    
+                                    //contentOpenSO += '<div class="float-right">';
+                                    //contentOpenSO += '<br/><small class="text-muted">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                    contentOpenSO += '<small class="text-muted pilldate">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                    contentOpenSO += '</div></div></div>';
+
+                                    contentOpenSO += '</li>';
+                                    theDivReps.innerHTML += contentOpenSO;
+                                });
+
+                                //$(function () {
+                                //    $("#sortable1, #sortable2").sortable({
+                                //        connectWith: ".connectedSortable",
+                                //        update: function () {
+                                //            var column2RelArray = [];
+                                //            $('ul#sortable2 small.pillAmount').each(function () {
+                                //                column2RelArray.push($(this).text());
+                                //            });
+                                //            console.log(column2RelArray);
+                                //        }
+                                       
+                                //    }).disableSelection();
+
+
+                                //});
+                                $("#sortable1").sortable({
+                                    connectWith: ".connectedSortable"
+                                }).disableSelection();
+
+
+                                $("#sortable2").sortable({
+                                    connectWith: ".connectedSortable",
+                                    update: function () {
+                                       var column2RelArray = [];
+                                            $('ul#sortable2 small.pillAmount').each(function () {
+                                                column2RelArray.push($(this).text());
+                                            });
+                                        
+                                        const result = column2RelArray.reduce((r, e) => r + +e.replace(',', '.'), 0)
+                                        
+                                        
+                                        $("#totalAmountSO").html("Total Amount: $ " + result.toFixed(2));
+                                        $("#totalSO").html("Total Sales Orders: " + column2RelArray.length);
+                                    }
+                                }).disableSelection();
+
+
+                                var column3RelArray = [];
+                                $('ul#sortable2 small.pillAmount').each(function () {
+                                    column3RelArray.push($(this).text());
+                                });
+
+                                const result2 = column3RelArray.reduce((r, e) => r + +e.replace(',', '.'), 0)
+
+
+                                $("#totalAmountSO").html("Total Amount: $ " + result2.toFixed(2));
+                                $("#totalSO").html("Total Sales Orders: " + column3RelArray.length);
+
+                                $("#officeFltr").html('');
+                                var o = new Option("option text", "value");
+                                /// jquerify the DOM object 'o' so we can use the html method
+                                $(o).html("SELECT ALL ROUTES...");
+                                $("#officeFltr").append(o);
+                                $.each($.parseJSON(result.result3), function (i, routes) {
+                                    var o = new Option("option text", "value");
+                                    /// jquerify the DOM object 'o' so we can use the html method
+                                    $(o).html(routes);
+                                    $("#officeFltr").append(o);
+                                });
+
+                                //REPS
+                                $("#officeFltr2").html('');
+                                var o = new Option("option text", "value");
+                                /// jquerify the DOM object 'o' so we can use the html method
+                                $(o).html("SELECT ALL REPS...");
+                                $("#officeFltr2").append(o);
+                                $.each($.parseJSON(result.result4), function (i, reps) {
+                                    var o = new Option("option text", "value");
+                                    /// jquerify the DOM object 'o' so we can use the html method
+                                    $(o).html(reps);
+                                    $("#officeFltr2").append(o);
+                                });
+
+                                ///
+                                //CUSTOMER
+                                $("#officeFltr3").html('');
+                                var o = new Option("option text", "value");
+                                /// jquerify the DOM object 'o' so we can use the html method
+                                $(o).html("SELECT ALL CUSTOMERS...");
+                                $("#officeFltr3").append(o);
+                                $.each($.parseJSON(result.result5), function (i, customer) {
+                                    var o = new Option("option text", "value");
+                                    /// jquerify the DOM object 'o' so we can use the html method
+                                    $(o).html(customer);
+                                    $("#officeFltr3").append(o);
+                                });
+                                //
+                            },
+                            error: function (request) {
+                                $("#loading").hide();
+
+
+                            }
+                        });
+               
+                        // change the border color just for fun
+                        $(".fc-h-event").css("border-color", "#eef2f5 !important");
+                        $(".fc-h-event").css("background", "#eef2f5");
+                        $(this).css("background", "#fab63f");
+                        //$(this).css("border-color", "#fab63f");
+                        $('#modal_SO').modal('show');
+                    }
+
+
+                })
+            }
+        });
+    })(jQuery);
+
+
+    function saveRoute() {
+
+        var routename = $("#routeName").val();
+        var mainrouteCode = $("#lstMaster").val();
+        var mainrouteName = $("#lstMaster option:selected").text();
+        var driverCode = $("#lstDriver").val();
+        var driverName = $("#lstDriver option:selected").text();
+        var truckCode = $("#lstTruck").val();
+        var truckName = $("#lstTruck option:selected").text();
+        var rleaderCode = $("#lstRLeader").val();
+        var rleaderName = $("#lstRLeader option:selected").text();
+        var departure = $("#departure").val();
+
+        document.getElementById("loader").style.display = "block";
+        $.ajax
+            ({
+                url: '/Invoices/CreateRoutePlanning',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    routeName: routename,
+                    lstMasterCode: mainrouteCode,
+                    lstMasterName: mainrouteName,
+                    lstDriverCode: driverCode,
+                    lstDriverName: driverName,
+                    lstTruckCode: truckCode,
+                    lstTruckName: truckName,
+                    lstRLeaderCode: rleaderCode,
+                    lstRLeaderName: rleaderName,
+                    departure: departure
+                }),
+                success: function (result) {
+
+                    $.each($.parseJSON(result), function (i, events) {
+                        var event = events;
+
+                        $('#calendar').fullCalendar('renderEvent', event, true);
+
+                    }
+
+                    ) //END EACH
+                    toastr.success("Route created successfully.", "Success");
+                    document.getElementById("loader").style.display = "none";
+                    $("#routeName").val('');
+                    $("#lstMaster").val('0').trigger('change');
+                    $("#lstDriver").val('0').trigger('change');
+                    $("#lstTruck").val('0').trigger('change');
+                    $("#lstRLeader").val('0').trigger('change');
+                    $('#createModal').modal('hide');
+                },
+                error: function () {
+                    
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+
+    }
+
+    function saveSalesOrders() {
+        var column1RelArray = [];
+        $('ul#sortable2 li').each(function () {
+            column1RelArray.push($(this).attr('id'));
+        });
+
+        var id_route = $("#selectedRoute").val();
+        document.getElementById("loader").style.display = "block";
+        $.ajax
+            ({
+                url: '/Invoices/SaveSalesOrders',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    salesOrders: column1RelArray,
+                    id_route: id_route
+                    
+                }),
+                success: function (result) {
+
+                    if (result == "SUCCESS") {
+                        toastr.success("Sales Orders saved successfully.", "Success");
+                        document.getElementById("loader").style.display = "none";
+                        window.location.reload(true); 
+                    } else {
+                        toastr.warning("Please, choose at least one sales order to continue.", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    }
+
+
+                },
+                error: function () {
+
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+
+    }
+</script>
+
+

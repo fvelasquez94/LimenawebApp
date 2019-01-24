@@ -4,13 +4,20 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="30cfeba61e52458dbe2eeff8f0d0a810" Name="Diagram1" ZoomLevel="72">
+      <Diagram DiagramId="30cfeba61e52458dbe2eeff8f0d0a810" Name="Diagram1" ZoomLevel="82">
         <EntityTypeShape EntityType="DLI_PROModel.OCRD" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="DLI_PROModel.BI_Dim_Customer" Width="1.5" PointX="3.375" PointY="0.75" />
-        <EntityTypeShape EntityType="DLI_PROModel.UFD1" Width="1.5" PointX="3.375" PointY="5.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.UFD1" Width="1.5" PointX="3.125" PointY="6.625" />
         <EntityTypeShape EntityType="DLI_PROModel.BI_Dim_Products" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="DLI_PROModel.ITM1" Width="1.5" PointX="5.375" PointY="6.75" />
         <EntityTypeShape EntityType="DLI_PROModel.Dsd_Products" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.View_dsd_suggestedinventory" Width="1.5" PointX="7.375" PointY="4.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.OpenSalesOrders" Width="1.5" PointX="7.375" PointY="8.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.C_DROUTE" Width="1.5" PointX="9.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.C_HELPERS" Width="1.5" PointX="9.375" PointY="4.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.C_TRUCKS" Width="1.5" PointX="9.375" PointY="7.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.C_DRIVERS" Width="1.5" PointX="9.375" PointY="10.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.OpenSalesOrders_Details" Width="1.5" PointX="11.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

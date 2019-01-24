@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Distribuidora Limeña - Routes";
+    ViewBag.Title = "Distribuidora Limeña - Planning";
 }
 
 <!--main content wrapper-->
@@ -11,60 +11,22 @@
             <!--/page title-->
             <!--calendar-->
             <div class="row">
-                <div class=" col-md-3">
-                    <div class="card card-shadow mb-4">
-                        <div class="card-header border-0">
-                            <div class="custom-title-wrap bar-success">
-                                <div class="custom-title">
-                                    <div class="row">
-                                        <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#createModal"><i class="mdi fa fa-plus"></i> Create new Route</button>
-                                        
-                                    </div>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card card-shadow mb-4">
-                        <div class="card-header border-0">
-                            <div class="custom-title-wrap bar-primary">
-                                <div class="custom-title">Route Details</div>
-                            </div>
-                        </div>
-                        <div class="card-body" id="hiddenDiv" style="display:none;">
-                            <a href="#" id="idroutedel" class="count online ml-auto" data-toggle="modal" data-target="#deleteModal" data-IDr=""><i class="close ml-auto fa fa-close"></i></a>
-                            <a href="#" id="idrouteedit" class="count online ml-auto" data-toggle="modal" data-target="#editModal" data-RepeatM="" data-IDr=""><i class="close ml-auto fa fa-edit"></i></a>
-                            <p id="nameofroute">Name of the Route</p>
-                            <div class="d-flex justify-content-between mt-2">
-
-                                <small id="porcentajeroute">0 %</small>
-                            </div>
-                            <div class="progress progress-sm mt-2">
-                                <div id="progressbarroute" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                            </div><br />
-                            <div class="d-flex align-items-center">
-                                <small class="font-weight-bold mr-2 mb-0">Reps</small>
-
-                            </div>
-                            <div class="wrapper mt-3" id="appendDivReps">
-
-                            </div>
-                            <div class="d-flex align-items-center">
-                                <small class="font-weight-bold mr-2 mb-0">Visits</small>
-                                <div class="badge badge-inverse-primary badge-pill" id="countVisits">0</div>
-                            </div>
-                            <div class="wrapper mt-3" id="appendDivVisits">
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div class=" col-md-9">
+                <div class=" col-md-12">
                     <div class="card card-shadow mb-4">
                         <div class="card-header border-0">
                             <div class="custom-title-wrap bar-warning">
                                 <div class="custom-title">Scheduled Routes</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+                                        <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                            <i class="fa fa-cogs"></i>Settings
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+
+                                            <a class="dropdown-item" data-toggle="modal" data-target="#createModal" href="#">New Route</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
@@ -82,9 +44,7 @@
 <div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("CreateRoutev2", "Commercial", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
+            <form>
                 <div class="modal-header">
 
                     <h5 class="modal-title" id="exampleModalLabel-4"><i class="fa fa-truck"></i> Add New Route</h5>
@@ -98,6 +58,25 @@
                     <div class="col-12 grid-margin">
                         <div class="card">
                             <div class="card-body">
+
+                                <p class="card-description">
+                                    <h5 class="card-title">Master route</h5>
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+
+                                            <div class="col-sm-12">
+
+                                                <select name="lstMaster" id="lstMaster" class="form-control" style="width:100%">
+                                                    <option value="0" selected>SELECT..</option>
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <p class="card-description">
                                     <h5 class="card-title">Name</h5>
                                 </p>
@@ -106,7 +85,7 @@
                                         <div class="form-group row">
 
                                             <div class="col-sm-12">
-                                                <input class="form-control" type="text" name="descriptionN" id="descriptionN" required />
+                                                <input class="form-control" type="text" name="routeName" id="routeName" required />
                                             </div>
                                         </div>
                                     </div>
@@ -115,59 +94,62 @@
 
 
                                 <p class="card-description">
-                                    <h5 class="card-title">Stores</h5>
+                                    <h5 class="card-title">Driver</h5>
                                 </p>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group row">
 
                                             <div class="col-sm-12">
-                                          
-                                                <select name="listatiendas" id="storesmulti" class="form-control" style="width:100%"></select>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Representatives</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-
-                                            <div class="col-sm-12">
-                                                <select name="listarepresentantes" id="repmulti" class="form-control" style="width:100%">
-                                                   
+                                                <select name="lstDriver" id="lstDriver" class="form-control" style="width:100%">
+                                                    <option value="0" selected>SELECT..</option>
                                                 </select>
-                                             
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <p class="card-description">
-                                    <h5 class="card-title">Date</h5>
+                                    <h5 class="card-title">Truck</h5>
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+
+                                            <div class="col-sm-12">
+                                                <select name="lstTruck" id="lstTruck" class="form-control" style="width:100%">
+                                                    <option value="0" selected>SELECT..</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-description">
+                                    <h5 class="card-title">Route Leader</h5>
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+
+                                            <div class="col-sm-12">
+                                                <select name="lstRLeader" id="lstRLeader" class="form-control" style="width:100%">
+                                                    <option value="0" selected>SELECT..</option>
+                                                </select>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-description">
+                                    <h5 class="card-title">Departure</h5>
                                 </p>
                                 <div class="row">
 
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <div class="col-sm-12">
-                                                <input type="date" name="date" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Estimated completion date</h5>
-                                </p>
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-                                                <input type="date" name="enddate" class="form-control">
+                                                <input type="datetime-local" name="departure" id="departure" class="form-control">
                                             </div>
                                         </div>
                                     </div>
@@ -180,7 +162,7 @@
                                         <div class="form-group row">
                                             <div class="col-sm-12">
 
-                                                <select name="cust" class="form-control">
+                                                <select name="cust" class="form-control" disabled>
                                                     <option value="NA">Never</option>
                                                     <option value="FW">First week of every month</option>
                                                     <option value="OW">Once a week</option>
@@ -199,10 +181,10 @@
 
 
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-info">Save</button>
+                    <button type="button" onclick="saveRoute()" class="btn btn-info">Save</button>
                     <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
                 </div>
-            }
+            </form>
         </div>
     </div>
 </div>
@@ -297,3 +279,97 @@
     </div>
 </div>
 <!--CREATE USER DATA ENDS-->
+<!--MODAL SALES ORDERS-->
+<div id="modal_SO" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Sales Orders</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class=" col-md-6">
+
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-primary">
+                                    <div class="custom-title">
+                                        Open Sales Orders
+                                        @*<small>        Sort by</small>*@
+                                        <ul class="nav nav-pills nav-pill-turquoise nav-pill-custom nav-pills-sm float-right " id="pills-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-AZ" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">A-Z</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-ZA" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">Z-A</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-Date" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↓ Date</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-DateUp" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Date</a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-Price" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Price</a>
+
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-PriceUp" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Price</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <input type="text" value="" id="selectedRoute" hidden />
+                                <input class="form-control" style="font-size:11px;" type="text" id="myInput" onkeyup="filterByCode()" placeholder="SEARCH BY ORDER NUMBER.." title="Type">
+                                <select id="officeFltr" class="form-control" onchange="myFunction()" style="width:100%; font-size:11px"></select>
+                                <select id="officeFltr2" class="form-control" onchange="myFunction2()" style="width:100%; font-size:11px"></select>
+                                <select id="officeFltr3" class="form-control" onchange="myFunction3()" style="width:100%; font-size:11px"></select>
+                                <ul id="sortable1" class="connectedSortable" style="height: 500px; overflow-y: auto; overflow-x:hidden"></ul>
+
+                            </div>
+
+
+                        </div>
+                        <div class="float-left">                    
+                            <span style="color:black !important" class="badge badge-warning text-light form-pill px-3 py-1">LIMENA</span>
+                            <span style="color:black !important"  class="badge badge-info text-light form-pill px-3 py-1">BAR-S</span>
+      
+                        </div>
+                    </div>
+                    <div class=" col-md-6">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-success">
+                                    <div class="custom-title" id="selectedOrdersTitle">Selected Orders</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <ul id="sortable2" class="connectedSortable" style="height: 500px; overflow-y: auto; overflow-x:hidden">
+               
+                                </ul>
+                                <small id="totalAmountSO">Total Amount: </small><br />
+                                <small id="totalSO">Total Sales Orders: </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" onclick="saveSalesOrders()" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--+++++++++-->

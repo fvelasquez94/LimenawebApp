@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace LimenawebApp.Controllers
 {
@@ -248,7 +249,7 @@ namespace LimenawebApp.Controllers
 
             List<ResumeSO_DSD> lstOrders = (from o in dblim.Tb_OrdersDSD where (o.Date >= filtrostartdate && o.Date <= filtroenddate) select new ResumeSO_DSD { ID_OrderDSD = o.ID_OrderDSD,
                 ID_customer = o.ID_customer, CustomerName = o.CustomerName, ID_payment = o.ID_payment, Payment = o.Payment, Doc_numP = o.Doc_numP, Doc_numCompany = o.Doc_numCompany, docNum_SAP = o.docNum_SAP, Date = o.Date.ToString()
-            , ID_User = o.ID_User, User_name = o.User_name, ID_Company = o.ID_Company, Comment = o.Comment, Sign = o.Sign, Total = 0, Direction="" }).ToList();
+            , ID_User = o.ID_User, User_name = o.User_name, ID_Company = o.ID_Company, Comment = o.Comment, Sign = o.Sign, Total = 0, Direction="" }).OrderBy(b=>b.Date).ToList();
 
             if (lstOrders != null)
             {
@@ -265,7 +266,7 @@ namespace LimenawebApp.Controllers
                     catch {
 
                     }
-
+                    item.Date = Convert.ToDateTime(item.Date).ToShortDateString();
                 }
             }
 
@@ -274,8 +275,8 @@ namespace LimenawebApp.Controllers
             rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Resume_DSD.rpt"));
             rd.SetDataSource(lstOrders);
 
-            rd.SetParameterValue("start", filtrostartdate.ToLongDateString());
-            rd.SetParameterValue("end", filtroenddate.ToLongDateString());
+            rd.SetParameterValue("start", filtrostartdate.ToShortDateString());
+            rd.SetParameterValue("end", filtroenddate.ToShortDateString());
             //rd.SetParameterValue("payment_number", header.Doc_numP);
             //rd.SetParameterValue("customer", header.CustomerName);
             //rd.SetParameterValue("rep", header.User_name);
@@ -338,7 +339,7 @@ namespace LimenawebApp.Controllers
                 ViewData["Menu"] = "DSD";
                 ViewData["Page"] = "New Order";
                 ViewBag.menunameid = "dsd_menu";
-                ViewBag.submenunameid = "dsdneword_submenu";
+                ViewBag.submenunameid = "dsdnew_submenu2";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
@@ -413,6 +414,11 @@ namespace LimenawebApp.Controllers
                     }
                 }
 
+                //var suggested = (from su in dlipro.View_dsd_suggestedinventory where (su.QryGroup8 == "Y" && su.MaxStock > 0 && su.WhsCode == "01") select su).ToList();//Pruebas
+                var suggested = (from su in dlipro.View_dsd_suggestedinventory where (su.QryGroup8 == "Y" && su.MaxStock > 0 && su.WhsName.Contains("DSD")) select su).ToList();
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                ViewBag.suggested = javaScriptSerializer.Serialize(suggested.ToArray());
+   
                 ViewBag.lstOrders = lstOrders;
                 return View();
 
@@ -469,6 +475,29 @@ namespace LimenawebApp.Controllers
             var result = "Success";
 
             return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult Print_InventoryDSD(int? id)
+        {
+            var header = (from b in dblim.Tb_InventoryTRDSD where (b.ID_InventoryDSD == id) select b).FirstOrDefault();
+  
+
+            var details = (from a in dblim.Tb_InventoryDetailsTRDSD where (a.ID_InventoryDSD == id) select a).ToList();
+            ReportDocument rd = new ReportDocument();
+            rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Inventory_DSD.rpt"));
+            rd.SetDataSource(details);
+         
+
+
+            var filePathOriginal = Server.MapPath("/Reports/pdf");
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            //PARA VISUALIZAR
+            Response.AppendHeader("Content-Disposition", "inline; filename=" + "Inventory_DSD.pdf; ");
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
         }
 
     }

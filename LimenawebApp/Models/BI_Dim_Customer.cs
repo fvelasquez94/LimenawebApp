@@ -30,5 +30,12 @@ namespace LimenawebApp.Models
         public string Classification { get; set; }
         public string CustomerType { get; set; }
         public string Active { get; set; }
+        public Nullable<int> id_SalesRep { get; set; }
+        public Nullable<decimal> Budget { get; set; }
+        public string VisitDayWA { get; set; }
+        public string VisitDayWB { get; set; }
+        public Nullable<short> U_VisitFrequency { get; set; }
+        public Nullable<int> Frequency { get; set; }
+        public string Type { get; set; }
     }
 }

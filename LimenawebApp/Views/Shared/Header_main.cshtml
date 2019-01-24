@@ -127,6 +127,15 @@
                         Home
                     </a>
                 </li>
+                <li class="nav-item dropdown" id="accr_menu" style="display:none">
+                    <a class="nav-link dropdown-toggle mr-lg-3" id="accNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Accounts Receivable
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="accNav">
+                        <a id="accorep_submenu" class="dropdown-item" href="#">Reports</a>
+
+                    </div>
+                </li>
                 <li class="nav-item dropdown" id="marketing_menu" style="display:none">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="markNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Commercial
@@ -154,34 +163,35 @@
                         </ul>
                     </div>
                 </li>
-                <li class="nav-item dropdown" id="accr_menu" style="display:none">
-                    <a class="nav-link dropdown-toggle mr-lg-3" id="accNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Accounts Receivable
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="accNav">
-                        <a id="accorep_submenu" class="dropdown-item" href="#">Reports</a>
-
-                    </div>
-                </li>
                 <li class="nav-item dropdown" id="dsd_menu" style="display:none">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="dsdNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         DSD
                     </a>
                     <div class="dropdown-menu" aria-labelledby="dsdNav">
-                        <a id="dsdnew_submenu" class="dropdown-item" href="@Url.Action("InventoryTR", "DSD")">Inventory Transfer Request</a>
+                        <a id="dsdnew_submenu2" class="dropdown-item" href="@Url.Action("InventoryTR", "DSD")">Inventory Transfer Request</a>
                         <a id="dsdnew_submenu" class="dropdown-item" href="@Url.Action("New_Customer", "DSD")">New Customer</a>
 
                         <a id="dsdneword_submenu" href="@Url.Action("DSD", "Commercial")" class="dropdown-item">Orders</a>
                     </div>
                 </li>
+
                 <li class="nav-item dropdown" id="oper_menu" style="display:none">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="oper_nav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Operations
                     </a>
                     <div class="dropdown-menu" aria-labelledby="oper_nav">
+                        <a id="drop3" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu3">Invoices</a>
+                        <ul class="collapse" id="multi_menu3" data-parent="#accordion">
+                            <li>
+                                <a href="@Url.Action("Planning", "Invoices")" class="dropdown-item">Planning</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("QualityControl_planning", "Invoices")" class="dropdown-item">Quality Control</a>
+                            </li>
 
-                       
-                        <a id="operrep_submenu" class="dropdown-item" href="#">Reports</a>
+                        </ul>
+                        <a id="operrep_submenu" class="dropdown-item">Reports</a>
+
 
                     </div>
                 </li>

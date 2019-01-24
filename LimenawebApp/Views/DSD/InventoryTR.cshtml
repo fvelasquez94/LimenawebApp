@@ -137,7 +137,7 @@
 
                                             </div>
                                             <div class=" float-right">
-                                                <button type="button" class="btn btn-outline-dark btn-sm  form-pill">LOAD SUGGESTED</button>
+                                                <button type="button" class="btn btn-outline-dark btn-sm  form-pill" onclick="loadS()">LOAD SUGGESTED</button>
                                             </div>
                                             
                                         </div>
@@ -168,10 +168,6 @@
                             <div class="custom-title-wrap bar-success">
                                 <div class="custom-title">
                                     Orders List
-                                    <a href="#" onclick="PrintResume()" class="btn btn-primary float-right ml-2">
-                                        <i class="fa fa-print"></i>
-                                    </a>
-
 
                                 </div>
                             </div>
@@ -205,7 +201,7 @@
                             <td>@itemO.ID_InventoryDSD</td>
                             <td>@Convert.ToDateTime(itemO.Date).ToShortDateString()</td>
                             <td>@itemO.docNum_SAP</td>
-                            <td></td>
+                            <td><a href="@Url.Action("Print_InventoryDSD", "DSD", new { id = itemO.ID_InventoryDSD})" target="_blank" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-print mr-2"></i>Print</a></td>
                         </tr>
 }
 
@@ -267,6 +263,7 @@
             <div class="modal-body">
                 <input id="IDProdEdit" name="IDProdEdit" hidden />
                 <p id="descriptionDEdit" name="descriptionDEdit"></p>
+                <input id="upcEdit" name="upcEdit" hidden />
                 <input class="form-control" type="number" id="unitsEdit" min="1" value="1" />
 
             </div>
@@ -306,8 +303,8 @@
         });*@
 
 
-        $("#units").InputSpinner();
-
+        $("#units").bootstrapNumber();
+        $('#unitsEdit').bootstrapNumber();
         $("#mainsub > *").css('display', 'none')
 
 

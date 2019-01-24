@@ -5,6 +5,42 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="DLI_PROModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="@DRIVERS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="@DROUTE">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="U_PDay" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_WeekA" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_WeekB" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_Staging" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_PDayB" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_Zone" Type="nvarchar" MaxLength="30" />
+          <Property Name="U_Driver" Type="nvarchar" MaxLength="30" />
+          <Property Name="U_RLeader" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="@HELPERS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="@TRUCKS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
         <EntityType Name="ITM1">
           <Key>
             <PropertyRef Name="ItemCode" />
@@ -416,9 +452,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Customer' does not have a prima
           <Key>
             <PropertyRef Name="id_Customer" />
             
+            <PropertyRef Name="VisitDayWA" />
+            <PropertyRef Name="VisitDayWB" />
+            <PropertyRef Name="Type" />
           </Key>
           <Property Name="id_Customer" Type="nvarchar" MaxLength="15" Nullable="false" />
           <Property Name="Customer" Type="nvarchar" MaxLength="118" />
+          <Property Name="id_SalesRep" Type="int" />
           <Property Name="SalesRep" Type="nvarchar" MaxLength="155" />
           <Property Name="CatCommission" Type="int" />
           <Property Name="Supervisor" Type="nvarchar" MaxLength="101" />
@@ -433,6 +473,12 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Customer' does not have a prima
           <Property Name="Classification" Type="nvarchar" MaxLength="10" />
           <Property Name="CustomerType" Type="varchar" MaxLength="9" Nullable="false" />
           <Property Name="Active" Type="char" MaxLength="1" />
+          <Property Name="Budget" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="VisitDayWA" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="VisitDayWB" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="U_VisitFrequency" Type="smallint" />
+          <Property Name="Frequency" Type="int" />
+          <Property Name="Type" Type="varchar" MaxLength="3" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -480,7 +526,74 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
           <Property Name="id_category" Type="nvarchar" MaxLength="4" />
           <Property Name="id_subcategory" Type="int" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="OpenSalesOrders">
+          <Key>
+            <PropertyRef Name="NumSO" />
+          </Key>
+          <Property Name="SODate" Type="datetime" />
+          <Property Name="NumSO" Type="int" Nullable="false" />
+          <Property Name="PepperiNum" Type="nvarchar" MaxLength="100" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="CustomerName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Printed" Type="char" MaxLength="1" />
+          <Property Name="DeliveryRoute" Type="nvarchar" MaxLength="30" />
+          <Property Name="TotalSO" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalCost" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="GrossProfit" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="GProfitPer" Type="numeric" Precision="38" Scale="14" />
+          <Property Name="TotalInvoice" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="OpenAmount" Type="numeric" Precision="20" Scale="6" />
+          <Property Name="IDSalesPerson" Type="int" />
+          <Property Name="SalesPerson" Type="nvarchar" MaxLength="155" />
+          <Property Name="Classification" Type="nvarchar" MaxLength="10" />
+          <Property Name="Remarks" Type="nvarchar" MaxLength="254" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="OpenSalesOrders_Details">
+          <Key>
+            <PropertyRef Name="LineNum" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="LineNum" Type="int" Nullable="false" />
+          <Property Name="U_BinLocation" Type="nvarchar" MaxLength="20" />
+          <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="UomCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="UomEntry" Type="int" />
+          <Property Name="InvQty" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
+          <Property Name="U_Storage" Type="nvarchar" MaxLength="20" />
+          <Property Name="DocNum" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="View_dsd_suggestedinventory">
+          <Key>
+            <PropertyRef Name="ItemCode" />
+            
+          </Key>
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
+          <Property Name="CodeBars" Type="nvarchar" MaxLength="254" />
+          <Property Name="WhsCode" Type="nvarchar" MaxLength="8" Nullable="false" />
+          <Property Name="WhsName" Type="nvarchar" MaxLength="100" />
+          <Property Name="QryGroup8" Type="char" MaxLength="1" />
+          <Property Name="OnHand" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="MinStock" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="MaxStock" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Request" Type="numeric" Precision="20" Scale="6" />
+        </EntityType>
         <EntityContainer Name="DLI_PROModelStoreContainer">
+          <EntitySet Name="@DRIVERS" EntityType="Self.@DRIVERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="@DROUTE" EntityType="Self.@DROUTE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="@HELPERS" EntityType="Self.@HELPERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="@TRUCKS" EntityType="Self.@TRUCKS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ITM1" EntityType="Self.ITM1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OCRD" EntityType="Self.OCRD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UFD1" EntityType="Self.UFD1" Schema="dbo" store:Type="Tables" />
@@ -488,6 +601,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
             <DefiningQuery>SELECT 
     [BI_Dim_Customer].[id_Customer] AS [id_Customer], 
     [BI_Dim_Customer].[Customer] AS [Customer], 
+    [BI_Dim_Customer].[id_SalesRep] AS [id_SalesRep], 
     [BI_Dim_Customer].[SalesRep] AS [SalesRep], 
     [BI_Dim_Customer].[CatCommission] AS [CatCommission], 
     [BI_Dim_Customer].[Supervisor] AS [Supervisor], 
@@ -501,7 +615,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
     [BI_Dim_Customer].[City] AS [City], 
     [BI_Dim_Customer].[Classification] AS [Classification], 
     [BI_Dim_Customer].[CustomerType] AS [CustomerType], 
-    [BI_Dim_Customer].[Active] AS [Active]
+    [BI_Dim_Customer].[Active] AS [Active], 
+    [BI_Dim_Customer].[Budget] AS [Budget], 
+    [BI_Dim_Customer].[VisitDayWA] AS [VisitDayWA], 
+    [BI_Dim_Customer].[VisitDayWB] AS [VisitDayWB], 
+    [BI_Dim_Customer].[U_VisitFrequency] AS [U_VisitFrequency], 
+    [BI_Dim_Customer].[Frequency] AS [Frequency], 
+    [BI_Dim_Customer].[Type] AS [Type]
     FROM [dbo].[BI_Dim_Customer] AS [BI_Dim_Customer]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="BI_Dim_Products" EntityType="Self.BI_Dim_Products" store:Type="Views" store:Schema="dbo">
@@ -541,6 +661,58 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
     [Dsd_Products].[id_category] AS [id_category], 
     [Dsd_Products].[id_subcategory] AS [id_subcategory]
     FROM [dbo].[Dsd_Products] AS [Dsd_Products]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="OpenSalesOrders" EntityType="Self.OpenSalesOrders" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [OpenSalesOrders].[SODate] AS [SODate], 
+    [OpenSalesOrders].[NumSO] AS [NumSO], 
+    [OpenSalesOrders].[PepperiNum] AS [PepperiNum], 
+    [OpenSalesOrders].[CardCode] AS [CardCode], 
+    [OpenSalesOrders].[CustomerName] AS [CustomerName], 
+    [OpenSalesOrders].[Printed] AS [Printed], 
+    [OpenSalesOrders].[DeliveryRoute] AS [DeliveryRoute], 
+    [OpenSalesOrders].[TotalSO] AS [TotalSO], 
+    [OpenSalesOrders].[TotalCost] AS [TotalCost], 
+    [OpenSalesOrders].[GrossProfit] AS [GrossProfit], 
+    [OpenSalesOrders].[GProfitPer] AS [GProfitPer], 
+    [OpenSalesOrders].[TotalInvoice] AS [TotalInvoice], 
+    [OpenSalesOrders].[OpenAmount] AS [OpenAmount], 
+    [OpenSalesOrders].[IDSalesPerson] AS [IDSalesPerson], 
+    [OpenSalesOrders].[SalesPerson] AS [SalesPerson], 
+    [OpenSalesOrders].[Classification] AS [Classification], 
+    [OpenSalesOrders].[Remarks] AS [Remarks]
+    FROM [dbo].[OpenSalesOrders] AS [OpenSalesOrders]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="OpenSalesOrders_Details" EntityType="Self.OpenSalesOrders_Details" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [OpenSalesOrders_Details].[LineNum] AS [LineNum], 
+    [OpenSalesOrders_Details].[U_BinLocation] AS [U_BinLocation], 
+    [OpenSalesOrders_Details].[Quantity] AS [Quantity], 
+    [OpenSalesOrders_Details].[UomCode] AS [UomCode], 
+    [OpenSalesOrders_Details].[UomEntry] AS [UomEntry], 
+    [OpenSalesOrders_Details].[InvQty] AS [InvQty], 
+    [OpenSalesOrders_Details].[NumPerMsr] AS [NumPerMsr], 
+    [OpenSalesOrders_Details].[ItemCode] AS [ItemCode], 
+    [OpenSalesOrders_Details].[ItemName] AS [ItemName], 
+    [OpenSalesOrders_Details].[U_Storage] AS [U_Storage], 
+    [OpenSalesOrders_Details].[DocNum] AS [DocNum], 
+    [OpenSalesOrders_Details].[DocDate] AS [DocDate], 
+    [OpenSalesOrders_Details].[CardCode] AS [CardCode]
+    FROM [dbo].[OpenSalesOrders_Details] AS [OpenSalesOrders_Details]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="View_dsd_suggestedinventory" EntityType="Self.View_dsd_suggestedinventory" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [View_dsd_suggestedinventory].[ItemCode] AS [ItemCode], 
+    [View_dsd_suggestedinventory].[ItemName] AS [ItemName], 
+    [View_dsd_suggestedinventory].[CodeBars] AS [CodeBars], 
+    [View_dsd_suggestedinventory].[WhsCode] AS [WhsCode], 
+    [View_dsd_suggestedinventory].[WhsName] AS [WhsName], 
+    [View_dsd_suggestedinventory].[QryGroup8] AS [QryGroup8], 
+    [View_dsd_suggestedinventory].[OnHand] AS [OnHand], 
+    [View_dsd_suggestedinventory].[MinStock] AS [MinStock], 
+    [View_dsd_suggestedinventory].[MaxStock] AS [MaxStock], 
+    [View_dsd_suggestedinventory].[Request] AS [Request]
+    FROM [dbo].[View_dsd_suggestedinventory] AS [View_dsd_suggestedinventory]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -925,10 +1097,20 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
           <EntitySet Name="BI_Dim_Products" EntityType="DLI_PROModel.BI_Dim_Products" />
           <EntitySet Name="ITM1" EntityType="DLI_PROModel.ITM1" />
           <EntitySet Name="Dsd_Products" EntityType="DLI_PROModel.Dsd_Products" />
+          <EntitySet Name="View_dsd_suggestedinventory" EntityType="DLI_PROModel.View_dsd_suggestedinventory" />
+          <EntitySet Name="OpenSalesOrders" EntityType="DLI_PROModel.OpenSalesOrders" />
+          <EntitySet Name="C_DROUTE" EntityType="DLI_PROModel.C_DROUTE" />
+          <EntitySet Name="C_HELPERS" EntityType="DLI_PROModel.C_HELPERS" />
+          <EntitySet Name="C_TRUCKS" EntityType="DLI_PROModel.C_TRUCKS" />
+          <EntitySet Name="C_DRIVERS" EntityType="DLI_PROModel.C_DRIVERS" />
+          <EntitySet Name="OpenSalesOrders_Details" EntityType="DLI_PROModel.OpenSalesOrders_Details" />
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
             <PropertyRef Name="id_Customer" />
+            <PropertyRef Name="VisitDayWA" />
+            <PropertyRef Name="VisitDayWB" />
+            <PropertyRef Name="Type" />
           </Key>
           <Property Name="id_Customer" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="Customer" Type="String" MaxLength="118" FixedLength="false" Unicode="true" />
@@ -946,6 +1128,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
           <Property Name="Classification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="CustomerType" Type="String" Nullable="false" MaxLength="9" FixedLength="false" Unicode="false" />
           <Property Name="Active" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="id_SalesRep" Type="Int32" />
+          <Property Name="Budget" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="VisitDayWA" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="VisitDayWB" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_VisitFrequency" Type="Int16" />
+          <Property Name="Frequency" Type="Int32" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="UFD1">
           <Key>
@@ -1020,6 +1209,98 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
           <Property Name="DSD" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="id_category" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
           <Property Name="id_subcategory" Type="Int32" />
+        </EntityType>
+        <EntityType Name="View_dsd_suggestedinventory">
+          <Key>
+            <PropertyRef Name="ItemCode" />
+          </Key>
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CodeBars" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="WhsCode" Type="String" Nullable="false" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="QryGroup8" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OnHand" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="MinStock" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="MaxStock" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Request" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="WhsName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OpenSalesOrders">
+          <Key>
+            <PropertyRef Name="NumSO" />
+          </Key>
+          <Property Name="SODate" Type="DateTime" Precision="3" />
+          <Property Name="NumSO" Type="Int32" Nullable="false" />
+          <Property Name="PepperiNum" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Printed" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DeliveryRoute" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="TotalSO" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalCost" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="GrossProfit" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="GProfitPer" Type="Decimal" Precision="38" Scale="14" />
+          <Property Name="TotalInvoice" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="OpenAmount" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="SalesPerson" Type="String" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="Classification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="IDSalesPerson" Type="Int32" />
+        </EntityType>
+        <EntityType Name="C_DROUTE">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="U_PDay" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_WeekA" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_WeekB" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_Staging" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_PDayB" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_Zone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="U_Driver" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="U_RLeader" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="C_HELPERS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="C_TRUCKS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="C_DRIVERS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OpenSalesOrders_Details">
+          <Key>
+            <PropertyRef Name="LineNum" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="LineNum" Type="Int32" Nullable="false" />
+          <Property Name="U_BinLocation" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="UomCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="UomEntry" Type="Int32" />
+          <Property Name="InvQty" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="NumPerMsr" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ItemCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_Storage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DocNum" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1402,6 +1683,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
           <EntitySetMapping Name="BI_Dim_Customer">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Customer">
               <MappingFragment StoreEntitySet="BI_Dim_Customer">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Frequency" ColumnName="Frequency" />
+                <ScalarProperty Name="U_VisitFrequency" ColumnName="U_VisitFrequency" />
+                <ScalarProperty Name="VisitDayWB" ColumnName="VisitDayWB" />
+                <ScalarProperty Name="VisitDayWA" ColumnName="VisitDayWA" />
+                <ScalarProperty Name="Budget" ColumnName="Budget" />
+                <ScalarProperty Name="id_SalesRep" ColumnName="id_SalesRep" />
                 <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="CustomerType" ColumnName="CustomerType" />
                 <ScalarProperty Name="Classification" ColumnName="Classification" />
@@ -1493,6 +1781,104 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Product" ColumnName="Product" />
                 <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="View_dsd_suggestedinventory">
+            <EntityTypeMapping TypeName="DLI_PROModel.View_dsd_suggestedinventory">
+              <MappingFragment StoreEntitySet="View_dsd_suggestedinventory">
+                <ScalarProperty Name="WhsName" ColumnName="WhsName" />
+                <ScalarProperty Name="Request" ColumnName="Request" />
+                <ScalarProperty Name="MaxStock" ColumnName="MaxStock" />
+                <ScalarProperty Name="MinStock" ColumnName="MinStock" />
+                <ScalarProperty Name="OnHand" ColumnName="OnHand" />
+                <ScalarProperty Name="QryGroup8" ColumnName="QryGroup8" />
+                <ScalarProperty Name="WhsCode" ColumnName="WhsCode" />
+                <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OpenSalesOrders">
+            <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders">
+              <MappingFragment StoreEntitySet="OpenSalesOrders">
+                <ScalarProperty Name="IDSalesPerson" ColumnName="IDSalesPerson" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="SalesPerson" ColumnName="SalesPerson" />
+                <ScalarProperty Name="OpenAmount" ColumnName="OpenAmount" />
+                <ScalarProperty Name="TotalInvoice" ColumnName="TotalInvoice" />
+                <ScalarProperty Name="GProfitPer" ColumnName="GProfitPer" />
+                <ScalarProperty Name="GrossProfit" ColumnName="GrossProfit" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="TotalSO" ColumnName="TotalSO" />
+                <ScalarProperty Name="DeliveryRoute" ColumnName="DeliveryRoute" />
+                <ScalarProperty Name="Printed" ColumnName="Printed" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="PepperiNum" ColumnName="PepperiNum" />
+                <ScalarProperty Name="NumSO" ColumnName="NumSO" />
+                <ScalarProperty Name="SODate" ColumnName="SODate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_DROUTE">
+            <EntityTypeMapping TypeName="DLI_PROModel.C_DROUTE">
+              <MappingFragment StoreEntitySet="@DROUTE">
+                <ScalarProperty Name="U_RLeader" ColumnName="U_RLeader" />
+                <ScalarProperty Name="U_Driver" ColumnName="U_Driver" />
+                <ScalarProperty Name="U_Zone" ColumnName="U_Zone" />
+                <ScalarProperty Name="U_PDayB" ColumnName="U_PDayB" />
+                <ScalarProperty Name="U_Staging" ColumnName="U_Staging" />
+                <ScalarProperty Name="U_WeekB" ColumnName="U_WeekB" />
+                <ScalarProperty Name="U_WeekA" ColumnName="U_WeekA" />
+                <ScalarProperty Name="U_PDay" ColumnName="U_PDay" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_HELPERS">
+            <EntityTypeMapping TypeName="DLI_PROModel.C_HELPERS">
+              <MappingFragment StoreEntitySet="@HELPERS">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_TRUCKS">
+            <EntityTypeMapping TypeName="DLI_PROModel.C_TRUCKS">
+              <MappingFragment StoreEntitySet="@TRUCKS">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_DRIVERS">
+            <EntityTypeMapping TypeName="DLI_PROModel.C_DRIVERS">
+              <MappingFragment StoreEntitySet="@DRIVERS">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OpenSalesOrders_Details">
+            <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders_Details">
+              <MappingFragment StoreEntitySet="OpenSalesOrders_Details">
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="U_Storage" ColumnName="U_Storage" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
+                <ScalarProperty Name="InvQty" ColumnName="InvQty" />
+                <ScalarProperty Name="UomEntry" ColumnName="UomEntry" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="U_BinLocation" ColumnName="U_BinLocation" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

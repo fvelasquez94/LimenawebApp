@@ -1,0 +1,152 @@
+﻿@{
+    ViewBag.Title = "Distribuidora Limeña - Quality Control";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+          
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Sales Orders</div>
+                                <a href="@Url.Action("QualityControl_planning", "Invoices")" class="btn btn-outline-info btn-sm">Back</a>
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>DOC NUM</th>
+                                            <th>DATE</th>
+                                            <th>CUSTOMER</th>
+                                            <th>SALES REP</th>
+                                            <th>TOTAL</th>
+                                            <th>STATUS</th>
+                                            <th>ACTIONS</th>
+                                           
+ 
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var so in ViewBag.lstSO) {
+                                            <tr>
+                                                <td>
+                                                    @so.SAP_docnum
+                                                                                                @if (so.isfinished == true && so.DocEntry != "")
+                                                                                                {<small class="text-success">(Invoiced)</small>}
+                                                                                                else if(so.isfinished == true && so.DocEntry == "") {
+                                                                                                 <small class="text-success">(Closed)</small>
+                                                                                                }</td>
+                                                <td>@Convert.ToDateTime(so.SAP_docdate).ToShortDateString()</td>
+                                                <td>@so.ID_customer - @so.Customer_name</td>
+                                                <td>@so.Rep_name</td>
+                                                <td>$@Convert.ToDecimal(so.Amount).ToString("n2")</td>
+                                                <td>
+                                                    <div class="progress-title">
+                                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 2px;">
+                                                        @if (Convert.ToDecimal(so.query1) < 100)
+        {
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+}
+else
+{
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+}
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <a href="#" class="btn btn-sm btn-outline-info btn-sm form-pill" data-saleso="@so.ID_salesorder" data-saledoc="@so.SAP_docnum" onclick="getSOdata(this)"><i class="fa fa-external-link"></i>View</a>
+                                                    @if (Convert.ToDecimal(so.query1) >= 100)
+                                                    {
+                                                        if (so.isfinished == false) {
+                                                    <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeSO(@so.ID_salesorder)"><i class="fa fa-close"></i>Close</a>
+                                                        }
+                                                
+}
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="SOdetails" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySmallModalLabel">Sales Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-title">
+                                <div class="row" style="margin-bottom: 0;">
+                                    <div class="col s12 m4">
+
+                                        <div class="col-12">
+                                            <span style="font-size:10px;font-weight:500;">FILTER BY STORAGE TYPE:</span>
+                                            <select id="officeFltr" class="form-control" style="width:50%">
+                                           
+                                            </select>
+                                            
+                                            <div class="float-right">
+                                                <span style="font-size:13px;font-weight:500;" id="docselnum">FILTER BY STORAGE TYPE:</span><br />
+                                                <span style="font-size:13px;font-weight:500;" class="text-success" id="valitems">FILTER BY STORAGE TYPE:</span>
+         
+                                                <label class="text-warning" id="delitems" style="display:none;"></label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body- pt-3 pb-4">
+                                <div class="table-responsive">
+                                    <input type="text" id="selectSOd" value="" hidden/>
+
+                                    <table id="htmlgrid" class="table tableEdit table-striped table-condensed">
+                                        <thead>
+
+                                        </thead>
+                                        <tbody></tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <button id="showAll" class="btn btn-outline-light" style="color:black !important">Restore deleted products</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-dismiss="modal">Close</button>
+                <button type="button" onclick="saveData()" class="btn btn-primary">Save</button>
+
+            </div>
+        </div>
+    </div>
+</div>

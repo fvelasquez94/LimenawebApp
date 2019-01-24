@@ -1,0 +1,104 @@
+﻿@{
+    ViewBag.Title = "Distribuidora Limeña - Quality Control planning";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">      
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Routes</div>
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>NAME</th>
+                                            <th>DATE(DEPARTURE)</th>
+                                            <th>DRIVER</th>
+                                            <th>TRUCK</th>
+                                            <th>ROUTE LEADER</th>
+                                            <th>STATUS</th>
+                                            <th>ACTIONS</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var so in ViewBag.lstPlanning) {
+                                            <tr>
+                                                <td>@so.ID_Route</td>
+                                                <td>
+                                                    @so.Route_name
+                                                                                                @if (so.isfinished == true && so.Invoiced == true)
+                                                                                                { <small class="text-success">(Closed)</small> }
+                                                                                                else if (so.isfinished == true && so.Invoiced == false) {<small class="text-warning">(In progress)</small> }
+                                                                                            </td>
+                                                <td>@so.Departure</td>
+                                                <td>@so.Driver_name</td>
+                                                <td>@so.Truck_name</td>
+                                                <td>@so.Routeleader_name</td>
+                                                <td>
+                                              
+                                                        <div class="progress-title">
+                                                            <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2</span>
+                                                        </div>
+                                                        <div class="progress" style="height: 2px;">
+                                                            @if (Convert.ToDecimal(so.query1) < 100)
+                                                            {
+                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+                                                            }
+                                                            else {
+                                                            <div class="progress-bar bg-success" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+                                                            }
+                                                        </div>
+
+                                                 
+                                                </td>
+                                                <td>
+                                                    <a href="@Url.Action("QualityControl", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>View</a>
+                                                    @if (Convert.ToDecimal(so.query1) >= 100)
+    {
+        if (so.isfinished == false)
+        {
+                                                <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeRoute(@so.ID_Route)"><i class="fa fa-close"></i>Invoice</a>
+}
+
+}
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>
+
+<script>
+    window.onload = function () {
+        $('#data_tableEditor').DataTable({
+            dom: 'Bfrtip',
+            select: true
+        });
+
+
+    }
+
+</script>

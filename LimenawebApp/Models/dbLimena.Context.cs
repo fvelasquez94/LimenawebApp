@@ -38,5 +38,8 @@ namespace LimenawebApp.Models
         public virtual DbSet<Tb_PreOrdersDSD> Tb_PreOrdersDSD { get; set; }
         public virtual DbSet<Tb_InventoryDetailsTRDSD> Tb_InventoryDetailsTRDSD { get; set; }
         public virtual DbSet<Tb_InventoryTRDSD> Tb_InventoryTRDSD { get; set; }
+        public virtual DbSet<Tb_Planning> Tb_Planning { get; set; }
+        public virtual DbSet<Tb_PlanningSO> Tb_PlanningSO { get; set; }
+        public virtual DbSet<Tb_PlanningSO_details> Tb_PlanningSO_details { get; set; }
     }
 }

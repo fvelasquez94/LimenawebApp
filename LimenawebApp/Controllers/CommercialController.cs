@@ -136,12 +136,22 @@ namespace LimenawebApp.Controllers
                 porcentaje = "0";
             }
 
+    
 
+            var idsV = (from a in visitas select a.ID_visit).ToArray();
+            var reps = (from e in dbcmk.VisitsM_representatives  where (idsV.Contains(e.ID_visit)) select e.ID_usuario).Distinct().ToArray();
+
+            var lstUsers = (from a in dblim.Sys_Users where (reps.Contains(a.ID_User)) select new { Name = a.Name, LastName = a.Lastname }).ToList();
+
+            
+            
 
 
             JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
             string result2 = javaScriptSerializer.Serialize(lst);
-            var result = new { result = result2, porcentaje = porcentaje, sel = rt.query3 };
+            string result3 = javaScriptSerializer.Serialize(lstUsers);
+           
+            var result = new { result = result2, result2=result3, porcentaje = porcentaje, sel = rt.query3 };
             return Json(result, JsonRequestBehavior.AllowGet);
 
         }
@@ -179,9 +189,12 @@ namespace LimenawebApp.Controllers
                 DateTime filtrostartdate;
                 DateTime filtroenddate;
 
-                //filtros de fecha
-                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
-                var saturday = sunday.AddDays(6).AddHours(23);
+                //filtros de fecha //SEMANAL
+                //var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                //var saturday = sunday.AddDays(6).AddHours(23);
+                //filtros de fecha //MENSUAL
+                var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                var saturday = sunday.AddMonths(1).AddDays(-1);
                 //FILTROS**************
 
                 if (fstartd == null || fstartd == "")
@@ -203,8 +216,8 @@ namespace LimenawebApp.Controllers
                 }
                 //FIN FILTROS*******************
 
-                visitas = dbcmk.VisitsM.Where(dc => dc.visit_date >= filtrostartdate && dc.end_date <= filtroenddate && dc.ID_empresa==11).ToList();
-                rutas = dbcmk.RoutesM.Where(dc => dc.date >= filtrostartdate && dc.end_date <= filtroenddate && dc.ID_empresa == 11).OrderByDescending(dc => dc.date).ToList();
+                //visitas = dbcmk.VisitsM.Where(dc => dc.visit_date >= filtrostartdate && dc.end_date <= filtroenddate ).ToList();
+                rutas = dbcmk.RoutesM.Where(dc => dc.date >= filtrostartdate && dc.end_date <= filtroenddate && dc.ID_empresa==11).OrderByDescending(dc => dc.date).ToList();
 
 
                 //Agregamos los representantes y tambien el estado de cada visita por REP filtro
@@ -387,6 +400,13 @@ namespace LimenawebApp.Controllers
             Sys_Users activeuser = Session["activeUser"] as Sys_Users;
             if (activeuser != null)
             {
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor")) {
+                    ViewBag.isAdmin = 1;
+                }
+                else{
+                    ViewBag.isAdmin = 0;
+                }
+               
                 //HEADER
                 //PAGINAS ACTIVAS
                 ViewData["Menu"] = "Commercial";
@@ -2378,6 +2398,41 @@ namespace LimenawebApp.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult GetEvents(DateTime startf, DateTime endf)
+        {
+            try
+            {
+                var lstRoutes = dbcmk.RoutesM.Where(dc => dc.date >= startf && dc.end_date <= endf && dc.ID_empresa ==11).OrderByDescending(dc => dc.date).ToList();
+
+                List<Routes_calendar> rutaslst = new List<Routes_calendar>();
+
+                foreach (var item in lstRoutes)
+                {
+                    Routes_calendar rt = new Routes_calendar();
+
+                    rt.title = item.ID_route + " - " + item.query2;
+                    rt.url = "";
+                    rt.start = item.date.ToString("yyyy-MM-dd");
+                    rt.end = item.end_date.AddDays(1).ToString("yyyy-MM-dd");
+                    //rt.color = "#.fc-event";//"#2081d6";
+                    rt.className = ".fc-event";
+                    rutaslst.Add(rt);
+                }
+                //}
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                    string result = javaScriptSerializer.Serialize(rutaslst);
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+            
+
+        }
+
 
     }
 }

@@ -16,14 +16,14 @@ namespace LimenawebApp.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class Resume_DSD : ReportClass {
+    public class Inventory_DSD : ReportClass {
         
-        public Resume_DSD() {
+        public Inventory_DSD() {
         }
         
         public override string ResourceName {
             get {
-                return "Resume_DSD.rpt";
+                return "Inventory_DSD.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace LimenawebApp.Reports {
         
         public override string FullResourceName {
             get {
-                return "LimenawebApp.Reports.Resume_DSD.rpt";
+                return "LimenawebApp.Reports.Inventory_DSD.rpt";
             }
             set {
                 // Do nothing
@@ -66,7 +66,7 @@ namespace LimenawebApp.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupHeaderSection2 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
             get {
                 return this.ReportDefinition.Sections[2];
             }
@@ -74,7 +74,7 @@ namespace LimenawebApp.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
+        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -82,49 +82,17 @@ namespace LimenawebApp.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section GroupFooterSection2 {
-            get {
-                return this.ReportDefinition.Sections[4];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
-            get {
-                return this.ReportDefinition.Sections[5];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
         public CrystalDecisions.CrystalReports.Engine.Section Section5 {
             get {
-                return this.ReportDefinition.Sections[6];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_start {
-            get {
-                return this.DataDefinition.ParameterFields[0];
-            }
-        }
-        
-        [Browsable(false)]
-        [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.Shared.IParameterField Parameter_end {
-            get {
-                return this.DataDefinition.ParameterFields[1];
+                return this.ReportDefinition.Sections[4];
             }
         }
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedResume_DSD : Component, ICachedReport {
+    public class CachedInventory_DSD : Component, ICachedReport {
         
-        public CachedResume_DSD() {
+        public CachedInventory_DSD() {
         }
         
         [Browsable(false)]
@@ -161,7 +129,7 @@ namespace LimenawebApp.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            Resume_DSD rpt = new Resume_DSD();
+            Inventory_DSD rpt = new Inventory_DSD();
             rpt.Site = this.Site;
             return rpt;
         }
