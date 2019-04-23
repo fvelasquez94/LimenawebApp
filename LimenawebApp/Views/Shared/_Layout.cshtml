@@ -12,10 +12,53 @@
     {
         @Html.Partial("~/Views/Shared/Style_main.cshtml")
     }
+
+
     @if (ViewBag.Title == "Distribuidora Limeña - Quality Control")
     {
         <style>
+            @@media (min-width: 576px) {
+                .modal-dialog {
+                    max-width: 100% !important;
+                    margin: 1.75rem auto !important;
+                }
+            }
 
+            /*@@media (max-width: 510px) {
+                .modal-dialog {
+                    max-width: 100% !important;
+                    margin: 1.75rem auto !important;
+                    font-size:8px;
+                }
+                .btnslso {
+                    font-size: 8px;
+                    padding: 14px;
+                }
+                .seluoms {
+                    font-size: 10px;
+                    width: 70px !important;
+                }
+                .numord {
+                    font-size: 14px;
+                    width: 40px !important;
+                }
+                .rowselord {
+                    font-size: 6px !important;
+                }
+            }
+
+            @@media (min-width: 576px) {
+                .modal-dialog {
+                    max-width: 100% !important;
+                    margin: 1.75rem auto !important;
+                }
+            }
+            @@media (min-width: 1280px) {
+                .modal-dialog {
+                    max-width: 70% !important;
+                    margin: 1.75rem auto !important;
+                }
+            }*/
 
             .tableEdit thead {
                 background-color: rgb(253, 199, 69);
@@ -53,6 +96,16 @@
 
     }
     <style>
+
+        #data_tableEditor_wrapper {
+            width: 100% !important;
+            display: inline-block;
+        }
+        #data_tableEditor2_wrapper {
+            width: 100% !important;
+            display: inline-block;
+        }
+
         .btnsel {
             background-color: #fab63f !important;
             color: black;
@@ -67,6 +120,12 @@
             background-color: #ddd !important;
             color: black;
         }
+
+        tr.selected {
+            background-color: rgba(0, 0, 0, .02) !important;
+        }
+
+
 
 
 
@@ -86,7 +145,47 @@
                 padding: 5px;
                 width: 100%;
             }
+
+
+        @@media (min-width: 992px) {
+            .displaya {
+                width: 100% !important;
+            }
+        }
+
+        table.vertical {
+        }
+
+            table.vertical tr {
+                display: block;
+                float: left;
+            }
+
+            table.vertical th, table.vertical td {
+                display: block;
+            }
+
+        #loading {
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            text-align: center;
+        }
+
+        #loading-content {
+            margin-top: 20%;
+        }
+
+        .select2-results__option[aria-selected=true] {
+            display: none;
+        }
     </style>
+
 </head>
 <body class="fixed-nav top-nav">
     <div id="loader" class="vertical-centered-box">
@@ -135,6 +234,131 @@ else
 
 }
 </html>
+<script type="text/javascript">
+    // initialize Session Updater on page
+    SessionUpdater.Setup('@Url.Action("KeepSessionAlive","Home")');
+</script>
+@if (ViewBag.Title == "Distribuidora Limeña - Users")
+{
+    <script>
+
+        function delUser(id_user) {
+
+            swal.fire({
+                title: 'Are you sure to delete this user?',
+
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Management/deleteUser',
+                        type: 'POST',
+                        data: { 'id_user': id_user },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+
+                                Swal.fire(
+                                    'User deleted!',
+                                    'The User has been deleted.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function editUser(id_user) {
+
+
+
+            $.ajax({
+                url: '/Management/getUser',
+                type: 'GET',
+                data: { 'id_user': id_user },
+                cache: false,
+                global: false,
+                success: function (result) {
+                    //console.log(result.result);
+                    $.each($.parseJSON(result.result), function (i, userdata) {
+                        $("#nameUserE").val(userdata.Name);
+                        $("#IDUserE").val(userdata.ID_User);
+                        $("#lastnameUserE").val(userdata.Lastname);
+                        $("#emailUserE").val(userdata.Email);
+                        $("#passwordUserE").val(userdata.Password);
+                        $("#telephoneUserE").val(userdata.Telephone);
+                        $("#positionUserE").val(userdata.Position);
+                        $("#departmentsUserE").select2({
+                            multiple: true
+                        });
+                        $("#rolesUserE").select2({
+                            multiple: true
+                        });
+                        var array = userdata.Departments.split(',');
+                        $('#departmentsUserE').select2('val', [array]);
+
+                        var array2 = userdata.Roles.split(',');
+                        $('#rolesUserE').select2('val', [array2]);
+                    });
+                    //console.log(result.result2);
+                    $("#custom").empty();
+                    $.each($.parseJSON(result.result2), function (i, reps) {
+                        if (reps.issel == 1) {
+                            $("<option selected>").val(reps.id_Sales_Rep).text(reps.Slp_name).appendTo("#custom");
+                        } else {
+                            $("<option>").val(reps.id_Sales_Rep).text(reps.Slp_name).appendTo("#custom");
+
+                        }
+
+                    });
+                    $("#rolesReps").trigger("change");
+                    $("#editUserModal").modal('show');
+                },
+                error: function (request) {
+                    alert("Something went wrong..");
+
+                }
+            });
+        }
+
+
+
+    </script>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("passwordUserE");
+            if (x.type === "password") {
+                x.type = "text";
+            } else {
+                x.type = "password";
+            }
+        }
+    </script>
+}
+
+
+
+
 
 <script>
     $('#drop1').hover(function () {
@@ -147,7 +371,7 @@ else
         $(document.body).find('#multi_menu2').stop(true, true).delay(100).fadeIn(500);
     }, function () {
         $(document.body).find('#multi_menu2').stop(true, true).delay(6600).fadeOut(500);
-        });
+    });
 
     $('#drop3').hover(function () {
         $(document.body).find('#multi_menu3').stop(true, true).delay(100).fadeIn(500);
@@ -271,12 +495,12 @@ else
             if (productId === null || Units == 0) { toastr.warning("Please, select a valid product", "Warning"); } else {
                 var x = list.filter(x => x.id === productId);
 
-                if (x.length > 0) {
-                    toastr.warning("This product already exist", "Warning");
-                    //$("#units").val("0");
-                }
+                //if (x.length > 0) {
+                //    toastr.warning("This product already exist", "Warning");
+                //    //$("#units").val("0");
+                //}
 
-                else if (Units < 0 && returnReason == 0) {
+                if (Units < 0 && returnReason == 0) {
                     document.getElementById("selectr").style.display = "block";
                     toastr.warning("Please, select a return reason", "Warning");
                 }
@@ -316,11 +540,11 @@ else
                     $('#addProductModal').modal('hide');
                     $("#returnReason").val('0');
                     document.getElementById("loader").style.display = "none";
-                    var idtr = "tr_" + productId;
-                    document.getElementById(idtr).style.color = "#ddd";
+                    //var idtr = "tr_" + productId;
+                    //document.getElementById(idtr).style.color = "#ddd";
 
-                    var btnidtr = "btntd_" + productId;
-                    document.getElementById(btnidtr).style.display = "none";
+                    //var btnidtr = "btntd_" + productId;
+                    //document.getElementById(btnidtr).style.display = "none";
                 }
             }
         };
@@ -964,7 +1188,36 @@ else
     </script>
 
 }
+@if (ViewBag.Title == "Distribuidora Limeña - Routes Details")
+{
+    <script>
+        $(document).ready(function () {
+            $('#id_store').select2();
 
+
+            (function ($) {
+                'use strict';
+                $('#deleteModal').on('show.bs.modal', function (event) {
+                    var button = $(event.relatedTarget);// Button that triggered the modal
+
+                    var IDvisit = button.data("id");// Extract info from data-* attributes
+                    var Desvisit = button.data("description");
+
+
+                    // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                    // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                    var modal = $(this);
+                    //modal.find('.modal-title').text('Edit data: ' + recipient)
+                    modal.find('.modal-body input[name="ID_visitD"]').val(IDvisit);
+                    $("#descriptionD").text(Desvisit);
+
+                })
+            })(jQuery);
+
+        });
+    </script>
+
+}
 @if (ViewBag.Title == "Distribuidora Limeña - Routes")
 {
     @Html.Partial("~/Views/Shared/Routes_calendarScript.cshtml")
@@ -981,59 +1234,774 @@ else
         });
 
         $("#repmulti").select2({
-            multiple: true,
+            multiple: false,
             placeholder: "Select...",
             data: data
 
         });
 
-        var json2 = JSON.parse('@Html.Raw(ViewBag.stores)')
-
-        var data2 = $.map(json2, function (obj2) {
-            obj2.id = obj2.id; // replace pk with your identifier
-            obj2.text = obj2.text;
-            return obj2;
         });
 
-        $("#storesmulti").select2({
-            multiple: true,
-            placeholder: "Select...",
-            data: data2
+        $("#repmulti").on('change', function () {
+            $.ajax
+                ({
+                    url: '/Commercial/getStoresByRep',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+
+                        rep: this.value
+
+
+                    }),
+                    success: function (data) {
+                        var json2 = JSON.parse(data)
+
+                        var data2 = $.map(json2, function (obj2) {
+                            obj2.id = obj2.id; // replace pk with your identifier
+                            obj2.text = obj2.text;
+                            return obj2;
+                        });
+
+                        $("#storesmulti").select2({
+                            multiple: true,
+                            placeholder: "Select...",
+                            data: data2
+
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        document.getElementById("loader").style.display = "none";
+                        var err = eval("(" + xhr.responseText + ")");
+                        toastr.error(err.Message, "Error");
+                        return false;
+                    },
+                });
+
+
 
         });
 
-    });
     </script>
 }
 @if (ViewBag.Title == "Distribuidora Limeña - Marketing activities")
 {
     <script>
+
+        $("#ID_subcat").select2({
+            multiple: true,
+            placeholder: "Select..."
+
+        });
+
+//CHECK IN
+        var options = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function success(pos) {
+            var crd = pos.coords;
+            $("#loading").show();
+
+            var lat = crd.latitude;
+            var lng = crd.longitude;
+
+            var idvisita = "";
+            idvisita = '@ViewBag.id_visit';
+            var now = new Date();
+            //console.log(now.toLocaleString("en-US", { hour12: true }));
+            $.ajax({
+                url: '/Commercial/check_in',
+                type: 'POST',
+                data: { 'ID_visit': idvisita, 'check_in': now.toLocaleString("en-US", { hour12: true }), 'lat': lat, 'lng': lng },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        //showSuccessToast();
+
+                        window.location.reload(true);
+                    } else {
+                        //showWarning2Toast();
+                    }
+
+
+                },
+                error: function (request) {
+                    //showWarning2Toast();
+
+                }
+            });
+
+
+
+
+        };
+
+        function error(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+            $("#loading").show();
+            var idvisita = "";
+            idvisita = '@ViewBag.id_visit';
+            var now = new Date();
+
+            $.ajax({
+                url: '/Commercial/check_in',
+                type: 'POST',
+                data: { 'ID_visit': idvisita, 'check_in': now.toLocaleString("en-US", { hour12: true }), 'lat': "", 'lng': "" },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        //showSuccessToast();
+
+                        window.location.reload(true);
+                    } else {
+                        //showWarning2Toast();
+                    }
+
+
+                },
+                error: function (request) {
+                    //showWarning2Toast();
+
+                }
+            });
+        };
+
+        function initGeolocation() {
+            if (navigator && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(success, error, options);
+            } else {
+                console.log('Geolocation is not supported');
+            }
+        }
+
         //CHECK IN
         function checkinVisit() {
 
-            swal({
-                title: "Check in",
+            swal.fire({
+                title: 'Check in',
                 text: "Are you sure you want to check in to the store?",
                 type: 'info',
                 showCancelButton: true,
                 confirmButtonColor: '#3dba6f',
-                confirmButtonText: 'Check in'
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    initGeolocation();
+                } else if (result.dismiss == 'cancel') {
+
+                }
 
             });
-        }
 
+        }
 
         //CHECK OUT
+        //CHECK OUT
         function checkoutVisit() {
-            swal({
-                title: "Check out",
+
+            swal.fire({
+                title: 'Check out',
                 text: "Are you sure you want to check out to the store?",
+                type: 'info',
                 showCancelButton: true,
-                confirmButtonColor: '#fe413b',
-                confirmButtonText: 'Check out'
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    initGeolocation2();
+                } else if (result.dismiss == 'cancel') {
+
+                }
 
             });
+
         }
+
+
+        var options2 = {
+            enableHighAccuracy: true,
+            timeout: 5000,
+            maximumAge: 0
+        };
+
+        function success2(pos) {
+            var crd = pos.coords;
+            $("#loading").show();
+
+            var lat = crd.latitude;
+            var lng = crd.longitude;
+
+            var idvisita = "";
+            idvisita ='@ViewBag.id_visit';
+            var now = new Date();
+            //console.log(now.toLocaleString("en-US", { hour12: true }));
+            $.ajax({
+                url: '/Commercial/check_out',
+                type: 'POST',
+                data: { 'ID_visit': idvisita, 'check_in': now.toLocaleString("en-US", { hour12: true }), 'lat': lat, 'lng': lng },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        //showSuccessToast();
+
+                        window.location.reload(true);
+                        $("#loading").hide();
+                    } else {
+                        toastr.warning(result.Result, "Warning");
+
+                        $("#loading").hide();
+                    }
+
+
+                },
+                error: function (request) {
+                    //showWarning2Toast();
+
+                }
+            });
+
+
+
+
+        };
+
+        function error2(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+            $("#loading").show();
+            var idvisita = "";
+            idvisita = '@ViewBag.id_visit';
+            var now = new Date();
+
+            $.ajax({
+                url: '/Commercial/check_out',
+                type: 'POST',
+                data: { 'ID_visit': idvisita, 'check_in': now.toLocaleString("en-US", { hour12: true }), 'lat': "", 'lng': "" },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        //showSuccessToast();
+
+                        window.location.reload(true);
+                        $("#loading").hide();
+                    } else {
+                        toastr.warning(result.Result, "Warning");
+
+                        $("#loading").hide();
+                    }
+
+
+                },
+                error: function (request) {
+                    //showWarning2Toast();
+
+                }
+            });
+        };
+
+        function initGeolocation2() {
+            if (navigator && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(success2, error2, options2);
+            } else {
+                console.log('Geolocation is not supported');
+            }
+        }
+
+        function getActivity() {
+            var Idact = $("#ID_form").val();
+            var FormName = $("#ID_form option:selected").text();
+
+            if (FormName == "MARKETING ACTIVITY") {
+                $("#moreoptions").show();
+                //$("#ID_customer").show();
+
+            } else {
+                $("#moreoptions").hide();
+                //$("#ID_customer").hide();
+            }
+
+
+        }
+
+
+        function createActivity() {
+
+
+            var UserId = "0";
+            ///var UserId = $("#ID_rep").val();
+            var VisitId = '@ViewBag.id_visit';
+
+            var CustomerId = $("#ID_customer").val();
+            var CustomerName = $("#ID_customer option:selected").text();
+
+
+            var CatID = $("#ID_cat").val();
+            var CatName = $("#ID_cat option:selected").text();
+
+            //var SubCatID = $("#ID_subcat").val();
+            //var SubCatName = $("#ID_subcat option:selected").text();
+
+            var BrandID = $("#ID_brand").val();
+            var BrandName = $("#ID_brand option:selected").text();
+
+            var selMulti2 = $.map($("#ID_subcat option:selected"), function (el, i) {
+                return $(el).val();
+            });
+            var SubCatID = selMulti2.join(",");
+
+
+            var selMulti = $.map($("#ID_subcat option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var SubCatName = selMulti.join(",");
+
+
+            var FormId = $("#ID_form").val();
+
+
+
+            if (VisitId === null || UserId === null || CustomerId == "0" || FormId == "0") { toastr.warning("Please, select a store or complete all the information", "Warning"); } else {
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Commercial/CreateActivity',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            ID_rep: UserId,
+                            ID_visita: VisitId,
+                            ID_customer: CustomerId,
+                            Customer: CustomerName,
+                            ID_form: FormId,
+                            ID_cat: CatID,
+                            cat: CatName,
+                            ID_subcat: SubCatID,
+                            subcat: SubCatName,
+                            ID_brand: BrandID,
+                            brand: BrandName
+                        }),
+                        success: function (data) {
+                            document.getElementById("loader").style.display = "none";
+                            if (data == "Success") {
+
+                                toastr.success("Activity created successfully.", "Success");
+                                $('#createModal').modal('hide');
+                                getVisitData();
+
+                                $("#ID_rep").val('0').trigger("change");
+                                $("#ID_customer").val('0').trigger("change");
+                                $("#ID_form").val('0').trigger("change");
+                                $("#ID_cat").val('0').trigger("change");
+                                $("#ID_subcat").val('0').trigger("change");
+                                $("#ID_brand").val('0').trigger("change");
+
+                            } else {
+                                toastr.warning(data, "Warning");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            document.getElementById("loader").style.display = "none";
+                            var err = eval("(" + xhr.responseText + ")");
+                            toastr.error(err.Message, "Error");
+                        },
+                    });
+            }
+
+
+        }
+
+        function getBrands() {
+            var subID = $("#ID_subcat").val();
+            var idvisita = "";
+
+            var catID = $("#ID_cat").val();
+            var customerId = $("#ID_customer").val();
+
+            //$.ajax
+            //    ({
+            //        url: '/FormsActions/Getbrands',
+            //        type: 'POST',
+            //        datatype: 'application/json',
+            //        contentType: 'application/json',
+            //        data: JSON.stringify({
+            //            customerID: customerId,
+            //            catID: catID,
+            //            subID: subID,
+            //            idvisit: idvisita
+            //        }),
+            //        success: function (result) {
+
+            //            $("#ID_brand").html("");
+            //            $("#ID_brand").append($('<option></option>').val(0).html("Seleccione una marca"))
+            //            $.each($.parseJSON(result), function (i, brands) {
+            //                if (brands.isselected) {//si esta seleccionado
+            //                    $("#ID_brand").append
+            //                        ($('<option selected></option>').val(brands.FirmCode).html(brands.FirmName));
+
+
+            //                } else {
+            //                    $("#ID_brand").append
+            //                        ($('<option></option>').val(brands.FirmCode).html(brands.FirmName));
+            //                }
+
+
+            //            }
+
+            //            )
+
+
+
+
+
+            //        },
+            //        error: function () {
+            //            alert("Whooaaa! Something went wrong..")
+            //        },
+            //    });
+
+
+
+        }
+
+
+        function getCategories() {
+            //var customerId = $("#ID_customer").val();
+            var brandID = $("#ID_brand").val();
+            var idvisita = "";
+
+
+
+            $.ajax
+                ({
+                    url: '/FormsActions/GetCategories',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        customerID: brandID,
+                        idvisit: idvisita
+                    }),
+                    success: function (result) {
+
+                        $("#ID_cat").html("");
+                        $("#ID_cat").append($('<option></option>').val(0).html("Seleccione una categoria"))
+                        $.each($.parseJSON(result), function (i, cat) {
+                            if (cat.isselected) {//si esta seleccionado
+                                $("#ID_cat").append
+                                    ($('<option selected></option>').val(cat.FirmCode).html(cat.FirmName));
+
+
+                            } else {
+                                $("#ID_cat").append
+                                    ($('<option></option>').val(cat.FirmCode).html(cat.FirmName));
+                            }
+
+
+                        }
+
+                        )
+
+
+
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+                    },
+                });
+
+
+
+        }
+
+        function getSubcategories() {
+            var catID = $("#ID_cat").val();
+            var idvisita = "";
+
+            //var customerId = $("#ID_customer").val();
+            var brandID = $("#ID_brand").val();
+            $.ajax
+                ({
+                    url: '/FormsActions/getSubcategories',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        customerID: brandID,
+                        catID: catID,
+                        idvisit: idvisita
+                    }),
+                    success: function (result) {
+
+                        $("#ID_subcat").html("");
+                        $("#ID_subcat").append($('<option></option>').val(0).html("Seleccione una subcategoria"))
+                        $.each($.parseJSON(result), function (i, productline) {
+
+                            if (productline.isselected) {//si esta seleccionado
+                                $("#ID_subcat").append
+                                    ($('<option selected></option>').val(productline.FirmCode).html(productline.FirmName));
+
+                            } else {
+                                $("#ID_subcat").append
+                                    ($('<option></option>').val(productline.FirmCode).html(productline.FirmName));
+                            }
+                        }
+                        )
+
+
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+                    },
+                });
+
+        }
+
+
+
+
+                function getVisitData() {
+
+
+            var UserId = '@ViewBag.id_user'; /*$("#option_Users").val();*/
+            var isadmin = '@Html.Raw(ViewBag.isAdmin)';
+            var VisitId = '@ViewBag.id_visit' /*$("#option_Stores").val();*/
+            $.ajax
+                ({
+                    url: '/Commercial/GetVisitData',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        UserId: UserId,
+                        VisitId: VisitId,
+                        isadmin: isadmin
+                    }),
+                    success: function (result) {
+
+
+                        $("#storeName").html(result.resultV[0].storeName);
+                        $("#storeAddress").html(result.resultV[0].storeAddress);
+
+                        var bdate = new Date(parseInt(result.resultV[0].storeDate.substr(6)));
+
+                        //format display date (e.g. 04/10/2012)
+                        var displayDate = $.datepicker.formatDate("mm/dd/yy", bdate);
+
+                        $("#storeDate").html(displayDate);
+                        $("#getdirections").attr("href", "https://www.google.com/maps/place/" + result.resultV[0].storeAddress);
+                        $("#getdirections").attr('target', '_blank');
+                        var obj = JSON.parse(result.resultAct);
+                        var flag = @Html.Raw(ViewBag.isAdmin);
+                        var estadovisita = '@ViewBag.estadovisita';
+                        var ftot = 0;
+                        var fcom = 0;
+                        var fpor = 0.0;
+
+                        var atot = 0;
+                        var acom = 0;
+                        var apor = 0.0;
+
+                        var stot = 0;
+                        var scom = 0;
+                        var spor = 0.0;
+
+                        var dtot = 0;
+                        var dcom = 0;
+                        var dpor = 0.0;
+
+                        if (obj.length > 0) {
+                            try {
+                                $("#tbodyid").empty();
+                                for (var i = 0; i < obj.length; i++) {
+
+                                    var url = '@Url.Action("Activityon", "Commercial", new { id = "ID_ACT"})';
+                                    url = url.replace('ID_ACT', obj[i]["ID_activity"]);
+
+                                    var tr = "<tr>";
+                                    tr += "<td>" + obj[i]["ID_activity"] + "</td>";
+
+                                    tr += "<td>" + obj[i]["description"] + "</td>";
+                                    tr += "<td>" + obj[i]["Customer"] + "</td>";
+                                    if (flag == 1) {
+                                    tr += "<td>" + obj[i]["comments"] + "</td>";
+                                }
+                                    if (obj[i]["isfinished"] == true) {
+
+                                                            var url2 = '@Url.Action("Activityon_preview", "Commercial", new { id = "ID_ACT"})';
+                                    url2 = url2.replace('ID_ACT', obj[i]["ID_activity"]);
+
+                                        tr += "<td>" + '<span class="badge badge-info form-pill px-3 py-1">Finished</span>' + "</td>";
+                                        tr += '<td><a  href="' + url2 + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-eye mr-2"></i>Preview</a>'
+                                    } else {
+                                        tr += "<td>" + '<span class="badge badge-warning form-pill px-3 py-1">Not finished</span>' + "</td>";
+                                        if (estadovisita == '3') {
+                                            tr += '<td>'
+                                        } else {
+                                            tr += '<td><a  href="' + url + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>'
+                                        }
+
+                                    }
+                                    if (estadovisita == '2') {
+                                        //tr += '<button class="btn btn-outline-warning btn-sm form-pill" data-toggle="modal" data-target="#copyModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-copy mr-2"></i>Copy</button>'
+                                    } else {
+
+                                    }
+
+                                        if (flag == 1) {
+                                            if (obj[i]["isfinished"] == false) {
+                                                                                var url2 = '@Url.Action("Activityon_preview", "Commercial", new { id = "ID_ACT"})';
+                                    url2 = url2.replace('ID_ACT', obj[i]["ID_activity"]);
+
+                                        tr += '<a  href="' + url2 + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-eye mr-2"></i>Preview</a>'
+                                            }
+                                            if (estadovisita != 4) {
+                                                tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#deleteModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Delete</button>'
+
+                                            }
+
+                                        }
+
+                                        tr += '</td ></tr > ';
+
+                                        $("#data_table").append(tr);
+
+                                        if (obj[i]["ID_activitytype"] == 1) {
+                                            ftot++;
+
+                                            if (obj[i]["isfinished"] == true) {
+                                                fcom++;
+                                            }
+                                        }
+                                        if (obj[i]["ID_activitytype"] == 2) {
+                                            atot++;
+
+                                            if (obj[i]["isfinished"] == true) {
+                                                acom++;
+                                            }
+                                        }
+                                        if (obj[i]["ID_activitytype"] == 3) {
+                                            stot++;
+
+                                            if (obj[i]["isfinished"] == true) {
+                                                scom++;
+                                            }
+                                        }
+                                        if (obj[i]["ID_activitytype"] == 4) {
+                                            dtot++;
+
+                                            if (obj[i]["isfinished"] == true) {
+                                                dcom++;
+                                            }
+                                        }
+
+                                    }
+
+                                    if (ftot > 0) {
+                                        fpor = Math.round(((fcom / ftot) * 100));
+                                    }
+                                    if (atot > 0) {
+                                        apor = Math.round(((acom / atot) * 100));
+                                    }
+                                    if (stot > 0) {
+                                        spor = Math.round(((scom / stot) * 100));
+                                    }
+                                    if (dtot > 0) {
+                                        dpor = Math.round(((dcom / dtot) * 100));
+                                    }
+
+                                    //STATS
+                                    $("#forms_p1").html(fpor + "%" + " (" + fcom + "/" + ftot + ")");
+                                    $('#forms_d1').css('width', '' + fpor + '%');
+                                    $("#audits_p1").html(apor + "%" + " (" + acom + "/" + atot + ")");
+                                    $("#audits_d1").css('width', '' + apor + '%');
+                                    $("#sales_p1").html(spor + "%" + " (" + scom + "/" + stot + ")");
+                                    $("#sales_d1").css('width', '' + spor + '%');
+                                    $("#demos_p1").html(dpor + "%" + " (" + dcom + "/" + dtot + ")");
+                                    $("#demos_d1").css('width', '' + dpor + '%');
+                                }
+
+                            catch (err) {
+
+                                console.log(err);
+                                var table = $('#data_table').DataTable();
+
+                                table
+                                    .clear()
+                                    .draw();
+                            }
+                        } else {
+                            var table = $('#data_table').DataTable();
+
+                            table
+                                .clear()
+                                .draw();
+                        }
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong...")
+                    },
+                });
+        }
+
+
+
+        function deleteActivity() {
+
+            var ActivityId = $("#ID_activityD").val();
+
+            if (ActivityId === null || ActivityId == "") { toastr.warning("Please, select an activity", "Warning"); } else {
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Commercial/DeleteActivity',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            ID_activity: ActivityId
+
+                        }),
+                        success: function (data) {
+                            document.getElementById("loader").style.display = "none";
+                            if (data == "Success") {
+
+                                toastr.success("Activity deleted successfully.", "Success");
+                                $('#deleteModal').modal('hide');
+                                getVisitData()
+
+
+
+
+                            } else {
+                                toastr.warning(data, "Warning");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            document.getElementById("loader").style.display = "none";
+                            var err = eval("(" + xhr.responseText + ")");
+                            toastr.error(err.Message, "Error");
+                        },
+                    });
+            }
+
+
+
+        }
+
     </script>
 }
 
@@ -1041,7 +2009,63 @@ else
 {
     @Html.Partial("~/Views/Shared/Planning_calendarScript.cshtml")
     <script>
+        /* ---------------------------------------------
+Configure tooltips globally
+--------------------------------------------- */
+        function deleteRoute() {
+            var idr = $("#selectedRoute").val();
+            swal.fire({
+                title: 'Are you sure to delete this route?',
+                text: "You won't be able to revert this",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/deleteRoute',
+                        type: 'POST',
+                        data: { 'id_route': idr },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+                            console.log(result);
+                            if (result == "SUCCESS") {
+
+                                Swal.fire(
+                                    'Route deleted!',
+                                    'The Route has been deleted.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
         function filterByCode() {
+
+
+            $("#officeFltr2").val("0");
+
+            $("#officeFltr3").val("0");
+
+            $("#officeFltr").val("0");
+
             var input, filter, ul, li, a, i, txtValue;
             input = document.getElementById("myInput");
             filter = input.value.toUpperCase();
@@ -1056,10 +2080,15 @@ else
                     li[i].style.display = "none";
                 }
             }
+
         }
 
         function myFunction() {
             var input, filter, ul, li, a, i, txtValue;
+            $("#myInput").val("");
+            $("#officeFltr2").val("0");
+
+            $("#officeFltr3").val("0");
 
             filter = $("#officeFltr option:selected").text();
 
@@ -1091,10 +2120,15 @@ else
                 }
             }
 
+
         }
 
         function myFunction2() {
             var input, filter, ul, li, a, i, txtValue;
+            $("#myInput").val("");
+            $("#officeFltr").val("0");
+
+            $("#officeFltr3").val("0");
 
             filter = $("#officeFltr2 option:selected").text();
 
@@ -1126,10 +2160,15 @@ else
                 }
             }
 
+
         }
 
         function myFunction3() {
             var input, filter, ul, li, a, i, txtValue;
+            $("#myInput").val("");
+            $("#officeFltr2").val("0");
+
+            $("#officeFltr").val("0");
 
             filter = $("#officeFltr3 option:selected").text();
 
@@ -1146,13 +2185,16 @@ else
 
                 }
             } else {
+                filter = filter.substr(filter.indexOf("-") + 2);
+                console.log(filter);
                 ul = document.getElementById("sortable1");
                 li = ul.getElementsByTagName("li");
                 for (i = 0; i < li.length; i++) {
                     a = li[i].getElementsByTagName("label")[0];
 
                     txtValue = a.textContent || a.innerText;
-                    txtValue = ": " + txtValue;
+
+
                     if (txtValue.indexOf(filter) > -1) {
                         li[i].style.display = "";
                     } else {
@@ -1168,12 +2210,12 @@ else
             $("#sortable1").html(
 
                 $("#sortable1").children("li").sort(function (a, b) {
-                    var s1 = $(b).find("label.pillCustomer").text();
-                    var s2 = $(a).find("label.pillCustomer").text();
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
 
-                    
+
                     return s2.toUpperCase().localeCompare(s1.toUpperCase());
-             
+
 
                 }) // End Sort
 
@@ -1189,8 +2231,8 @@ else
             $("#sortable1").html(
 
                 $("#sortable1").children("li").sort(function (a, b) {
-                    var s1 = $(b).find("label.pillCustomer").text();
-                    var s2 = $(a).find("label.pillCustomer").text();
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
 
 
                     return s1.toUpperCase().localeCompare(s2.toUpperCase());
@@ -1210,7 +2252,7 @@ else
 
                 $("#sortable1").children("li").sort(function (a, b) {
 
-                    return (new Date($(a).find("small.pilldate").text()) > new Date($(b).find("small.pilldate").text())) ? 1 : -1;
+                    return (new Date($(a).find("small.pilldate2").text()) > new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
 
                 }) // End Sort
 
@@ -1228,7 +2270,7 @@ else
                 $("#sortable1").children("li").sort(function (a, b) {
 
                     //return $(b).find("small.pilldate").text().toUpperCase().localeCompare($(a).find("small.pilldate").text().toUpperCase());
-                    return (new Date($(a).find("small.pilldate").text()) < new Date($(b).find("small.pilldate").text())) ? 1 : -1;
+                    return (new Date($(a).find("small.pilldate2").text()) < new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
 
                 }) // End Sort
 
@@ -1247,7 +2289,7 @@ else
                 $("#sortable1").children("li").sort(function (a, b) {
 
                     //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
-                    return (parseFloat($(a).find("small.pillAmount").text()) > parseFloat($(b).find("small.pillAmount").text())) ? 1 : -1;
+                    return (parseFloat($(a).find("small.pillAmount2").text()) > parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
                 }) // End Sort
 
             ); // End HTML
@@ -1264,7 +2306,7 @@ else
                 $("#sortable1").children("li").sort(function (a, b) {
 
                     //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
-                    return (parseFloat($(a).find("small.pillAmount").text()) < parseFloat($(b).find("small.pillAmount").text())) ? 1 : -1;
+                    return (parseFloat($(a).find("small.pillAmount2").text()) < parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
                 }) // End Sort
 
             ); // End HTML
@@ -1273,6 +2315,207 @@ else
                 connectWith: ".connectedSortable"
             }).disableSelection();
         });
+
+
+
+        //SELECTED ORDERS SORT
+        $('#pills-AZ2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
+
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-ZA2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-Date2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    return (new Date($(a).find("small.pilldate2").text()) > new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-DateUp2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    //return $(b).find("small.pilldate").text().toUpperCase().localeCompare($(a).find("small.pilldate").text().toUpperCase());
+                    return (new Date($(a).find("small.pilldate2").text()) < new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-Price2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount2").text()) > parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-PriceUp2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount2").text()) < parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-CC2u').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("span.pillcc2").text();
+                    var s2 = $(a).find("span.pillcc2").text();
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-CC2d').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("span.pillcc2").text();
+                    var s2 = $(a).find("span.pillcc2").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-SO2u').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("div.pillso").text();
+                    var s2 = $(a).find("div.pillso").text();
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-SO2d').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("div.pillso").text();
+                    var s2 = $(a).find("div.pillso").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $("#officeFltr3").select2();
+
+
+
     </script>
 
     <script>
@@ -1291,6 +2534,11 @@ else
             data: data
         });
 
+        $("#lstDriver2").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
         json = JSON.parse('@Html.Raw(ViewBag.routeleaders)')
 
         data = $.map(json, function (obj2) {
@@ -1304,6 +2552,13 @@ else
             data: data
 
         });
+
+        $("#lstRLeader2").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
         json = JSON.parse('@Html.Raw(ViewBag.trucks)')
         data = $.map(json, function (obj2) {
             obj2.id = obj2.id; // replace pk with your identifier
@@ -1312,6 +2567,12 @@ else
         });
 
         $("#lstTruck").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        $("#lstTruck2").select2({
             placeholder: "Select...",
             data: data
 
@@ -1330,6 +2591,169 @@ else
 
         });
 
+        $("#lstMaster2").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        document.getElementById("btneditr").addEventListener("click", editRoute, false);
+        document.getElementById("finisheditbtn").addEventListener("click", SaveEditRoute, false);
+        document.getElementById("newExtra").addEventListener("click", newExtra, false);
+        document.getElementById("addExtra").addEventListener("click", addExtra, false);
+
+        $('#tbExtras').on('click', '.delRow', function () {
+            $(this).closest("tr").remove();
+        });
+
+        function addExtra() {
+            var description = $('#addDescription').val();
+            var value = $('#addValue').val();
+
+            var tr2 = "<tr>";
+            tr2 += "<td>" + description + "</td>";
+            tr2 += "<td>" + value + "</td>";
+            tr2 += "<td>" + "<button class='btn btn-sm btn-outline-warning btn-pill delRow'>DEL</button>" + "</td>";
+            tr2 += "</tr>"
+            $("#tbExtras").append(tr2);
+
+            $('#addDescription').val("");
+            $('#addValue').val("");
+        }
+
+
+        function newExtra() {
+            var idroute = $("#selectedRoute").val();
+            $.ajax
+                ({
+                    url: '/Invoices/GetExtraData',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: idroute
+                    }),
+                    success: function (result) {
+
+                        $.each($.parseJSON(result), function (i, route) {
+                           // console.log(result);
+                            var tr2 = "<tr>";
+                            tr2 += "<td>" + route.Description + "</td>";
+                            tr2 += "<td>" + route.Value + "</td>";
+                            tr2 += "<td>" + "<button class='btn btn-sm btn-outline-warning btn-pill delRow'>DEL</button>" + "</td>";
+                            tr2 += "</tr>"
+                            $("#tbExtras").append(tr2);
+
+
+
+                        }); //END EACH
+                        setTimeout(function () { $('#extraModal').modal('show') }, 500);
+                        $('#modal_SO').modal('hide');
+
+
+
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+
+                    },
+                });
+
+
+
+        }
+
+        function editRoute() {
+            var idroute = $("#selectedRoute").val();
+            $.ajax
+                ({
+                    url: '/Invoices/GetRouteData',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: idroute
+                    }),
+                    success: function (result) {
+
+                        $.each($.parseJSON(result), function (i, route) {
+                            $("#routeName2").val(route.Route_name);
+                            $("#lstDriver2").val(route.ID_driver).trigger("change");
+                            $("#lstTruck2").val(route.ID_truck).trigger("change");
+                            $("#lstRLeader2").val(route.ID_routeleader).trigger("change");
+                            var nowDate = new Date(parseInt(route.Departure.substr(6)));
+                            nowDate.setHours(nowDate.getHours() + 6);
+                            var final = moment(nowDate).format();
+
+                            $('#departure2').val(final.substring(0, final.length - 6));
+
+
+                        }); //END EACH
+                        setTimeout(function () { $('#editModal').modal('show') }, 500);
+                        $('#modal_SO').modal('hide');
+
+
+
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+
+                    },
+                });
+
+
+
+        }
+
+        function SaveEditRoute() {
+            var idroute = $("#selectedRoute2").val();
+            var routename = $("#routeName2").val();
+            var driverCode = $("#lstDriver2").val();
+            var driverName = $("#lstDriver2 option:selected").text();
+            var truckCode = $("#lstTruck2").val();
+            var truckName = $("#lstTruck2 option:selected").text();
+            var rleaderCode = $("#lstRLeader2").val();
+            var rleaderName = $("#lstRLeader2 option:selected").text();
+            var departure = $("#departure2").val();
+
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/EditRoute',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        routeName: routename,
+                        id: idroute,
+                        lstDriverCode: driverCode,
+                        lstDriverName: driverName,
+                        lstTruckCode: truckCode,
+                        lstTruckName: truckName,
+                        lstRLeaderCode: rleaderCode,
+                        lstRLeaderName: rleaderName,
+                        departure: departure
+                    }),
+                    success: function (result) {
+                        if (result == "Success") {
+                            toastr.success("Route saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+        }
+
     });
     </script>
 }
@@ -1337,6 +2761,75 @@ else
 @if (ViewBag.Title == "Distribuidora Limeña - Quality Control")
 {
     @Html.Partial("~/Views/Shared/QualityControl_Script.cshtml")
+    <script type="text/javascript">
+        $('#data_tableEditor2').treegrid();
+        $('#data_tableEditor2').treegrid('collapseAll');
+    </script>
+
+    <script>
+
+        function PrintSO(id, docentry) {
+
+            swal.fire({
+                title: 'Are you sure to print this sales order?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_so',
+                        type: 'POST',
+                        data: { 'id': id, 'docentry':docentry },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Sales Order printed',
+                                    '',
+                                    'success'
+                                )
+                                //window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+    $(document).ready(function () {
+        var json = JSON.parse('@Html.Raw(ViewBag.pickers)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#pickerlst").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+
+    });
+    </script>
 }
 @if (ViewBag.Title == "Distribuidora Limeña - Quality Control planning")
 {
@@ -1367,7 +2860,7 @@ else
 
                                 Swal.fire(
                                     'Route closed!',
-                                    'The Route has been deleted.',
+                                    'The Route has been closed.',
                                     'success'
                                 )
                                 window.location.reload(true);
@@ -1386,5 +2879,2296 @@ else
                 }
             })
         }
+
+        function PrintRoute(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to print this route?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_route',
+                        type: 'POST',
+                        data: { 'id': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Route printed',
+                                    '',
+                                    'success'
+                                )
+                                //window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+
+        function closeOrders(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to close all Sales Orders for this route?',
+                text: "You won't be able to revert this",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/closeAllSalesOrders',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Sales Orders closed!',
+                                    'The Sales Orders have been deleted.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+    </script>
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Purchase Data")
+{
+    <script>
+        $(document).ready(function () {
+            $(".delbtn").click(function () {
+                var contentPanelId = jQuery(this).attr("id");
+                id_data = contentPanelId;
+
+                Del_PurchaseData(id_data);
+            });
+
+
+            function Del_PurchaseData(id_data) {
+
+
+                swal.fire({
+                    title: 'Are you sure to delete this data?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
+
+                        $.ajax({
+                            url: '/Operations/Del_PurchaseData',
+                            type: 'POST',
+                            data: { 'id': id_data },
+                            cache: false,
+                            global: false,
+                            success: function (result) {
+
+                                if (result == "SUCCESS") {
+
+                                    Swal.fire(
+                                        'Data deleted!',
+                                        'The Data has been deleted.',
+                                        'success'
+                                    )
+                                    window.location.reload(true);
+                                }
+                                else {
+                                    //alert("Something went wrong..");
+                                    toastr.info("Deleting details...", "Delete");
+                                    repeatdel(id_data);
+
+                                }
+
+
+                            },
+                            error: function (request) {
+                                //alert("Something went wrong..");
+                            }
+                        });
+
+                    }
+                })
+            }
+
+            function repeatdel(id_data) {
+                $.ajax({
+                    url: '/Operations/Del_PurchaseData',
+                    type: 'POST',
+                    data: { 'id': id_data },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+
+                            Swal.fire(
+                                'Data deleted!',
+                                'The Data has been deleted.',
+                                'success'
+                            )
+                            window.location.reload(true);
+                        }
+                        else {
+                            //alert("Something went wrong..");
+                            toastr.info("Deleting details...", "Delete");
+                            repeatdel(id_data);
+                        }
+
+
+                    },
+                    error: function (request) {
+                        //alert("Something went wrong..");
+                    }
+                });
+
+            }
+            //var classname = document.getElementsByClassName("delbtn");
+
+            //for (var i = 0; i < classname.length; i++) {
+            //    classname[i].addEventListener('click', Del_PurchaseData, false);
+            //}
+        });
+    </script>
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Edit Purchase Data")
+{
+
+    <script type="text/javascript">
+        //$('#data_tableEditor2').DataTable({
+        //    'paging':false
+        //});
+
+
+        function test() {
+                 var objects = @Html.Raw(Json.Encode(ViewBag.data));
+            var myArray = [];
+            if (objects.length > 0) {
+
+                try {
+                    $("#maintbbo").empty();
+                    $("#data_tableEditor2").append();
+                    for (var i = 0; i < objects.length; i++) {
+                        //console.log(objects[i]["ProdCodigo"]);
+                        //var tr = "";
+
+                        if (objects[i]["transito"] > 0) {
+                            myArray.push('<tr class="context-menu-one" style="background-color:aliceblue" id="' + objects[i]["ProdCodigo"] + '">');
+                        } else {
+                            myArray.push('<tr  class="context-menu-one" id="' + objects[i]["ProdCodigo"] + '">');
+                        }
+                        myArray.push('<td></td>');
+                        myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra_quiebre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["Politica_cobertura"] + "</td>");
+
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Marca"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["SubCategory"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Category"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioCajas"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Desviacion"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Maximo"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Minimo"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoPeriodoActual"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio_AA"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["VentaB1"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Variacion"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["TendenciaPeriodoActual"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente1"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente2"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente3"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente4"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"] + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
+
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_TI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
+
+
+
+                        if (objects[i]["Comentarios"] != null) {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea>' + objects[i]["Comentarios"] + '</textarea>' + "</td>");
+                        } else {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea></textarea>' + "</td>");
+                        }
+
+
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["VentaF1"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["LeadTime"] + "</td>");
+
+                        myArray.push('</tr >');
+
+
+
+
+                    }
+                    $('#maintbbo').append(myArray.join(''));
+
+                }
+                catch (err) {
+                    console.log("error: " + err.message);
+                    $("#maintbbo").empty();
+                    $("#data_tableEditor2").append();
+                }
+            } else {
+                console.log("error2");
+                $("#maintbbo").empty();
+                $("#data_tableEditor2").append();
+            }
+
+
+
+        }
+
+        $(document).ready(function () {
+            //Llamamos los datos
+            test();
+
+            var table = $('#data_tableEditor2').DataTable({
+                dom: 'lrtip',
+                scrollY: "600px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+
+                fixedColumns: {
+                    leftColumns: 3
+                }
+
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            function sort_unique(arr) {
+                return arr.sort().filter(function (el, i, a) {
+                    return (i == a.indexOf(el));
+                });
+            }
+
+            $(function () {
+                $('input.filternumbers').on('input', function () {
+                    this.value = this.value
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+                });
+            });
+
+
+
+
+            $('input.editPedido[type = "text"]').on('focusout', function () {
+                //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
+                var pedido = $(this).val();
+                var coberturaProyectadaNume = $(this).closest('tr').find('.editCoberturaProyectadaNume').text();
+                var coberturaProyectadaDeno = $(this).closest('tr').find('.editCoberturaProyectadaDeno').text();
+                var total = (coberturaProyectadaNume + pedido) / coberturaProyectadaDeno
+                if (coberturaProyectadaDeno == 0) { total = 0.0; }
+
+                $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
+                //            //$(this).html('DEL');
+
+                ///Monto PO
+                var desc = 0;
+
+                desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                var monto = desc * pedido;
+                if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                //Pallet de orden editPalletOrden
+                var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
+                var palletstotal = (pedido / casesPallet);
+
+                if (casesPallet == 0) { palletstotal = 0; }
+                if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
+
+
+            });
+
+            $('input.editDAp[type = "text"]').on('focusout', function () {
+
+                var x = $(this).closest('tr').find('.editDAp').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAn').val('');
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - ((descuentop * costo) / 100));
+                    //costo con descuento
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var desc = 0;
+
+                    desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                    var monto = desc * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+                    //$(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2));
+
+                }
+
+
+            });
+
+            $('input.editDAn[type = "text"]').on('focusout', function () {
+                var x = $(this).closest('tr').find('.editDAn').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAp').val('');
+
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - descuentop);
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var monto = total * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                }
+
+
+            });
+        });
+
+
+
+        $('#data_tableEditor2 tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                $('#data_tableEditor2 tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        //$('#data_tableEditor2').treegrid();
+        //$('#data_tableEditor2').treegrid('collapseAll');
+
+
+
+
+        $(function () {
+            $.contextMenu({
+                selector: '.context-menu-one',
+                trigger: 'right',
+                items: $.contextMenu.fromMenu($('#html5menu'))
+            });
+
+            $('.context-menu-one').on('contextmenu', function (e) {
+                var product = this.id;
+                //Cargamos Transito final
+
+                $.ajax({
+                    url: '/Operations/getTransitoFinal',
+                    type: 'GET',
+                    data: { 'id': product },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        var obj = JSON.parse(result);
+
+                        if (obj.length > 0) {
+
+                            obj.sort(function (a, b) {
+                                if (a.NumTransito > b.NumTransito) {
+                                    return 1;
+                                }
+                                if (a.NumTransito < b.NumTransito) {
+                                    return -1;
+                                }
+                                // a must be equal to b
+                                return 0;
+                            });
+
+                            try {
+                                $(".tbodyid").empty();
+                                $(".tb_editor").append();
+                                for (var i = 0; i < obj.length; i++) {
+                                    var tr = "<tr>";
+                                    tr += "<td>" + obj[i]["NumTransito"] + "</td>";
+                                    tr += "<td>" + (new Date(parseInt(obj[i]["DocDate"].substr(6)))).toLocaleDateString('en-US') + "</td>";
+                                    tr += "<td>" + obj[i]["DiaSemana"] + "</td>";
+                                    tr += "<td>" + obj[i]["DifSemanas"] + "</td>";
+                                    tr += "<td>" + obj[i]["NumFactura"] + "</td>";
+                                    tr += "<td>" + obj[i]["CantCajas"] + "</td>";
+                                    tr += "<td>" + obj[i]["FormulaDia"] + "</td>";
+                                    tr += "<td>" + obj[i]["CoberturaSemanal"] + "</td>";
+                                    tr += '</tr > ';
+
+                                    $(".tb_editor").append(tr);
+
+
+                                }
+
+                                $.contextMenu({
+                                    selector: '.context-menu-one',
+                                    trigger: 'right',
+                                    items: $.contextMenu.fromMenu($('#html5menu'))
+                                });
+                            }
+                            catch (err) {
+
+                                $(".tbodyid").empty();
+                                $(".tb_editor").append();
+                            }
+                        } else {
+
+                            $(".tbodyid").empty();
+                            $(".tb_editor").append();
+                        }
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..Please, try again");
+
+                    }
+
+                });
+
+            });
+        });
+
+
+        function savePurchaseData() {
+            var data;
+            data = Array();
+
+
+
+            $("#data_tableEditor2 tr").each(function (i, v) {
+                data[i] = Array();
+                $(this).children('td').each(function (ii, vv) {
+                    if (ii == 30) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+                    } else if (ii == 44) {
+                        data[i][ii] = $(this).eq(0).find('textarea').val();
+
+                    } else if (ii == 40) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    } else if (ii == 41) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    }  else {
+                        data[i][ii] = $(this).text();
+                    }
+
+
+                });
+            })
+
+
+            var objects = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+                if (i != 0) {
+                    objects.push({
+                        num: data[i][0],
+                        ProdCodigo: data[i][1].trim(),
+                        ProdNombre: data[i][2],
+                        FactorCompra: data[i][3],
+                        FactorCompra_quiebre: data[i][4],
+                        Politica_cobertura: data[i][5],
+                        Marca: data[i][6],
+                        SubCategory: data[i][7],
+                        Category: data[i][8],
+                        ProvNombre: data[i][9],
+                        UnidadMedidaLetras: data[i][10],
+                        InventarioEach: data[i][11],
+                        InventarioCajas: data[i][12],
+                        Promedio: data[i][13],
+                        Desviacion: data[i][14],
+                        Maximo: data[i][15],
+                        Minimo: data[i][16],
+                        PronosticoPeriodoActual: data[i][17],
+                        Promedio_AA: data[i][18],
+                        VentaB1: data[i][19],
+                        Variacion: data[i][20],
+                        TendenciaPeriodoActual: data[i][21],
+                        PronosticoSiguiente1: data[i][22],
+                        PronosticoSiguiente2: data[i][23],
+                        PronosticoSiguiente3: data[i][24],
+                        PronosticoSiguiente4: data[i][25],
+                        CoberturaActual: data[i][26],
+                        CoberturaProyectada: data[i][27],
+                        OTB: data[i][28],
+                        Cobertura_OTB: data[i][29],
+                        Pedido: data[i][30],
+                        DeliveryDate: data[i][31],
+                        DocumentDate: data[i][32],
+                        U_TI: data[i][33],
+                        U_HI: data[i][34],
+                        U_PalletCount: data[i][35],
+                        PalletsdeOrden: data[i][36],
+                        CoberturaProyectadaNume: data[i][37],
+                        CoberturaIngresoPO: data[i][38],
+                        Costo:data[i][39],
+                        DescuentoAn: data[i][40],
+                        DescuentoAp: data[i][41],
+                        CostoconDescuento: data[i][42],
+                        MontoPO: data[i][43],
+                        Comentarios: data[i][44],
+                        CoberturaProyectadaDeno: data[i][45],
+                        VentaF1: data[i][46],
+                        LeadTime: data[i][47],
+                        transito:0
+                    });
+                }
+
+            }
+            var idpurchase = @ViewBag.purchasedataID;
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Operations/SaveEdit_PurchaseData',
+                    type: 'POST',
+                    data: {'id': idpurchase, 'objects': objects },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+
+            //$('.editPedido').on('change', function () {
+            //    console.log("editing");
+            //            //$(this).closest('tr').hide();
+            //            //$(this).html('DEL');
+
+
+
+
+
+            //    //$(this).closest('tr').find("input,button,select").attr("disabled", true);
+            //    //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
+            //    //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
+            //});
+
+        }
+        //SECCION PARA EDICION Y FORMULAS
+
+
+    </script>
+
+}
+@if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data")
+{
+
+    <script type="text/javascript">
+        //$('#data_tableEditor2').DataTable({
+        //    'paging':false
+        //});
+
+
+        function test() {
+                 var objects = @Html.Raw(Json.Encode(ViewBag.data));
+            var myArray = [];
+            if (objects.length > 0) {
+
+                try {
+                    $("#maintbbo").empty();
+                    $("#data_tableEditor2").append();
+                    for (var i = 0; i < objects.length; i++) {
+                        //console.log(objects[i]["ProdCodigo"]);
+                        //var tr = "";
+
+                        if (objects[i]["transito"] > 0) {
+                            myArray.push('<tr class="context-menu-one" style="background-color:aliceblue" id="' + objects[i]["ProdCodigo"] + '">');
+                        } else {
+                            myArray.push('<tr  class="context-menu-one" id="' + objects[i]["ProdCodigo"] + '">');
+                        }
+                        myArray.push('<td></td>');
+                        myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra_quiebre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["Politica_cobertura"] + "</td>");
+
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Marca"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["SubCategory"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Category"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioCajas"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Desviacion"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Maximo"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Minimo"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoPeriodoActual"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio_AA"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["VentaB1"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Variacion"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["TendenciaPeriodoActual"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente1"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente2"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente3"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente4"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"] + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
+
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_TI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
+
+
+
+                        if (objects[i]["Comentarios"] != null) {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea>' + objects[i]["Comentarios"] + '</textarea>' + "</td>");
+                        } else {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea></textarea>' + "</td>");
+                        }
+
+
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["VentaF1"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["LeadTime"] + "</td>");
+
+                        myArray.push('</tr >');
+
+
+
+
+                    }
+                    $('#maintbbo').append(myArray.join(''));
+
+                }
+                catch (err) {
+                    console.log("error: " + err.message);
+                    $("#maintbbo").empty();
+                    $("#data_tableEditor2").append();
+                }
+            } else {
+                console.log("error2");
+                $("#maintbbo").empty();
+                $("#data_tableEditor2").append();
+            }
+
+
+
+        }
+
+        $(document).ready(function () {
+            //Llamamos los datos
+            test();
+
+            var table = $('#data_tableEditor2').DataTable({
+                dom: 'lrtip',
+                scrollY: "600px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+                //"columnDefs": [
+                //    {
+                //        "targets": [6],
+                //        "visible": false
+                //    },
+                //    {
+                //        "targets": [7],
+                //        "visible": false
+                //    },
+                //    {
+                //        "targets": [8],
+                //        "visible": false
+                //    },
+                //    {
+                //        "targets": [9],
+                //        "visible": false
+                //    },
+                //    {
+                //        "targets": [45],
+                //        "visible": false
+                //    },
+                //    {
+                //        "targets": [46],
+                //        "visible": false
+                //    },
+                //    {
+                //        "targets": [47],
+                //        "visible": false
+                //    }
+                //],
+                fixedColumns: {
+                    leftColumns: 3
+                },
+                initComplete: function () {
+                    this.api().columns([8]).every(function () {
+                        var column = this;
+
+                        var select = $("#lstCategory");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([7]).every(function () {
+                        var column = this;
+
+                        var select = $("#lstSubCategory");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([9]).every(function () {
+                        var column = this;
+
+                        var select = $("#lstProvider");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([6]).every(function () {
+                        var column = this;
+
+                        var select = $("#lstBrands");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    $("#lstCategory").select2({ multiple: true });
+                    $("#lstSubCategory").select2({ multiple: true });
+                    $("#lstProvider").select2({ multiple: true });
+                    $("#lstBrands").select2({ multiple: true });
+                }
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            function sort_unique(arr) {
+                return arr.sort().filter(function (el, i, a) {
+                    return (i == a.indexOf(el));
+                });
+            }
+
+            $(function () {
+                $('input.filternumbers').on('input', function () {
+                    this.value = this.value
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+                });
+            });
+
+            $('#lstCategory').on('change', function () {
+                var search = [];
+
+                var data2;
+                data2 = Array();
+
+
+
+                $.each($('#lstCategory option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(8).search(search, true, false).draw();
+
+                var select = $("#lstSubCategory");
+                select.empty();
+
+                table.rows({ search: 'applied' }).data().unique().sort().each(function (value, index) {
+
+                    data2.push(value[7]);
+
+
+                });
+                data2 = sort_unique(data2);
+                $.each(data2, function (key, value) {
+                    select.append('<option value="' + value + '">' + value + '</option>')
+                });
+
+
+            });
+
+            $('#lstSubCategory').on('change', function () {
+                var search = [];
+
+                $.each($('#lstSubCategory option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(7).search(search, true, false).draw();
+            });
+
+            $('#lstBrands').on('change', function () {
+                var search = [];
+
+                $.each($('#lstBrands option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(6).search(search, true, false).draw();
+            });
+
+            $('#lstProvider').on('change', function () {
+                var search = [];
+
+                $.each($('#lstProvider option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(9).search(search, true, false).draw();
+            });
+
+
+            $('input.editPedido[type = "text"]').on('focusout', function () {
+                //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
+                var pedido = $(this).val();
+                var coberturaProyectadaNume = $(this).closest('tr').find('.editCoberturaProyectadaNume').text();
+                var coberturaProyectadaDeno = $(this).closest('tr').find('.editCoberturaProyectadaDeno').text();
+                var total = (coberturaProyectadaNume + pedido) / coberturaProyectadaDeno
+                if (coberturaProyectadaDeno == 0) { total = 0.0; }
+
+                $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
+                //            //$(this).html('DEL');
+
+                ///Monto PO
+                var desc = 0;
+
+                desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                var monto = desc * pedido;
+                if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                //Pallet de orden editPalletOrden
+                var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
+                var palletstotal = (pedido / casesPallet);
+
+                if (casesPallet == 0) { palletstotal = 0; }
+                if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
+
+
+            });
+
+            $('input.editDAp[type = "text"]').on('focusout', function () {
+
+                var x = $(this).closest('tr').find('.editDAp').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAn').val('');
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - ((descuentop * costo) / 100));
+                    //costo con descuento
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var desc = 0;
+
+                    desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                    var monto = desc * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+                    //$(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2));
+
+                }
+
+
+            });
+
+            $('input.editDAn[type = "text"]').on('focusout', function () {
+                var x = $(this).closest('tr').find('.editDAn').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAp').val('');
+
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - descuentop);
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var monto = total * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                }
+
+
+            });
+        });
+
+
+
+        $('#data_tableEditor2 tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                $('#data_tableEditor2 tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        //$('#data_tableEditor2').treegrid();
+        //$('#data_tableEditor2').treegrid('collapseAll');
+
+
+
+
+        $(function () {
+            $.contextMenu({
+                selector: '.context-menu-one',
+                trigger: 'right',
+                items: $.contextMenu.fromMenu($('#html5menu'))
+            });
+
+            $('.context-menu-one').on('contextmenu', function (e) {
+                var product = this.id;
+                //Cargamos Transito final
+
+                $.ajax({
+                    url: '/Operations/getTransitoFinal',
+                    type: 'GET',
+                    data: { 'id': product },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        var obj = JSON.parse(result);
+
+                        if (obj.length > 0) {
+
+                            obj.sort(function (a, b) {
+                                if (a.NumTransito > b.NumTransito) {
+                                    return 1;
+                                }
+                                if (a.NumTransito < b.NumTransito) {
+                                    return -1;
+                                }
+                                // a must be equal to b
+                                return 0;
+                            });
+
+                            try {
+                                $(".tbodyid").empty();
+                                $(".tb_editor").append();
+                                for (var i = 0; i < obj.length; i++) {
+                                    var tr = "<tr>";
+                                    tr += "<td>" + obj[i]["NumTransito"] + "</td>";
+                                    tr += "<td>" + (new Date(parseInt(obj[i]["DocDate"].substr(6)))).toLocaleDateString('en-US') + "</td>";
+                                    tr += "<td>" + obj[i]["DiaSemana"] + "</td>";
+                                    tr += "<td>" + obj[i]["DifSemanas"] + "</td>";
+                                    tr += "<td>" + obj[i]["NumFactura"] + "</td>";
+                                    tr += "<td>" + obj[i]["CantCajas"] + "</td>";
+                                    tr += "<td>" + obj[i]["FormulaDia"] + "</td>";
+                                    tr += "<td>" + obj[i]["CoberturaSemanal"] + "</td>";
+                                    tr += '</tr > ';
+
+                                    $(".tb_editor").append(tr);
+
+
+                                }
+
+                                $.contextMenu({
+                                    selector: '.context-menu-one',
+                                    trigger: 'right',
+                                    items: $.contextMenu.fromMenu($('#html5menu'))
+                                });
+                            }
+                            catch (err) {
+
+                                $(".tbodyid").empty();
+                                $(".tb_editor").append();
+                            }
+                        } else {
+
+                            $(".tbodyid").empty();
+                            $(".tb_editor").append();
+                        }
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..Please, try again");
+
+                    }
+
+                });
+
+            });
+        });
+
+
+        function savePurchaseData() {
+            var data;
+            data = Array();
+
+
+
+            $("#data_tableEditor2 tr").each(function (i, v) {
+                data[i] = Array();
+                $(this).children('td').each(function (ii, vv) {
+                    if (ii == 30) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+                    } else if (ii == 44) {
+                        data[i][ii] = $(this).eq(0).find('textarea').val();
+
+                    } else if (ii == 40) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    } else if (ii == 41) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    }  else {
+                        data[i][ii] = $(this).text();
+                    }
+
+
+                });
+            })
+
+            var dataCategory = [];
+            if ($("#lstCategory").select2('data').length) {
+                $.each($("#lstCategory").select2('data'), function (key, item) {
+                    dataCategory.push(item.text);
+                });
+            }
+
+            var dataSubCategory = [];
+            if ($("#lstSubCategory").select2('data').length) {
+                $.each($("#lstSubCategory").select2('data'), function (key, item) {
+                    dataSubCategory.push(item.text);
+                });
+            }
+
+            var dataProvider = [];
+            if ($("#lstProvider").select2('data').length) {
+                $.each($("#lstProvider").select2('data'), function (key, item) {
+                    dataProvider.push(item.text);
+                });
+            }
+
+            var dataBrands = [];
+            if ($("#lstBrands").select2('data').length) {
+                $.each($("#lstBrands").select2('data'), function (key, item) {
+                    dataBrands.push(item.text);
+                });
+            }
+
+
+            var objects = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+                if (i != 0) {
+                    objects.push({
+                        num: data[i][0],
+                        ProdCodigo: data[i][1].trim(),
+                        ProdNombre: data[i][2],
+                        FactorCompra: data[i][3],
+                        FactorCompra_quiebre: data[i][4],
+                        Politica_cobertura: data[i][5],
+                        Marca: data[i][6],
+                        SubCategory: data[i][7],
+                        Category: data[i][8],
+                        ProvNombre: data[i][9],
+                        UnidadMedidaLetras: data[i][10],
+                        InventarioEach: data[i][11],
+                        InventarioCajas: data[i][12],
+                        Promedio: data[i][13],
+                        Desviacion: data[i][14],
+                        Maximo: data[i][15],
+                        Minimo: data[i][16],
+                        PronosticoPeriodoActual: data[i][17],
+                        Promedio_AA: data[i][18],
+                        VentaB1: data[i][19],
+                        Variacion: data[i][20],
+                        TendenciaPeriodoActual: data[i][21],
+                        PronosticoSiguiente1: data[i][22],
+                        PronosticoSiguiente2: data[i][23],
+                        PronosticoSiguiente3: data[i][24],
+                        PronosticoSiguiente4: data[i][25],
+                        CoberturaActual: data[i][26],
+                        CoberturaProyectada: data[i][27],
+                        OTB: data[i][28],
+                        Cobertura_OTB: data[i][29],
+                        Pedido: data[i][30],
+                        DeliveryDate: data[i][31],
+                        DocumentDate: data[i][32],
+                        U_TI: data[i][33],
+                        U_HI: data[i][34],
+                        U_PalletCount: data[i][35],
+                        PalletsdeOrden: data[i][36],
+                        CoberturaProyectadaNume: data[i][37],
+                        CoberturaIngresoPO: data[i][38],
+                        Costo:data[i][39],
+                        DescuentoAn: data[i][40],
+                        DescuentoAp: data[i][41],
+                        CostoconDescuento: data[i][42],
+                        MontoPO: data[i][43],
+                        Comentarios: data[i][44],
+                        CoberturaProyectadaDeno: data[i][45],
+                        VentaF1: data[i][46],
+                        LeadTime: data[i][47],
+                        transito:0
+                    });
+                }
+
+            }
+
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Operations/Save_PurchaseData',
+                    type: 'POST',
+                    data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString() },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.href = '@Url.Action("Purchase_data", "Operations")';
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+
+            //$('.editPedido').on('change', function () {
+            //    console.log("editing");
+            //            //$(this).closest('tr').hide();
+            //            //$(this).html('DEL');
+
+
+
+
+
+            //    //$(this).closest('tr').find("input,button,select").attr("disabled", true);
+            //    //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
+            //    //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
+            //});
+
+        }
+        //SECCION PARA EDICION Y FORMULAS
+
+
+    </script>
+
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Product Catalog")
+{
+    <script>
+        $(document).ready(function () {
+
+            var table = $('#data_tableEditor2').DataTable({
+                paging: false,
+                searching: false,
+                drawCallback: function (settings) {
+                    var api = this.api();
+
+                    $('.editable', api.table().body())
+                        .editable()
+                        .off('hidden')
+                        .on('hidden', function (e, reason) {
+                            if (reason === 'save') {
+                                $(this).closest('tr').find('.savebtn').show();
+                                //$(this).closest('td').attr('data-order', $(this).text());
+                                table.row($(this).closest('tr')).invalidate().draw(false);
+                            }
+                        });
+                }
+            });
+
+
+            $('textarea.editComentarios').on('blur', function (e) {
+                $(this).closest('tr').find('.savebtn').show();
+            });
+
+            $('a.savebtn').on('click', function (e) {
+                $(this).hide();
+                var product = $(this).closest('tr').find('.editProduct').text();
+                var factorn = $(this).closest('tr').find('.editFactorN').text();
+                var factorq = $(this).closest('tr').find('.editFactorQ').text();
+                var politica = $(this).closest('tr').find('.editPolitica').text();
+                var factorunidad = $(this).closest('tr').find('.editFactorUC').text();
+                var costo = $(this).closest('tr').find('.editCosto').text();
+                var comentarios = $(this).closest('tr').find('textarea.editComentarios').val();
+
+                $.ajax
+                    ({
+                        url: '/Operations/Save_ItemCatalog',
+                        type: 'POST',
+                        data: { 'product': product.trim(), 'factorn': factorn, 'factorq': factorq, 'factoru': factorunidad, 'politica': politica, 'costo': costo, 'comentarios': comentarios },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+
+                                toastr.success("Data saved successfully.", "Success");
+
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong, please check the data.", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+
+            });
+
+        });
+    </script>
+}
+
+<!--FORM BUILDER-->
+@if (ViewBag.Title == "Distribuidora Limeña - Forms")
+{
+    <script>
+        $('#order-listing').DataTable();
+    </script>
+
+    @Html.Partial("~/Views/Shared/FormBuilderScriptM.cshtml")
+
+
+
+}
+
+<!--FORM BUILDER-->
+@if (ViewBag.Title == "Distribuidora Limeña - Planning order")
+{
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#tbOrder').DataTable({
+                rowReorder: {
+                    selector: 'tr'
+                },
+                columnDefs: [
+                    //{ targets: 0, visible: false }
+                ],
+                scrollY: 450,
+                "order": [[0, 'asc']],
+                searching: false,
+                paging: false
+            });
+
+
+            $('#tbOrder_wrapper').removeClass('form-inline');
+
+
+
+
+        });
+
+
+
+    </script>
+
+    <script>
+        function changeOrder() {
+            var table = $('#tbOrder').DataTable();
+            table.destroy();
+            var table2 = $('#tbOrder').DataTable({
+                rowReorder: {
+                    selector: 'tr'
+                },
+                columnDefs: [
+                    //{ targets: 0, visible: false }
+                ],
+                scrollY: 450,
+                "order": [[0, 'asc']],
+                searching: false,
+                paging: false
+            });
+
+
+            $('#tbOrder_wrapper').removeClass('form-inline');
+        }
+        function saveOrderData() {
+
+
+            var table = $('#tbOrder').DataTable();
+            var data;
+            data = Array();
+
+
+
+            $("#tbOrder tr").each(function (i, v) {
+                data[i] = Array();
+                $(this).children('td').each(function (ii, vv) {
+
+                    data[i][ii] = $(this).text();
+
+
+                });
+            })
+            var objects = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+
+                if (i != 0) {
+                    objects.push({
+                        num: data[i][1],
+                        SO: data[i][2]
+                    });
+                }
+
+            }
+
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Save_order',
+                    type: 'POST',
+                    data: { 'objects': objects },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+
+
+        }
+
+    </script>
+
+}
+
+<!--PRICES-->
+@if (ViewBag.Title == "Distribuidora Limeña - Prices Request")
+{
+    <script type="text/javascript">
+
+
+
+        function filter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(0).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+
+            $("#subfilter").css('display', 'block')
+        }
+
+        function filter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(0).search("").draw();
+            table.columns(1).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $('.btnsl').removeClass('btnsel');
+            $('.subbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(1).search("").draw();
+            $('.subbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(1).search("" + clicked_id + "", true, false, true).draw();
+        }
+
+        $(document).ready(function () {
+           
+            $("#mainsub > *").css('display', 'none')
+
+
+            $('.btnsl').on('click', function () {
+                $('.btnsl').removeClass('btnsel');
+                $(this).addClass('btnsel');
+            });
+
+            $('.subbtnsl').on('click', function () {
+                $('.subbtnsl').removeClass('btnsubsel');
+                $(this).addClass('btnsubsel');
+            });
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            var table = $('#data_tableEditor').DataTable();
+
+
+        });
+
+
+
+
+        function buscarPedido() {
+                var codigo = $('#docnum').val();
+            if (codigo != '') {
+                $.ajax
+                    ({
+                        url: '/Commercial/PedidoExiste',
+                        type: 'POST',
+                        data: { 'docnum': codigo },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                var url = '@Url.Action("Prices_requestpdo", "Commercial", new { docnum = "ID_SO"})';
+                                url = url.replace('ID_SO', codigo);
+                                window.location.href = url;
+                            } else if (result == "NO EXIST") {
+                                toastr.warning("Sales order not found", "Warning");
+
+                            }
+
+                            else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+            } else {
+                toastr.warning("Sales order not found", "Warning");
+            }
+            }
+
+
+
+    </script>
+
+
+
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Home Customers")
+{
+
+    <script type="text/javascript">
+
+        $(function () {
+            $('input.filternumbers').on('input', function () {
+                this.value = this.value
+                    .replace(/[^\d.]/g, '')             // numbers and decimals only
+                    //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                    .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                    .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+            });
+        });
+
+    window.onload = function (e) {
+
+        var flag = 0;
+
+
+
+                //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = '@Url.Action("Dashboard_customers", "Main", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+
+            window.location.href = newurl;
+        };
+
+
+
+    }
+    </script>
+
+    <script>
+
+        $('button.btnAutorizar').on('click', function () {
+            var id = $(this).attr('id');
+            var cantidad = $(this).attr('data-qty');
+
+
+            $('#tbbonificaciones').modal('show');
+            $("#idAut").val(id);
+            $("#CantAut").val(cantidad);
+        });
+
+
+        $('#btnAutorizar').on('click', function () {
+            document.getElementById("loader").style.display = "block";
+            var id = $("#idAut").val();
+            var cantidad = $("#CantAut").val();
+            $.ajax
+                ({
+                    url: '/Commercial/ApproveBonification',
+                    type: 'POST',
+                    data: { 'bonification': id, 'cantidad': cantidad },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                            var btn = "#" + id;
+                            $(btn).hide();
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                            var btn = "#" + id;
+                            $(btn).show();
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                        var btn = "#" + id;
+                        $(btn).show();
+                    },
+                });
+        });
+
+
+        $('button.btnDeny').on('click', function () {
+            var id = $(this).attr('id');
+            swal.fire({
+                title: 'Deny bonification',
+                text: "Are you sure you want to deny this bonification?",
+                type: 'info',
+
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    document.getElementById("loader").style.display = "block";
+                    $.ajax
+                        ({
+                            url: '/Commercial/DenyBonification',
+                            type: 'POST',
+                            data: { 'bonification': id },
+                            success: function (result) {
+
+                                if (result == "SUCCESS") {
+                                    toastr.success("Data saved successfully.", "Success");
+                                    document.getElementById("loader").style.display = "none";
+                                    window.location.reload(true);
+                                    var btn = "#" + id;
+                                    $(btn).hide();
+                                } else {
+                                    toastr.warning("Something went wrong.." + result, "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                }
+
+
+                            },
+                            error: function () {
+
+                                toastr.warning("Something went wrong..", "Warning");
+                                document.getElementById("loader").style.display = "none";
+                            },
+                        });
+
+                }
+                else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+        });
+
+    </script>
+
+
+}
+
+
+@if (ViewBag.Title == "Distribuidora Limeña - Prices Request (Pedidos)")
+{
+    <script src="~/Content/appcontent/assets/vendor/inputnumber/bootstrap-input-spinner.js"></script>
+    <script>
+        var amountpriceglobal = parseFloat(0);
+        $(document).ready(function () {
+            var table = $('#data_tableEditor').DataTable({
+                paging: false,
+                sort: false,
+
+            });
+            $('#totalso').html(Number(table.column(5).data().sum()).toFixed(4));
+
+            var table2 = $('#tbBonificaciones').DataTable();
+            var table3 = $('#tbDeudas').DataTable();
+
+                   var json = JSON.parse('@Html.Raw(ViewBag.lstproducts)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#lstproducts").select2({
+            multiple: false,
+            placeholder: "Select...",
+            data: data
+
+        });
+
+            $("#cantidadBonificar").InputSpinner();
+
+            $(function () {
+                $('input.filternumbers').on('input', function () {
+                    this.value = this.value
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+                });
+
+                $('input.filternumbers').on('focus', function () {
+                    amountpriceglobal = parseFloat($(this).val());
+                });
+
+
+                $('input.filternumbers').on('blur', function () {
+                    //console.log("hola, soy: " + this.id);
+                    var nuevoprecio = parseFloat($(this).val());
+                    //console.log(nuevoprecio);
+                    var bolsa = parseFloat($('#bolsaValoractual').val()); //parseFloat("ViewBag.bolsa");
+                    //console.log(bolsa);
+                    var price = parseFloat($(this).closest('tr').find('.price').text());
+                    var minprice = $(this).closest('tr').find('.minprice').text();
+
+                    var descuento = parseFloat(nuevoprecio - minprice);
+
+                    var descuentoAnterior = parseFloat(amountpriceglobal - minprice);
+                    //console.log(price);
+                    //console.log(minprice);
+                    var flag = 0
+
+                    if (nuevoprecio > 0) {
+                        if (bolsa < nuevoprecio) {
+                            flag = 1;
+                            toastr.warning("No tienes suficientes fondos en la bolsa", "Warning");
+                            $(this).val('0');
+                            $(this).removeClass('border-success');
+                            $(this).addClass('border-warning');
+
+                            bolsa = parseFloat(bolsa + descuentoAnterior);
+                            $('#bolsaValoractual').val(parseFloat(bolsa).toFixed(2));
+                        } else {
+                            flag = 0;
+                        }
+                        if (nuevoprecio < minprice) {
+                            flag = 1;
+                            toastr.warning("Nuevo precio no puede ser menor al precio minimo", "Warning");
+                            $(this).val('0');
+                            $(this).removeClass('border-success');
+                            $(this).addClass('border-warning');
+
+
+                            bolsa = parseFloat(bolsa + descuentoAnterior);
+                            $('#bolsaValoractual').val(parseFloat(bolsa).toFixed(2));
+                        } else {
+                            flag = 0;
+                        }
+
+                        if (nuevoprecio < minprice || bolsa < nuevoprecio) { flag = 1; } else { flag = 0;}
+
+
+                        if (flag == 0) { //Ejecutamos el codigo
+                            if ($(this).hasClass('border-success')) { //No hacemos nada ya que se esta haciendo o un cambio o solo se introdujo a la cajita
+                                if (nuevoprecio == descuentoAnterior) {
+
+                                } else {
+
+                                    bolsa = parseFloat(bolsa + descuentoAnterior);
+
+                                    $('#bolsaValoractual').val(parseFloat(bolsa - nuevoprecio).toFixed(2));
+                                }
+                            } else {
+                                $(this).removeClass('border-warning');
+                                $(this).addClass('border-success');
+                                $('#bolsaValoractual').val(parseFloat(bolsa - descuento).toFixed(2));
+                            }
+
+
+
+                        }
+                    } else {
+                        $(this).removeClass('border-warning');
+                        $(this).removeClass('border-success');
+                        $(this).val(0);
+
+                        bolsa = parseFloat(bolsa + descuentoAnterior);
+                        $('#bolsaValoractual').val(parseFloat(bolsa).toFixed(2));
+
+                    }
+
+
+
+                })
+
+            });
+        });
+
+        function saveAutorizaciones() {
+
+            swal.fire({
+                title: 'Save changes',
+                text: "Are you sure you want to save this changes?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    //Guardamos
+                    var table = $('#data_tableEditor').DataTable();
+                        // var oTable = $('#htmlgrid').dataTable();
+                        //console.log(oTable.fnGetData());
+
+                        oSettings = table.settings();
+                        oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
+                        table.search('').columns().search('').draw();
+
+
+                        var data;
+                        data = Array();
+
+
+
+                    $("#data_tableEditor tr").each(function (i, v) {
+                            data[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+
+                                if (ii == 7) {
+                                    data[i][ii] = $(this).eq(0).find('input').val();
+                                }  else {
+                                    data[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+                        var objects = [];
+                        for (var i = 0, len = data.length; i < len; i++) {
+
+                            if (i != 0) {
+                                objects.push({
+                                    lineNumber: data[i][0],
+                                    ItemCode: data[i][1],
+                                    Description: data[i][2],
+                                    uom: data[i][3],
+                                    Qty: data[i][4],
+                                    Price: data[i][5],
+                                    MinPrice: data[i][6],
+                                    NewPrice: data[i][7]
+                                });
+                            }
+
+                        }
+                        var pedido = '@ViewBag.docnum';
+                        var bolsa = $('#bolsaValoractual').val();
+
+                   // console.log(objects);
+
+
+                    var objectsfinal = objects.filter(function (object) {
+                        return object.NewPrice >0;
+                    });
+                    console.log(objectsfinal);
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/Save_SODetails',
+                                type: 'POST',
+                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+
+        }
+
+        function nuevaBonificacion() {
+            setTimeout(function () { $('#nuevabonificacion').modal('show') }, 500);
+            $('#tbbonificaciones').modal('hide');
+        }
+
+        function guardarBonificacion() {
+            var pedido = "@ViewBag.docnum";
+            var producto = $('#lstproducts').val();
+            var nombreProducto = $("#lstproducts option:selected").text();
+            var unidades = $('#cantidadBonificar').val();
+            var userID = "@ViewBag.userID";
+            var userName = "@ViewBag.userName";
+            var now = new Date();
+
+
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Commercial/Save_bonification',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        pedido: pedido,
+                        producto: producto,
+                        unidades: unidades,
+                        date: now.toLocaleString("en-US", { hour12: true }),
+                        userID: userID,
+                        userName: userName
+                    }),
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+
+                            var t = $('#tbBonificaciones').DataTable();
+
+                            t.row.add([
+                                nombreProducto,
+                                unidades,
+                                '<span class="badge text-warning">Waiting for approval</span>'
+                            ]).draw(false);
+
+                            setTimeout(function () { $('#tbbonificaciones').modal('show') }, 500);
+                            $('#nuevabonificacion').modal('hide');
+
+
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+
+
+
+        }
+    </script>
+
+
+
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Prices Request Micro")
+{
+    <script>
+        $(document).ready(function () {
+
+            var table = $('#data_tableEditor').DataTable({
+                paging: false,
+                searching: true,
+
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                drawCallback: function (settings) {
+                    var api = this.api();
+
+                    $('.editable', api.table().body())
+                        .editable()
+                        .off('hidden')
+                        .on('hidden', function (e, reason) {
+                            if (reason === 'save') {
+                                $(this).closest('tr').find('.savebtn').show();
+                                //$(this).closest('td').attr('data-order', $(this).text());
+                                table.row($(this).closest('tr')).invalidate().draw(false);
+                            }
+                        });
+                }
+            });
+
+
+            $('a.savebtn').on('click', function (e) {
+                $(this).hide();
+                var id = $(this).closest('tr').find('.editID').text();
+                var factorn = $(this).closest('tr').find('.editFactorN').text();
+
+
+                $.ajax
+                    ({
+                        url: '/Commercial/CambiarPorcentajeMicro',
+                        type: 'POST',
+                        data: { 'id': id, 'factorn': factorn },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+
+                                toastr.success("Data saved successfully.", "Success");
+
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong, please check the data.", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+
+            });
+
+
+
+
+
+            var table = $('#data_tableEditor2').DataTable({
+                paging: false,
+                searching: true,
+
+                "bLengthChange": false,
+                "bFilter": true,
+                "bInfo": false,
+                drawCallback: function (settings) {
+                    var api = this.api();
+
+                    $('.editable', api.table().body())
+                        .editable()
+                        .off('hidden')
+                        .on('hidden', function (e, reason) {
+                            if (reason === 'save') {
+                                $(this).closest('tr').find('.savebtnUsuarios').show();
+                                //$(this).closest('td').attr('data-order', $(this).text());
+                                table.row($(this).closest('tr')).invalidate().draw(false);
+                            }
+                        });
+                }
+            });
+
+
+            $('a.savebtnUsuarios').on('click', function (e) {
+                $(this).hide();
+                var id = $(this).closest('tr').find('.editIDUsuarios').text();
+                var factorn = $(this).closest('tr').find('.editFactorNUsuarios').text();
+
+                console.log(id);
+                console.log(factorn);
+                $.ajax
+                    ({
+                        url: '/Commercial/CambiarPorcentajePorUsuario',
+                        type: 'POST',
+                        data: { 'id': id, 'factorn': factorn },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+
+                                toastr.success("Data saved successfully.", "Success");
+
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong, please check the data.", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+
+            });
+
+            //$('#saveValorBolsa').on('click', function (e) {
+
+
+            //    var valor = $('#bolsapor').val();
+
+            //    if (valor >= 0 && valor != "") {
+            //        $('#bolsapor').removeClass('border-warning');
+            //        $('#bolsapor').addClass('border-success');
+            //        $(this).hide();
+            //        $.ajax
+            //            ({
+            //                url: '/Commercial/CambiarPorcentajeBolsa',
+            //                type: 'POST',
+            //                data: { 'valor': valor },
+            //                success: function (result) {
+
+            //                    if (result == "SUCCESS") {
+            //                        $('#bolsaactual').val(valor + " %");
+            //                        toastr.success("Data saved successfully.", "Success");
+            //                        $(this).show();
+
+            //                    } else {
+            //                        toastr.warning("Something went wrong.." + result, "Warning");
+            //                        $(this).show();
+            //                    }
+
+
+            //                },
+            //                error: function () {
+            //                    $(this).show();
+            //                    toastr.warning("Something went wrong, please check the data.", "Warning");
+            //                    document.getElementById("loader").style.display = "none";
+            //                },
+            //            });
+            //    } else {
+            //        toastr.warning("Campo obligatorio.", "Warning");
+            //        $('#bolsapor').removeClass('border-success');
+            //        $('#bolsapor').addClass('border-warning');
+            //    }
+
+
+
+            //});
+
+
+
+            $(function () {
+                $('input.filternumbers').on('input', function () {
+                    this.value = this.value
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+                });
+            });
+        });
+
     </script>
 }

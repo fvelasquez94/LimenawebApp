@@ -20,7 +20,7 @@
                                         <div class="dropdown-menu dropdown-menu-right vl-dropdown">
                                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#createUserModal" data-whatever="mdo"> Add new user</a>
 
-                                            <a class="dropdown-item" href="#"> Export list</a>
+                                            @*<a class="dropdown-item" href="#"> Export list</a>*@
                                         </div>
                                     </div>
                                 </div>
@@ -37,7 +37,7 @@
                                             <th>Position</th>
                                             <th>Departments</th>
                                             <th>Roles</th>
-                                            <th>State</th>
+                                            @*<th>State</th>*@
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -54,7 +54,7 @@
                                                 <td>@user.Position</td>
                                                 <td>@user.Departments</td>
                                                 <td>@user.Roles</td>
-                                                <td>
+                                                @*<td>
                                                     @if (user.Active == true)
                                                     {
                                                         <span class="text-success pl-3">ACTIVE</span>
@@ -63,7 +63,7 @@
                                                     {
                                                         <span class="text-warning pl-3">INACTIVE</span>
                                                     }
-                                                </td>
+                                                </td>*@
                                                 <td>
                                                     @if (user.Roles == "Super Admin")
                                                     {
@@ -71,8 +71,8 @@
                                                     }
                                                     else
                                                     {
-                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Edit"><i class="fa fa-edit"></i></a>
-                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" onclick="editUser(@user.ID_User)" title="Edit"><i class="fa fa-edit"></i></a>
+                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" onclick="delUser(@user.ID_User)" title="Delete"><i class="fa fa-trash-o"></i></a>
                                                     }
 
                                                 </td>
@@ -91,7 +91,7 @@
     </div>
 </div>
 <!--MODAL FORM CREATE USER-->
-<div class="modal fade" id="createUserModal"  role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+<div class="modal fade" id="createUserModal" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -123,10 +123,110 @@
                         <input type="text" class="form-control" id="positionUserC" name="positionUserC">
 
                         <label class="col-form-label">Departments:</label>
-                        <input type="text" class="form-control" id="departmentsUserC" name="departmentsUserC">
+                        <select type="text" class="form-control" id="departmentsUserC" name="departmentsUserC" style="width:100%;">
+
+                                <option>Management</option>
+                                <option>Operations</option>
+                                <option>Sales</option>
+
+                                <option>Customer</option>
+            
+
+                        </select>
 
                         <label class="col-form-label">Roles:</label>
-                        <input type="text" class="form-control" id="rolesUserC" name="rolesUserC">
+                        <select type="text" class="form-control" id="rolesUserC" name="rolesUserC" style="width:100%;">
+                            <optgroup label="DSD">
+                                <option>DSD</option>
+                            </optgroup>
+                            <optgroup label="Operations">
+                                <option>Planning</option>
+                                <option>Quality Control</option>
+
+                                <option>Purchases</option>
+                            </optgroup>
+                            <optgroup label="Sales">
+                                <option>Sales Manager</option>
+                                <option>Sales Supervisor</option>
+                                <option>Sales Representative</option>
+                                <option>Bonifications</option>
+                            </optgroup>
+        
+   
+
+                        </select>
+
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--MODAL FORM EDIT USER-->
+<div class="modal fade" id="editUserModal" role="dialog" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabeedit">Edit User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="editUserForm" method="post">
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Name:</label>
+                        <input type="text" class="form-control" id="nameUserE" name="nameUserE" required>
+                        <input type="text" class="form-control" id="IDUserE" name="IDUserE" hidden>
+
+                        <label class="col-form-label">Last name:</label>
+                        <input type="text" class="form-control" id="lastnameUserE" name="lastnameUserE" required>
+
+                        <label class="col-form-label">Email:</label>
+                        <input type="email" class="form-control" id="emailUserE" name="emailUserE" required>
+
+                        <label class="col-form-label">Password:</label>
+                        <input type="password" class="form-control" id="passwordUserE" name="passwordUserE" required>
+                        <input type="checkbox" onclick="myFunction()">Show Password <br />
+
+                        <label class="col-form-label">Telephone:</label>
+                        <input type="text" class="form-control" id="telephoneUserE" name="telephoneUserE" required>
+
+                        <label class="col-form-label">Position:</label>
+                        <input type="text" class="form-control" id="positionUserE" name="positionUserE">
+
+                        <label class="col-form-label">Departments:</label>
+                        <select type="text" class="form-control" id="departmentsUserE" name="departmentsUserE" style="width:100%;">
+
+                            <option>Management</option>
+                            <option>Operations</option>
+                            <option>Sales</option>
+                        </select>
+
+                        <label class="col-form-label">Roles:</label>
+                        <select type="text" class="form-control" id="rolesUserE" name="rolesUserE" style="width:100%;">
+
+                            <option>DSD</option>
+                            <option>Planning</option>
+                            <option>Quality Control</option>
+                            <option>Sales Representative</option>
+                            <option>Sales Supervisor</option>
+
+                        </select>
+                        <label class="col-form-label">Assigned Users:</label>
+                        <select type="text" class="form-control" id="rolesReps" name="rolesReps" style="width:100%;">
+                            <optgroup id="custom" label="Sales Representatives">
+
+
+
+                            </optgroup>
+                        </select>
 
                     </div>
 
@@ -140,12 +240,26 @@
     </div>
 </div>
 
+
+
+
 <script>
     window.onload = function () {
         $('#createUserForm').submit(function (event) {
             event.preventDefault();
             document.getElementById("loader").style.display = "block";
             $('#createUserModal').modal('hide');
+
+            var selMulti = $.map($("#departmentsUserC option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var deps = selMulti.join(",");
+
+
+            var selMulti2 = $.map($("#rolesUserC option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var roles = selMulti2.join(",");
 
             $.ajax({
                 url: '/Management/CreateUser',
@@ -156,13 +270,14 @@
                     name: $('#nameUserC').val(), lastname: $('#lastnameUserC').val(),
                     email: $('#emailUserC').val(), password: $('#passwordUserC').val(),
                     position: $('#positionUserC').val(), telephone: $('#telephoneUserC').val(),
-                    departments: $('#departmentsUserC').val(), roles: $('#rolesUserC').val(),
+                    departments: deps, roles: roles,
                 }),
-               
+
                 success: function (data) {
                     if (data.Result == "Success") {
-                      
+
                         document.getElementById("loader").style.display = "none";
+                        window.location.reload(true);
                     } else {
                         document.getElementById("loader").style.display = "none";
                         alert(data.Result);
@@ -170,5 +285,68 @@
                 }
             });
         })
+
+        $("#departmentsUserC").select2({
+            multiple: true
+        });
+        $("#rolesUserC").select2({
+            multiple: true
+        });
+
+        $("#rolesReps").select2({
+            multiple: true
+        });
+
+        $("#rolesUserC").val(-1).trigger("change");
+        $("#departmentsUserC").val(-1).trigger("change");
+        $("#rolesReps").val(-2).trigger("change");
+
+        $('#editUserForm').submit(function (event) {
+            event.preventDefault();
+            document.getElementById("loader").style.display = "block";
+            $('#editUserForm').modal('hide');
+
+            var selMulti = $.map($("#departmentsUserE option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var deps2 = selMulti.join(",");
+
+
+            var selMulti2 = $.map($("#rolesUserE option:selected"), function (el, i) {
+                return $(el).text();
+            });
+            var roles2 = selMulti2.join(",");
+
+            var selReps = $.map($("#rolesReps option:selected"), function (el, i) {
+                return $(el).val();
+            });
+            var reps = selReps.join(",");
+
+
+            $.ajax({
+                url: '/Management/EditUser',
+                method: 'POST',
+                contentType: 'application/json',
+                datatype: 'application/json',
+                data: JSON.stringify({
+                    id: $('#IDUserE').val(), name: $('#nameUserE').val(), lastname: $('#lastnameUserE').val(),
+                    email: $('#emailUserE').val(), password: $('#passwordUserE').val(),
+                    position: $('#positionUserE').val(), telephone: $('#telephoneUserE').val(),
+                    departments: deps2, roles: roles2, reps:reps,
+                }),
+
+                success: function (data) {
+                    if (data.Result == "Success") {
+
+                        document.getElementById("loader").style.display = "none";
+                        window.location.reload(true);
+                    } else {
+                        document.getElementById("loader").style.display = "none";
+                        
+                    }
+                }
+            });
+        })
+
     }
 </script>

@@ -1,0 +1,77 @@
+﻿@model IEnumerable<LimenawebApp.Models.Purchase_catalog>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Product Catalog";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Product Catalog</div>
+                                <a href="@Url.Action("Purchase_data", "Operations")" class="btn btn-outline-info btn-sm">Back</a>
+                                <div class=" widget-action-link">
+
+                                </div>
+
+
+                            </div>
+                        </div>
+
+                        <div class="card-body pt-3 pb-4" style="font-size:12px;line-height:1.5;">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor2" class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                  
+                                            <th>CODIGO EN SAP</th>
+                                            <th>DESCRIPCION</th>
+                                            <th>FACTOR DE COMPRA</th>
+                                            <th>FACTOR DE COMPRA (QUIEBRE)</th>
+                                            <th>FACTOR UNIDAD DE COMPRA (QUIEBRE)</th>
+                                            <th>POLITICA DE COBERTURA</th>
+                                            <th>COSTO</th>
+                                            <th style="width:300px">COMENTARIOS</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var data in Model)
+                                        {
+                                            <tr >
+                                                <td style="padding: .25rem;" class="editProduct">
+                                                    @data.ProductCode
+                                                </td>
+                                                <td style="padding: .25rem;">@data.ProductName</td>
+                                                <td class="editable editFactorN" style="padding: .25rem;">@data.FactorCompra</td>
+                                                <td class="editable editFactorQ" style="padding: .25rem;">@data.FactorCompra_quiebre</td>
+                                                <td class="editable editFactorUC" style="padding: .25rem;">@data.FactorUnidadCompra</td>
+                                                <td class="editable editPolitica">@data.Politica_cobertura</td>
+                                                <td class="editable editCosto">@data.Costo</td>
+                                                <td  style="padding: .25rem;"><textarea style="width:300px" class="editComentarios">@data.Comentarios</textarea> </td>
+                                                <td style="padding: .25rem;"><a href="JavaScript:Void(0);" class="btn btn-sm btn-outline-success btn-sm form-pill savebtn" style="display:none;">Save</a> </td>
+                                            </tr>
+
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+

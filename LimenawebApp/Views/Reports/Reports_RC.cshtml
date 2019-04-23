@@ -7,12 +7,12 @@
 <div class="content-wrapper">
 
     <!--/creative states-->
-    <div class="box-container">
+    <div class="box-container displaya">
         <div class="container-fluid">
             @if (ViewBag.lstUsers != null)
     {
         <div class="row">
-            <div class="col-xl-12">
+            <div class="col-12">
                 <div class="card card-shadow mb-4">
                     <div class="card-header border-0">
                         <div class="custom-title-wrap bar-info">
@@ -25,7 +25,7 @@
 
 
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-12">
                                 @using (Html.BeginForm("Reports_RC", "Reports", FormMethod.Post))
                         {
                             <select class="form-control" onchange="this.form.submit()" name="ID_User" id="ID_User">
@@ -61,7 +61,7 @@
             foreach (var item in ViewBag.lstresources)
             {
                 <div class="row">
-                    <div class="col-xl-12">
+                    <div class="col-12">
                         <div class="card card-shadow mb-4">
                             <div class="card-header border-0">
                                 <div class="custom-title-wrap bar-info">
@@ -80,7 +80,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-xl-12">
+                                    <div class="col-12">
                                         <div id="iframePowerBI" style="height:750px; position:relative">
                                             <iframe style="border:none; width:100%; height:700px; z-index:1" src="@item.Url" frameborder="0" allowfullscreen="false"></iframe>
                                             <!--<img style="top:0px; right:0px; position:absolute;width:100%; height:670px; z-index:9; opacity:0" src="~/Content/images/MechandiserWeb.jpg">-->
@@ -99,7 +99,7 @@
 else
 {
         <div class="row">
-            <div class="col-xl-12">
+            <div class="col-12">
                 <div class="card card-shadow mb-4">
                     <div class="card-header border-0">
                         <div class="custom-title-wrap bar-warning">
@@ -108,7 +108,7 @@ else
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-12">
 
                             </div>
 
@@ -128,7 +128,7 @@ else
             foreach (var item in ViewBag.lstresourcesSS)
             {
                 <div class="row">
-                    <div class="col-xl-12">
+                    <div class="col-12">
                         <div class="card card-shadow mb-4">
                             <div class="card-header border-0">
                                 <div class="custom-title-wrap bar-info">
@@ -147,7 +147,7 @@ else
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-xl-12">
+                                    <div class="col-12">
                                         <div id="iframePowerBI" style="height:750px; position:relative">
                                             <iframe style="border:none; width:100%; height:700px; z-index:1" src="@item.Url" frameborder="0" allowfullscreen="false"></iframe>
                                             <!--<img style="top:0px; right:0px; position:absolute;width:100%; height:670px; z-index:9; opacity:0" src="~/Content/images/MechandiserWeb.jpg">-->
@@ -175,7 +175,7 @@ else
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-xl-12">
+                            <div class="col-12">
 
                             </div>
 

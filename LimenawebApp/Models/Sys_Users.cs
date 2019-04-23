@@ -32,6 +32,11 @@ namespace LimenawebApp.Models
         public string Departments { get; set; }
         public string Roles { get; set; }
         public int ID_Company { get; set; }
+        public string prop01 { get; set; }
+        public string prop02 { get; set; }
+        public string IDSAP { get; set; }
+        public Nullable<decimal> BolsaValor { get; set; }
+        public Nullable<decimal> PorcentajeBolsa { get; set; }
     
         public virtual Sys_Companies Sys_Companies { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

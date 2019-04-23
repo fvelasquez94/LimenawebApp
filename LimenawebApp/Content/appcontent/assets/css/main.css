@@ -17,6 +17,48 @@ Table of Contents
 /*------------------------------------
 type
 ------------------------------------*/
+
+#interactive.viewport {
+    position: relative;
+    width: 100%;
+    height: auto;
+    overflow: hidden;
+    text-align: center;
+}
+
+#interactive.viewport > canvas, #interactive.viewport > video {
+    max - width: 100%;
+    width: 100%;
+}
+
+canvas.drawing, canvas.drawingBuffer {
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+
+
+
+.clear {
+    position: relative;
+    float: left;
+    height: 27px;
+    width: 30px;
+    top: -1px;
+    right: 5px;
+    border-radius: 20px;
+    background: #fab63f;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+}
+
+    .clear:hover {
+        background: #ccc;
+    }
+
 .flexRadio {
     display: flex !important;
     /* Optional, if you want the DIVs 100% width: */
@@ -1293,6 +1335,7 @@ a.more-list {
 a.more-list:hover {
     color: #141414;
 }
+
 
 /*-------------------------------
 active user widget
@@ -3732,6 +3775,8 @@ top-nav
         width: 1200px;
         margin: 0 auto;
     }
+
+
     .top-nav .container-fluid {
         padding: 0;
     }

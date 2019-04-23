@@ -24,5 +24,7 @@ namespace LimenawebApp.Models
         public string U_Zone { get; set; }
         public string U_Driver { get; set; }
         public string U_RLeader { get; set; }
+        public string U_DelDayA { get; set; }
+        public string U_DelDayB { get; set; }
     }
 }

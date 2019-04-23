@@ -4,7 +4,19 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="dbComerciaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="dbComerciaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Activities_RefImg">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="src" Type="text" Nullable="false" />
+          <Property Name="ID_customer" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ID_category" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="ID_subcategory" Type="int" Nullable="false" />
+          <Property Name="ID_brand" Type="int" Nullable="false" />
+          <Property Name="query1" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
         <EntityType Name="ActivitiesM">
           <Key>
             <PropertyRef Name="ID_activity" />
@@ -174,6 +186,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="dbComerciaModelStoreContainer">
+          <EntitySet Name="Activities_RefImg" EntityType="Self.Activities_RefImg" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActivitiesM" EntityType="Self.ActivitiesM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActivitiesM_log" EntityType="Self.ActivitiesM_log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ActivitiesM_types" EntityType="Self.ActivitiesM_types" Schema="dbo" store:Type="Tables" />
@@ -192,8 +205,7 @@
             <End Role="VisitsM" EntitySet="VisitsM" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="dbComerciaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -387,7 +399,20 @@
             <End Role="VisitsM" EntitySet="VisitsM" />
             <End Role="VisitsM_representatives" EntitySet="VisitsM_representatives" />
           </AssociationSet>
+          <EntitySet Name="Activities_RefImg" EntityType="dbComerciaModel.Activities_RefImg" />
         </EntityContainer>
+        <EntityType Name="Activities_RefImg">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="src" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ID_customer" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ID_category" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ID_subcategory" Type="Int32" Nullable="false" />
+          <Property Name="ID_brand" Type="Int32" Nullable="false" />
+          <Property Name="query1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -542,6 +567,19 @@
                 <ScalarProperty Name="ID_usuario" ColumnName="ID_usuario" />
                 <ScalarProperty Name="query1" ColumnName="query1" />
                 <ScalarProperty Name="ID_empresa" ColumnName="ID_empresa" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Activities_RefImg">
+            <EntityTypeMapping TypeName="dbComerciaModel.Activities_RefImg">
+              <MappingFragment StoreEntitySet="Activities_RefImg">
+                <ScalarProperty Name="query1" ColumnName="query1" />
+                <ScalarProperty Name="ID_brand" ColumnName="ID_brand" />
+                <ScalarProperty Name="ID_subcategory" ColumnName="ID_subcategory" />
+                <ScalarProperty Name="ID_category" ColumnName="ID_category" />
+                <ScalarProperty Name="ID_customer" ColumnName="ID_customer" />
+                <ScalarProperty Name="src" ColumnName="src" />
+                <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

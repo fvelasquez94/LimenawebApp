@@ -5,6 +5,76 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="dbLimenaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Purchase_data">
+          <Key>
+            <PropertyRef Name="ID_purchaseData" />
+          </Key>
+          <Property Name="ID_purchaseData" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date_data" Type="datetime" Nullable="false" />
+          <Property Name="Date_create" Type="datetime" Nullable="false" />
+          <Property Name="User_create" Type="int" Nullable="false" />
+          <Property Name="Providers" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Categories" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="SubCategories" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Brands" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="query1" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="query2" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Purchase_data_details">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="num" Type="int" />
+          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ProdNombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="FactorCompra" Type="float" />
+          <Property Name="FactorCompra_quiebre" Type="float" />
+          <Property Name="Politica_cobertura" Type="float" />
+          <Property Name="Marca" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="SubCategory" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Category" Type="nvarchar" MaxLength="20" />
+          <Property Name="ProvNombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="UnidadMedidaLetras" Type="nvarchar" MaxLength="100" />
+          <Property Name="InventarioEach" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="InventarioCajas" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="Promedio" Type="float" />
+          <Property Name="Desviacion" Type="float" />
+          <Property Name="Maximo" Type="float" />
+          <Property Name="Minimo" Type="float" />
+          <Property Name="PronosticoPeriodoActual" Type="float" />
+          <Property Name="Promedio_AA" Type="float" />
+          <Property Name="VentaB1" Type="float" />
+          <Property Name="Variacion" Type="float" />
+          <Property Name="TendenciaPeriodoActual" Type="numeric" Precision="38" Scale="17" />
+          <Property Name="PronosticoSiguiente1" Type="float" />
+          <Property Name="PronosticoSiguiente2" Type="float" />
+          <Property Name="PronosticoSiguiente3" Type="float" />
+          <Property Name="PronosticoSiguiente4" Type="float" />
+          <Property Name="CoberturaActual" Type="float" />
+          <Property Name="CoberturaProyectada" Type="float" />
+          <Property Name="OTB" Type="float" />
+          <Property Name="Pedido" Type="float" />
+          <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="DocumentDate" Type="datetime" />
+          <Property Name="U_TI" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_HI" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_PalletCount" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="PalletsdeOrden" Type="float" />
+          <Property Name="CoberturaProyectadaNume" Type="float" />
+          <Property Name="CoberturaIngresoPO" Type="float" />
+          <Property Name="Costo" Type="float" />
+          <Property Name="Descuento_allowancep" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="Descuento_allowanced" Type="decimal" Precision="18" Scale="4" />
+          <Property Name="CostoconDescuento" Type="float" />
+          <Property Name="MontoPO" Type="float" />
+          <Property Name="Comentarios" Type="varchar" MaxLength="800" />
+          <Property Name="CoberturaProyectadaDeno" Type="float" />
+          <Property Name="VentaF1" Type="float" />
+          <Property Name="Cobertura_OTB" Type="float" />
+          <Property Name="LeadTime" Type="int" Nullable="false" />
+          <Property Name="ID_purchaseData" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Sys_Companies">
           <Key>
             <PropertyRef Name="ID_Company" />
@@ -67,6 +137,11 @@
           <Property Name="Departments" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Roles" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="ID_Company" Type="int" Nullable="false" />
+          <Property Name="prop01" Type="text" />
+          <Property Name="prop02" Type="text" />
+          <Property Name="IDSAP" Type="varchar" MaxLength="20" />
+          <Property Name="BolsaValor" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PorcentajeBolsa" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -158,6 +233,25 @@
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Invoiced" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="Tb_Planning_extra">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="query1" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="ID_Route" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_planning_print">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IsRoute" Type="bit" Nullable="false" />
+          <Property Name="Doc_key" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Printed" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Tb_PlanningSO">
           <Key>
             <PropertyRef Name="ID_salesorder" />
@@ -170,7 +264,7 @@
           <Property Name="ID_rep" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="Rep_name" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="ID_SAPRoute" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="Amount" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Amount" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="isfinished" Type="bit" Nullable="false" />
           <Property Name="query1" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="query2" Type="varchar" MaxLength="150" Nullable="false" />
@@ -182,6 +276,7 @@
           <Property Name="Weight" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Volume" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Printed" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Remarks" Type="text" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO_details">
           <Key>
@@ -191,8 +286,9 @@
           <Property Name="Line_num" Type="int" Nullable="false" />
           <Property Name="Bin_loc" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Quantity" Type="int" Nullable="false" />
-          <Property Name="ID_UOM" Type="varchar" MaxLength="15" Nullable="false" />
-          <Property Name="UOM" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="UomCode" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UomEntry" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="NumPerMsr" Type="decimal" Precision="18" Scale="6" Nullable="false" />
           <Property Name="ItemCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="ItemName" Type="varchar" MaxLength="250" Nullable="false" />
           <Property Name="StockWhs01" Type="varchar" MaxLength="15" Nullable="false" />
@@ -204,6 +300,10 @@
           <Property Name="query2" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="ID_picker" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Picker_name" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="AREA" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="SUBAREA" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UomFilter" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="PrintOrder" Type="varchar" MaxLength="15" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_PreOrdersDetailsDSD">
           <Key>
@@ -313,31 +413,21 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Tb_PlanningSO_details_Tb_PlanningSO">
-          <End Role="Tb_PlanningSO" Type="Self.Tb_PlanningSO" Multiplicity="1" />
-          <End Role="Tb_PlanningSO_details" Type="Self.Tb_PlanningSO_details" Multiplicity="*" />
+        <Association Name="FK_Purchase_data_details_Purchase_data">
+          <End Role="Purchase_data" Type="Self.Purchase_data" Multiplicity="1" />
+          <End Role="Purchase_data_details" Type="Self.Purchase_data_details" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Tb_PlanningSO">
-              <PropertyRef Name="ID_salesorder" />
+            <Principal Role="Purchase_data">
+              <PropertyRef Name="ID_purchaseData" />
             </Principal>
-            <Dependent Role="Tb_PlanningSO_details">
-              <PropertyRef Name="ID_salesorder" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Tb_PlanningSO_Tb_Planning">
-          <End Role="Tb_Planning" Type="Self.Tb_Planning" Multiplicity="1" />
-          <End Role="Tb_PlanningSO" Type="Self.Tb_PlanningSO" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Tb_Planning">
-              <PropertyRef Name="ID_Route" />
-            </Principal>
-            <Dependent Role="Tb_PlanningSO">
-              <PropertyRef Name="ID_Route" />
+            <Dependent Role="Purchase_data_details">
+              <PropertyRef Name="ID_purchaseData" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="dbLimenaModelStoreContainer">
+          <EntitySet Name="Purchase_data" EntityType="Self.Purchase_data" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Purchase_data_details" EntityType="Self.Purchase_data_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Companies" EntityType="Self.Sys_Companies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Departments" EntityType="Self.Sys_Departments" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_LogCon" EntityType="Self.Sys_LogCon" Schema="dbo" store:Type="Tables" />
@@ -349,6 +439,8 @@
           <EntitySet Name="Tb_OrdersDetailsDSD" EntityType="Self.Tb_OrdersDetailsDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_OrdersDSD" EntityType="Self.Tb_OrdersDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Planning" EntityType="Self.Tb_Planning" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_Planning_extra" EntityType="Self.Tb_Planning_extra" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_planning_print" EntityType="Self.Tb_planning_print" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_PlanningSO" EntityType="Self.Tb_PlanningSO" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_PlanningSO_details" EntityType="Self.Tb_PlanningSO_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_PreOrdersDetailsDSD" EntityType="Self.Tb_PreOrdersDetailsDSD" Schema="dbo" store:Type="Tables" />
@@ -374,13 +466,9 @@
             <End Role="Sys_Users" EntitySet="Sys_Users" />
             <End Role="Tb_Resources" EntitySet="Tb_Resources" />
           </AssociationSet>
-          <AssociationSet Name="FK_Tb_PlanningSO_details_Tb_PlanningSO" Association="Self.FK_Tb_PlanningSO_details_Tb_PlanningSO">
-            <End Role="Tb_PlanningSO" EntitySet="Tb_PlanningSO" />
-            <End Role="Tb_PlanningSO_details" EntitySet="Tb_PlanningSO_details" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Tb_PlanningSO_Tb_Planning" Association="Self.FK_Tb_PlanningSO_Tb_Planning">
-            <End Role="Tb_Planning" EntitySet="Tb_Planning" />
-            <End Role="Tb_PlanningSO" EntitySet="Tb_PlanningSO" />
+          <AssociationSet Name="FK_Purchase_data_details_Purchase_data" Association="Self.FK_Purchase_data_details_Purchase_data">
+            <End Role="Purchase_data" EntitySet="Purchase_data" />
+            <End Role="Purchase_data_details" EntitySet="Purchase_data_details" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -437,6 +525,11 @@
           <Property Name="ID_Company" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Sys_Companies" Relationship="Self.FK__Sys_Users__ID_Co__5165187F" FromRole="Sys_Users" ToRole="Sys_Companies" />
           <NavigationProperty Name="Tb_Resources" Relationship="Self.FK__Tb_Resour__ID_Us__5AEE82B9" FromRole="Sys_Users" ToRole="Tb_Resources" />
+          <Property Name="prop01" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="prop02" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="IDSAP" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="BolsaValor" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PorcentajeBolsa" Type="Decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="Tb_Resources">
           <Key>
@@ -548,15 +641,19 @@
           <EntitySet Name="Tb_InventoryTRDSD" EntityType="dbLimenaModel.Tb_InventoryTRDSD" />
           <EntitySet Name="Tb_Planning" EntityType="dbLimenaModel.Tb_Planning" />
           <EntitySet Name="Tb_PlanningSO" EntityType="dbLimenaModel.Tb_PlanningSO" />
-          <EntitySet Name="Tb_PlanningSO_details" EntityType="dbLimenaModel.Tb_PlanningSO_details" />
           <AssociationSet Name="FK_Tb_PlanningSO_Tb_Planning" Association="dbLimenaModel.FK_Tb_PlanningSO_Tb_Planning">
             <End Role="Tb_Planning" EntitySet="Tb_Planning" />
             <End Role="Tb_PlanningSO" EntitySet="Tb_PlanningSO" />
           </AssociationSet>
-          <AssociationSet Name="FK_Tb_PlanningSO_details_Tb_PlanningSO" Association="dbLimenaModel.FK_Tb_PlanningSO_details_Tb_PlanningSO">
-            <End Role="Tb_PlanningSO" EntitySet="Tb_PlanningSO" />
-            <End Role="Tb_PlanningSO_details" EntitySet="Tb_PlanningSO_details" />
+          <EntitySet Name="Tb_PlanningSO_details" EntityType="dbLimenaModel.Tb_PlanningSO_details" />
+          <EntitySet Name="Purchase_data" EntityType="dbLimenaModel.Purchase_data" />
+          <EntitySet Name="Purchase_data_details" EntityType="dbLimenaModel.Purchase_data_details" />
+          <AssociationSet Name="FK_Purchase_data_details_Purchase_data" Association="dbLimenaModel.FK_Purchase_data_details_Purchase_data">
+            <End Role="Purchase_data" EntitySet="Purchase_data" />
+            <End Role="Purchase_data_details" EntitySet="Purchase_data_details" />
           </AssociationSet>
+          <EntitySet Name="Tb_Planning_extra" EntityType="dbLimenaModel.Tb_Planning_extra" />
+          <EntitySet Name="Tb_planning_print" EntityType="dbLimenaModel.Tb_planning_print" />
         </EntityContainer>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -717,43 +814,20 @@
           <Property Name="ID_rep" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="Rep_name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="ID_SAPRoute" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Amount" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
           <Property Name="isfinished" Type="Boolean" Nullable="false" />
           <Property Name="query1" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="query2" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="query3" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="ID_Route" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Tb_Planning" Relationship="dbLimenaModel.FK_Tb_PlanningSO_Tb_Planning" FromRole="Tb_PlanningSO" ToRole="Tb_Planning" />
-          <NavigationProperty Name="Tb_PlanningSO_details" Relationship="dbLimenaModel.FK_Tb_PlanningSO_details_Tb_PlanningSO" FromRole="Tb_PlanningSO" ToRole="Tb_PlanningSO_details" />
           <Property Name="DocEntry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="query4" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="query5" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Weight" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Volume" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Printed" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Tb_PlanningSO_details">
-          <Key>
-            <PropertyRef Name="ID_detail" />
-          </Key>
-          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Line_num" Type="Int32" Nullable="false" />
-          <Property Name="Bin_loc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Quantity" Type="Int32" Nullable="false" />
-          <Property Name="ID_UOM" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="UOM" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="StockWhs01" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
-          <Property Name="isvalidated" Type="Boolean" Nullable="false" />
-          <Property Name="ID_storagetype" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Storage_type" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="ID_salesorder" Type="Int32" Nullable="false" />
-          <Property Name="query1" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Tb_PlanningSO" Relationship="dbLimenaModel.FK_Tb_PlanningSO_details_Tb_PlanningSO" FromRole="Tb_PlanningSO_details" ToRole="Tb_PlanningSO" />
-          <Property Name="query2" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
-          <Property Name="ID_picker" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Picker_name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Tb_PlanningSO_Tb_Planning">
           <End Type="dbLimenaModel.Tb_Planning" Role="Tb_Planning" Multiplicity="1" />
@@ -767,18 +841,136 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Tb_PlanningSO_details_Tb_PlanningSO">
-          <End Type="dbLimenaModel.Tb_PlanningSO" Role="Tb_PlanningSO" Multiplicity="1" />
-          <End Type="dbLimenaModel.Tb_PlanningSO_details" Role="Tb_PlanningSO_details" Multiplicity="*" />
+        <EntityType Name="Tb_PlanningSO_details">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Line_num" Type="Int32" Nullable="false" />
+          <Property Name="Bin_loc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="UomCode" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UomEntry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NumPerMsr" Type="Decimal" Nullable="false" Precision="18" Scale="6" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="StockWhs01" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="isvalidated" Type="Boolean" Nullable="false" />
+          <Property Name="ID_storagetype" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Storage_type" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ID_salesorder" Type="Int32" Nullable="false" />
+          <Property Name="query1" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="query2" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ID_picker" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Picker_name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="AREA" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="SUBAREA" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UomFilter" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="PrintOrder" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Purchase_data">
+          <Key>
+            <PropertyRef Name="ID_purchaseData" />
+          </Key>
+          <Property Name="ID_purchaseData" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date_data" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Date_create" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="User_create" Type="Int32" Nullable="false" />
+          <Property Name="Providers" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Categories" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="SubCategories" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Brands" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="query1" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="query2" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Purchase_data_details" Relationship="dbLimenaModel.FK_Purchase_data_details_Purchase_data" FromRole="Purchase_data" ToRole="Purchase_data_details" />
+        </EntityType>
+        <EntityType Name="Purchase_data_details">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProdCodigo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ProdNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UnidadMedidaLetras" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Marca" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SubCategory" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Category" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ProvNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InventarioEach" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="InventarioCajas" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="LeadTime" Type="Int32" Nullable="false" />
+          <Property Name="U_TI" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_HI" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_PalletCount" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Promedio" Type="Double" />
+          <Property Name="Desviacion" Type="Double" />
+          <Property Name="Maximo" Type="Double" />
+          <Property Name="Minimo" Type="Double" />
+          <Property Name="PronosticoPeriodoActual" Type="Double" />
+          <Property Name="PronosticoSiguiente1" Type="Double" />
+          <Property Name="PronosticoSiguiente2" Type="Double" />
+          <Property Name="PronosticoSiguiente3" Type="Double" />
+          <Property Name="PronosticoSiguiente4" Type="Double" />
+          <Property Name="ID_purchaseData" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Purchase_data" Relationship="dbLimenaModel.FK_Purchase_data_details_Purchase_data" FromRole="Purchase_data_details" ToRole="Purchase_data" />
+          <Property Name="Comentarios" Type="String" MaxLength="800" FixedLength="false" Unicode="false" />
+          <Property Name="Descuento_allowancep" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="Descuento_allowanced" Type="Decimal" Precision="18" Scale="4" />
+          <Property Name="TendenciaPeriodoActual" Type="Decimal" Precision="38" Scale="17" />
+          <Property Name="Promedio_AA" Type="Double" />
+          <Property Name="VentaB1" Type="Double" />
+          <Property Name="VentaF1" Type="Double" />
+          <Property Name="CoberturaActual" Type="Double" />
+          <Property Name="CoberturaProyectada" Type="Double" />
+          <Property Name="CoberturaProyectadaNume" Type="Double" />
+          <Property Name="CoberturaProyectadaDeno" Type="Double" />
+          <Property Name="num" Type="Int32" />
+          <Property Name="FactorCompra" Type="Double" />
+          <Property Name="FactorCompra_quiebre" Type="Double" />
+          <Property Name="Politica_cobertura" Type="Double" />
+          <Property Name="Variacion" Type="Double" />
+          <Property Name="OTB" Type="Double" />
+          <Property Name="Pedido" Type="Double" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
+          <Property Name="DocumentDate" Type="DateTime" Precision="3" />
+          <Property Name="PalletsdeOrden" Type="Double" />
+          <Property Name="CoberturaIngresoPO" Type="Double" />
+          <Property Name="Costo" Type="Double" />
+          <Property Name="CostoconDescuento" Type="Double" />
+          <Property Name="MontoPO" Type="Double" />
+          <Property Name="Cobertura_OTB" Type="Double" />
+        </EntityType>
+        <Association Name="FK_Purchase_data_details_Purchase_data">
+          <End Type="dbLimenaModel.Purchase_data" Role="Purchase_data" Multiplicity="1" />
+          <End Type="dbLimenaModel.Purchase_data_details" Role="Purchase_data_details" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Tb_PlanningSO">
-              <PropertyRef Name="ID_salesorder" />
+            <Principal Role="Purchase_data">
+              <PropertyRef Name="ID_purchaseData" />
             </Principal>
-            <Dependent Role="Tb_PlanningSO_details">
-              <PropertyRef Name="ID_salesorder" />
+            <Dependent Role="Purchase_data_details">
+              <PropertyRef Name="ID_purchaseData" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="Tb_Planning_extra">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="query1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Route" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_planning_print">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IsRoute" Type="Boolean" Nullable="false" />
+          <Property Name="Doc_key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Printed" Type="Boolean" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -817,6 +1009,11 @@
           <EntitySetMapping Name="Sys_Users">
             <EntityTypeMapping TypeName="dbLimenaModel.Sys_Users">
               <MappingFragment StoreEntitySet="Sys_Users">
+                <ScalarProperty Name="PorcentajeBolsa" ColumnName="PorcentajeBolsa" />
+                <ScalarProperty Name="BolsaValor" ColumnName="BolsaValor" />
+                <ScalarProperty Name="IDSAP" ColumnName="IDSAP" />
+                <ScalarProperty Name="prop02" ColumnName="prop02" />
+                <ScalarProperty Name="prop01" ColumnName="prop01" />
                 <ScalarProperty Name="ID_User" ColumnName="ID_User" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Lastname" ColumnName="Lastname" />
@@ -1003,6 +1200,7 @@
           <EntitySetMapping Name="Tb_PlanningSO">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_PlanningSO">
               <MappingFragment StoreEntitySet="Tb_PlanningSO">
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Printed" ColumnName="Printed" />
                 <ScalarProperty Name="Volume" ColumnName="Volume" />
                 <ScalarProperty Name="Weight" ColumnName="Weight" />
@@ -1029,6 +1227,10 @@
           <EntitySetMapping Name="Tb_PlanningSO_details">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_PlanningSO_details">
               <MappingFragment StoreEntitySet="Tb_PlanningSO_details">
+                <ScalarProperty Name="PrintOrder" ColumnName="PrintOrder" />
+                <ScalarProperty Name="UomFilter" ColumnName="UomFilter" />
+                <ScalarProperty Name="SUBAREA" ColumnName="SUBAREA" />
+                <ScalarProperty Name="AREA" ColumnName="AREA" />
                 <ScalarProperty Name="Picker_name" ColumnName="Picker_name" />
                 <ScalarProperty Name="ID_picker" ColumnName="ID_picker" />
                 <ScalarProperty Name="query2" ColumnName="query2" />
@@ -1040,11 +1242,105 @@
                 <ScalarProperty Name="StockWhs01" ColumnName="StockWhs01" />
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
-                <ScalarProperty Name="UOM" ColumnName="UOM" />
-                <ScalarProperty Name="ID_UOM" ColumnName="ID_UOM" />
+                <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
+                <ScalarProperty Name="UomEntry" ColumnName="UomEntry" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
                 <ScalarProperty Name="Quantity" ColumnName="Quantity" />
                 <ScalarProperty Name="Bin_loc" ColumnName="Bin_loc" />
                 <ScalarProperty Name="Line_num" ColumnName="Line_num" />
+                <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Purchase_data">
+            <EntityTypeMapping TypeName="dbLimenaModel.Purchase_data">
+              <MappingFragment StoreEntitySet="Purchase_data">
+                <ScalarProperty Name="query2" ColumnName="query2" />
+                <ScalarProperty Name="query1" ColumnName="query1" />
+                <ScalarProperty Name="Brands" ColumnName="Brands" />
+                <ScalarProperty Name="SubCategories" ColumnName="SubCategories" />
+                <ScalarProperty Name="Categories" ColumnName="Categories" />
+                <ScalarProperty Name="Providers" ColumnName="Providers" />
+                <ScalarProperty Name="User_create" ColumnName="User_create" />
+                <ScalarProperty Name="Date_create" ColumnName="Date_create" />
+                <ScalarProperty Name="Date_data" ColumnName="Date_data" />
+                <ScalarProperty Name="ID_purchaseData" ColumnName="ID_purchaseData" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Purchase_data_details">
+            <EntityTypeMapping TypeName="dbLimenaModel.Purchase_data_details">
+              <MappingFragment StoreEntitySet="Purchase_data_details">
+                <ScalarProperty Name="Cobertura_OTB" ColumnName="Cobertura_OTB" />
+                <ScalarProperty Name="MontoPO" ColumnName="MontoPO" />
+                <ScalarProperty Name="CostoconDescuento" ColumnName="CostoconDescuento" />
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+                <ScalarProperty Name="CoberturaIngresoPO" ColumnName="CoberturaIngresoPO" />
+                <ScalarProperty Name="PalletsdeOrden" ColumnName="PalletsdeOrden" />
+                <ScalarProperty Name="DocumentDate" ColumnName="DocumentDate" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Pedido" ColumnName="Pedido" />
+                <ScalarProperty Name="OTB" ColumnName="OTB" />
+                <ScalarProperty Name="Variacion" ColumnName="Variacion" />
+                <ScalarProperty Name="Politica_cobertura" ColumnName="Politica_cobertura" />
+                <ScalarProperty Name="FactorCompra_quiebre" ColumnName="FactorCompra_quiebre" />
+                <ScalarProperty Name="FactorCompra" ColumnName="FactorCompra" />
+                <ScalarProperty Name="num" ColumnName="num" />
+                <ScalarProperty Name="CoberturaProyectadaDeno" ColumnName="CoberturaProyectadaDeno" />
+                <ScalarProperty Name="CoberturaProyectadaNume" ColumnName="CoberturaProyectadaNume" />
+                <ScalarProperty Name="CoberturaProyectada" ColumnName="CoberturaProyectada" />
+                <ScalarProperty Name="CoberturaActual" ColumnName="CoberturaActual" />
+                <ScalarProperty Name="VentaF1" ColumnName="VentaF1" />
+                <ScalarProperty Name="VentaB1" ColumnName="VentaB1" />
+                <ScalarProperty Name="Promedio_AA" ColumnName="Promedio_AA" />
+                <ScalarProperty Name="TendenciaPeriodoActual" ColumnName="TendenciaPeriodoActual" />
+                <ScalarProperty Name="Descuento_allowanced" ColumnName="Descuento_allowanced" />
+                <ScalarProperty Name="Descuento_allowancep" ColumnName="Descuento_allowancep" />
+                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
+                <ScalarProperty Name="ID_purchaseData" ColumnName="ID_purchaseData" />
+                <ScalarProperty Name="PronosticoSiguiente4" ColumnName="PronosticoSiguiente4" />
+                <ScalarProperty Name="PronosticoSiguiente3" ColumnName="PronosticoSiguiente3" />
+                <ScalarProperty Name="PronosticoSiguiente2" ColumnName="PronosticoSiguiente2" />
+                <ScalarProperty Name="PronosticoSiguiente1" ColumnName="PronosticoSiguiente1" />
+                <ScalarProperty Name="PronosticoPeriodoActual" ColumnName="PronosticoPeriodoActual" />
+                <ScalarProperty Name="Minimo" ColumnName="Minimo" />
+                <ScalarProperty Name="Maximo" ColumnName="Maximo" />
+                <ScalarProperty Name="Desviacion" ColumnName="Desviacion" />
+                <ScalarProperty Name="Promedio" ColumnName="Promedio" />
+                <ScalarProperty Name="U_PalletCount" ColumnName="U_PalletCount" />
+                <ScalarProperty Name="U_HI" ColumnName="U_HI" />
+                <ScalarProperty Name="U_TI" ColumnName="U_TI" />
+                <ScalarProperty Name="LeadTime" ColumnName="LeadTime" />
+                <ScalarProperty Name="InventarioCajas" ColumnName="InventarioCajas" />
+                <ScalarProperty Name="InventarioEach" ColumnName="InventarioEach" />
+                <ScalarProperty Name="ProvNombre" ColumnName="ProvNombre" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="UnidadMedidaLetras" ColumnName="UnidadMedidaLetras" />
+                <ScalarProperty Name="ProdNombre" ColumnName="ProdNombre" />
+                <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
+                <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Planning_extra">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_Planning_extra">
+              <MappingFragment StoreEntitySet="Tb_Planning_extra">
+                <ScalarProperty Name="ID_Route" ColumnName="ID_Route" />
+                <ScalarProperty Name="query1" ColumnName="query1" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_planning_print">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_planning_print">
+              <MappingFragment StoreEntitySet="Tb_planning_print">
+                <ScalarProperty Name="Printed" ColumnName="Printed" />
+                <ScalarProperty Name="Doc_key" ColumnName="Doc_key" />
+                <ScalarProperty Name="IsRoute" ColumnName="IsRoute" />
                 <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
               </MappingFragment>
             </EntityTypeMapping>

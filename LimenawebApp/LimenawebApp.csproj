@@ -19,7 +19,7 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort>44350</IISExpressSSLPort>
+    <IISExpressSSLPort>44354</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -46,14 +46,26 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ClosedXML, Version=0.94.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.94.2\lib\net46\ClosedXML.dll</HintPath>
+    </Reference>
     <Reference Include="CrystalDecisions.CrystalReports.Engine, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Shared, Version=13.0.3500.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.3.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.3\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
@@ -68,8 +80,15 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Transactions" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
     <Reference Include="System.Web.ApplicationServices" />
@@ -128,6 +147,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="Z.EntityFramework.Extensions, Version=3.17.3.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.3.17.3\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
@@ -160,11 +183,13 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\DSDController.cs" />
+    <Compile Include="Controllers\FormsActionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InvoicesController.cs" />
     <Compile Include="Controllers\MainController.cs" />
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\CommercialController.cs" />
+    <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -179,6 +204,10 @@
     <Compile Include="Models\ActivitiesM_types.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Activities_RefImg.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AuxiliarModels.cs" />
     <Compile Include="Models\BI_Dim_Customer.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -192,6 +221,9 @@
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C_HELPERS.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\C_PICKERS.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\C_TRUCKS.cs">
@@ -227,6 +259,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dbLimena.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\dbMatrizCompras.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbMatrizCompras.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dbMatrizCompras.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\dbMatrizCompras.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbMatrizCompras.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Models\DLI_PRO.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -254,10 +301,31 @@
     <Compile Include="Models\form_resource_type.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Interna_DLI.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Interna_DLI.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Interna_DLI.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Interna_DLI.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Interna_DLI.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Models\ITM1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Matriz_Formato.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\OCRD.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OHEM.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OpenSalesOrders.cs">
@@ -265,6 +333,21 @@
     </Compile>
     <Compile Include="Models\OpenSalesOrders_Details.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OpenSalesOrders_DetailsUOM.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OSLP.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Purchase_catalog.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Purchase_data.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Purchase_data_details.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Reports.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -274,6 +357,12 @@
     <Compile Include="Models\ResumeSO_DSD.cs" />
     <Compile Include="Models\RoutesM.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SalesRep.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Supervisor.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Sys_Companies.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -293,11 +382,23 @@
     <Compile Include="Models\Tb_Alerts.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_Autorizaciones.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_Bonificaciones.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_ConfigBolsa.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_InventoryDetailsTRDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_InventoryTRDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_MaestroPorcentajes.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_OrdersDetailsDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -314,6 +415,12 @@
     <Compile Include="Models\Tb_PlanningSO_details.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_Planning_extra.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_planning_print.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_PreOrdersDetailsDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
@@ -323,10 +430,22 @@
     <Compile Include="Models\Tb_Resources.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Transito_Final.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\UFD1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\view_cuentascobrarCliente.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\View_dsd_suggestedinventory.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\view_MatrizMadre.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\view_ordenesAbiertasDet.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\VisitsM.cs">
@@ -356,11 +475,25 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\appcontent\assets\css\dropify.min.css" />
+    <Content Include="Content\appcontent\assets\css\fixedColumns.dataTables.css" />
     <Content Include="Content\appcontent\assets\css\floatingboxsettings.css" />
+    <Content Include="Content\appcontent\assets\css\magic-input.css" />
     <Content Include="Content\appcontent\assets\css\main.css" />
     <Content Include="Content\appcontent\assets\css\main.min.css" />
     <Content Include="Content\appcontent\assets\css\multi.css" />
+    <Content Include="Content\appcontent\assets\css\multiple-select.css" />
+    <Content Include="Content\appcontent\assets\css\multiple-select.png" />
+    <Content Include="Content\appcontent\assets\css\nestable.css" />
+    <Content Include="Content\appcontent\assets\css\svgicons.css" />
     <Content Include="Content\appcontent\assets\css\sweetalert.css" />
+    <Content Include="Content\appcontent\assets\fonts\dropify.svg" />
+    <Content Include="Content\appcontent\assets\js\dropify.js" />
+    <Content Include="Content\appcontent\assets\js\dropify.min.js" />
+    <Content Include="Content\appcontent\assets\js\JIC.js" />
+    <Content Include="Content\appcontent\assets\js\jquery.nestable.js" />
+    <Content Include="Content\appcontent\assets\js\multiple-select.js" />
+    <Content Include="Content\appcontent\assets\js\SessionUpdater.js" />
     <Content Include="Content\appcontent\assets\js\signature_forFB.js" />
     <Content Include="Content\appcontent\assets\dev\js\scripts.js" />
     <Content Include="Content\appcontent\assets\img\404.svg" />
@@ -719,6 +852,16 @@
     <Content Include="Content\appcontent\assets\vendor\amcharts\themes\light.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\themes\patterns.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\xy.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\barcode_scan.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\css\colors.css" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\css\fonts.css" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\css\styles.css" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\file_input_original.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\file_input.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\live_w_locator_original.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\live_w_locator.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\quagga.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\vendor\jquery-1.9.0.min.js" />
     <Content Include="Content\appcontent\assets\vendor\bootstrap\css\bootstrap-grid.css" />
     <Content Include="Content\appcontent\assets\vendor\bootstrap\css\bootstrap-grid.min.css" />
     <Content Include="Content\appcontent\assets\vendor\bootstrap\css\bootstrap-reboot.css" />
@@ -740,6 +883,7 @@
     <Content Include="Content\appcontent\assets\vendor\colorpicker\css\bootstrap-colorpicker.min.css" />
     <Content Include="Content\appcontent\assets\vendor\colorpicker\js\bootstrap-colorpicker.js" />
     <Content Include="Content\appcontent\assets\vendor\colorpicker\js\bootstrap-colorpicker.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\contextmeu\jquery.contextMenu.css" />
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\dashlab-icon.css" />
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\demo-files\demo.css" />
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\demo-files\demo.js" />
@@ -748,8 +892,10 @@
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\ie7\ie7.css" />
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\ie7\ie7.js" />
     <Content Include="Content\appcontent\assets\vendor\dashlab-icon\Read Me.txt" />
+    <Content Include="Content\appcontent\assets\vendor\data-tables\datatablesCopy.css" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\dataTables.bootstrap4.min.css" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\dataTables.bootstrap4.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\data-tables\datatables.css" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\dataTables.editor.min.js" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\data\arrays.txt" />
     <Content Include="Content\appcontent\assets\vendor\data-tables\data\row-details.txt" />
@@ -1165,6 +1311,11 @@
     <Content Include="Content\appcontent\assets\vendor\js-init\sweetalert.min.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\vmap\init-vmap-usa.js" />
     <Content Include="Content\appcontent\assets\vendor\js-init\vmap\init-vmap-world.js" />
+    <Content Include="Content\appcontent\assets\vendor\jstreegrid\collapse.png" />
+    <Content Include="Content\appcontent\assets\vendor\jstreegrid\expand.png" />
+    <Content Include="Content\appcontent\assets\vendor\jstreegrid\expand2.png" />
+    <Content Include="Content\appcontent\assets\vendor\jstreegrid\jquery.treegrid.css" />
+    <Content Include="Content\appcontent\assets\vendor\jstreegrid\jquery.treegrid.js" />
     <Content Include="Content\appcontent\assets\vendor\jstree\jstree.js" />
     <Content Include="Content\appcontent\assets\vendor\jstree\jstree.min.js" />
     <Content Include="Content\appcontent\assets\vendor\jstree\themes\default-dark\32px.png" />
@@ -1253,6 +1404,13 @@
     <Content Include="Content\appcontent\assets\vendor\simple-line-icons\css\simple-line-icons.css" />
     <Content Include="Content\appcontent\assets\vendor\simple-line-icons\fonts\Simple-Line-Icons.svg" />
     <Content Include="Content\appcontent\assets\vendor\sparkline\jquery.sparkline.js" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\css\component.css" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\css\demo.css" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\css\normalize.css" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\blokk\BLOKKRegular.svg" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\codropsicons\codropsicons.svg" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\codropsicons\license.txt" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\js\jquery.stickyheader.js" />
     <Content Include="Content\appcontent\assets\vendor\summernote\lang\summernote-ar-AR.js" />
     <Content Include="Content\appcontent\assets\vendor\summernote\lang\summernote-ar-AR.min.js" />
     <Content Include="Content\appcontent\assets\vendor\summernote\lang\summernote-bg-BG.js" />
@@ -1345,6 +1503,7 @@
     <Content Include="Content\appcontent\assets\vendor\summernote\summernote.css" />
     <Content Include="Content\appcontent\assets\vendor\summernote\summernote.js" />
     <Content Include="Content\appcontent\assets\vendor\summernote\summernote.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\tableeditorinline\SimpleTableCellEditor.js" />
     <Content Include="Content\appcontent\assets\vendor\themify-icons\css\themify-icons.css" />
     <Content Include="Content\appcontent\assets\vendor\themify-icons\fonts\themify.svg" />
     <Content Include="Content\appcontent\assets\vendor\themify-icons\ie7\ie7.css" />
@@ -1371,6 +1530,7 @@
     <Content Include="Content\appcontent\assets\vendor\weather-icons\css\weather-icons.css" />
     <Content Include="Content\appcontent\assets\vendor\weather-icons\css\weather-icons.min.css" />
     <Content Include="Content\appcontent\assets\vendor\weather-icons\font\weathericons-regular-webfont.svg" />
+    <Content Include="Content\images\Logo_watermark.png" />
     <Content Include="Content\landingpage\css\dlimena.webflow.css" />
     <Content Include="Content\landingpage\css\ionicons.css" />
     <Content Include="Content\landingpage\css\normalize.css" />
@@ -1964,11 +2124,56 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>DLI_PRO.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <Content Include="Models\dbMatrizCompras.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbMatrizCompras.edmx</DependentUpon>
+      <LastGenOutput>dbMatrizCompras.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\dbMatrizCompras.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>dbMatrizCompras.edmx</DependentUpon>
+      <LastGenOutput>dbMatrizCompras.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\DLI_PRO.edmx.diagram">
       <DependentUpon>DLI_PRO.edmx</DependentUpon>
     </Content>
+    <Content Include="Models\Interna_DLI.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Interna_DLI.edmx</DependentUpon>
+      <LastGenOutput>Interna_DLI.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="Models\Interna_DLI.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Interna_DLI.edmx</DependentUpon>
+      <LastGenOutput>Interna_DLI.cs</LastGenOutput>
+    </Content>
     <Content Include="Models\Reports.xsc">
       <DependentUpon>Reports.xsd</DependentUpon>
+    </Content>
+    <EntityDeploy Include="Models\dbMatrizCompras.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>dbMatrizCompras.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\dbMatrizCompras.edmx.diagram">
+      <DependentUpon>dbMatrizCompras.edmx</DependentUpon>
+    </Content>
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\blokk\BLOKKRegular.eot" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\blokk\BLOKKRegular.ttf" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\blokk\BLOKKRegular.woff" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\codropsicons\codropsicons.eot" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\codropsicons\codropsicons.ttf" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\fonts\codropsicons\codropsicons.woff" />
+    <Content Include="Content\appcontent\assets\vendor\stickytable\js\.DS_Store" />
+    <Content Include="Content\appcontent\assets\fonts\dropify.eot" />
+    <Content Include="Content\appcontent\assets\fonts\dropify.ttf" />
+    <Content Include="Content\appcontent\assets\fonts\dropify.woff" />
+    <Content Include="Content\documents\SPSKlass_ACEPTADA.xlsx" />
+    <EntityDeploy Include="Models\Interna_DLI.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Interna_DLI.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <Content Include="Models\Interna_DLI.edmx.diagram">
+      <DependentUpon>Interna_DLI.edmx</DependentUpon>
     </Content>
     <None Include="Models\Reports.xsd">
       <SubType>Designer</SubType>
@@ -2039,11 +2244,35 @@
     <Content Include="Views\Invoices\QualityControl.cshtml" />
     <Content Include="Views\Shared\QualityControl_Script.cshtml" />
     <Content Include="Views\Invoices\QualityControl_planning.cshtml" />
+    <Content Include="Views\Main\Dashboard_operations.cshtml" />
+    <Content Include="Views\Main\Dashboard_dsd.cshtml" />
+    <Content Include="Views\Operations\Purchase_data.cshtml" />
+    <Content Include="Views\Operations\new_purchaseData.cshtml" />
+    <Content Include="Views\Operations\ProductCatalog.cshtml" />
+    <Content Include="Views\Management\FormsM.cshtml" />
+    <Content Include="Views\Shared\FormBuilderScriptM.cshtml" />
+    <Content Include="Views\Operations\edit_purchaseData.cshtml" />
+    <Content Include="Views\Management\Template_preview.cshtml" />
+    <Content Include="Views\Home\Test_barcode.cshtml" />
+    <Content Include="Views\Home\Test_barcode2.cshtml" />
+    <Content Include="Views\Management\Template_preview - Copy.cshtml" />
+    <Content Include="Views\Commercial\Activityon_preview.cshtml" />
+    <Content Include="Views\Commercial\Klass_report.cshtml" />
+    <Content Include="Views\Invoices\Planning_order.cshtml" />
+    <Content Include="Views\Commercial\Routes_details.cshtml" />
+    <Content Include="Views\Commercial\Prices_request.cshtml" />
+    <Content Include="Views\Commercial\Prices_requestpdo.cshtml" />
+    <Content Include="Views\Commercial\Prices_requestMicro.cshtml" />
+    <Content Include="Views\Main\Dashboard_customers.cshtml" />
+    <Content Include="Views\Emails\email_confirmation_bonification.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Content\images\activities\" />
+    <Folder Include="Content\images\activities_refimg\" />
     <Folder Include="Content\images\temp_sign\" />
     <Folder Include="Reports\pdf\" />
+    <Folder Include="Views\FormsActions\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -2093,7 +2322,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>49387</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>https://localhost:44350/</IISUrl>
+          <IISUrl>https://localhost:44354/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

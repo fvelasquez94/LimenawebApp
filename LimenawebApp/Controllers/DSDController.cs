@@ -410,6 +410,14 @@ namespace LimenawebApp.Controllers
                     foreach (var item in lstOrders)
                     {
                         var sumtotal = (from se in dblim.Tb_InventoryDetailsTRDSD where (se.ID_InventoryDSD == item.ID_InventoryDSD) select se.Units).Sum();
+                        try
+                        {
+                            item.ID_Company = Convert.ToInt32(item.docNum_SAP);
+                        }
+                        catch {
+                            item.ID_Company = 0;
+                        }
+                       
                         item.docNum_SAP = sumtotal.ToString();
                     }
                 }
@@ -486,8 +494,8 @@ namespace LimenawebApp.Controllers
             ReportDocument rd = new ReportDocument();
             rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Inventory_DSD.rpt"));
             rd.SetDataSource(details);
-         
 
+            rd.SetParameterValue("SAPDOC", header.docNum_SAP);
 
             var filePathOriginal = Server.MapPath("/Reports/pdf");
             Response.Buffer = false;

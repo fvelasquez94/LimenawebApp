@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Distribuidora Limeña - Planning order";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            <!--page title-->
+            <!--/page title-->
+            <!--calendar-->
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-info">
+                                <div class="custom-title">Sort Routes</div>
+                                <div class=" widget-action-link">
+
+                                    <a class="btn dropdown-item btn btn-info btn-sm" href="@Url.Action("Planning", "Invoices")">Back</a>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body pt-3 pb-4">
+                            <div class="table-responsive">
+                                <a href="#" class="btn btn-sm btn-outline-warning" onclick="changeOrder()">CLEAR SORTS</a>
+                                <table id="tbOrder" class="table table-striped" style="width:100% !important">
+                                    <thead>
+                                        <tr>
+                                            <th style="display:none">ORDER</th>
+                                            <th style="display:none">#</th>
+                                            <th>DOC NUM</th>
+                                            <th>ID CUSTOMER</th>
+                                            <th>CUSTOMER</th>
+                                            <th>ROUTE</th>
+                                            <th>REP</th>
+                                            <th>DATE</th>
+                                            <th>AMOUNT</th>
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in ViewBag.orders)
+                        {
+                                        <tr style="font-size:12px;font-weight:normal !important;">
+                                            <td style="display:none;">@item.query3</td>
+                                            <td style="display:none;">@item.ID_salesorder</td>
+                                            @if (item.ID_customer[0] == 'C')
+    {
+                                        <td><span style="color:black !important; font-size:12px;" class="badge badge-warning text-light form-pill px-3 py-1">@item.SAP_docnum</span></td>
+}
+else
+{
+                                        <td><span style="color:black !important; font-size:12px;" class="badge badge-info text-light form-pill px-3 py-1">@item.SAP_docnum</span></td>
+}
+
+
+
+                                            <td>@item.ID_customer</td>
+                                            <td>@item.Customer_name</td>
+                                            <td>@item.query2</td>
+                                            <td>@item.Rep_name</td>
+                                            <td>@Convert.ToDateTime(item.SAP_docdate).ToShortDateString()</td>
+                                            <td>$@item.Amount</td>
+
+                                        </tr>
+        }
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div class="float-left">
+                            <span style="color:black !important" class="badge badge-warning text-light form-pill px-3 py-1">LIMENA</span>
+                            <span style="color:black !important" class="badge badge-info text-light form-pill px-3 py-1">BAR-S</span>
+
+                        </div>
+
+                    </div>
+                    <div class="float-right">
+                        <a href="#" class="btn btn-success" onclick="saveOrderData()">Save</a>
+
+                    </div>
+                </div>
+            </div>
+            <!--/calendar-->
+        </div>
+    </div>
+</div>
+<!--/main content wrapper-->
+

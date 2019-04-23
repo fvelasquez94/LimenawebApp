@@ -1,0 +1,432 @@
+﻿
+@{
+    ViewBag.Title = "Distribuidora Limeña - Forms";
+}
+
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">FORMS LIST</div>
+                                <div class=" widget-action-link">
+
+                                            <button class="btn btn-success" data-toggle="modal" data-target="#createModal" data-action="create">Add Form<i class="mdi mdi-plus"></i></button>
+    
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        <br /><br />
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table id="order-listing" class="table table-hover table-custom" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">ID #</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Type of document</th>
+                                            <th scope="col">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var itemForms in ViewBag.formslist)
+    {
+                                    <tr>
+                                        <td scope="row" data-label="ID">
+
+                  
+                                                @itemForms.ID_form
+
+
+                                        </td>
+                                        <td data-label="Name">@itemForms.name</td>
+                                        <td data-label="Type of document">
+                                            @itemForms.query1
+                                        </td>
+                                        <td align="left" data-label="Actions">
+                                            <button class="btn btn-sm btn-pill btn-outline-info pl-4 pr-4" data-toggle="modal" data-target="#createModal" data-action="edit" data-idform="@itemForms.ID_form" data-name="@itemForms.name" data-description="@itemForms.description" data-activity="@itemForms.ID_activity"><i class="fa fa-edit"></i>Edit</button>
+                                            <button class="btn btn-sm btn-pill btn-outline-warning " data-toggle="modal" data-target="#deleteModal" data-idform="@itemForms.ID_form"><i class="fa fa-trash"></i>Delete</button>
+
+                                            @if (itemForms.ID_activity == 1)
+    {//Forms
+                                        <a href="@Url.Action("Template_preview", "Management", new { id=itemForms.ID_form})" class="btn btn-pill btn-sm btn-outline-success"><i class="fa fa-eye"></i> Preview</a>
+
+}
+
+                                        </td>
+                                    </tr>
+}
+
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- content-wrapper ends -->
+        <!-- partial:../../partials/_footer.html -->
+        <!-- partial -->
+    </div>
+    <!-- main-panel ends -->
+</div>
+
+<!-- page-body-wrapper ends -->
+<!--DELETE FORM DATA STARTS-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("DeleteForm", "FormsActions", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-delete"></i> Delete Form Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Are you sure you want to delete Form Data?</label>
+                        <input type="text" class="form-control" id="idFormD" name="idFormD" hidden>
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>}
+        </div>
+    </div>
+</div>
+<!--CREATE USER DATA STARTS-->
+<div class="modal fade" id="createModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content ">
+            @using (Html.BeginForm("CreateForm", "FormsActions", FormMethod.Post, new { onkeydown = "return event.keyCode!=13" }))
+            {
+                @Html.AntiForgeryToken()
+
+
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="modal-body ">
+                    <input type="text" id="possibleID" name="possibleID" value="0" hidden />
+                    <input type="text" id="action" name="action" value="0" hidden />
+                    <div class="row ">
+                        <div class="col-md-12 grid-margin">
+                           
+                                <div class="content">
+
+                                    <div class="form-horizontal col-md-12">
+                                        <div class="custom-title-wrap bar-primary">
+                                            <p id="titleform" class="custom-title text-dark"><i class="fa fa-file"></i>Title</p>
+                                            <p id="desform" class="display-5">Description</p>
+
+                                        </div>
+
+                                        <br />
+                                        @*<h5 class="display-5 text-warning">Description</h5>*@
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <p class="control-label col-md-6">Form name*</p>
+                                                    <div class="col-md-12">
+                                                        <input type="text" class="form-control" required id="name" name="name" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <p class="control-label col-md-6">Description*</p>
+                                                    <div class="col-md-12">
+                                                        <input type="text" class="form-control" required id="description" name="description" autocomplete="off" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <p class="control-label col-md-12">Type of Activity</p>
+                                                    <div class="col-md-12">
+                                                        @Html.DropDownList("ID_activity", null, htmlAttributes: new { @class = "form-control", @id = "type" })
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-horizontal col-md-12">
+                                        <h3 class="display-5 text-warning">Questions & input fields</h3>
+                                        <hr />
+                                        <div class="row">
+                                            <div class="col-md-4">
+
+                                                <div class="form-group">
+                                                    <p class="control-label col-md-12">Resource type</p>
+                                                    <div class="col-md-12">
+                                                        @Html.DropDownList("ID_formresourcetype", null, htmlAttributes: new { @class = "form-control", @id = "formresourcetype" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_label">
+                                                    <p class="control-label col-md-12">Text to show</p>
+                                                    <div class="col-md-12">
+                                                        <input type="text" id="label_toshow" class="form-control" autocomplete="off" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_category" style="display:none">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        <select class="form-control" id="category_list">
+                                                            <option value="0">Select category</option>
+                                                            <option value="1">Flavor</option>
+                                                            <option value="2">Quality</option>
+                                                            <option value="3">Price</option>
+                                                            <option value="4">Packing</option>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_resourceR" style="display:none">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        @Html.DropDownList("ID_formresourcetypeRetail", null, htmlAttributes: new { @class = "form-control", @id = "resource_list" })
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_products" style="display:none">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        <input type="button" value="Find products" class="btn btn-info" id="myBtn">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="form-group" id="div_samples" style="display:none">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        <input type="button" value="Find samples" class="btn btn-info" id="myBtn_samples">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_displays" style="display:none">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        <input type="button" value="Find displays" class="btn btn-info" id="myBtn_displays">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_gifts" style="display:none">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        <input type="button" value="Find gifts" class="btn btn-info" id="myBtn_gifts">
+                                                    </div>
+                                                </div>
+
+                                                <div class="form-group" id="div_btnadd">
+                                                    <div class="col-md-offset-2 col-md-12 text-right">
+                                                        <input type="button" value="Add" id="btn_agregarObjeto" class="btn btn-info">
+                                                    </div>
+                                                </div><br />
+
+                                                <div class="form-group" id="menu-editor" style="display: none;">
+                                                    <hr />
+                                                    <div class="col-md-offset-2 col-md-12 text-left">
+                                                        <h3>Editing item <span id="currentEditName"></span></h3>
+                                                        <div class="form-group">
+                                                            <label for="addInputName">Text to show</label>
+                                                            <input type="text" class="form-control" id="editInputName" placeholder="Text to show">
+                                                        </div>
+                                                        <a class="btn btn-info" id="editButton" onclick="JavaScript:return editMenuItem(this);">Edit</a>
+
+                                                    </div>
+                                                </div><br />
+                                            </div>
+                                            <div class="col-md-8">
+
+                                                <div class="cf nestable-lists" id="rightss">
+
+                                                    <div class="dd" id="nestable">
+                                                        <ol class="dd-list" id="main_list"></ol>
+
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <div class="col-md-12 text-right">
+
+                                                        <a id="clear_list" href="#" class="close btn btn-inverse-light" data-dismiss="alert" aria-label="close">Clear list</a>
+                                                    </div>
+                                                </div>
+
+
+
+                                            </div>
+                                        </div>
+
+                                        <textarea id="nestable-output" name="nestable_output" hidden></textarea>
+
+
+                                    </div>
+
+
+
+
+
+
+
+                                </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">Save</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--CREATE USER DATA ENDS-->
+<!--DELETE FORM DATA ENDS-->
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-left">Select products</h4>
+            </div>
+            <div class="modal-body col-md-12">
+                <div class="form-group">
+                    <p class="control-label col-md-12">Vendor</p>
+                    <div class="col-md-12">
+                        <select class="form-control" id="vendors_list" onChange='getProducts()'>
+                            <option data-hidden="true">Select vendor</option>
+                            @foreach (var item in ViewBag.vendors)
+                            {
+                                <option value="@item.CardCode">@item.CardName</option>
+                            }
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <p class="control-label col-md-8">Products</p>
+                    <div class="col-md-12">
+                        <select class="form-control" id="products_list" multiple="multiple"></select>
+
+                    </div>
+                </div>
+                <!--
+                <div class="form-group">
+                    <p class="control-label col-md-8">Input format</p>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <div class="form-radio">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                                    Numeric
+                                </label>
+                            </div>
+                            <div class="form-radio">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option2">
+                                    Text
+                                </label>
+                            </div>
+                            <div class="form-radio">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option3">
+                                    Single option
+                                </label>
+                            </div>
+                            <div class="form-radio">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option4">
+                                    Multiple option
+                                </label>
+                            </div>
+                            <div class="form-radio">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option4">
+                                    Label (subtitle)
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                    -->
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Add" id="btn_agregarProducto" class="btn btn-primary" data-dismiss="modal">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- Modal samples-->
+<div class="modal fade" id="myModal_samples" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title text-left">Select samples</h4>
+            </div>
+            <div class="modal-body col-md-12">
+                <div class="form-group">
+                    <p class="control-label col-md-12">Vendor</p>
+                    <div class="col-md-12">
+                        <select class="form-control" id="vendors_list_samples" onChange='getSamples()'>
+                            <option data-hidden="true">Select vendor</option>
+                            @foreach (var item in ViewBag.vendors)
+                            {
+                                <option value="@item.CardCode">@item.CardName</option>
+                            }
+
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <p class="control-label col-md-8">Samples</p>
+                    <div class="col-md-12">
+                        <select id="samples_list" multiple="multiple"></select>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <input type="button" value="Add" id="btn_agregarSample" class="btn btn-primary" data-dismiss="modal">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+

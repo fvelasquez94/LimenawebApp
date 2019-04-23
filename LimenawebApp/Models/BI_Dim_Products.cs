@@ -33,5 +33,10 @@ namespace LimenawebApp.Models
         public string CodeBars { get; set; }
         public string DSD { get; set; }
         public Nullable<decimal> SRP { get; set; }
+        public string id_Vendor { get; set; }
+        public Nullable<int> id_brand { get; set; }
+        public Nullable<decimal> unitCost { get; set; }
+        public Nullable<int> MinPorcent { get; set; }
+        public Nullable<decimal> MinPrice { get; set; }
     }
 }

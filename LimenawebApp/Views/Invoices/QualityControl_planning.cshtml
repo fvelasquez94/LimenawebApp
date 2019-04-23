@@ -13,8 +13,17 @@
                             <div class="custom-title-wrap bar-primary">
                                 <div class="custom-title">Routes</div>
                             </div>
+
                         </div>
-                        <div class="card-body- pt-3 pb-4">
+                        <div class="form-group row col-xl-4">
+                            <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Date</label>
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                                <i class="mdi mdi-calendar"></i>&nbsp;
+                                <span></span> <i class="fa fa-caret-down"></i>
+                            </div>
+
+                        </div>
+                        <div class="card-body pt-3 pb-4">
                             <div class="table-responsive">
                                 <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
                                     <thead>
@@ -34,49 +43,77 @@
                                     <tfoot>
                                     </tfoot>
                                     <tbody>
-                                        @foreach (var so in ViewBag.lstPlanning) {
-                                            <tr>
-                                                <td>@so.ID_Route</td>
-                                                <td>
-                                                    @so.Route_name
-                                                                                                @if (so.isfinished == true && so.Invoiced == true)
-                                                                                                { <small class="text-success">(Closed)</small> }
-                                                                                                else if (so.isfinished == true && so.Invoiced == false) {<small class="text-warning">(In progress)</small> }
-                                                                                            </td>
-                                                <td>@so.Departure</td>
-                                                <td>@so.Driver_name</td>
-                                                <td>@so.Truck_name</td>
-                                                <td>@so.Routeleader_name</td>
-                                                <td>
-                                              
-                                                        <div class="progress-title">
-                                                            <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2</span>
-                                                        </div>
-                                                        <div class="progress" style="height: 2px;">
-                                                            @if (Convert.ToDecimal(so.query1) < 100)
-                                                            {
-                                                            <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
-                                                            }
-                                                            else {
-                                                            <div class="progress-bar bg-success" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
-                                                            }
-                                                        </div>
+                                        @foreach (var so in ViewBag.lstPlanning)
+                    {
+                        <tr>
+                            <td>@so.ID_Route</td>
+                            <td>
+                                @so.Route_name
+                                @if (so.isfinished == true && so.Invoiced == true)
+            {<small class="text-success">(Closed)</small> }
+else if (so.isfinished == true && so.Invoiced == false)
+{<small class="text-warning">(In progress)</small>}
+                            </td>
+                            <td>@so.Departure</td>
+                            <td>@so.Driver_name</td>
+                            <td>@so.Truck_name</td>
+                            <td>@so.Routeleader_name</td>
+                            <td>
 
-                                                 
-                                                </td>
-                                                <td>
-                                                    <a href="@Url.Action("QualityControl", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>View</a>
-                                                    @if (Convert.ToDecimal(so.query1) >= 100)
+                                <div class="progress-title">
+                                    <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2 Items</span>
+                                </div>
+                                <div class="progress" style="height: 2px;">
+                                    @if (Convert.ToDecimal(so.query1) < 100)
+                {
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+}
+else
+{
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+}
+                                </div>
+
+
+                            </td>
+                            <td>
+                                <a href="@Url.Action("QualityControl", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>View</a>
+                                @if (so.isfinished == true && so.Invoiced == true)
+                                {
+                            <a href="#" onclick="PrintRoute(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>}
+                   
+
+                                @if (Convert.ToDecimal(so.query1) >= 100)
     {
-        if (so.isfinished == false)
+
+        if (so.query3 == 0)
         {
-                                                <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeRoute(@so.ID_Route)"><i class="fa fa-close"></i>Invoice</a>
+                            <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeOrders(@so.ID_Route)"><i class="fa fa-close"></i>Close All Orders</a>
 }
+else
+{
+if (so.isfinished == false)
+
+{
+                            <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeRoute(@so.ID_Route)"><i class="fa fa-close"></i>Invoice</a>
 
 }
-                                                </td>
-                                            </tr>
-                                        }
+else
+{
+
+}
+
+
+}
+}
+else
+{
+
+
+}
+                            </td>
+                        </tr>
+}
 
                                     </tbody>
                                 </table>
@@ -97,8 +134,59 @@
             dom: 'Bfrtip',
             select: true
         });
+        var flag = 0;
+       //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+           
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
 
 
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = '@Url.Action("QualityControl_planning", "Invoices", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+     
+            window.location.href = newurl;
+        };
     }
 
 </script>

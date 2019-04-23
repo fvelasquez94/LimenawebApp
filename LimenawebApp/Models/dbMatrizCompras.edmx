@@ -1,0 +1,585 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MatrizComprasModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MatrizCompras.dbo.Matriz_Formato' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Matriz_Formato">
+          <Key>
+            <PropertyRef Name="ProdCodigo" />
+            
+            
+            
+          </Key>
+          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ProdNombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="UnidadMedidaLetras" Type="nvarchar" MaxLength="100" />
+          <Property Name="Marca" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="SubCategory" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Category" Type="nvarchar" MaxLength="20" />
+          <Property Name="ProvCodigo" Type="nvarchar" MaxLength="15" />
+          <Property Name="ProvNombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="TipoEntregaProveedor" Type="smallint" />
+          <Property Name="EstadoUbicacion" Type="nvarchar" MaxLength="3" />
+          <Property Name="InventarioEach" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="InventarioCajas" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="LeadTime" Type="int" Nullable="false" />
+          <Property Name="U_TI" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_HI" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_PalletCount" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TendenciaPeriodoActual" Type="numeric" Precision="38" Scale="17" />
+          <Property Name="Promedio" Type="float" />
+          <Property Name="Promedio_AA" Type="float" />
+          <Property Name="VentaB1" Type="float" />
+          <Property Name="VentaF1" Type="float" />
+          <Property Name="Desviacion" Type="float" />
+          <Property Name="Maximo" Type="float" />
+          <Property Name="Minimo" Type="float" />
+          <Property Name="CoberturaActual" Type="float" />
+          <Property Name="PronosticoPeriodoActual" Type="float" />
+          <Property Name="PronosticoSiguiente1" Type="float" />
+          <Property Name="PronosticoSiguiente2" Type="float" />
+          <Property Name="PronosticoSiguiente3" Type="float" />
+          <Property Name="PronosticoSiguiente4" Type="float" />
+          <Property Name="CoberturaProyectada" Type="float" />
+          <Property Name="CoberturaProyectadaNume" Type="float" />
+          <Property Name="CoberturaProyectadaDeno" Type="float" />
+          <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="DocumentDate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Purchase_catalog">
+          <Key>
+            <PropertyRef Name="ID_catalog" />
+          </Key>
+          <Property Name="ID_catalog" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProductCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ProductName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="FactorCompra" Type="float" />
+          <Property Name="FactorCompra_quiebre" Type="float" />
+          <Property Name="Politica_cobertura" Type="float" />
+          <Property Name="Comentarios" Type="varchar" MaxLength="850" />
+          <Property Name="Prop01" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Prop02" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Prop03" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="FactorUnidadCompra" Type="float" />
+          <Property Name="Costo" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MatrizCompras.dbo.Transito_Final' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Transito_Final">
+          <Key>
+            <PropertyRef Name="NumTransito" />
+            <PropertyRef Name="ProdCodigo" />
+          </Key>
+          <Property Name="ProdCodigo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NumTransito" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="date" />
+          <Property Name="DiaSemana" Type="nvarchar" MaxLength="30" />
+          <Property Name="DifSemanas" Type="float" />
+          <Property Name="NumFactura" Type="int" />
+          <Property Name="CantCajas" Type="int" />
+          <Property Name="FormulaDia" Type="varchar" MaxLength="3" />
+          <Property Name="CoberturaSemanal" Type="float" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="view_MatrizMadre">
+          <Key>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            <PropertyRef Name="ProdCodigo" />
+          </Key>
+          <Property Name="num" Type="int" Nullable="false" />
+          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ProdNombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="FactorCompra" Type="float" Nullable="false" />
+          <Property Name="FactorCompra_quiebre" Type="float" Nullable="false" />
+          <Property Name="Politica_cobertura" Type="float" Nullable="false" />
+          <Property Name="Marca" Type="nvarchar" MaxLength="30" />
+          <Property Name="SubCategory" Type="nvarchar" MaxLength="20" />
+          <Property Name="Category" Type="nvarchar" MaxLength="20" />
+          <Property Name="ProvCodigo" Type="nvarchar" MaxLength="15" />
+          <Property Name="ProvNombre" Type="nvarchar" MaxLength="100" />
+          <Property Name="UnidadMedidaLetras" Type="nvarchar" MaxLength="100" />
+          <Property Name="InventarioEach" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="InventarioCajas" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="Promedio" Type="float" Nullable="false" />
+          <Property Name="Desviacion" Type="float" Nullable="false" />
+          <Property Name="Minimo" Type="float" Nullable="false" />
+          <Property Name="Maximo" Type="float" Nullable="false" />
+          <Property Name="PronosticoPeriodoActual" Type="float" Nullable="false" />
+          <Property Name="Promedio_AA" Type="float" Nullable="false" />
+          <Property Name="VentaB1" Type="float" Nullable="false" />
+          <Property Name="Variacion" Type="float" Nullable="false" />
+          <Property Name="TendenciaPeriodoActual" Type="numeric" Precision="38" Scale="17" Nullable="false" />
+          <Property Name="PronosticoSiguiente1" Type="float" Nullable="false" />
+          <Property Name="PronosticoSiguiente2" Type="float" Nullable="false" />
+          <Property Name="PronosticoSiguiente3" Type="float" Nullable="false" />
+          <Property Name="PronosticoSiguiente4" Type="float" Nullable="false" />
+          <Property Name="CoberturaActual" Type="float" Nullable="false" />
+          <Property Name="CoberturaProyectada" Type="float" Nullable="false" />
+          <Property Name="OTB" Type="float" Nullable="false" />
+          <Property Name="Pedido" Type="numeric" Precision="1" Scale="1" Nullable="false" />
+          <Property Name="DeliveryDate" Type="datetime" />
+          <Property Name="DocumentDate" Type="datetime" />
+          <Property Name="U_TI" Type="numeric" Precision="19" Scale="6" Nullable="false" />
+          <Property Name="U_HI" Type="numeric" Precision="19" Scale="6" Nullable="false" />
+          <Property Name="U_PalletCount" Type="float" Nullable="false" />
+          <Property Name="PalletsdeOrden" Type="numeric" Precision="1" Scale="1" Nullable="false" />
+          <Property Name="CoberturaProyectadaNume" Type="float" Nullable="false" />
+          <Property Name="CoberturaIngresoPO" Type="float" Nullable="false" />
+          <Property Name="Costo" Type="float" Nullable="false" />
+          <Property Name="DescuentoAp" Type="numeric" Precision="1" Scale="1" Nullable="false" />
+          <Property Name="DescuentoAn" Type="numeric" Precision="1" Scale="1" Nullable="false" />
+          <Property Name="CostoconDescuento" Type="float" Nullable="false" />
+          <Property Name="MontoPO" Type="numeric" Precision="1" Scale="1" Nullable="false" />
+          <Property Name="Comentarios" Type="varchar" MaxLength="850" Nullable="false" />
+          <Property Name="CoberturaProyectadaDeno" Type="float" Nullable="false" />
+          <Property Name="VentaF1" Type="float" Nullable="false" />
+          <Property Name="Cobertura_OTB" Type="float" Nullable="false" />
+          <Property Name="LeadTime" Type="int" />
+          <Property Name="transito" Type="int" />
+        </EntityType>
+        <EntityContainer Name="MatrizComprasModelStoreContainer">
+          <EntitySet Name="Purchase_catalog" EntityType="Self.Purchase_catalog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Matriz_Formato" EntityType="Self.Matriz_Formato" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Matriz_Formato].[ProdCodigo] AS [ProdCodigo], 
+    [Matriz_Formato].[ProdNombre] AS [ProdNombre], 
+    [Matriz_Formato].[UnidadMedidaLetras] AS [UnidadMedidaLetras], 
+    [Matriz_Formato].[Marca] AS [Marca], 
+    [Matriz_Formato].[SubCategory] AS [SubCategory], 
+    [Matriz_Formato].[Category] AS [Category], 
+    [Matriz_Formato].[ProvCodigo] AS [ProvCodigo], 
+    [Matriz_Formato].[ProvNombre] AS [ProvNombre], 
+    [Matriz_Formato].[TipoEntregaProveedor] AS [TipoEntregaProveedor], 
+    [Matriz_Formato].[EstadoUbicacion] AS [EstadoUbicacion], 
+    [Matriz_Formato].[InventarioEach] AS [InventarioEach], 
+    [Matriz_Formato].[InventarioCajas] AS [InventarioCajas], 
+    [Matriz_Formato].[LeadTime] AS [LeadTime], 
+    [Matriz_Formato].[U_TI] AS [U_TI], 
+    [Matriz_Formato].[U_HI] AS [U_HI], 
+    [Matriz_Formato].[U_PalletCount] AS [U_PalletCount], 
+    [Matriz_Formato].[TendenciaPeriodoActual] AS [TendenciaPeriodoActual], 
+    [Matriz_Formato].[Promedio] AS [Promedio], 
+    [Matriz_Formato].[Promedio_AA] AS [Promedio_AA], 
+    [Matriz_Formato].[VentaB1] AS [VentaB1], 
+    [Matriz_Formato].[VentaF1] AS [VentaF1], 
+    [Matriz_Formato].[Desviacion] AS [Desviacion], 
+    [Matriz_Formato].[Maximo] AS [Maximo], 
+    [Matriz_Formato].[Minimo] AS [Minimo], 
+    [Matriz_Formato].[CoberturaActual] AS [CoberturaActual], 
+    [Matriz_Formato].[PronosticoPeriodoActual] AS [PronosticoPeriodoActual], 
+    [Matriz_Formato].[PronosticoSiguiente1] AS [PronosticoSiguiente1], 
+    [Matriz_Formato].[PronosticoSiguiente2] AS [PronosticoSiguiente2], 
+    [Matriz_Formato].[PronosticoSiguiente3] AS [PronosticoSiguiente3], 
+    [Matriz_Formato].[PronosticoSiguiente4] AS [PronosticoSiguiente4], 
+    [Matriz_Formato].[CoberturaProyectada] AS [CoberturaProyectada], 
+    [Matriz_Formato].[CoberturaProyectadaNume] AS [CoberturaProyectadaNume], 
+    [Matriz_Formato].[CoberturaProyectadaDeno] AS [CoberturaProyectadaDeno], 
+    [Matriz_Formato].[DeliveryDate] AS [DeliveryDate], 
+    [Matriz_Formato].[DocumentDate] AS [DocumentDate]
+    FROM [dbo].[Matriz_Formato] AS [Matriz_Formato]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Transito_Final" EntityType="Self.Transito_Final" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Transito_Final].[ProdCodigo] AS [ProdCodigo], 
+    [Transito_Final].[NumTransito] AS [NumTransito], 
+    [Transito_Final].[DocDate] AS [DocDate], 
+    [Transito_Final].[DiaSemana] AS [DiaSemana], 
+    [Transito_Final].[DifSemanas] AS [DifSemanas], 
+    [Transito_Final].[NumFactura] AS [NumFactura], 
+    [Transito_Final].[CantCajas] AS [CantCajas], 
+    [Transito_Final].[FormulaDia] AS [FormulaDia], 
+    [Transito_Final].[CoberturaSemanal] AS [CoberturaSemanal]
+    FROM [dbo].[Transito_Final] AS [Transito_Final]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="view_MatrizMadre" EntityType="Self.view_MatrizMadre" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [view_MatrizMadre].[num] AS [num], 
+    [view_MatrizMadre].[ProdCodigo] AS [ProdCodigo], 
+    [view_MatrizMadre].[ProdNombre] AS [ProdNombre], 
+    [view_MatrizMadre].[FactorCompra] AS [FactorCompra], 
+    [view_MatrizMadre].[FactorCompra_quiebre] AS [FactorCompra_quiebre], 
+    [view_MatrizMadre].[Politica_cobertura] AS [Politica_cobertura], 
+    [view_MatrizMadre].[Marca] AS [Marca], 
+    [view_MatrizMadre].[SubCategory] AS [SubCategory], 
+    [view_MatrizMadre].[Category] AS [Category], 
+    [view_MatrizMadre].[ProvCodigo] AS [ProvCodigo], 
+    [view_MatrizMadre].[ProvNombre] AS [ProvNombre], 
+    [view_MatrizMadre].[UnidadMedidaLetras] AS [UnidadMedidaLetras], 
+    [view_MatrizMadre].[InventarioEach] AS [InventarioEach], 
+    [view_MatrizMadre].[InventarioCajas] AS [InventarioCajas], 
+    [view_MatrizMadre].[Promedio] AS [Promedio], 
+    [view_MatrizMadre].[Desviacion] AS [Desviacion], 
+    [view_MatrizMadre].[Minimo] AS [Minimo], 
+    [view_MatrizMadre].[Maximo] AS [Maximo], 
+    [view_MatrizMadre].[PronosticoPeriodoActual] AS [PronosticoPeriodoActual], 
+    [view_MatrizMadre].[Promedio_AA] AS [Promedio_AA], 
+    [view_MatrizMadre].[VentaB1] AS [VentaB1], 
+    [view_MatrizMadre].[Variacion] AS [Variacion], 
+    [view_MatrizMadre].[TendenciaPeriodoActual] AS [TendenciaPeriodoActual], 
+    [view_MatrizMadre].[PronosticoSiguiente1] AS [PronosticoSiguiente1], 
+    [view_MatrizMadre].[PronosticoSiguiente2] AS [PronosticoSiguiente2], 
+    [view_MatrizMadre].[PronosticoSiguiente3] AS [PronosticoSiguiente3], 
+    [view_MatrizMadre].[PronosticoSiguiente4] AS [PronosticoSiguiente4], 
+    [view_MatrizMadre].[CoberturaActual] AS [CoberturaActual], 
+    [view_MatrizMadre].[CoberturaProyectada] AS [CoberturaProyectada], 
+    [view_MatrizMadre].[OTB] AS [OTB], 
+    [view_MatrizMadre].[Pedido] AS [Pedido], 
+    [view_MatrizMadre].[DeliveryDate] AS [DeliveryDate], 
+    [view_MatrizMadre].[DocumentDate] AS [DocumentDate], 
+    [view_MatrizMadre].[U_TI] AS [U_TI], 
+    [view_MatrizMadre].[U_HI] AS [U_HI], 
+    [view_MatrizMadre].[U_PalletCount] AS [U_PalletCount], 
+    [view_MatrizMadre].[PalletsdeOrden] AS [PalletsdeOrden], 
+    [view_MatrizMadre].[CoberturaProyectadaNume] AS [CoberturaProyectadaNume], 
+    [view_MatrizMadre].[CoberturaIngresoPO] AS [CoberturaIngresoPO], 
+    [view_MatrizMadre].[Costo] AS [Costo], 
+    [view_MatrizMadre].[DescuentoAp] AS [DescuentoAp], 
+    [view_MatrizMadre].[DescuentoAn] AS [DescuentoAn], 
+    [view_MatrizMadre].[CostoconDescuento] AS [CostoconDescuento], 
+    [view_MatrizMadre].[MontoPO] AS [MontoPO], 
+    [view_MatrizMadre].[Comentarios] AS [Comentarios], 
+    [view_MatrizMadre].[CoberturaProyectadaDeno] AS [CoberturaProyectadaDeno], 
+    [view_MatrizMadre].[VentaF1] AS [VentaF1], 
+    [view_MatrizMadre].[Cobertura_OTB] AS [Cobertura_OTB], 
+    [view_MatrizMadre].[LeadTime] AS [LeadTime], 
+    [view_MatrizMadre].[transito] AS [transito]
+    FROM [dbo].[view_MatrizMadre] AS [view_MatrizMadre]</DefiningQuery>
+          </EntitySet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MatrizComprasModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Matriz_Formato">
+          <Key>
+            <PropertyRef Name="ProdCodigo" />
+          </Key>
+          <Property Name="ProdCodigo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProdNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UnidadMedidaLetras" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Marca" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Category" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ProvCodigo" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="ProvNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InventarioEach" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="InventarioCajas" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="LeadTime" Type="Int32" Nullable="false" />
+          <Property Name="U_TI" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_HI" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_PalletCount" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Promedio" Type="Double" />
+          <Property Name="Desviacion" Type="Double" />
+          <Property Name="Maximo" Type="Double" />
+          <Property Name="Minimo" Type="Double" />
+          <Property Name="PronosticoPeriodoActual" Type="Double" />
+          <Property Name="PronosticoSiguiente1" Type="Double" />
+          <Property Name="PronosticoSiguiente2" Type="Double" />
+          <Property Name="PronosticoSiguiente3" Type="Double" />
+          <Property Name="PronosticoSiguiente4" Type="Double" />
+          <Property Name="TendenciaPeriodoActual" Type="Decimal" Precision="38" Scale="17" />
+          <Property Name="Promedio_AA" Type="Double" />
+          <Property Name="VentaB1" Type="Double" />
+          <Property Name="VentaF1" Type="Double" />
+          <Property Name="CoberturaActual" Type="Double" />
+          <Property Name="CoberturaProyectada" Type="Double" />
+          <Property Name="CoberturaProyectadaNume" Type="Double" />
+          <Property Name="CoberturaProyectadaDeno" Type="Double" />
+          <Property Name="TipoEntregaProveedor" Type="Int16" />
+          <Property Name="EstadoUbicacion" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
+          <Property Name="DocumentDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Transito_Final">
+          <Key>
+            <PropertyRef Name="NumTransito" />
+            <PropertyRef Name="ProdCodigo" />
+          </Key>
+          <Property Name="ProdCodigo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="NumTransito" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="0" />
+          <Property Name="DiaSemana" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="DifSemanas" Type="Double" />
+          <Property Name="NumFactura" Type="Int32" />
+          <Property Name="CantCajas" Type="Int32" />
+          <Property Name="FormulaDia" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="CoberturaSemanal" Type="Double" />
+        </EntityType>
+        <EntityContainer Name="MatrizComprasEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Matriz_Formato" EntityType="Self.Matriz_Formato" />
+          <EntitySet Name="Transito_Final" EntityType="Self.Transito_Final" />
+          <EntitySet Name="Purchase_catalog" EntityType="MatrizComprasModel.Purchase_catalog" />
+          <EntitySet Name="view_MatrizMadre" EntityType="MatrizComprasModel.view_MatrizMadre" />
+        </EntityContainer>
+        <EntityType Name="Purchase_catalog">
+          <Key>
+            <PropertyRef Name="ID_catalog" />
+          </Key>
+          <Property Name="ID_catalog" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProductCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="FactorCompra" Type="Double" />
+          <Property Name="FactorCompra_quiebre" Type="Double" />
+          <Property Name="Politica_cobertura" Type="Double" />
+          <Property Name="Comentarios" Type="String" MaxLength="850" FixedLength="false" Unicode="false" />
+          <Property Name="Prop01" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Prop02" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Prop03" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="FactorUnidadCompra" Type="Double" />
+          <Property Name="Costo" Type="Double" />
+        </EntityType>
+        <EntityType Name="view_MatrizMadre">
+          <Key>
+            <PropertyRef Name="ProdCodigo" />
+          </Key>
+          <Property Name="num" Type="Int32" Nullable="false" />
+          <Property Name="ProdCodigo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProdNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FactorCompra" Type="Double" Nullable="false" />
+          <Property Name="FactorCompra_quiebre" Type="Double" Nullable="false" />
+          <Property Name="Politica_cobertura" Type="Double" Nullable="false" />
+          <Property Name="Marca" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SubCategory" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Category" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ProvCodigo" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="ProvNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UnidadMedidaLetras" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InventarioEach" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="InventarioCajas" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="Promedio" Type="Double" Nullable="false" />
+          <Property Name="Desviacion" Type="Double" Nullable="false" />
+          <Property Name="Minimo" Type="Double" Nullable="false" />
+          <Property Name="Maximo" Type="Double" Nullable="false" />
+          <Property Name="PronosticoPeriodoActual" Type="Double" Nullable="false" />
+          <Property Name="Promedio_AA" Type="Double" Nullable="false" />
+          <Property Name="VentaB1" Type="Double" Nullable="false" />
+          <Property Name="Variacion" Type="Double" Nullable="false" />
+          <Property Name="TendenciaPeriodoActual" Type="Decimal" Nullable="false" Precision="38" Scale="17" />
+          <Property Name="PronosticoSiguiente1" Type="Double" Nullable="false" />
+          <Property Name="PronosticoSiguiente2" Type="Double" Nullable="false" />
+          <Property Name="PronosticoSiguiente3" Type="Double" Nullable="false" />
+          <Property Name="PronosticoSiguiente4" Type="Double" Nullable="false" />
+          <Property Name="CoberturaActual" Type="Double" Nullable="false" />
+          <Property Name="CoberturaProyectada" Type="Double" Nullable="false" />
+          <Property Name="OTB" Type="Double" Nullable="false" />
+          <Property Name="Pedido" Type="Decimal" Nullable="false" Precision="1" Scale="1" />
+          <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
+          <Property Name="DocumentDate" Type="DateTime" Precision="3" />
+          <Property Name="U_TI" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
+          <Property Name="U_HI" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
+          <Property Name="PalletsdeOrden" Type="Decimal" Nullable="false" Precision="1" Scale="1" />
+          <Property Name="CoberturaProyectadaNume" Type="Double" Nullable="false" />
+          <Property Name="CoberturaIngresoPO" Type="Double" Nullable="false" />
+          <Property Name="Costo" Type="Double" Nullable="false" />
+          <Property Name="DescuentoAp" Type="Decimal" Nullable="false" Precision="1" Scale="1" />
+          <Property Name="DescuentoAn" Type="Decimal" Nullable="false" Precision="1" Scale="1" />
+          <Property Name="CostoconDescuento" Type="Double" Nullable="false" />
+          <Property Name="MontoPO" Type="Decimal" Nullable="false" Precision="1" Scale="1" />
+          <Property Name="Comentarios" Type="String" Nullable="false" MaxLength="850" FixedLength="false" Unicode="false" />
+          <Property Name="CoberturaProyectadaDeno" Type="Double" Nullable="false" />
+          <Property Name="VentaF1" Type="Double" Nullable="false" />
+          <Property Name="Cobertura_OTB" Type="Double" Nullable="false" />
+          <Property Name="LeadTime" Type="Int32" />
+          <Property Name="transito" Type="Int32" />
+          <Property Name="U_PalletCount" Type="Double" Nullable="false" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MatrizComprasModelStoreContainer" CdmEntityContainer="MatrizComprasEntities">
+          <EntitySetMapping Name="Matriz_Formato">
+            <EntityTypeMapping TypeName="MatrizComprasModel.Matriz_Formato">
+              <MappingFragment StoreEntitySet="Matriz_Formato">
+                <ScalarProperty Name="DocumentDate" ColumnName="DocumentDate" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="EstadoUbicacion" ColumnName="EstadoUbicacion" />
+                <ScalarProperty Name="TipoEntregaProveedor" ColumnName="TipoEntregaProveedor" />
+                <ScalarProperty Name="CoberturaProyectadaDeno" ColumnName="CoberturaProyectadaDeno" />
+                <ScalarProperty Name="CoberturaProyectadaNume" ColumnName="CoberturaProyectadaNume" />
+                <ScalarProperty Name="CoberturaProyectada" ColumnName="CoberturaProyectada" />
+                <ScalarProperty Name="CoberturaActual" ColumnName="CoberturaActual" />
+                <ScalarProperty Name="VentaF1" ColumnName="VentaF1" />
+                <ScalarProperty Name="VentaB1" ColumnName="VentaB1" />
+                <ScalarProperty Name="Promedio_AA" ColumnName="Promedio_AA" />
+                <ScalarProperty Name="TendenciaPeriodoActual" ColumnName="TendenciaPeriodoActual" />
+                <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
+                <ScalarProperty Name="ProdNombre" ColumnName="ProdNombre" />
+                <ScalarProperty Name="UnidadMedidaLetras" ColumnName="UnidadMedidaLetras" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="ProvCodigo" ColumnName="ProvCodigo" />
+                <ScalarProperty Name="ProvNombre" ColumnName="ProvNombre" />
+                <ScalarProperty Name="InventarioEach" ColumnName="InventarioEach" />
+                <ScalarProperty Name="InventarioCajas" ColumnName="InventarioCajas" />
+                <ScalarProperty Name="LeadTime" ColumnName="LeadTime" />
+                <ScalarProperty Name="U_TI" ColumnName="U_TI" />
+                <ScalarProperty Name="U_HI" ColumnName="U_HI" />
+                <ScalarProperty Name="U_PalletCount" ColumnName="U_PalletCount" />
+                <ScalarProperty Name="Promedio" ColumnName="Promedio" />
+                <ScalarProperty Name="Desviacion" ColumnName="Desviacion" />
+                <ScalarProperty Name="Maximo" ColumnName="Maximo" />
+                <ScalarProperty Name="Minimo" ColumnName="Minimo" />
+                <ScalarProperty Name="PronosticoPeriodoActual" ColumnName="PronosticoPeriodoActual" />
+                <ScalarProperty Name="PronosticoSiguiente1" ColumnName="PronosticoSiguiente1" />
+                <ScalarProperty Name="PronosticoSiguiente2" ColumnName="PronosticoSiguiente2" />
+                <ScalarProperty Name="PronosticoSiguiente3" ColumnName="PronosticoSiguiente3" />
+                <ScalarProperty Name="PronosticoSiguiente4" ColumnName="PronosticoSiguiente4" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transito_Final">
+            <EntityTypeMapping TypeName="MatrizComprasModel.Transito_Final">
+              <MappingFragment StoreEntitySet="Transito_Final">
+                <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
+                <ScalarProperty Name="NumTransito" ColumnName="NumTransito" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DiaSemana" ColumnName="DiaSemana" />
+                <ScalarProperty Name="DifSemanas" ColumnName="DifSemanas" />
+                <ScalarProperty Name="NumFactura" ColumnName="NumFactura" />
+                <ScalarProperty Name="CantCajas" ColumnName="CantCajas" />
+                <ScalarProperty Name="FormulaDia" ColumnName="FormulaDia" />
+                <ScalarProperty Name="CoberturaSemanal" ColumnName="CoberturaSemanal" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Purchase_catalog">
+            <EntityTypeMapping TypeName="MatrizComprasModel.Purchase_catalog">
+              <MappingFragment StoreEntitySet="Purchase_catalog">
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+                <ScalarProperty Name="FactorUnidadCompra" ColumnName="FactorUnidadCompra" />
+                <ScalarProperty Name="Prop03" ColumnName="Prop03" />
+                <ScalarProperty Name="Prop02" ColumnName="Prop02" />
+                <ScalarProperty Name="Prop01" ColumnName="Prop01" />
+                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
+                <ScalarProperty Name="Politica_cobertura" ColumnName="Politica_cobertura" />
+                <ScalarProperty Name="FactorCompra_quiebre" ColumnName="FactorCompra_quiebre" />
+                <ScalarProperty Name="FactorCompra" ColumnName="FactorCompra" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+                <ScalarProperty Name="ProductCode" ColumnName="ProductCode" />
+                <ScalarProperty Name="ID_catalog" ColumnName="ID_catalog" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="view_MatrizMadre">
+            <EntityTypeMapping TypeName="MatrizComprasModel.view_MatrizMadre">
+              <MappingFragment StoreEntitySet="view_MatrizMadre">
+                <ScalarProperty Name="U_PalletCount" ColumnName="U_PalletCount" />
+                <ScalarProperty Name="transito" ColumnName="transito" />
+                <ScalarProperty Name="LeadTime" ColumnName="LeadTime" />
+                <ScalarProperty Name="Cobertura_OTB" ColumnName="Cobertura_OTB" />
+                <ScalarProperty Name="VentaF1" ColumnName="VentaF1" />
+                <ScalarProperty Name="CoberturaProyectadaDeno" ColumnName="CoberturaProyectadaDeno" />
+                <ScalarProperty Name="Comentarios" ColumnName="Comentarios" />
+                <ScalarProperty Name="MontoPO" ColumnName="MontoPO" />
+                <ScalarProperty Name="CostoconDescuento" ColumnName="CostoconDescuento" />
+                <ScalarProperty Name="DescuentoAn" ColumnName="DescuentoAn" />
+                <ScalarProperty Name="DescuentoAp" ColumnName="DescuentoAp" />
+                <ScalarProperty Name="Costo" ColumnName="Costo" />
+                <ScalarProperty Name="CoberturaIngresoPO" ColumnName="CoberturaIngresoPO" />
+                <ScalarProperty Name="CoberturaProyectadaNume" ColumnName="CoberturaProyectadaNume" />
+                <ScalarProperty Name="PalletsdeOrden" ColumnName="PalletsdeOrden" />
+                <ScalarProperty Name="U_HI" ColumnName="U_HI" />
+                <ScalarProperty Name="U_TI" ColumnName="U_TI" />
+                <ScalarProperty Name="DocumentDate" ColumnName="DocumentDate" />
+                <ScalarProperty Name="DeliveryDate" ColumnName="DeliveryDate" />
+                <ScalarProperty Name="Pedido" ColumnName="Pedido" />
+                <ScalarProperty Name="OTB" ColumnName="OTB" />
+                <ScalarProperty Name="CoberturaProyectada" ColumnName="CoberturaProyectada" />
+                <ScalarProperty Name="CoberturaActual" ColumnName="CoberturaActual" />
+                <ScalarProperty Name="PronosticoSiguiente4" ColumnName="PronosticoSiguiente4" />
+                <ScalarProperty Name="PronosticoSiguiente3" ColumnName="PronosticoSiguiente3" />
+                <ScalarProperty Name="PronosticoSiguiente2" ColumnName="PronosticoSiguiente2" />
+                <ScalarProperty Name="PronosticoSiguiente1" ColumnName="PronosticoSiguiente1" />
+                <ScalarProperty Name="TendenciaPeriodoActual" ColumnName="TendenciaPeriodoActual" />
+                <ScalarProperty Name="Variacion" ColumnName="Variacion" />
+                <ScalarProperty Name="VentaB1" ColumnName="VentaB1" />
+                <ScalarProperty Name="Promedio_AA" ColumnName="Promedio_AA" />
+                <ScalarProperty Name="PronosticoPeriodoActual" ColumnName="PronosticoPeriodoActual" />
+                <ScalarProperty Name="Maximo" ColumnName="Maximo" />
+                <ScalarProperty Name="Minimo" ColumnName="Minimo" />
+                <ScalarProperty Name="Desviacion" ColumnName="Desviacion" />
+                <ScalarProperty Name="Promedio" ColumnName="Promedio" />
+                <ScalarProperty Name="InventarioCajas" ColumnName="InventarioCajas" />
+                <ScalarProperty Name="InventarioEach" ColumnName="InventarioEach" />
+                <ScalarProperty Name="UnidadMedidaLetras" ColumnName="UnidadMedidaLetras" />
+                <ScalarProperty Name="ProvNombre" ColumnName="ProvNombre" />
+                <ScalarProperty Name="ProvCodigo" ColumnName="ProvCodigo" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="SubCategory" ColumnName="SubCategory" />
+                <ScalarProperty Name="Marca" ColumnName="Marca" />
+                <ScalarProperty Name="Politica_cobertura" ColumnName="Politica_cobertura" />
+                <ScalarProperty Name="FactorCompra_quiebre" ColumnName="FactorCompra_quiebre" />
+                <ScalarProperty Name="FactorCompra" ColumnName="FactorCompra" />
+                <ScalarProperty Name="ProdNombre" ColumnName="ProdNombre" />
+                <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
+                <ScalarProperty Name="num" ColumnName="num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

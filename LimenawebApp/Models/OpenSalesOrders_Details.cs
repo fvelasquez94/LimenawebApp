@@ -27,5 +27,9 @@ namespace LimenawebApp.Models
         public int DocNum { get; set; }
         public Nullable<System.DateTime> DocDate { get; set; }
         public string CardCode { get; set; }
+        public int AREA { get; set; }
+        public string SUBAREA { get; set; }
+        public string UoMFilter { get; set; }
+        public Nullable<int> PrintOrder { get; set; }
     }
 }

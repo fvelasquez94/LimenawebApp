@@ -1,0 +1,312 @@
+﻿@model IEnumerable<LimenawebApp.Models.Pedidos_precios>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Prices Request (Pedidos)";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">      
+            <div class="row">
+                <div class="col-xl-12">
+                    <a href="@Url.Action("Prices_request","Commercial")" class="btn btn-sm btn-info mb-2">Back</a>
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Pedido: @ViewBag.docnum</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+
+                                        <button class="btn btn-sm btn-success mb-2" data-toggle="modal" data-target="#tbbonificaciones">Bonificaciones</button>
+
+                                        <div class="modal fade bd-example-modal-lg" id="tbbonificaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="myLargeModalLabel">Bonificaciones</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+
+                                                    </div>
+                                                    <button onclick="nuevaBonificacion()" class="btn btn-smn btn-outline-success">Nueva bonificacion</button>
+                                                    <div class="modal-body">
+                                                        <div class="table-responsive">
+                                                            <table id="tbBonificaciones" class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Producto</th>
+                                                                        <th>Cantidad</th>
+                                                                        <th>Estado</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var bon in ViewBag.bonificaciones) {
+                                                                    <tr>
+                                                                        <td>@bon.Producto</td>
+                                                                        <td>@bon.Cantidad</td>
+                                                                        <td>
+                                                                            @if (bon.Estado == 1)
+                                                                            {
+                                                                        <span class="badge text-warning">Waiting for approval</span>
+
+                                                                            }
+                                                                            else if (bon.Estado == 2 || bon.Estado==3) {
+                                                                                 <span class="badge text-success">Approved</span>
+                                                                            }
+                                                                            else if (bon.Estado == 4)
+                                                                            {
+                                                                                 <span class="badge text-danger">Deny</span>
+                                                                            }
+                                                                        </td>
+
+                                                                        </tr>
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+                                        <div class="modal fade" id="nuevabonificacion" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="myLargeModalLabel">Nueva Bonificacion</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+
+                                                    </div>
+                                                    
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                            Seleccione Producto:
+                                                            <select id="lstproducts" style="width:100%;">
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            Cantidad a bonificar:
+                                                            <input class="form-control" type="number" id="cantidadBonificar" min="1" value="1" />
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" onclick="guardarBonificacion()" class="btn btn-success" >Save</button>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-6 mb-3">
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="font-size:14px;">Cliente</span>
+                                    </div>
+                                    <input type="text"style="font-size:14px;width:130px;" value="@ViewBag.cliente" readonly class="form-control">
+
+                                </div>
+                            </div>
+
+
+                        </div>                        
+                        <div class="row col-md-12">
+                            <div class="col-md-4">
+
+               
+                                   
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="font-size:14px;"> Deuda</span>
+                                        <input type="text" value="$ @Math.Round(ViewBag.deudaMonto,2)" style="font-size:15px;width:130px;" readonly class="form-control">
+                                        <a href="#" class="btn btn-sm btn-info " data-toggle="modal" data-target=".bd-example-modal-lg-historial">Historial</a>
+                                    </div>
+    
+                                    <div class="modal fade bd-example-modal-lg-historial" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="myLargeModalLabel">Historial de deudas | Cliente: @ViewBag.cliente</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <table id="tbDeudas" class="table table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>No Factura</th>
+                                                                <th>Fecha</th>
+                                                                <th>Dias de vencimiento</th>
+                                                                <th style="text-align:right;">Monto ($)</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach (var item in ViewBag.deuda)
+                            {
+                                <tr>
+                                    <td>@item.DocNum</td>
+                                    <td>@Convert.ToDateTime(item.DocDate).ToShortDateString()</td>
+                                    <td>
+                                        @if (item.Antiguedad == 1)
+        {
+                                <label>COD</label>
+}
+else if (item.Antiguedad == 2)
+{
+                                <label>CURRENT</label>
+}
+else if (item.Antiguedad == 3)
+{
+                                <label>1 - 7 DAYS</label>
+}
+else if (item.Antiguedad == 4)
+{
+                                <label>8 - 14 DAYS</label>
+}
+else if (item.Antiguedad == 5)
+{
+                                <label>15- 21 DAYS</label>
+}
+else if (item.Antiguedad == 6)
+{
+                                <label>22 - 28 DAYS</label>
+}
+else if (item.Antiguedad == 7)
+{
+                                <label>> 28 DAYS</label>
+}
+else if (item.Antiguedad == 8)
+{
+                                <label>COD</label>
+}
+
+                                    </td>
+                                    <td style="text-align:right;">@Math.Round(item.Saldo, 4)</td>
+                                </tr>
+}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <div class="card-body pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_sales" class="vertical table table-bordered" style="width:100%; font-family: 'Open Sans' !important">
+                           
+                                        <tr>
+                                            <th>PERIODO</th>
+                                            <th>VENTA</th>
+                                            <th>SKUs</th>
+                                        </tr>
+                                        @foreach (var item in ViewBag.historialVentas)
+    {
+                                    <tr>
+                                        <td>PERIODO @item.PreviousPeriod</td>
+                                        <td style="text-align:right;">$@Math.Round(item.Invoices,2)</td>
+                                        <td style="text-align:right;">@item.SKUs</td>
+                                    </tr>
+}
+                                       
+</table>
+                            </div>
+                        </div>
+                        <row class="col-md-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">Bolsa $</span>
+                                </div>
+                                <input type="text" value="@ViewBag.bolsa" id="bolsaValoractual" readonly class="form-control">
+
+                            </div>
+                        </row>
+                        <div class="card-body pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>LINE NUM</th>
+                                            <th>ITEM CODE</th>
+                                            <th>DESCRIPTION</th>
+                                            <th>UOM</th>
+                                            <th>QTY</th>
+                                            <th>PRICE ($)</th>
+                                            <th>MIN PRICE ($)</th>
+                                            <th>NEW PRICE ($)</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var product in Model)
+    {
+                                    <tr>
+                                        <td>@product.LineNum</td>
+                                        <td>@product.ItemCode</td>
+                                        <td>@product.ItemName</td>
+                                        <td>@product.UomCode</td>
+                                        <td style="text-align:right;">@product.Quantity.Value.ToString("0")</td>
+                                        <td style="text-align:right;" class="price">@if (product.Price == null) { @Html.Raw("0") } else {@product.Price.Value.ToString("0.0000")}</td>
+                                        <td style="text-align:right;" class="minprice">@if (product.MinPrice == null) { @Html.Raw("0") } else {@product.MinPrice.Value.ToString("0.0000")}</td>
+                                        <td style="text-align:right;">
+                                            @if (product.NewPrice != 0)
+    {
+                                        <input placeholder="0.00" disabled style="text-align:right;" type="text" id="newprice_@product.LineNum" value="@product.NewPrice" class="form-control filternumbers" />
+}
+else
+{
+                                        <input placeholder="0.00"  style="text-align:right;" type="text" id="newprice_@product.LineNum" value="@product.NewPrice" class="form-control filternumbers" />
+}
+                                        </td>
+                                     
+                                    </tr>
+}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="5" style="text-align:right">Total:</th>
+                                            <th style="text-align:right;"><span id="totalso"></span></th>
+                                            <th></th>
+                                            <th style="text-align:right"><button onclick="saveAutorizaciones()" class="btn btn-success">Save</button></th>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>

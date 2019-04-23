@@ -26,8 +26,17 @@
           <Property Name="U_Zone" Type="nvarchar" MaxLength="30" />
           <Property Name="U_Driver" Type="nvarchar" MaxLength="30" />
           <Property Name="U_RLeader" Type="nvarchar" MaxLength="30" />
+          <Property Name="U_DelDayA" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_DelDayB" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="@HELPERS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="@PICKERS">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
@@ -433,6 +442,155 @@
           <Property Name="U_Status" Type="nvarchar" MaxLength="25" />
           <Property Name="U_StoreSize" Type="nvarchar" MaxLength="25" />
         </EntityType>
+        <EntityType Name="OHEM">
+          <Key>
+            <PropertyRef Name="empID" />
+          </Key>
+          <Property Name="empID" Type="int" Nullable="false" />
+          <Property Name="lastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="firstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="middleName" Type="nvarchar" MaxLength="50" />
+          <Property Name="sex" Type="char" MaxLength="1" />
+          <Property Name="jobTitle" Type="nvarchar" MaxLength="20" />
+          <Property Name="type" Type="int" />
+          <Property Name="dept" Type="smallint" />
+          <Property Name="branch" Type="smallint" />
+          <Property Name="workStreet" Type="nvarchar" MaxLength="100" />
+          <Property Name="workBlock" Type="nvarchar" MaxLength="100" />
+          <Property Name="workZip" Type="nvarchar" MaxLength="20" />
+          <Property Name="workCity" Type="nvarchar" MaxLength="100" />
+          <Property Name="workCounty" Type="nvarchar" MaxLength="100" />
+          <Property Name="workCountr" Type="nvarchar" MaxLength="3" />
+          <Property Name="workState" Type="nvarchar" MaxLength="3" />
+          <Property Name="manager" Type="int" />
+          <Property Name="userId" Type="int" />
+          <Property Name="salesPrson" Type="int" />
+          <Property Name="officeTel" Type="nvarchar" MaxLength="20" />
+          <Property Name="officeExt" Type="nvarchar" MaxLength="20" />
+          <Property Name="mobile" Type="nvarchar" MaxLength="20" />
+          <Property Name="pager" Type="nvarchar" MaxLength="20" />
+          <Property Name="homeTel" Type="nvarchar" MaxLength="20" />
+          <Property Name="fax" Type="nvarchar" MaxLength="20" />
+          <Property Name="email" Type="nvarchar" MaxLength="100" />
+          <Property Name="startDate" Type="datetime" />
+          <Property Name="status" Type="int" />
+          <Property Name="salary" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="salaryUnit" Type="char" MaxLength="1" />
+          <Property Name="emplCost" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="empCostUnt" Type="char" MaxLength="1" />
+          <Property Name="termDate" Type="datetime" />
+          <Property Name="termReason" Type="int" />
+          <Property Name="bankCode" Type="nvarchar" MaxLength="30" />
+          <Property Name="bankBranch" Type="nvarchar" MaxLength="100" />
+          <Property Name="bankBranNo" Type="nvarchar" MaxLength="30" />
+          <Property Name="bankAcount" Type="nvarchar" MaxLength="100" />
+          <Property Name="homeStreet" Type="nvarchar" MaxLength="100" />
+          <Property Name="homeBlock" Type="nvarchar" MaxLength="100" />
+          <Property Name="homeZip" Type="nvarchar" MaxLength="20" />
+          <Property Name="homeCity" Type="nvarchar" MaxLength="100" />
+          <Property Name="homeCounty" Type="nvarchar" MaxLength="100" />
+          <Property Name="homeCountr" Type="nvarchar" MaxLength="3" />
+          <Property Name="homeState" Type="nvarchar" MaxLength="3" />
+          <Property Name="birthDate" Type="datetime" />
+          <Property Name="brthCountr" Type="nvarchar" MaxLength="3" />
+          <Property Name="martStatus" Type="char" MaxLength="1" />
+          <Property Name="nChildren" Type="smallint" />
+          <Property Name="govID" Type="nvarchar" MaxLength="64" />
+          <Property Name="citizenshp" Type="nvarchar" MaxLength="3" />
+          <Property Name="passportNo" Type="nvarchar" MaxLength="64" />
+          <Property Name="passportEx" Type="datetime" />
+          <Property Name="picture" Type="nvarchar" MaxLength="200" />
+          <Property Name="remark" Type="ntext" />
+          <Property Name="attachment" Type="ntext" />
+          <Property Name="salaryCurr" Type="nvarchar" MaxLength="3" />
+          <Property Name="empCostCur" Type="nvarchar" MaxLength="3" />
+          <Property Name="WorkBuild" Type="ntext" />
+          <Property Name="HomeBuild" Type="ntext" />
+          <Property Name="position" Type="int" />
+          <Property Name="AtcEntry" Type="int" />
+          <Property Name="AddrTypeW" Type="nvarchar" MaxLength="100" />
+          <Property Name="AddrTypeH" Type="nvarchar" MaxLength="100" />
+          <Property Name="StreetNoW" Type="nvarchar" MaxLength="100" />
+          <Property Name="StreetNoH" Type="nvarchar" MaxLength="100" />
+          <Property Name="DispMidNam" Type="char" MaxLength="1" />
+          <Property Name="NamePos" Type="char" MaxLength="1" />
+          <Property Name="DispComma" Type="char" MaxLength="1" />
+          <Property Name="CostCenter" Type="nvarchar" MaxLength="8" />
+          <Property Name="CompanyNum" Type="nvarchar" MaxLength="20" />
+          <Property Name="VacPreYear" Type="int" />
+          <Property Name="VacCurYear" Type="int" />
+          <Property Name="MunKey" Type="nvarchar" MaxLength="20" />
+          <Property Name="TaxClass" Type="nvarchar" MaxLength="2" />
+          <Property Name="InTaxLiabi" Type="nvarchar" MaxLength="2" />
+          <Property Name="EmTaxCCode" Type="nvarchar" MaxLength="9" />
+          <Property Name="RelPartner" Type="nvarchar" MaxLength="9" />
+          <Property Name="ExemptAmnt" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ExemptUnit" Type="nvarchar" MaxLength="20" />
+          <Property Name="AddiAmnt" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="AddiUnit" Type="nvarchar" MaxLength="20" />
+          <Property Name="TaxOName" Type="nvarchar" MaxLength="50" />
+          <Property Name="TaxONum" Type="nvarchar" MaxLength="20" />
+          <Property Name="HeaInsName" Type="nvarchar" MaxLength="50" />
+          <Property Name="HeaInsCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="HeaInsType" Type="nvarchar" MaxLength="20" />
+          <Property Name="SInsurNum" Type="nvarchar" MaxLength="20" />
+          <Property Name="StatusOfP" Type="nvarchar" MaxLength="2" />
+          <Property Name="StatusOfE" Type="nvarchar" MaxLength="2" />
+          <Property Name="BCodeDateV" Type="nvarchar" MaxLength="20" />
+          <Property Name="DevBAOwner" Type="char" MaxLength="1" />
+          <Property Name="FNameSP" Type="nvarchar" MaxLength="50" />
+          <Property Name="SurnameSP" Type="nvarchar" MaxLength="50" />
+          <Property Name="LogInstanc" Type="int" />
+          <Property Name="UserSign" Type="smallint" />
+          <Property Name="UserSign2" Type="smallint" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="PersGroup" Type="nvarchar" MaxLength="5" />
+          <Property Name="JTCode" Type="nvarchar" MaxLength="5" />
+          <Property Name="ExtEmpNo" Type="nvarchar" MaxLength="20" />
+          <Property Name="BirthPlace" Type="nvarchar" MaxLength="100" />
+          <Property Name="PymMeth" Type="nvarchar" MaxLength="2" />
+          <Property Name="ExemptCurr" Type="nvarchar" MaxLength="3" />
+          <Property Name="AddiCurr" Type="nvarchar" MaxLength="3" />
+          <Property Name="STDCode" Type="int" />
+          <Property Name="FatherName" Type="nvarchar" MaxLength="150" />
+          <Property Name="CPF" Type="nvarchar" MaxLength="100" />
+          <Property Name="CRC" Type="nvarchar" MaxLength="20" />
+          <Property Name="ContResp" Type="char" MaxLength="1" />
+          <Property Name="RepLegal" Type="char" MaxLength="1" />
+          <Property Name="DirfDeclar" Type="char" MaxLength="1" />
+          <Property Name="UF_CRC" Type="nvarchar" MaxLength="3" />
+          <Property Name="IDType" Type="nvarchar" MaxLength="30" />
+          <Property Name="Active" Type="char" MaxLength="1" />
+          <Property Name="BPLId" Type="int" />
+          <Property Name="ManualNUM" Type="nvarchar" MaxLength="60" />
+          <Property Name="PassIssue" Type="datetime" />
+          <Property Name="PassIssuer" Type="nvarchar" MaxLength="254" />
+          <Property Name="QualCode" Type="nvarchar" MaxLength="3" />
+          <Property Name="PRWebAccss" Type="char" MaxLength="1" />
+          <Property Name="PrePRWeb" Type="char" MaxLength="1" />
+          <Property Name="BPLink" Type="nvarchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="OSLP">
+          <Key>
+            <PropertyRef Name="SlpCode" />
+          </Key>
+          <Property Name="SlpCode" Type="int" Nullable="false" />
+          <Property Name="SlpName" Type="nvarchar" MaxLength="155" Nullable="false" />
+          <Property Name="Memo" Type="nvarchar" MaxLength="50" />
+          <Property Name="Commission" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="GroupCode" Type="smallint" />
+          <Property Name="Locked" Type="char" MaxLength="1" />
+          <Property Name="DataSource" Type="char" MaxLength="1" />
+          <Property Name="UserSign" Type="smallint" />
+          <Property Name="EmpID" Type="int" />
+          <Property Name="Active" Type="char" MaxLength="1" />
+          <Property Name="Telephone" Type="nvarchar" MaxLength="20" />
+          <Property Name="Mobil" Type="nvarchar" MaxLength="50" />
+          <Property Name="Fax" Type="nvarchar" MaxLength="20" />
+          <Property Name="Email" Type="nvarchar" MaxLength="100" />
+          <Property Name="U_id_Supervisor" Type="smallint" />
+          <Property Name="U_Type" Type="nvarchar" MaxLength="10" />
+        </EntityType>
         <EntityType Name="UFD1">
           <Key>
             <PropertyRef Name="TableID" />
@@ -468,6 +626,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Customer' does not have a prima
           <Property Name="DeliveryRoute" Type="nvarchar" MaxLength="30" />
           <Property Name="SalesZone" Type="nvarchar" MaxLength="30" />
           <Property Name="DeliveryZone" Type="nvarchar" MaxLength="30" />
+          <Property Name="ZipCode" Type="nvarchar" MaxLength="20" />
           <Property Name="State" Type="nvarchar" MaxLength="3" />
           <Property Name="City" Type="nvarchar" MaxLength="100" />
           <Property Name="Classification" Type="nvarchar" MaxLength="10" />
@@ -506,6 +665,11 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="CodeBars" Type="nvarchar" MaxLength="254" />
           <Property Name="DSD" Type="varchar" MaxLength="1" />
           <Property Name="SRP" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="id_Vendor" Type="nvarchar" MaxLength="15" />
+          <Property Name="id_brand" Type="int" />
+          <Property Name="unitCost" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="MinPorcent" Type="int" />
+          <Property Name="MinPrice" Type="numeric" Precision="30" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -556,11 +720,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have
           <Key>
             <PropertyRef Name="LineNum" />
             <PropertyRef Name="DocNum" />
+            <PropertyRef Name="AREA" />
+            <PropertyRef Name="SUBAREA" />
+            <PropertyRef Name="UoMFilter" />
           </Key>
           <Property Name="LineNum" Type="int" Nullable="false" />
           <Property Name="U_BinLocation" Type="nvarchar" MaxLength="20" />
           <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="UomCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="UomCode" Type="nvarchar" MaxLength="100" />
           <Property Name="UomEntry" Type="int" />
           <Property Name="InvQty" Type="numeric" Precision="19" Scale="6" />
           <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
@@ -570,6 +737,61 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have
           <Property Name="DocNum" Type="int" Nullable="false" />
           <Property Name="DocDate" Type="datetime" />
           <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="AREA" Type="int" Nullable="false" />
+          <Property Name="SUBAREA" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="UoMFilter" Type="varchar" MaxLength="4" Nullable="false" />
+          <Property Name="PrintOrder" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_DetailsUOM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="OpenSalesOrders_DetailsUOM">
+          <Key>
+            <PropertyRef Name="ItemCode" />
+            <PropertyRef Name="UomEntry" />
+          </Key>
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="UomEntry" Type="int" Nullable="false" />
+          <Property Name="UomCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="Units" Type="numeric" Precision="19" Scale="6" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.SalesRep' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="SalesRep">
+          <Key>
+            <PropertyRef Name="id_SalesRep" />
+            <PropertyRef Name="Slp_Name" />
+            <PropertyRef Name="CatCommission" />
+          </Key>
+          <Property Name="id_SalesRep" Type="int" Nullable="false" />
+          <Property Name="Slp_Name" Type="nvarchar" MaxLength="155" Nullable="false" />
+          <Property Name="CatCommission" Type="int" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.Supervisor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Supervisor">
+          <Key>
+            <PropertyRef Name="id_Supervisor" />
+            <PropertyRef Name="Area" />
+          </Key>
+          <Property Name="id_Supervisor" Type="int" Nullable="false" />
+          <Property Name="Supervisor_Name" Type="nvarchar" MaxLength="101" />
+          <Property Name="Zone" Type="varchar" MaxLength="12" />
+          <Property Name="Area" Type="varchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.view_cuentascobrarCliente' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="view_cuentascobrarCliente">
+          <Key>
+            <PropertyRef Name="Tipo" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="DocNum" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="SlpCode" Type="int" />
+          <Property Name="Tipo" Type="varchar" MaxLength="2" Nullable="false" />
+          <Property Name="Antiguedad" Type="int" />
+          <Property Name="Saldo" Type="numeric" Precision="38" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -589,13 +811,38 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <Property Name="MaxStock" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Request" Type="numeric" Precision="20" Scale="6" />
         </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="view_ordenesAbiertasDet">
+          <Key>
+            <PropertyRef Name="LineNum" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="LineNum" Type="int" Nullable="false" />
+          <Property Name="U_BinLocation" Type="nvarchar" MaxLength="20" />
+          <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="UomCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="UomEntry" Type="int" />
+          <Property Name="InvQty" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
+          <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_Storage" Type="nvarchar" MaxLength="20" />
+          <Property Name="DocNum" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+        </EntityType>
         <EntityContainer Name="DLI_PROModelStoreContainer">
           <EntitySet Name="@DRIVERS" EntityType="Self.@DRIVERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="@DROUTE" EntityType="Self.@DROUTE" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="@HELPERS" EntityType="Self.@HELPERS" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="@PICKERS" EntityType="Self.@PICKERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="@TRUCKS" EntityType="Self.@TRUCKS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ITM1" EntityType="Self.ITM1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OCRD" EntityType="Self.OCRD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OHEM" EntityType="Self.OHEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OSLP" EntityType="Self.OSLP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UFD1" EntityType="Self.UFD1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BI_Dim_Customer" EntityType="Self.BI_Dim_Customer" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -611,6 +858,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
     [BI_Dim_Customer].[DeliveryRoute] AS [DeliveryRoute], 
     [BI_Dim_Customer].[SalesZone] AS [SalesZone], 
     [BI_Dim_Customer].[DeliveryZone] AS [DeliveryZone], 
+    [BI_Dim_Customer].[ZipCode] AS [ZipCode], 
     [BI_Dim_Customer].[State] AS [State], 
     [BI_Dim_Customer].[City] AS [City], 
     [BI_Dim_Customer].[Classification] AS [Classification], 
@@ -644,7 +892,12 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
     [BI_Dim_Products].[CommPerc] AS [CommPerc], 
     [BI_Dim_Products].[CodeBars] AS [CodeBars], 
     [BI_Dim_Products].[DSD] AS [DSD], 
-    [BI_Dim_Products].[SRP] AS [SRP]
+    [BI_Dim_Products].[SRP] AS [SRP], 
+    [BI_Dim_Products].[id_Vendor] AS [id_Vendor], 
+    [BI_Dim_Products].[id_brand] AS [id_brand], 
+    [BI_Dim_Products].[unitCost] AS [unitCost], 
+    [BI_Dim_Products].[MinPorcent] AS [MinPorcent], 
+    [BI_Dim_Products].[MinPrice] AS [MinPrice]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -697,8 +950,46 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
     [OpenSalesOrders_Details].[U_Storage] AS [U_Storage], 
     [OpenSalesOrders_Details].[DocNum] AS [DocNum], 
     [OpenSalesOrders_Details].[DocDate] AS [DocDate], 
-    [OpenSalesOrders_Details].[CardCode] AS [CardCode]
+    [OpenSalesOrders_Details].[CardCode] AS [CardCode], 
+    [OpenSalesOrders_Details].[AREA] AS [AREA], 
+    [OpenSalesOrders_Details].[SUBAREA] AS [SUBAREA], 
+    [OpenSalesOrders_Details].[UoMFilter] AS [UoMFilter], 
+    [OpenSalesOrders_Details].[PrintOrder] AS [PrintOrder]
     FROM [dbo].[OpenSalesOrders_Details] AS [OpenSalesOrders_Details]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="OpenSalesOrders_DetailsUOM" EntityType="Self.OpenSalesOrders_DetailsUOM" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [OpenSalesOrders_DetailsUOM].[ItemCode] AS [ItemCode], 
+    [OpenSalesOrders_DetailsUOM].[UomEntry] AS [UomEntry], 
+    [OpenSalesOrders_DetailsUOM].[UomCode] AS [UomCode], 
+    [OpenSalesOrders_DetailsUOM].[Units] AS [Units]
+    FROM [dbo].[OpenSalesOrders_DetailsUOM] AS [OpenSalesOrders_DetailsUOM]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="SalesRep" EntityType="Self.SalesRep" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [SalesRep].[id_SalesRep] AS [id_SalesRep], 
+    [SalesRep].[Slp_Name] AS [Slp_Name], 
+    [SalesRep].[CatCommission] AS [CatCommission]
+    FROM [dbo].[SalesRep] AS [SalesRep]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Supervisor" EntityType="Self.Supervisor" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Supervisor].[id_Supervisor] AS [id_Supervisor], 
+    [Supervisor].[Supervisor_Name] AS [Supervisor_Name], 
+    [Supervisor].[Zone] AS [Zone], 
+    [Supervisor].[Area] AS [Area]
+    FROM [dbo].[Supervisor] AS [Supervisor]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="view_cuentascobrarCliente" EntityType="Self.view_cuentascobrarCliente" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [view_cuentascobrarCliente].[DocNum] AS [DocNum], 
+    [view_cuentascobrarCliente].[DocDate] AS [DocDate], 
+    [view_cuentascobrarCliente].[CardCode] AS [CardCode], 
+    [view_cuentascobrarCliente].[SlpCode] AS [SlpCode], 
+    [view_cuentascobrarCliente].[Tipo] AS [Tipo], 
+    [view_cuentascobrarCliente].[Antiguedad] AS [Antiguedad], 
+    [view_cuentascobrarCliente].[Saldo] AS [Saldo]
+    FROM [dbo].[view_cuentascobrarCliente] AS [view_cuentascobrarCliente]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="View_dsd_suggestedinventory" EntityType="Self.View_dsd_suggestedinventory" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -713,6 +1004,24 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
     [View_dsd_suggestedinventory].[MaxStock] AS [MaxStock], 
     [View_dsd_suggestedinventory].[Request] AS [Request]
     FROM [dbo].[View_dsd_suggestedinventory] AS [View_dsd_suggestedinventory]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="view_ordenesAbiertasDet" EntityType="Self.view_ordenesAbiertasDet" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [view_ordenesAbiertasDet].[LineNum] AS [LineNum], 
+    [view_ordenesAbiertasDet].[U_BinLocation] AS [U_BinLocation], 
+    [view_ordenesAbiertasDet].[Quantity] AS [Quantity], 
+    [view_ordenesAbiertasDet].[UomCode] AS [UomCode], 
+    [view_ordenesAbiertasDet].[UomEntry] AS [UomEntry], 
+    [view_ordenesAbiertasDet].[InvQty] AS [InvQty], 
+    [view_ordenesAbiertasDet].[NumPerMsr] AS [NumPerMsr], 
+    [view_ordenesAbiertasDet].[ItemCode] AS [ItemCode], 
+    [view_ordenesAbiertasDet].[ItemName] AS [ItemName], 
+    [view_ordenesAbiertasDet].[Price] AS [Price], 
+    [view_ordenesAbiertasDet].[U_Storage] AS [U_Storage], 
+    [view_ordenesAbiertasDet].[DocNum] AS [DocNum], 
+    [view_ordenesAbiertasDet].[DocDate] AS [DocDate], 
+    [view_ordenesAbiertasDet].[CardCode] AS [CardCode]
+    FROM [dbo].[view_ordenesAbiertasDet] AS [view_ordenesAbiertasDet]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -1104,6 +1413,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <EntitySet Name="C_TRUCKS" EntityType="DLI_PROModel.C_TRUCKS" />
           <EntitySet Name="C_DRIVERS" EntityType="DLI_PROModel.C_DRIVERS" />
           <EntitySet Name="OpenSalesOrders_Details" EntityType="DLI_PROModel.OpenSalesOrders_Details" />
+          <EntitySet Name="OpenSalesOrders_DetailsUOM" EntityType="DLI_PROModel.OpenSalesOrders_DetailsUOM" />
+          <EntitySet Name="C_PICKERS" EntityType="DLI_PROModel.C_PICKERS" />
+          <EntitySet Name="OHEM" EntityType="DLI_PROModel.OHEM" />
+          <EntitySet Name="OSLP" EntityType="DLI_PROModel.OSLP" />
+          <EntitySet Name="SalesRep" EntityType="DLI_PROModel.SalesRep" />
+          <EntitySet Name="Supervisor" EntityType="DLI_PROModel.Supervisor" />
+          <EntitySet Name="view_cuentascobrarCliente" EntityType="DLI_PROModel.view_cuentascobrarCliente" />
+          <EntitySet Name="view_ordenesAbiertasDet" EntityType="DLI_PROModel.view_ordenesAbiertasDet" />
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
@@ -1135,6 +1452,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <Property Name="U_VisitFrequency" Type="Int16" />
           <Property Name="Frequency" Type="Int32" />
           <Property Name="Type" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UFD1">
           <Key>
@@ -1172,6 +1490,11 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <Property Name="CodeBars" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
           <Property Name="DSD" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="SRP" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="id_Vendor" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="id_brand" Type="Int32" />
+          <Property Name="unitCost" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="MinPorcent" Type="Int32" />
+          <Property Name="MinPrice" Type="Decimal" Precision="30" Scale="6" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
@@ -1261,6 +1584,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <Property Name="U_Zone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="U_Driver" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="U_RLeader" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="U_DelDayA" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_DelDayB" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="C_HELPERS">
           <Key>
@@ -1287,6 +1612,231 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <Key>
             <PropertyRef Name="LineNum" />
             <PropertyRef Name="DocNum" />
+            <PropertyRef Name="AREA" />
+            <PropertyRef Name="SUBAREA" />
+            <PropertyRef Name="UoMFilter" />
+          </Key>
+          <Property Name="LineNum" Type="Int32" Nullable="false" />
+          <Property Name="U_BinLocation" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="UomCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="UomEntry" Type="Int32" />
+          <Property Name="InvQty" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="NumPerMsr" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ItemCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_Storage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DocNum" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AREA" Type="Int32" Nullable="false" />
+          <Property Name="SUBAREA" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="UoMFilter" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="PrintOrder" Type="Int32" />
+        </EntityType>
+        <EntityType Name="OpenSalesOrders_DetailsUOM">
+          <Key>
+            <PropertyRef Name="ItemCode" />
+            <PropertyRef Name="UomEntry" />
+          </Key>
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="UomEntry" Type="Int32" Nullable="false" />
+          <Property Name="UomCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Units" Type="Decimal" Precision="19" Scale="6" />
+        </EntityType>
+        <EntityType Name="C_PICKERS">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OHEM">
+          <Key>
+            <PropertyRef Name="empID" />
+          </Key>
+          <Property Name="empID" Type="Int32" Nullable="false" />
+          <Property Name="lastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="middleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="sex" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="jobTitle" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="type" Type="Int32" />
+          <Property Name="dept" Type="Int16" />
+          <Property Name="branch" Type="Int16" />
+          <Property Name="workStreet" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="workBlock" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="workZip" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="workCity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="workCounty" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="workCountr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="workState" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="manager" Type="Int32" />
+          <Property Name="userId" Type="Int32" />
+          <Property Name="salesPrson" Type="Int32" />
+          <Property Name="officeTel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="officeExt" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="pager" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="homeTel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="fax" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="startDate" Type="DateTime" Precision="3" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="salary" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="salaryUnit" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="emplCost" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="empCostUnt" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="termDate" Type="DateTime" Precision="3" />
+          <Property Name="termReason" Type="Int32" />
+          <Property Name="bankCode" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="bankBranch" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="bankBranNo" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="bankAcount" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="homeStreet" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="homeBlock" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="homeZip" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="homeCity" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="homeCounty" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="homeCountr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="homeState" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="birthDate" Type="DateTime" Precision="3" />
+          <Property Name="brthCountr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="martStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="nChildren" Type="Int16" />
+          <Property Name="govID" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="citizenshp" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="passportNo" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="passportEx" Type="DateTime" Precision="3" />
+          <Property Name="picture" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="remark" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="attachment" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="salaryCurr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="empCostCur" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="WorkBuild" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="HomeBuild" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="position" Type="Int32" />
+          <Property Name="AtcEntry" Type="Int32" />
+          <Property Name="AddrTypeW" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AddrTypeH" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="StreetNoW" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="StreetNoH" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DispMidNam" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NamePos" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DispComma" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="CostCenter" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="CompanyNum" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="VacPreYear" Type="Int32" />
+          <Property Name="VacCurYear" Type="Int32" />
+          <Property Name="MunKey" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TaxClass" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="InTaxLiabi" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="EmTaxCCode" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="RelPartner" Type="String" MaxLength="9" FixedLength="false" Unicode="true" />
+          <Property Name="ExemptAmnt" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ExemptUnit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="AddiAmnt" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="AddiUnit" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TaxOName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TaxONum" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="HeaInsName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HeaInsCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HeaInsType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="SInsurNum" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="StatusOfP" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="StatusOfE" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="BCodeDateV" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DevBAOwner" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="FNameSP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SurnameSP" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LogInstanc" Type="Int32" />
+          <Property Name="UserSign" Type="Int16" />
+          <Property Name="UserSign2" Type="Int16" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="PersGroup" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="JTCode" Type="String" MaxLength="5" FixedLength="false" Unicode="true" />
+          <Property Name="ExtEmpNo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="BirthPlace" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PymMeth" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="ExemptCurr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="AddiCurr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="STDCode" Type="Int32" />
+          <Property Name="FatherName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="CPF" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CRC" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ContResp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RepLegal" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DirfDeclar" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="UF_CRC" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="IDType" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Active" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="BPLId" Type="Int32" />
+          <Property Name="ManualNUM" Type="String" MaxLength="60" FixedLength="false" Unicode="true" />
+          <Property Name="PassIssue" Type="DateTime" Precision="3" />
+          <Property Name="PassIssuer" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="QualCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="PRWebAccss" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="PrePRWeb" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="BPLink" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="OSLP">
+          <Key>
+            <PropertyRef Name="SlpCode" />
+          </Key>
+          <Property Name="SlpCode" Type="Int32" Nullable="false" />
+          <Property Name="SlpName" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="Memo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Commission" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="GroupCode" Type="Int16" />
+          <Property Name="Locked" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DataSource" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="UserSign" Type="Int16" />
+          <Property Name="EmpID" Type="Int32" />
+          <Property Name="Active" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Telephone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Mobil" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Fax" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_id_Supervisor" Type="Int16" />
+          <Property Name="U_Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SalesRep">
+          <Key>
+            <PropertyRef Name="id_SalesRep" />
+            <PropertyRef Name="Slp_Name" />
+            <PropertyRef Name="CatCommission" />
+          </Key>
+          <Property Name="id_SalesRep" Type="Int32" Nullable="false" />
+          <Property Name="Slp_Name" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="CatCommission" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Supervisor">
+          <Key>
+            <PropertyRef Name="id_Supervisor" />
+            <PropertyRef Name="Area" />
+          </Key>
+          <Property Name="id_Supervisor" Type="Int32" Nullable="false" />
+          <Property Name="Supervisor_Name" Type="String" MaxLength="101" FixedLength="false" Unicode="true" />
+          <Property Name="Zone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="Area" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="view_cuentascobrarCliente">
+          <Key>
+            <PropertyRef Name="Tipo" />
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="DocNum" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="SlpCode" Type="Int32" />
+          <Property Name="Tipo" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="Antiguedad" Type="Int32" />
+          <Property Name="Saldo" Type="Decimal" Precision="38" Scale="6" />
+        </EntityType>
+        <EntityType Name="view_ordenesAbiertasDet">
+          <Key>
+            <PropertyRef Name="LineNum" />
+            <PropertyRef Name="DocNum" />
           </Key>
           <Property Name="LineNum" Type="Int32" Nullable="false" />
           <Property Name="U_BinLocation" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
@@ -1301,6 +1851,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <Property Name="DocNum" Type="Int32" Nullable="false" />
           <Property Name="DocDate" Type="DateTime" Precision="3" />
           <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1683,6 +2234,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <EntitySetMapping Name="BI_Dim_Customer">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Customer">
               <MappingFragment StoreEntitySet="BI_Dim_Customer">
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Frequency" ColumnName="Frequency" />
                 <ScalarProperty Name="U_VisitFrequency" ColumnName="U_VisitFrequency" />
@@ -1724,6 +2276,11 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+                <ScalarProperty Name="MinPorcent" ColumnName="MinPorcent" />
+                <ScalarProperty Name="unitCost" ColumnName="unitCost" />
+                <ScalarProperty Name="id_brand" ColumnName="id_brand" />
+                <ScalarProperty Name="id_Vendor" ColumnName="id_Vendor" />
                 <ScalarProperty Name="SRP" ColumnName="SRP" />
                 <ScalarProperty Name="DSD" ColumnName="DSD" />
                 <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
@@ -1826,6 +2383,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <EntitySetMapping Name="C_DROUTE">
             <EntityTypeMapping TypeName="DLI_PROModel.C_DROUTE">
               <MappingFragment StoreEntitySet="@DROUTE">
+                <ScalarProperty Name="U_DelDayB" ColumnName="U_DelDayB" />
+                <ScalarProperty Name="U_DelDayA" ColumnName="U_DelDayA" />
                 <ScalarProperty Name="U_RLeader" ColumnName="U_RLeader" />
                 <ScalarProperty Name="U_Driver" ColumnName="U_Driver" />
                 <ScalarProperty Name="U_Zone" ColumnName="U_Zone" />
@@ -1866,6 +2425,231 @@ warning 6002: The table/view 'DLI_PRO.dbo.View_dsd_suggestedinventory' does not 
           <EntitySetMapping Name="OpenSalesOrders_Details">
             <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders_Details">
               <MappingFragment StoreEntitySet="OpenSalesOrders_Details">
+                <ScalarProperty Name="PrintOrder" ColumnName="PrintOrder" />
+                <ScalarProperty Name="UoMFilter" ColumnName="UoMFilter" />
+                <ScalarProperty Name="SUBAREA" ColumnName="SUBAREA" />
+                <ScalarProperty Name="AREA" ColumnName="AREA" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="U_Storage" ColumnName="U_Storage" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
+                <ScalarProperty Name="InvQty" ColumnName="InvQty" />
+                <ScalarProperty Name="UomEntry" ColumnName="UomEntry" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="U_BinLocation" ColumnName="U_BinLocation" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OpenSalesOrders_DetailsUOM">
+            <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders_DetailsUOM">
+              <MappingFragment StoreEntitySet="OpenSalesOrders_DetailsUOM">
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
+                <ScalarProperty Name="UomEntry" ColumnName="UomEntry" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="C_PICKERS">
+            <EntityTypeMapping TypeName="DLI_PROModel.C_PICKERS">
+              <MappingFragment StoreEntitySet="@PICKERS">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OHEM">
+            <EntityTypeMapping TypeName="DLI_PROModel.OHEM">
+              <MappingFragment StoreEntitySet="OHEM">
+                <ScalarProperty Name="BPLink" ColumnName="BPLink" />
+                <ScalarProperty Name="PrePRWeb" ColumnName="PrePRWeb" />
+                <ScalarProperty Name="PRWebAccss" ColumnName="PRWebAccss" />
+                <ScalarProperty Name="QualCode" ColumnName="QualCode" />
+                <ScalarProperty Name="PassIssuer" ColumnName="PassIssuer" />
+                <ScalarProperty Name="PassIssue" ColumnName="PassIssue" />
+                <ScalarProperty Name="ManualNUM" ColumnName="ManualNUM" />
+                <ScalarProperty Name="BPLId" ColumnName="BPLId" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="IDType" ColumnName="IDType" />
+                <ScalarProperty Name="UF_CRC" ColumnName="UF_CRC" />
+                <ScalarProperty Name="DirfDeclar" ColumnName="DirfDeclar" />
+                <ScalarProperty Name="RepLegal" ColumnName="RepLegal" />
+                <ScalarProperty Name="ContResp" ColumnName="ContResp" />
+                <ScalarProperty Name="CRC" ColumnName="CRC" />
+                <ScalarProperty Name="CPF" ColumnName="CPF" />
+                <ScalarProperty Name="FatherName" ColumnName="FatherName" />
+                <ScalarProperty Name="STDCode" ColumnName="STDCode" />
+                <ScalarProperty Name="AddiCurr" ColumnName="AddiCurr" />
+                <ScalarProperty Name="ExemptCurr" ColumnName="ExemptCurr" />
+                <ScalarProperty Name="PymMeth" ColumnName="PymMeth" />
+                <ScalarProperty Name="BirthPlace" ColumnName="BirthPlace" />
+                <ScalarProperty Name="ExtEmpNo" ColumnName="ExtEmpNo" />
+                <ScalarProperty Name="JTCode" ColumnName="JTCode" />
+                <ScalarProperty Name="PersGroup" ColumnName="PersGroup" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="UserSign2" ColumnName="UserSign2" />
+                <ScalarProperty Name="UserSign" ColumnName="UserSign" />
+                <ScalarProperty Name="LogInstanc" ColumnName="LogInstanc" />
+                <ScalarProperty Name="SurnameSP" ColumnName="SurnameSP" />
+                <ScalarProperty Name="FNameSP" ColumnName="FNameSP" />
+                <ScalarProperty Name="DevBAOwner" ColumnName="DevBAOwner" />
+                <ScalarProperty Name="BCodeDateV" ColumnName="BCodeDateV" />
+                <ScalarProperty Name="StatusOfE" ColumnName="StatusOfE" />
+                <ScalarProperty Name="StatusOfP" ColumnName="StatusOfP" />
+                <ScalarProperty Name="SInsurNum" ColumnName="SInsurNum" />
+                <ScalarProperty Name="HeaInsType" ColumnName="HeaInsType" />
+                <ScalarProperty Name="HeaInsCode" ColumnName="HeaInsCode" />
+                <ScalarProperty Name="HeaInsName" ColumnName="HeaInsName" />
+                <ScalarProperty Name="TaxONum" ColumnName="TaxONum" />
+                <ScalarProperty Name="TaxOName" ColumnName="TaxOName" />
+                <ScalarProperty Name="AddiUnit" ColumnName="AddiUnit" />
+                <ScalarProperty Name="AddiAmnt" ColumnName="AddiAmnt" />
+                <ScalarProperty Name="ExemptUnit" ColumnName="ExemptUnit" />
+                <ScalarProperty Name="ExemptAmnt" ColumnName="ExemptAmnt" />
+                <ScalarProperty Name="RelPartner" ColumnName="RelPartner" />
+                <ScalarProperty Name="EmTaxCCode" ColumnName="EmTaxCCode" />
+                <ScalarProperty Name="InTaxLiabi" ColumnName="InTaxLiabi" />
+                <ScalarProperty Name="TaxClass" ColumnName="TaxClass" />
+                <ScalarProperty Name="MunKey" ColumnName="MunKey" />
+                <ScalarProperty Name="VacCurYear" ColumnName="VacCurYear" />
+                <ScalarProperty Name="VacPreYear" ColumnName="VacPreYear" />
+                <ScalarProperty Name="CompanyNum" ColumnName="CompanyNum" />
+                <ScalarProperty Name="CostCenter" ColumnName="CostCenter" />
+                <ScalarProperty Name="DispComma" ColumnName="DispComma" />
+                <ScalarProperty Name="NamePos" ColumnName="NamePos" />
+                <ScalarProperty Name="DispMidNam" ColumnName="DispMidNam" />
+                <ScalarProperty Name="StreetNoH" ColumnName="StreetNoH" />
+                <ScalarProperty Name="StreetNoW" ColumnName="StreetNoW" />
+                <ScalarProperty Name="AddrTypeH" ColumnName="AddrTypeH" />
+                <ScalarProperty Name="AddrTypeW" ColumnName="AddrTypeW" />
+                <ScalarProperty Name="AtcEntry" ColumnName="AtcEntry" />
+                <ScalarProperty Name="position" ColumnName="position" />
+                <ScalarProperty Name="HomeBuild" ColumnName="HomeBuild" />
+                <ScalarProperty Name="WorkBuild" ColumnName="WorkBuild" />
+                <ScalarProperty Name="empCostCur" ColumnName="empCostCur" />
+                <ScalarProperty Name="salaryCurr" ColumnName="salaryCurr" />
+                <ScalarProperty Name="attachment" ColumnName="attachment" />
+                <ScalarProperty Name="remark" ColumnName="remark" />
+                <ScalarProperty Name="picture" ColumnName="picture" />
+                <ScalarProperty Name="passportEx" ColumnName="passportEx" />
+                <ScalarProperty Name="passportNo" ColumnName="passportNo" />
+                <ScalarProperty Name="citizenshp" ColumnName="citizenshp" />
+                <ScalarProperty Name="govID" ColumnName="govID" />
+                <ScalarProperty Name="nChildren" ColumnName="nChildren" />
+                <ScalarProperty Name="martStatus" ColumnName="martStatus" />
+                <ScalarProperty Name="brthCountr" ColumnName="brthCountr" />
+                <ScalarProperty Name="birthDate" ColumnName="birthDate" />
+                <ScalarProperty Name="homeState" ColumnName="homeState" />
+                <ScalarProperty Name="homeCountr" ColumnName="homeCountr" />
+                <ScalarProperty Name="homeCounty" ColumnName="homeCounty" />
+                <ScalarProperty Name="homeCity" ColumnName="homeCity" />
+                <ScalarProperty Name="homeZip" ColumnName="homeZip" />
+                <ScalarProperty Name="homeBlock" ColumnName="homeBlock" />
+                <ScalarProperty Name="homeStreet" ColumnName="homeStreet" />
+                <ScalarProperty Name="bankAcount" ColumnName="bankAcount" />
+                <ScalarProperty Name="bankBranNo" ColumnName="bankBranNo" />
+                <ScalarProperty Name="bankBranch" ColumnName="bankBranch" />
+                <ScalarProperty Name="bankCode" ColumnName="bankCode" />
+                <ScalarProperty Name="termReason" ColumnName="termReason" />
+                <ScalarProperty Name="termDate" ColumnName="termDate" />
+                <ScalarProperty Name="empCostUnt" ColumnName="empCostUnt" />
+                <ScalarProperty Name="emplCost" ColumnName="emplCost" />
+                <ScalarProperty Name="salaryUnit" ColumnName="salaryUnit" />
+                <ScalarProperty Name="salary" ColumnName="salary" />
+                <ScalarProperty Name="status" ColumnName="status" />
+                <ScalarProperty Name="startDate" ColumnName="startDate" />
+                <ScalarProperty Name="email" ColumnName="email" />
+                <ScalarProperty Name="fax" ColumnName="fax" />
+                <ScalarProperty Name="homeTel" ColumnName="homeTel" />
+                <ScalarProperty Name="pager" ColumnName="pager" />
+                <ScalarProperty Name="mobile" ColumnName="mobile" />
+                <ScalarProperty Name="officeExt" ColumnName="officeExt" />
+                <ScalarProperty Name="officeTel" ColumnName="officeTel" />
+                <ScalarProperty Name="salesPrson" ColumnName="salesPrson" />
+                <ScalarProperty Name="userId" ColumnName="userId" />
+                <ScalarProperty Name="manager" ColumnName="manager" />
+                <ScalarProperty Name="workState" ColumnName="workState" />
+                <ScalarProperty Name="workCountr" ColumnName="workCountr" />
+                <ScalarProperty Name="workCounty" ColumnName="workCounty" />
+                <ScalarProperty Name="workCity" ColumnName="workCity" />
+                <ScalarProperty Name="workZip" ColumnName="workZip" />
+                <ScalarProperty Name="workBlock" ColumnName="workBlock" />
+                <ScalarProperty Name="workStreet" ColumnName="workStreet" />
+                <ScalarProperty Name="branch" ColumnName="branch" />
+                <ScalarProperty Name="dept" ColumnName="dept" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="jobTitle" ColumnName="jobTitle" />
+                <ScalarProperty Name="sex" ColumnName="sex" />
+                <ScalarProperty Name="middleName" ColumnName="middleName" />
+                <ScalarProperty Name="firstName" ColumnName="firstName" />
+                <ScalarProperty Name="lastName" ColumnName="lastName" />
+                <ScalarProperty Name="empID" ColumnName="empID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OSLP">
+            <EntityTypeMapping TypeName="DLI_PROModel.OSLP">
+              <MappingFragment StoreEntitySet="OSLP">
+                <ScalarProperty Name="U_Type" ColumnName="U_Type" />
+                <ScalarProperty Name="U_id_Supervisor" ColumnName="U_id_Supervisor" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Fax" ColumnName="Fax" />
+                <ScalarProperty Name="Mobil" ColumnName="Mobil" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="EmpID" ColumnName="EmpID" />
+                <ScalarProperty Name="UserSign" ColumnName="UserSign" />
+                <ScalarProperty Name="DataSource" ColumnName="DataSource" />
+                <ScalarProperty Name="Locked" ColumnName="Locked" />
+                <ScalarProperty Name="GroupCode" ColumnName="GroupCode" />
+                <ScalarProperty Name="Commission" ColumnName="Commission" />
+                <ScalarProperty Name="Memo" ColumnName="Memo" />
+                <ScalarProperty Name="SlpName" ColumnName="SlpName" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SalesRep">
+            <EntityTypeMapping TypeName="DLI_PROModel.SalesRep">
+              <MappingFragment StoreEntitySet="SalesRep">
+                <ScalarProperty Name="CatCommission" ColumnName="CatCommission" />
+                <ScalarProperty Name="Slp_Name" ColumnName="Slp_Name" />
+                <ScalarProperty Name="id_SalesRep" ColumnName="id_SalesRep" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Supervisor">
+            <EntityTypeMapping TypeName="DLI_PROModel.Supervisor">
+              <MappingFragment StoreEntitySet="Supervisor">
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Zone" ColumnName="Zone" />
+                <ScalarProperty Name="Supervisor_Name" ColumnName="Supervisor_Name" />
+                <ScalarProperty Name="id_Supervisor" ColumnName="id_Supervisor" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="view_cuentascobrarCliente">
+            <EntityTypeMapping TypeName="DLI_PROModel.view_cuentascobrarCliente">
+              <MappingFragment StoreEntitySet="view_cuentascobrarCliente">
+                <ScalarProperty Name="Saldo" ColumnName="Saldo" />
+                <ScalarProperty Name="Antiguedad" ColumnName="Antiguedad" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="view_ordenesAbiertasDet">
+            <EntityTypeMapping TypeName="DLI_PROModel.view_ordenesAbiertasDet">
+              <MappingFragment StoreEntitySet="view_ordenesAbiertasDet">
+                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="CardCode" ColumnName="CardCode" />
                 <ScalarProperty Name="DocDate" ColumnName="DocDate" />
                 <ScalarProperty Name="DocNum" ColumnName="DocNum" />

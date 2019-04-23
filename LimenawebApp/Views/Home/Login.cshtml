@@ -17,8 +17,12 @@
 
     <link rel="stylesheet" type="text/css" href="~/Content/login/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretty-checkbox@3.0/dist/pretty-checkbox.min.css">
+    <link rel="stylesheet" href="~/Content/appcontent/assets/css/svgicons.css">
 
     <link rel="stylesheet" href="~/Content/login/css/stylespinner.css">
+
+
     <!--===============================================================================================-->
 </head>
 <body class="horizontal-menu-2">
@@ -55,50 +59,54 @@
                                 <img src="~/Content/landingpage/images/LogoLimenaWebIcono_1-p-500x192.png" height="80" width="230">
                             </div>
                             @using (Html.BeginForm("Log_in", "Home", FormMethod.Post, new { id = "myform" }))
-                            {
+    {
 
-                                <h3 class="mr-auto">Welcome!</h3>
-                                <p class="mb-5 mr-auto">Enter your details below.</p>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="mdi mdi-account-outline"></i></span>
-                                        </div>
-                                        <input type="text" class="form-control" placeholder="Email" name="email" id="email" required autofocus>
-                                    </div>
+                        <h3 class="mr-auto">Welcome!</h3>
+                        <p class="mb-5 mr-auto">Enter your details below.</p>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-account-outline"></i></span>
                                 </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text"><i class="mdi mdi-lock-outline"></i></span>
-                                        </div>
-                                        <input type="password" class="form-control" placeholder="Password" name="password" id="password" required>
-                                        <input type="text" id="date" name="date" hidden/>
-                                    </div>
-                                    <div class="input-groupp clearfix">
-                                        <a href="@Url.Action("Reset_password", "Home")" class="float-left forgot-link my-2 text-muted text-small text-right">Forgot Password ?</a>
+                                <input type="text" class="form-control"  value="@ViewBag.correo" placeholder="Email" name="email" id="email" required autofocus>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="mdi mdi-lock-outline"></i></span>
+                                </div>
+                                <input type="password" value="@ViewBag.pass" class="form-control" placeholder="Password" name="password" id="password" required>
+                                <input type="text" id="date" name="date" hidden />
+                            </div>
+                            <div class="input-groupp clearfix">
+                                <a href="@Url.Action("Reset_password", "Home")" class="float-left forgot-link my-2 text-muted text-small text-right">Forgot Password ?</a>
 
-                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-check form-check-flat mt-0">
+                            <div class="pretty p-default">
+                                
+                                @Html.CheckBox("rememberme", (bool)ViewBag.remember)
+                                <div class="state p-primary">
+                                    <label class="">Remember me</label>
                                 </div>
-                                @*<div class="form-check form-check-flat mt-0">
-                                        <label class="form-check-label">
-                                            <input type="checkbox" class="form-check-input" name="ahahahahstayinalive" id="ahahahahstayinalive">
-                                            Keep me logged in
-                                        </label>
-                                    </div>*@
-                                <div class="form-group">
-                                    <button class="btn btn-dark submit-btn">LOG IN</button>
-                                </div>
-                                <div class="wrapper mt-5 text-gray">
-                                    <p class="footer-text">Copyright © 2018 Distribuidora Limena. All rights reserved.</p>
-                                    <ul class="auth-footer text-gray">
-                                        <!--
-                                        <li><a href="#">Terms & Conditions</a></li>
-                                        <li><a href="#">Cookie Policy</a></li>
-                                            -->
-                                    </ul>
-                                </div>
-                            }
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button class="btn btn-dark submit-btn">LOG IN</button>
+                        </div>
+                        <div class="wrapper mt-5 text-gray">
+                            <p class="footer-text">Copyright © 2018 Distribuidora Limena. All rights reserved.</p>
+                            <ul class="auth-footer text-gray">
+                                <!--
+        <li><a href="#">Terms & Conditions</a></li>
+        <li><a href="#">Cookie Policy</a></li>
+            -->
+                            </ul>
+                        </div>
+}
 
 
                         </div>
@@ -114,7 +122,11 @@
     <script src="~/Content/appcontent/assets/vendor/jquery/jquery.min.js"></script>
     <script src="~/Content/appcontent/assets/vendor/jquery-ui/jquery-ui.min.js"></script>
 
+
     <script>
+
+
+
         $("#myform").submit(function (e) {
             var now = new Date();
             $("#date").val(now.toLocaleString("en-US", { hour12: true }));

@@ -1,0 +1,154 @@
+﻿@model IQueryable<LimenawebApp.Models.Tb_MaestroPorcentajes>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Prices Request Micro";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        @*<div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">SETTINGS</div>
+                            </div>
+
+                        </div>*@
+                        @*<div class="row col-md-12">
+                            <div class="col-md-4 mb-3">
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="font-size:14px;">Porcentaje Bolsa</span>
+                                    </div>
+                                    <input type="text" id="bolsaactual" style="font-size:14px;width:130px;" value="ViewBag.confbolsa %" readonly class="form-control">
+                                    <button class="btn btn-outline-success btn-sm" data-toggle="modal" data-target="#nuevoPorcentaje" id="changeBolsa">Cambiar</button>
+
+                                </div>
+                            </div>
+
+
+                        </div>*@
+
+                        <div class="card card-shadow mb-4">
+
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-success">
+                                    <div class="custom-title">SETTINGS</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tab-j_1"> <i class="fa fa-book pr-2"></i> By Category, SubCategory and Brand</a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tab-j_2"><i class="fa fa-users pr-2"></i> By Sales Representatives</a>
+                                    </li>
+
+
+
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab-j_1" role="tabpanel">
+                                        <table id="data_tableEditor" style="padding: .25rem; width:100%;" class="table table-striped" cellspacing="0">
+                                            <caption>Porcentaje por Categoria, Subcategoria, Marca</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>CATEGORY</th>
+                                                    <th>SUBCATEGORY</th>
+                                                    <th>BRAND</th>
+                                                    <th>PORC MIN(%)</th>
+                                                    <th></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in Model)
+            {
+                                    <tr>
+                                        <td class="editID">@item.ID_detail</td>
+                                        <td>@item.category_name</td>
+                                        <td>@item.subcategory_name</td>
+                                        <td>@item.Brand_Name</td>
+                                        <td class="editable editFactorN">@item.min_porc</td>
+                                        <td style="padding: .25rem;"><a href="JavaScript:Void(0);" class="btn btn-sm btn-outline-success btn-sm form-pill savebtn" style="display:none;">Save</a> </td>
+                                    </tr>
+}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="tab-pane" id="tab-j_2" role="tabpanel">
+                                        <table id="data_tableEditor2" style="padding: .25rem; width:100%;" class="table table-striped" cellspacing="0">
+                                            <caption>By Sales Representative</caption>
+                                            <thead>
+                                                <tr>
+                                                    <th style="display:none">ID</th>
+                                                    <th>NAME</th>
+                                                    <th>EMAIL</th>
+                                                    <th>VALOR BOLSA ACTUAL</th>
+                                                    <th>PORC MIN(%)</th>
+                                                    <th></th>
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @foreach (var item in ViewBag.usuarios)
+            {
+                                    <tr>
+                                        <td class="editIDUsuarios" style="display:none">@item.ID_User</td>
+                                        <td >@item.Name @item.Lastname</td>
+                                        <td>@item.Email</td>
+                                        <td>@item.BolsaValor</td>
+                                        <td class="editable editFactorNUsuarios">@item.PorcentajeBolsa</td>
+                                        <td style="padding: .25rem;"><a href="JavaScript:Void(0);" class="btn btn-sm btn-outline-success btn-sm form-pill savebtnUsuarios" style="display:none;">Save</a> </td>
+                                    </tr>
+}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                   
+
+              
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="nuevoPorcentaje" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Cambio porcentaje bolsa para Usuarios</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+            <div class="modal-body">
+                
+                <div class="form-group">
+                    <span>Nuevo valor: (*)</span>
+                    <input type="text" id="bolsapor" class="form-control filternumbers"/> 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="saveValorBolsa">Save</button>
+
+            </div>
+        </div>
+    </div>
+</div>

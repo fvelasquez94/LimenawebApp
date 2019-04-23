@@ -1,0 +1,416 @@
+﻿
+@{
+    ViewBag.Title = "Distribuidora Limeña - Routes Details";
+}
+
+<div class="content-wrapper">
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class=" col-md-12">
+                    <a href="@Url.Action("Routes", "Commercial")" class="btn btn-sm btn-info mb-2">Back</a>
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-warning">
+                                <div class="custom-title">Route Details: @ViewBag.routename</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+                                 
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!--creative states-->
+                            <div class="row">
+                                <div class=" col-md-3">
+                                    <div class="card card-shadow mb-4">
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-primary">
+                                                <div class="custom-title">Stats</div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" id="hiddenDiv">
+                                            <div class="row col-sm-3">
+                                                <div class="col-xl-3 col-sm-6">
+                                                    <div class="card card-shadow mb-4">
+                                                        <div class="card-body">
+                                                            <div class="media d-flex align-items-center">
+
+                                                                <div class="media-body">
+                                                                    <h4 class="text-uppercase mb-0 weight500 text-dark">@ViewBag.onhold</h4>
+                                                                    <span class="text-muted">SCHEDULED</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-sm-6">
+                                                    <div class="card card-shadow mb-4">
+                                                        <div class="card-body">
+                                                            <div class="media d-flex align-items-center">
+
+                                                                <div class="media-body">
+                                                                    <h4 class="text-uppercase mb-0 weight500 text-dark">@ViewBag.inprogress</h4>
+                                                                    <span class="text-muted">IN PROGRESS</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-sm-6">
+                                                    <div class="card card-shadow mb-4">
+                                                        <div class="card-body">
+                                                            <div class="media d-flex align-items-center">
+
+                                                                <div class="media-body">
+                                                                    <h4 class="text-uppercase mb-0 weight500 text-dark">@ViewBag.finished</h4>
+                                                                    <span class="text-muted">FINISHED</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-sm-6">
+                                                    <div class="card card-shadow mb-4">
+                                                        <div class="card-body">
+                                                            <div class="media d-flex align-items-center">
+
+                                                                <div class="media-body">
+                                                                    <h4 class="text-uppercase mb-0 weight500 text-dark">@ViewBag.canceled</h4>
+                                                                    <span class="text-muted">CANCELED</span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class=" col-md-9">
+                                    @*<div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-warning">
+                                    <div class="custom-title">Map</div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                            </div>
+                        </div>*@
+
+                                    <!--VISITS LIST-->
+                                    <div class="card card-shadow mb-4">
+                                        <div class="card-header border-0">
+                                            <div class="custom-title-wrap bar-info">
+                                                <div class="custom-title">Visits List</div>
+                                                <div class=" widget-action-link">
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-success btn-sm" data-toggle="modal" data-target="#createModal">Add visit<i class="mdi mdi-plus"></i></button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body" style="overflow-x: auto;">
+
+                                            <table id="order-listing" class="table table-striped" style="width:100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">ID</th>
+                                                        <th scope="col">Store</th>
+                                                        <th scope="col">Representatives</th>
+                                                        <th scope="col">Status</th>
+
+                                                        <th scope="col">Actions</th>
+
+
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var itemVisita in ViewBag.visitas)
+                                    {
+                                        <tr>
+                                            <td scope="row" data-label="ID">
+                                                @itemVisita.ID_visit
+
+
+                                            </td>
+
+                                            <td data-label="Store">
+
+                                                <a class="text-black" href="@Url.Action("Marketing_Activities", "Commercial", new { visit=itemVisita.ID_visit})">
+                                                    <i class="mdi mdi-store icon-sm text-black"></i>@itemVisita.store<br />
+                                                    <span class="text-primary">@itemVisita.address</span>
+                                                </a>
+
+
+                                            </td>
+                                            <td data-label="Representatives">@itemVisita.city &nbsp;</td>
+
+                                            <td data-label="Status">
+                                                @switch (itemVisita.ID_visitstate)
+                                {
+                                    case 1: //Canceled
+                                        <label class="badge badge-danger">Canceled</label>
+                        break;
+                    case 2: //In Progress
+                        <label class="badge badge-success">In progress</label>
+        break;
+    case 3: //On Hold
+        if (itemVisita.city == "" || itemVisita.city == null)
+        {
+                <label class="badge badge-warning">Not assigned</label>
+}
+else
+{
+                <label class="badge badge-warning">Scheduled</label>
+}
+
+break;
+case 4: //Finished
+                <label class="badge badge-primary">Finished</label>
+break;
+}
+
+                                            </td>
+
+                                            <td data-label="Actions">
+                                                &nbsp;
+                                                <a href="#" class="count online ml-auto" data-toggle="modal" data-target="#deleteModal" data-ID="@itemVisita.ID_visit" data-description="@itemVisita.store">
+                                                    <i class="close ml-auto fa fa-close"></i>
+
+                                                </a>
+                                            </td>
+
+                                        </tr>
+                    }
+                                                </tbody>
+                                            </table>
+
+
+                                            <span class="text-muted text-small">*Click on Store name to go to Store details</span>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+          
+            @*<!--MAPA-->
+            <div class="row">
+                <div class="col-md-12 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- <a href="#map-with-marker" id="click_animation">Iniciar animacion</a>-->
+                            <div class="map-container">
+                                <div id="map-with-marker" class="google-map"></div>
+
+                                <div class="col-md-4 grid-margin stretch-card " style="position: absolute; top: 100px;display:none;" id="RouteDetails">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <button type="button" class="close" aria-label="Close" id="close_divmap">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                            <div class="row mt-4">
+                                                <div class="col-md-12">
+                                                    <h5>Visit details</h5>
+
+                                                    <ul class="nav nav-tabs tab-simple-styled" role="tablist">
+                                                        <li class="nav-item">
+                                                            <a class="nav-link active" id="tab-3-1" data-toggle="tab" href="#home-3-1" role="tab" aria-controls="home-3-1" aria-selected="true"><i class="mdi mdi-weather-night"></i>Resume</a>
+                                                        </li>
+                                                        <li class="nav-item">
+                                                            <a class="nav-link" id="tab-3-2" data-toggle="tab" href="#profile-3-2" role="tab" aria-controls="profile-3-2" aria-selected="false"><i class="mdi mdi-tag-multiple"></i>Comments</a>
+                                                        </li>
+                                                        <!--
+                                                <li class="nav-item">
+                                                    <a class="nav-link" id="tab-3-3" data-toggle="tab" href="#contact-3-3" role="tab" aria-controls="contact-3-3" aria-selected="false"><i class="mdi mdi-border-outside"></i>Timeline</a>
+                                                </li>-->
+                                                    </ul>
+                                                    <div class="tab-content tab-content-basic">
+                                                        <div class="tab-pane fade show active" id="home-3-1" role="tabpanel" aria-labelledby="tab-3-1">
+                                                            <p class="mb-0" id="map_id"></p>
+                                                            <p id="map_customername"></p>
+                                                            <p id="map_storename"></p>
+                                                            <p id="map_date"></p>
+                                                            <p id="map_representatives"></p>
+                                                        </div>
+                                                        <div class="tab-pane fade" id="profile-3-2" role="tabpanel" aria-labelledby="tab-3-2">
+                                                            <p id="map_comment"></p>
+                                                        </div>
+                                                        <!--<div class="tab-pane fade" id="contact-3-3" role="tabpanel" aria-labelledby="tab-3-3">
+
+                                                    <div class="card" style="height: 500px; bottom:10px;display:block">
+                                                        <div class="card-body" style="height: 500px;overflow: auto; bottom:10px;display:block">
+
+                                                            <ul class="bullet-line-list pb-3" id="timelinemap">
+                                                                <li>
+                                                                    <div class="d-flex align-items-center justify-content-between">
+                                                                        <div class="d-flex">
+
+                                                                            <div class="ml-3">
+                                                                                <h6 class="mb-0">Check in</h6>
+                                                                                <small class="text-muted">
+                                                                                    Start
+                                                                                </small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <small class="d-block mb-0">02</small>
+                                                                            <small class="text-muted d-block">pm</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="d-flex align-items-center justify-content-between">
+                                                                        <div class="d-flex">
+
+                                                                            <div class="ml-3">
+                                                                                <h6 class="mb-0">Form</h6>
+                                                                                <small class="text-muted">
+                                                                                    Data saved
+                                                                                </small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <small class="d-block mb-0">03</small>
+                                                                            <small class="text-muted d-block">pm</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                <li>
+                                                                    <div class="d-flex align-items-center justify-content-between">
+                                                                        <div class="d-flex">
+
+                                                                            <div class="ml-3">
+                                                                                <h6 class="mb-0">Form</h6>
+                                                                                <small class="text-muted">
+                                                                                    Data saved
+                                                                                </small>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div>
+                                                                            <small class="d-block mb-0">04</small>
+                                                                            <small class="text-muted d-block">pm</small>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+
+
+                                                        </div>
+                                                    </div>
+
+                                                </div>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>*@
+
+            <!--FIN-->
+
+
+
+
+        </div>
+            </div>
+
+        </div>
+    <!-- main-panel ends -->
+
+</div>
+    </div>
+<!-- page-body-wrapper ends -->
+<!--CRESTE USER DATA STARTS-->
+<div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("CreateVisitRoute", "Commercial", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-account"></i>Add new visit</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="text" id="ID_route" name="ID_route" value="@ViewBag.id_route" hidden />
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Store:</label>
+
+                        <div class="form-group">
+                            <select class="js-example-basic-single" name="id_store" id="id_store" style="width:100%">
+                                <option value="">Select a store</option>
+                                @foreach (var itemStores in ViewBag.stores)
+                                {
+                                    <option value="@itemStores.id">@itemStores.text</option>
+                                }
+                            </select>
+                        </div>
+                        <label class="col-form-label">Date:</label>
+                        <div class="form-group">
+                            <input type="date" class="form-control" name="date" id="date" />
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-info">Save</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--CREATE USER DATA ENDS-->
+<!--DELETE DATA STARTS-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("DeleteVisit", "Commercial", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-delete"></i> Delete Visit Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Are you sure you want to delete this Visit?</label><br />
+                        <strong><label id="descriptionD" class="col-form-label"></label></strong>
+                        <input type="text" id="ID_visitD" name="ID_visitD" hidden />
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

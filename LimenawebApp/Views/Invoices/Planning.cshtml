@@ -225,73 +225,148 @@
 <div class="modal fade" id="editModal" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            @using (Html.BeginForm("EditRoutev2", "Commercial", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-header">
+            <div class="modal-header">
 
-                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Edit Route</h5>
+                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Edit Route</h5>
 
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
 
-                    <div class="col-12 grid-margin">
-                        <div class="card">
-                            <div class="card-body">
+                <div class="col-12 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
 
+                            <p class="card-description">
+                                <h5 class="card-title">Name</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
 
-                                <input type="text" id="ID_routeDedt" name="ID_routeDedt" hidden />
-
-                                <p class="card-description">
-                                    <h4 class="card-title">Repeat</h4>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-
-                                                <select name="custedt" class="form-control">
-                                                    <option value="NA">Never</option>
-                                                    <option value="FW">First week of every month</option>
-                                                    <option value="OW">Once a week</option>
-                                                    <option value="OTW">Once every two weeks</option>
-                                                </select>
-                                            </div>
+                                        <div class="col-sm-12">
+                                            <input class="form-control" type="text" name="routeName2" id="routeName2" required />
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
+                            <input id="selectedRoute2" name="selectedRoute2" type="text" hidden />
+
+
+                            <p class="card-description">
+                                <h5 class="card-title">Driver</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstDriver2" id="lstDriver2" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Truck</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstTruck2" id="lstTruck2" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Route Leader</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstRLeader2" id="lstRLeader2" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Departure</h5>
+                            </p>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="datetime-local" name="departure2" id="departure2" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Repeat</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <select name="cust22" class="form-control" disabled>
+                                                <option value="NA">Never</option>
+                                                <option value="FW">First week of every month</option>
+                                                <option value="OW">Once a week</option>
+                                                <option value="OTW">Once every two weeks</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
                         </div>
                     </div>
                 </div>
+            </div>
 
 
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-info">Save</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                </div>
-            }
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="finisheditbtn">Save</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+
         </div>
     </div>
 </div>
 <!--CREATE USER DATA ENDS-->
 <!--MODAL SALES ORDERS-->
-<div id="modal_SO" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+<div id="modal_SO" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myLargeModalLabel">Sales Orders</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+
+
+                <div>
+                    <button type="button" id="btneditr" class="btn btn-info mr-auto btn-sm">EDIT ROUTE INFO</button>
+                </div>
             </div>
+
             <div class="modal-body">
                 <div class="row">
-                    <div class=" col-md-6">
+                    <div class="col-md-6" id="divopenso">
 
                         <div class="card card-shadow mb-4">
                             <div class="card-header border-0">
@@ -337,27 +412,76 @@
 
 
                         </div>
-                        <div class="float-left">                    
+                        <div class="float-left">
                             <span style="color:black !important" class="badge badge-warning text-light form-pill px-3 py-1">LIMENA</span>
-                            <span style="color:black !important"  class="badge badge-info text-light form-pill px-3 py-1">BAR-S</span>
-      
+                            <span style="color:black !important" class="badge badge-info text-light form-pill px-3 py-1">BAR-S</span>
+
                         </div>
                     </div>
-                    <div class=" col-md-6">
+
+                    <div class="col-md-6" id="divselos">
                         <div class="card card-shadow mb-4">
                             <div class="card-header border-0">
                                 <div class="custom-title-wrap bar-success">
-                                    <div class="custom-title" id="selectedOrdersTitle">Selected Orders</div>
+                                    <div class="custom-title" id="selectedOrdersTitle">
+                                        Selected Orders
+                                    </div>
+                                    <ul class="nav nav-pills nav-pill-turquoise nav-pill-custom nav-pills-sm float-right " id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-AZ2" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">A-Z</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-ZA2" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">Z-A</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-Date2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↓ Date</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-DateUp2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Date</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-Price2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Price</a>
+
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-PriceUp2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Price</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-CC2u" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Customer Code</a>
+
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-CC2d" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Customer Code</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-SO2u" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ SO Code</a>
+
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-SO2d" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ SO Code</a>
+                                        </li>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="card-body">
-                                <ul id="sortable2" class="connectedSortable" style="height: 500px; overflow-y: auto; overflow-x:hidden">
-               
-                                </ul>
-                                <small id="totalAmountSO">Total Amount: </small><br />
-                                <small id="totalSO">Total Sales Orders: </small>
+
+                                <ul id="sortable2" class="connectedSortable" style="height: 590px; overflow-y: auto; overflow-x:hidden"></ul>
+                                <button type="button" id="newExtra" class="btn btn-info mr-auto btn-sm">ADD EXTRA EXPENSES</button>
+                                <a href="#" id="Sortbtn" class="btn btn-success mr-auto btn-sm">SORT</a>
+                                <div class="float-right">
+                                    <small id="totalAmountSO">Total Amount: </small><br />
+                                    <small id="totalSO">Total Sales Orders: </small><br />
+                                    <small id="totalCustomers">Total Customers: </small><br />
+                                    <small id="totalExtra">Total Extra: </small>
+
+
+                                </div>
+
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -365,11 +489,72 @@
 
             </div>
             <div class="modal-footer">
-
+                <button type="button" id="delso" onclick="deleteRoute()" class="btn btn-default mr-auto btn-sm">Delete Route</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" onclick="saveSalesOrders()" class="btn btn-primary">Save changes</button>
+                <button type="button" id="savso" onclick="saveSalesOrders()" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>
 </div>
+
+
+<!--EXTRA DATA STARTS-->
+<div class="modal fade" id="extraModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Extras</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+                   
+                        <div class="row" style="border-style:none !important">
+                            <div class="col-8">
+                                <input type="text" id="addDescription" class="form-control" placeholder="Description">
+                            </div>
+                            <div class="col-3">
+       
+                                <input type="text" id="addValue" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" placeholder="Value($)">
+                            </div>
+                            <div class="col-1">
+                                <button class="btn btn-info" id="addExtra"  >+</button>
+                            </div>
+                        </div>
+                        <br /><br />
+                        <div class="row">
+                            <table class="table table-striped" id="tbExtras">
+                                <thead>
+                                    <tr>
+                                        <th>DESCRIPTION</th>
+                                        <th>VALUE($)</th>
+                                        <th>ACTIONS</th>
+
+                                    </tr>
+                                </thead>
+                                <tbody id="tbBodyExtras">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+               
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="savExtras" onclick="saveExtrasDet()">Save</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--EXTRA DATA ENDS-->
 <!--+++++++++-->

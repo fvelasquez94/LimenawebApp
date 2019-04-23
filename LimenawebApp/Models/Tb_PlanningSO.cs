@@ -14,12 +14,6 @@ namespace LimenawebApp.Models
     
     public partial class Tb_PlanningSO
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Tb_PlanningSO()
-        {
-            this.Tb_PlanningSO_details = new HashSet<Tb_PlanningSO_details>();
-        }
-    
         public int ID_salesorder { get; set; }
         public string SAP_docnum { get; set; }
         public System.DateTime SAP_docdate { get; set; }
@@ -40,9 +34,8 @@ namespace LimenawebApp.Models
         public string Weight { get; set; }
         public string Volume { get; set; }
         public string Printed { get; set; }
+        public string Remarks { get; set; }
     
         public virtual Tb_Planning Tb_Planning { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Tb_PlanningSO_details> Tb_PlanningSO_details { get; set; }
     }
 }

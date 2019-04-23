@@ -11,12 +11,19 @@
             <!--sales monitor-->
             <div class="row">
                 <div class="col-12">
+                    @if (ViewBag.isAdmin == 1)
+    {
+                <a href="@Url.Action("Routes_details", "Commercial", new { id = ViewBag.id_route })" class="btn btn-sm btn-info mb-2">Back</a>}
                     <div class="card card-shadow mb-4">
                         <div class="card-header border-0">
                             <div class="custom-title-wrap bar-turquoise">
                                 <div class="custom-title">VISIT INFO</div>
+
                                 <div class=" widget-action-link">
-                                    @*<label>From: To:</label>*@
+                                    <div class="dropdown">
+
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -71,25 +78,37 @@
                                                 </div>
                                                 <h5 class="text-uppercase mb-0" id="storeName">STORE NAME</h5>
                                                 <p class="text-muted mb-0" id="storeAddress">STORE ADDRESS </p>
+                                                <p class="text-muted mb-0" id="storeDate">STORE DATE </p>
                                                 <div class="rattings mb-4">
-                                                    <i class="fa fa-star-o text-warning"></i>
-                                                    <i class="fa fa-star-o text-warning"></i>
-                                                    <i class="fa fa-star-o text-warning"></i>
-                                                    <i class="fa fa-star-o text-warning"></i>
-                                                    <i class="fa fa-star-o text-warning"></i>
+                                                    @*<i class="fa fa-star-o text-warning"></i>
+                                        <i class="fa fa-star-o text-warning"></i>
+                                        <i class="fa fa-star-o text-warning"></i>
+                                        <i class="fa fa-star-o text-warning"></i>
+                                        <i class="fa fa-star-o text-warning"></i>*@
                                                 </div>
 
                                                 <div class="mb-2">
                                                     <a id="getdirections" href="#" class="btn btn-sm btn-pill btn-primary pl-4 pr-4"><i class="fa fa-map-o"></i> Get directions</a>
                                                     @if (ViewBag.isAdmin == 1)
-                                                    {
-                                                        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
-                                                    }
-                                                    else
-                                                    {
-                                                        <a href="#" onclick="checkinVisit()" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-user-times"></i> Check in</a>
-                                                        <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
-                                                    }
+                                    {
+                                        if (ViewBag.estadovisita != 4)
+                                        {
+                                            <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
+                        }
+                    }
+                    else
+                    {
+                        if (ViewBag.estadovisita == 3)
+                        {
+                            <a href="#" onclick="checkinVisit()" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-user-times"></i> Check in</a>
+        }
+        else if (ViewBag.estadovisita == 2)
+        {
+                <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
+}
+
+
+}
                                                 </div>
                                             </div>
                                         </div>
@@ -117,9 +136,13 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
-                                            <th scope="col">TYPE</th>
+
                                             <th scope="col">DESCRIPTION</th>
-                                            <th scope="col">CUSTOMER</th>
+                                            <th scope="col">BRAND</th>
+                                            @if (ViewBag.isAdmin == 1)
+    {
+                                        <th scope="col">REPS</th>}
+
                                             <th scope="col">STATE</th>
                                             <th scope="col">ACTIONS</th>
                                         </tr>
@@ -142,7 +165,7 @@
 
 
 <!-- contact form start -->
-<div class="floating-form card card-shadow" id="contact_form">
+@*<div class="floating-form card card-shadow" id="contact_form">
     <div class="contact-opener custom-title">Settings</div>
     <div class="floating-form-heading  custom-title">Filters</div>
     <hr />
@@ -168,7 +191,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>*@
 <!-- contact form end -->
 <!--CREATE ACTIVITY STARTS-->
 <div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
@@ -186,60 +209,81 @@
 
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Activity:</label>
-                        <select id="ID_form" name="ID_form" class="form-control" style="width:100%">
+                        <select id="ID_form" name="ID_form" class="form-control" style="width:100%" onchange="getActivity()">
                             <option value="0">Select an activity</option>
                             <optgroup label="Demos">
                                 @foreach (var form in ViewBag.activeforms)
-                                {
-                                    if (form.ID_activity == 4)
-                                    {
-                                        <option value="@form.ID_form">@form.name</option>
-                                    }
-                                }
+                {
+                    if (form.ID_activity == 4)
+                    {
+                        <option value="@form.ID_form">@form.name</option>
+    }
+}
                             </optgroup>
                             <optgroup label="Forms"></optgroup>
                             @foreach (var form in ViewBag.activeforms)
-                            {
-                                if (form.ID_activity == 1)
-                                {
-                                    <option value="@form.ID_form">@form.name</option>
-                                }
-                            }
+            {
+                if (form.ID_activity == 1)
+                {
+                    <option value="@form.ID_form">@form.name</option>
+}
+}
                             <optgroup label="Audits"></optgroup>
                             @foreach (var form in ViewBag.activeforms)
-                            {
-                                if (form.ID_activity == 2)
-                                {
-                                    <option value="@form.ID_form">@form.name</option>
-                                }
-                            }
+            {
+                if (form.ID_activity == 2)
+                {
+                    <option value="@form.ID_form">@form.name</option>
+}
+}
                             <optgroup label="Sales Order">
                                 @foreach (var form in ViewBag.activeforms)
-                                {
-                                    if (form.ID_activity == 3)
-                                    {
-                                        <option value="@form.ID_form">@form.name</option>
-                                    }
-                                }
+                {
+                    if (form.ID_activity == 3)
+                    {
+                        <option value="@form.ID_form">@form.name</option>
+    }
+}
                             </optgroup>
                         </select>
                     </div>
                     @*<div class="form-group">
-                            <label for="recipient-name" class="col-form-label">Set start date:</label>
-                            <input type="datetime-local" class="form-control" name="time" id="time" />
-                        </div>*@
-                    <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Set start date:</label>
+            <input type="datetime-local" class="form-control" name="time" id="time" />
+        </div>*@
+                    @*<div class="form-group">
                         <label for="recipient-name" class="col-form-label">User:</label>
                         <select name="ID_rep" id="ID_rep" class="form-control" style="width:100%">
                             <option value="0">Select an user</option>
                         </select>
-                    </div>
+                    </div>*@
 
-                    <div class="form-group">
+                    @*<div class="form-group">
                         <label for="recipient-name" class="col-form-label">Customer:</label>
-                        <select name="ID_customer" id="ID_customer" class="form-control" style="width:100%">
+                        <select name="ID_customer" id="ID_customer" class="form-control" style="width:100%" >
                             <option value="0">Select a Customer</option>
                         </select>
+                    </div>*@
+                    <div class="form-group">
+                        <label for="recipient-name" class="col-form-label">Brand:</label>
+                        <select name="ID_brand" id="ID_brand" class="form-control" style="width:100%" onchange="getCategories()">
+                          <option value="0">Select a Brand</option>
+                        </select>
+                    </div>
+                    <div id="moreoptions" style="display:none;">
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">Category:</label>
+                            <select name="ID_cat" id="ID_cat" class="form-control" style="width:100%" onchange="getSubcategories()">
+                                <option value="0">Select a Category</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="recipient-name" class="col-form-label">SubCategory:</label>
+                            <select name="ID_subcat" id="ID_subcat" class="form-control" style="width:100%"></select>
+                        </div>
+
+
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -319,7 +363,8 @@
 <script type="text/javascript">
     window.onload = function (e) {
 
-        var _scroll = true, _timer = false, _floatbox = $("#contact_form"), _floatbox_opener = $(".contact-opener");
+        getVisitData();
+        @*var _scroll = true, _timer = false, _floatbox = $("#contact_form"), _floatbox_opener = $(".contact-opener");
         _floatbox.css("right", "-322px"); //initial contact form position
 
         //Contact form Opener button
@@ -403,322 +448,106 @@
             data: dataCustomers
         });
 
-    }
-
+    }*@
+                //BRAND
+        var dataBrands = @Html.Raw(ViewBag.lstBrands);
 
-    function getStores() {
-        var UserId = $("#option_Users").val();
-        var st = new Date($('#reportrange').data('daterangepicker').startDate);
-        var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+        $('#ID_brand').select2({
+            placeholder: "Select a Brand",
+            data: dataBrands
+        });
+        
+        //USERS
+        var dataUsers = @Html.Raw(ViewBag.lstUsers);
 
-        st = st.toLocaleDateString();
-        ed = ed.toLocaleDateString();
-        $.ajax
-            ({
-                url: '/Commercial/GetStores',
-                type: 'POST',
-                datatype: 'application/json',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    UserId: UserId,
-                    start: st,
-                    end: ed
-                }),
-                success: function (result) {
 
-                    var dataStores = JSON.parse(result);
-                    $("#option_Stores").html("");
-
-                    $('#option_Stores').select2({
-                        placeholder: "No data to show",
-                        data: dataStores
-                    });
-
-                    if (dataStores.length > 0) {
-                        getVisitData();
-
-
-
-
-                    } else {
-                            var table = $('#data_table').DataTable();
-
-                            table
-                                .clear()
-                                .draw();
-
-                        $("#storeName").html("NO STORE SELECTED");
-                        $("#storeAddress").html("");
-                        $("#getdirections").attr("href", "#");
-                        $("#getdirections").attr('target', '_self');
-                        //STATS
-                        $("#forms_p1").html("0% (0/0)");
-                        $('#forms_d1').css('width', '0%');
-                        $("#audits_p1").html("0% (0/0)");
-                        $("#audits_d1").css('width', '0%');
-                        $("#sales_p1").html("0% (0/0)");
-                        $("#sales_d1").css('width', '0%');
-                        $("#demos_p1").html("0% (0/0)");
-                        $("#demos_d1").css('width', '0%');
-
-                    }
-
-
-
-
-                },
-                error: function () {
-                    alert("Whooaaa! Something went wrong...")
-                },
-            });
-
-
-
-    }
-
-    function getVisitData() {
-
-
-        var UserId = $("#option_Users").val();
-        var VisitId = $("#option_Stores").val();
-            $.ajax
-                ({
-                    url: '/Commercial/GetVisitData',
-                    type: 'POST',
-                    datatype: 'application/json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        UserId: UserId,
-                        VisitId: VisitId
-                    }),
-                    success: function (result) {
-
-
-                        $("#storeName").html(result.resultV[0].storeName);
-                        $("#storeAddress").html(result.resultV[0].storeAddress);
-                        $("#getdirections").attr("href", "https://www.google.com/maps/place/" + result.resultV[0].storeAddress);
-                        $("#getdirections").attr('target', '_blank');
-                        var obj = JSON.parse(result.resultAct);
-                        var flag = @Html.Raw(ViewBag.isAdmin);
-                        console.log(flag);
-                        var ftot = 0;
-                        var fcom = 0;
-                        var fpor = 0.0;
-
-                        var atot = 0;
-                        var acom = 0;
-                        var apor = 0.0;
-
-                        var stot = 0;
-                        var scom = 0;
-                        var spor = 0.0;
-
-                        var dtot = 0;
-                        var dcom = 0;
-                        var dpor = 0.0;
-
-                        if (obj.length > 0) {
-                            try {
-                                $("#tbodyid").empty();
-                                for (var i = 0; i < obj.length; i++) {
-
-                                    var url = '@Url.Action("Activityon", "Commercial", new { id = "ID_ACT"})';
-                                    url = url.replace('ID_ACT', obj[i]["ID_activity"]);
-
-                                    var tr = "<tr>";
-                                    tr += "<td>" + obj[i]["ID_activity"] + "</td>";
-                                    tr += "<td>" + obj[i]["ID_form"] + "</td>";
-                                    tr += "<td>" + obj[i]["description"] + "</td>";
-                                    tr += "<td>" + obj[i]["Customer"] + "</td>";
-                                    if (obj[i]["isfinished"] == true) {
-                                        tr += "<td>" + '<span class="badge badge-info form-pill px-3 py-1">Finished</span>' + "</td>";
-                                        tr += '<td><a  href="#" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-eye mr-2"></i>Preview</a>'
-                                    } else {
-                                        tr += "<td>" + '<span class="badge badge-warning form-pill px-3 py-1">Not finished</span>' + "</td>";
-                                        tr += '<td><a  href="' + url + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>'
-                                    }
-                                    tr += '<button class="btn btn-outline-warning btn-sm form-pill" data-toggle="modal" data-target="#copyModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-copy mr-2"></i>Copy</button>'
-                                    if (flag == 1)
-                                        {
-
-                                            tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#deleteModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Delete</button>'
-
-                                    }
-
-                                        tr += '</td ></tr > ';
-
-                                    $("#data_table").append(tr);
-
-                                        if (obj[i]["ID_activitytype"] == 1) {
-                                            ftot++;
-
-                                            if (obj[i]["isfinished"] == true) {
-                                                fcom++;
-                                            }
-                                        }
-                                        if (obj[i]["ID_activitytype"] == 2) {
-                                            atot++;
-
-                                            if (obj[i]["isfinished"] == true) {
-                                                acom++;
-                                            }
-                                        }
-                                        if (obj[i]["ID_activitytype"] == 3) {
-                                            stot++;
-
-                                            if (obj[i]["isfinished"] == true) {
-                                                scom++;
-                                            }
-                                        }
-                                        if (obj[i]["ID_activitytype"] == 4) {
-                                            dtot++;
-
-                                            if (obj[i]["isfinished"] == true) {
-                                                dcom++;
-                                            }
-                                        }
-
-                                    }
-
-                                if (ftot > 0) {
-                                    fpor = Math.round(((fcom / ftot) * 100));
-                                }
-                                if (atot > 0) {
-                                    apor = Math.round(((acom / atot) * 100));
-                                }
-                                if (stot > 0) {
-                                    spor = Math.round(((scom / stot) * 100));
-                                }
-                                if (dtot > 0) {
-                                    dpor = Math.round(((dcom / dtot) * 100));
-                                }
-
-                                //STATS
-                                $("#forms_p1").html(fpor + "%" + " (" + fcom + "/" + ftot + ")");
-                                $('#forms_d1').css('width', '' + fpor + '%');
-                                $("#audits_p1").html(apor + "%" + " (" + acom + "/" + atot + ")");
-                                $("#audits_d1").css('width', '' + apor + '%');
-                                $("#sales_p1").html(spor + "%" + " (" + scom + "/" + stot + ")");
-                                $("#sales_d1").css('width', '' + spor + '%');
-                                $("#demos_p1").html(dpor + "%" + " (" + dcom + "/" + dtot + ")");
-                                $("#demos_d1").css('width', '' + dpor + '%');
-                            }
-                            catch (err) {
-
-                                console.log(err);
-                                var table = $('#data_table').DataTable();
-
-                                table
-                                    .clear()
-                                    .draw();
-                            }
-                        } else {
-                            var table = $('#data_table').DataTable();
-
-                            table
-                                .clear()
-                                .draw();
-                        }
-                    },
-                    error: function () {
-                        alert("Whooaaa! Something went wrong...")
-                    },
-                });
-    }
-
-    function createActivity() {
-
-
-        var UserId = $("#ID_rep").val();
-        var VisitId = $("#option_Stores").val();
-
-        var CustomerId = $("#ID_customer").val();
-        var CustomerName = $("#ID_customer option:selected").text();
-        var FormId = $("#ID_form").val();
-
-        if (VisitId === null || UserId === null || CustomerId == "0" || FormId == "0") { toastr.warning("Please, select a store or complete all the information", "Warning"); } else {
-            document.getElementById("loader").style.display = "block";
-            $.ajax
-                ({
-                    url: '/Commercial/CreateActivity',
-                    type: 'POST',
-                    datatype: 'application/json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ID_rep: UserId,
-                        ID_visita: VisitId,
-                        ID_customer: CustomerId,
-                        Customer: CustomerName,
-                        ID_form: FormId
-                    }),
-                    success: function (data) {
-                        document.getElementById("loader").style.display = "none";
-                        if (data == "Success") {
-
-                            toastr.success("Activity created successfully.", "Success");
-                            $('#createModal').modal('hide');
-                            getVisitData()
-
-                            $("#ID_rep").val('0');
-                            $("#ID_customer").val('0');
-                            $("#ID_form").val('0');
-
-
-                        } else {
-                            toastr.warning(data, "Warning");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        document.getElementById("loader").style.display = "none";
-                        var err = eval("(" + xhr.responseText + ")");
-                        toastr.error(err.Message, "Error");
-                    },
-                });
-        }
-
-
-    }
-
-    function deleteActivity() {
-
-        var ActivityId = $("#ID_activityD").val();
-
-        if (ActivityId === null || ActivityId == "") { toastr.warning("Please, select an activity", "Warning"); } else {
-            document.getElementById("loader").style.display = "block";
-            $.ajax
-                ({
-                    url: '/Commercial/DeleteActivity',
-                    type: 'POST',
-                    datatype: 'application/json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        ID_activity: ActivityId
-
-                    }),
-                    success: function (data) {
-                        document.getElementById("loader").style.display = "none";
-                        if (data == "Success") {
-
-                            toastr.success("Activity deleted successfully.", "Success");
-                            $('#deleteModal').modal('hide');
-                            getVisitData()
-
-
-
-
-                        } else {
-                            toastr.warning(data, "Warning");
-                        }
-                    },
-                    error: function (xhr, status, error) {
-                        document.getElementById("loader").style.display = "none";
-                        var err = eval("(" + xhr.responseText + ")");
-                        toastr.error(err.Message, "Error");
-                    },
-                });
-        }
+        $('#ID_rep').select2({
+            placeholder: "Select an user",
+            data: dataUsers
+        });
 
+        @*//CUSTOMERS
+        var dataCustomers = @Html.Raw(ViewBag.lstCustomer);
 
+        $('#ID_customer').select2({
+            placeholder: "Select a Customer",
+            data: dataCustomers
+        });*@
+
+
+
+        //function getStores() {
+        //    var UserId = $("#option_Users").val();
+        //    var st = new Date($('#reportrange').data('daterangepicker').startDate);
+        //    var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+        //    st = st.toLocaleDateString();
+        //    ed = ed.toLocaleDateString();
+        //    $.ajax
+        //        ({
+        //            url: '/Commercial/GetStores',
+        //            type: 'POST',
+        //            datatype: 'application/json',
+        //            contentType: 'application/json',
+        //            data: JSON.stringify({
+        //                UserId: UserId,
+        //                start: st,
+        //                end: ed
+        //            }),
+        //            success: function (result) {
+
+        //                var dataStores = JSON.parse(result);
+        //                $("#option_Stores").html("");
+
+        //                $('#option_Stores').select2({
+        //                    placeholder: "No data to show",
+        //                    data: dataStores
+        //                });
+
+        //                if (dataStores.length > 0) {
+        //                    getVisitData();
+
+
+
+
+        //                } else {
+        //                        var table = $('#data_table').DataTable();
+
+        //                        table
+        //                            .clear()
+        //                            .draw();
+
+        //                    $("#storeName").html("NO STORE SELECTED");
+        //                    $("#storeAddress").html("");
+        //                    $("#getdirections").attr("href", "#");
+        //                    $("#getdirections").attr('target', '_self');
+        //                    //STATS
+        //                    $("#forms_p1").html("0% (0/0)");
+        //                    $('#forms_d1').css('width', '0%');
+        //                    $("#audits_p1").html("0% (0/0)");
+        //                    $("#audits_d1").css('width', '0%');
+        //                    $("#sales_p1").html("0% (0/0)");
+        //                    $("#sales_d1").css('width', '0%');
+        //                    $("#demos_p1").html("0% (0/0)");
+        //                    $("#demos_d1").css('width', '0%');
+
+        //                }
+
+
+
+
+        //            },
+        //            error: function () {
+        //                alert("Whooaaa! Something went wrong...")
+        //            },
+        //        });
+
+
+
+        //}
+
+
+        
 
     }
 </script>

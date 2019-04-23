@@ -18,8 +18,9 @@ namespace LimenawebApp.Models
         public int Line_num { get; set; }
         public string Bin_loc { get; set; }
         public int Quantity { get; set; }
-        public string ID_UOM { get; set; }
-        public string UOM { get; set; }
+        public string UomCode { get; set; }
+        public string UomEntry { get; set; }
+        public decimal NumPerMsr { get; set; }
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
         public string StockWhs01 { get; set; }
@@ -31,7 +32,9 @@ namespace LimenawebApp.Models
         public string query2 { get; set; }
         public string ID_picker { get; set; }
         public string Picker_name { get; set; }
-    
-        public virtual Tb_PlanningSO Tb_PlanningSO { get; set; }
+        public string AREA { get; set; }
+        public string SUBAREA { get; set; }
+        public string UomFilter { get; set; }
+        public string PrintOrder { get; set; }
     }
 }

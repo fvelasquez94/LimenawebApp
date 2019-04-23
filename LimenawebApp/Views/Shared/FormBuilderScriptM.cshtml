@@ -1,0 +1,1397 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+    $(document).ready(function () {
+        var newIdCount = 1;
+
+
+        $("#btn_agregarObjeto").click(function () {
+            newIdCount = 1 + $(".dd-item").length;
+            var dropdownlist = document.getElementById("formresourcetype");
+            var ID_tipo_recurso = dropdownlist.options[dropdownlist.selectedIndex].value;
+            var descripciontp = dropdownlist.options[dropdownlist.selectedIndex].text;
+            var label = $("#label_toshow").val();
+            var categoryID = document.getElementById("category_list").value;
+            var categoryText = document.getElementById('category_list').options[document.getElementById('category_list').selectedIndex].text;
+
+            var categoryID_retail = document.getElementById("resource_list").value;
+            var categoryText_retail = document.getElementById('resource_list').options[document.getElementById('resource_list').selectedIndex].text;
+
+            var Idkey = newIdCount;
+
+
+
+            if (descripciontp == "Title") {
+
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-font icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+
+                $("ol#main_list").append("<li  class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+            } else if (descripciontp == "Subtitle") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-text-width icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+            } else if (descripciontp == "DynamicProducts") { //NUEVO
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-code-branch icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Customers") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-user icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Item_list") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-thumbtack icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Brands") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-blogger-b icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Categories") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-cat icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "SubCategories") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-boxes icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            }  else if (descripciontp == "Products_line") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-cube icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Brand_competitors") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-gamepad icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Multiple_choice") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-tasks icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Select") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-list-ul icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Input_number") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-sort-numeric-up icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Currency") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-usd-circle icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Single_choice") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-check-circle icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            } else if (descripciontp == "Input_text") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-comment icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                if (categoryID == "0") {
+                    $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + categoryID + "' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+                } else {
+                    $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + categoryID + "' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + " - " + categoryText + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+                }
+
+            } else if (descripciontp == "Barcode_scanner") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-barcode icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+ 
+                    $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + categoryID + "' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+                
+
+            } else if (descripciontp == "Column") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-columns icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                if (categoryID_retail == "0") {
+                    $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='0' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+                } else {
+                    $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + categoryID_retail + "' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + " - " + categoryText_retail + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+                }
+
+            } else if (descripciontp == "Date") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-calendar icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+            } else if (descripciontp == "Picture") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-image icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+            } else if (descripciontp == "Reference_picture") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-image icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+            } else if (descripciontp == "Electronic_signature") {
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-file-signature icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='' data-fdescription='" + label + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+            }
+
+
+            $("#label_toshow").val("");
+
+            $('.dd-item a').on('mousedown', function (event) {
+                event.preventDefault();
+                return false;
+            });
+
+            $('#nestable').trigger("change");
+
+
+
+        });
+
+        $("#btn_agregarProducto").click(function () {
+
+            var dropdownlist = document.getElementById("formresourcetype");
+            var ID_tipo_recurso = dropdownlist.options[dropdownlist.selectedIndex].value;
+            var descripciontp = dropdownlist.options[dropdownlist.selectedIndex].text;
+            var Idkey = 0;
+
+            var products = [];
+            $('#products_list :selected').each(function (i, selected) {
+                var $itm = $(this);
+                products.push({
+                    'ID': $(selected).val(),
+                    'Description': $(selected).text()
+                });
+
+
+                //textvalues[i] = $(selected).text();
+            });
+
+            var divlo = "<div class='media'>";
+            divlo += "<i class='mdi mdi-cube icon-md align-self-center mr-3'></i>";
+            divlo += "<div class='media-body'>";
+
+            products.forEach(function (element, e) {
+                newIdCount = 1 + $(".dd-item").length;
+                Idkey = newIdCount;
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.ID + "' data-fdescription='" + element.Description + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><p href='javascript:;'  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</p></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
+            });
+
+            $('.dd-item a').on('mousedown', function (event) {
+                event.preventDefault();
+                return false;
+            });
+
+            $('#nestable').trigger("change");
+            //$("#products_list").html("");
+        });
+
+        $("#btn_agregarDisplay").click(function () {
+
+            var dropdownlist = document.getElementById("formresourcetype");
+            var ID_tipo_recurso = dropdownlist.options[dropdownlist.selectedIndex].value;
+            var descripciontp = dropdownlist.options[dropdownlist.selectedIndex].text;
+            var Idkey = 0;
+
+            var idFormato = $('input[name=optionsRadiosDisplay]:checked', '#radiosDisplay').val();
+
+
+
+
+            var products = [];
+            $('#displays_list :selected').each(function (i, selected) {
+                var $itm = $(this);
+                products.push({
+                    'ID': $(selected).val(),
+                    'Description': $(selected).text()
+                });
+
+
+                //textvalues[i] = $(selected).text();
+            });
+
+            var divlo = "<div class='media'>";
+
+            if (idFormato == "1") { //Numerico
+                ID_tipo_recurso = "18";
+                descripciontp = "Input_number";
+
+                divlo += "<i class='mdi mdi-counter icon-md align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                products.forEach(function (element, e) {
+                    newIdCount = 1 + $(".dd-item").length;
+                    Idkey = newIdCount;
+
+
+                    $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.Description + "' data-fdescription='" + element.ID + "'><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+            });
+            } else if (idFormato == "2") { //Texto
+                ID_tipo_recurso = "6";
+                descripciontp = "Input_text";
+
+
+                divlo += "<i class='mdi mdi-textbox icon-md align-self-center mr-3'></i>";
+        divlo += "<div class='media-body'>";
+
+        products.forEach(function (element, e) {
+            newIdCount = 1 + $(".dd-item").length;
+            Idkey = newIdCount;
+
+            $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='" + element.ID + "' data-fvalue='0' data-fdescription='" + element.Description + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+        });
+            } else if (idFormato == "3") { //Opcion unica
+                ID_tipo_recurso = "19";
+                descripciontp = "Single_choice";
+                divlo += "<i class='mdi mdi-radiobox-marked icon-md align-self-center mr-3'></i>";
+        divlo += "<div class='media-body'>";
+
+        products.forEach(function (element, e) {
+            newIdCount = 1 + $(".dd-item").length;
+            Idkey = newIdCount;
+
+            $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.Description + "' data-fdescription='" + element.ID + "'><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+        });
+            } else if (idFormato == "4") { //Opcion multiple
+                ID_tipo_recurso = "16";
+                descripciontp = "Multiple_choice";
+                divlo += "<i class='mdi mdi-checkbox-marked-outline icon-md align-self-center mr-3'></i>";
+        divlo += "<div class='media-body'>";
+
+        products.forEach(function (element, e) {
+            newIdCount = 1 + $(".dd-item").length;
+            Idkey = newIdCount;
+
+            $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.Description + "' data-fdescription='" + element.ID + "'><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+        });
+            } else if (idFormato == "5") { //label
+                ID_tipo_recurso = "8";
+                descripciontp = "Subtitle";
+                divlo += "<i class='mdi mdi-text-shadow icon-md align-self-center mr-3'></i>";
+        divlo += "<div class='media-body'>";
+
+        products.forEach(function (element, e) {
+            newIdCount = 1 + $(".dd-item").length;
+            Idkey = newIdCount;
+
+            $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.Description + "' data-fdescription='" + element.ID + "'><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+        });
+    }
+
+
+            $('.dd-item a').on('mousedown', function (event) {
+                event.preventDefault();
+                return false;
+            });
+
+            $('#nestable').trigger("change");
+
+            //$("#displays_list").html("");
+        });
+
+        $("#btn_agregarSample").click(function () {
+
+            var dropdownlist = document.getElementById("formresourcetype");
+            var ID_tipo_recurso = dropdownlist.options[dropdownlist.selectedIndex].value;
+            var descripciontp = dropdownlist.options[dropdownlist.selectedIndex].text;
+            var Idkey = 0;
+
+            var products = [];
+            $('#samples_list :selected').each(function (i, selected) {
+                var $itm = $(this);
+                products.push({
+                    'ID': $(selected).val(),
+                    'Description': $(selected).text()
+                });
+
+
+                //textvalues[i] = $(selected).text();
+            });
+
+            var divlo = "<div class='media'>";
+            divlo += "<i class='mdi mdi-cube-outline icon-md align-self-center mr-3'></i>";
+            divlo += "<div class='media-body'>";
+
+            products.forEach(function (element, e) {
+                newIdCount = 1 + $(".dd-item").length;
+                Idkey = newIdCount;
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.ID + "' data-fdescription='" + element.Description + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><p href='javascript:;'  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</p></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+          
+            });
+
+            $('.dd-item a').on('mousedown', function (event) {
+                event.preventDefault();
+                return false;
+            });
+
+            var updateOutput = function (e) {
+                var list = e.length ? e : $(e.target),
+                    output = list.data('output');
+                if (window.JSON) {
+                    output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+                } else {
+                    output.val('JSON browser support required for this demo.');
+                }
+            };
+
+
+            updateOutput($('#nestable').data('output', $('#nestable-output')));
+            //$("#samples_list").html("");
+        });
+
+        $("#btn_agregarGift").click(function () {
+
+            var dropdownlist = document.getElementById("formresourcetype");
+            var ID_tipo_recurso = dropdownlist.options[dropdownlist.selectedIndex].value;
+            var descripciontp = dropdownlist.options[dropdownlist.selectedIndex].text;
+            var Idkey = newIdCount;
+
+            var products = [];
+            $('#gifts_list :selected').each(function (i, selected) {
+                var $itm = $(this);
+                products.push({
+                    'ID': $(selected).val(),
+                    'Description': $(selected).text()
+                });
+
+
+                //textvalues[i] = $(selected).text();
+            });
+
+            var divlo = "<div class='media'>";
+            divlo += "<i class='mdi mdi-gift icon-md align-self-center mr-3'></i>";
+            divlo += "<div class='media-body'>";
+
+            products.forEach(function (element, e) {
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.ID + "' data-fdescription='" + element.Description + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><p href='javascript:;'  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.Description + "</p></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+                newIdCount++;
+                Idkey++;
+            });
+
+            $('.dd-item a').on('mousedown', function (event) {
+                event.preventDefault();
+                return false;
+            });
+
+            updateOutput($('#nestable').data('output', $('#nestable-output')));
+            //$("#gifts_list").html("");
+        });
+    });
+</script>
+
+
+
+<script>
+    $(document).ready(function () {
+        $('.js-example-basic-single').select2();
+    });
+
+</script>
+<script>
+
+    $(document).ready(function () {
+
+
+        var updateOutput = function (e) {
+            var list = e.length ? e : $(e.target),
+                output = list.data('output');
+            if (window.JSON) {
+                output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+            } else {
+                output.val('JSON browser support required for this demo.');
+            }
+        };
+
+        // activate Nestable for list 1
+        $('#nestable').nestable({
+            group: 1
+        })
+            .on('change', updateOutput).nestable('collapseAll');
+
+        /* activate Nestable for list 2
+        $('#nestable2').nestable({
+            group: 1
+        })
+            .on('change', updateOutput);
+            */
+        // output initial serialised data
+        updateOutput($('#nestable').data('output', $('#nestable-output')));
+        //updateOutput($('#nestable2').data('output', $('#nestable2-output')));
+
+        //$('#nestable-menu').on('click', function (e) {
+        //    var target = $(e.target),
+        //        action = target.data('action');
+        //    if (action === 'expand-all') {
+        //        $('.dd').nestable('expandAll');
+        //    }
+        //    if (action === 'collapse-all') {
+        //        $('.dd').nestable('collapseAll');
+        //    }
+        //});
+
+        //$('#nestable3').nestable();
+
+        //LIMPIAR TODA LA LISTA DE NESTABLE
+        $("#clear_list").on("click", function (e) {
+            e.preventDefault();
+            $(".dd-item").remove();
+
+            updateOutput($('#nestable').data('output', $('#nestable-output')));
+        });
+        //ACTUALIZAR AL ELIMINAR
+        $('#main_list').on('click', '.dd-item a#delete', function () {
+            //$(this).closest('li').remove();
+            $(this).closest('li').fadeOut('slow', function () {
+                $(this).remove();
+
+                updateOutput($('#nestable').data('output', $('#nestable-output')));
+            });
+        });
+        //**************
+
+
+        // FOR EDIT
+        //$('#main_list').on('click', '#category-item', function () {
+        //    $(this).text("PRUEBA FUNCIONA");
+
+
+        //    $(this).closest('.dd-item').attr('data-fsource', "PRUEBA FUNCIONA");
+
+        //    updateOutput($('#nestable').data('output', $('#nestable-output')));
+        //});
+        //***************
+
+
+
+
+
+    });
+</script>
+<script>
+
+    /*************** Edit ***************/
+
+    var menuEditor = $("#menu-editor");
+    var editButton = $("#editButton");
+    var editInputName = $("#editInputName");
+    var editInputSlug = $("#editInputSlug");
+    var currentEditName = $("#currentEditName");
+
+    // Prepares and shows the Edit Form
+    function prepareEdit(item) {
+        var targetId = $(item).closest('.dd-item').data('idkey');
+        var target = $('[data-idkey="' + targetId + '"]');
+        console.log(targetId + "- " + target);
+        editInputName.val(target.data("fsource"));
+        //editInputSlug.val(target.data("slug"));
+        currentEditName.html(targetId);
+        editButton.data("idkey", targetId);
+
+        console.log("[INFO] Editing Menu Item " + editButton.data("idkey"));
+
+        menuEditor.fadeIn();
+    };
+
+    // Edits the Menu item and hides the Edit Form
+    function editMenuItem(item2) {
+        var targetId = $(item2).data('idkey');
+        var target = $('[data-idkey="' + targetId + '"]');
+
+        var newName = editInputName.val();
+
+
+        target.data("fsource", newName);
+
+        var item = "item" + targetId;
+        console.log(item);
+        document.getElementById(item).innerHTML = newName;
+
+        menuEditor.fadeOut();
+
+        // update JSON
+        var updateOutput = function (e) {
+            var list = e.length ? e : $(e.target),
+                output = list.data('output');
+            if (window.JSON) {
+                output.val(window.JSON.stringify(list.nestable('serialize')));//, null, 2));
+            } else {
+                output.val('JSON browser support required for this demo.');
+            }
+        };
+
+
+        updateOutput($('#nestable').data('output', $('#nestable-output')));
+    };
+
+    /***************************************/
+
+</script>
+<script type="text/javascript">
+    $(function () {
+        $("#formresourcetype").change(function () {
+            var txt = $("#formresourcetype option:selected").text();
+
+            document.getElementById("category_list").value = "0";
+
+            if (txt == "Product") {
+                var x = document.getElementById("div_label");
+                x.style.display = "none";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "block";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "none";
+
+
+                var c = document.getElementById("div_category");
+                c.style.display = "none";
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "none";
+
+                var e = document.getElementById("div_samples");
+                e.style.display = "none";
+
+
+                var o = document.getElementById("div_gifts");
+                o.style.display = "none";
+                var d = document.getElementById("div_displays");
+                d.style.display = "none";
+            } else if (txt == "Gift") {
+                var x = document.getElementById("div_label");
+                x.style.display = "none";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "none";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "none";
+
+                var c = document.getElementById("div_category");
+                c.style.display = "none";
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "none";
+                var e = document.getElementById("div_samples");
+                e.style.display = "none";
+
+
+                var o = document.getElementById("div_gifts");
+                o.style.display = "block";
+                var d = document.getElementById("div_displays");
+                d.style.display = "none";
+            } else if (txt == "Displays") {
+                var x = document.getElementById("div_label");
+                x.style.display = "none";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "none";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "none";
+
+                var c = document.getElementById("div_category");
+                c.style.display = "none";
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "none";
+                var e = document.getElementById("div_samples");
+                e.style.display = "none";
+
+
+                var o = document.getElementById("div_gifts");
+                o.style.display = "none";
+
+                var d = document.getElementById("div_displays");
+                d.style.display = "block";
+
+            }
+            else if (txt == "Product_sample") {
+                var x = document.getElementById("div_label");
+                x.style.display = "none";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "none";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "none";
+
+                var c = document.getElementById("div_category");
+                c.style.display = "none";
+
+                var e = document.getElementById("div_samples");
+                e.style.display = "block";
+
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "none";
+                var o = document.getElementById("div_gifts");
+                o.style.display = "none";
+                var d = document.getElementById("div_displays");
+                d.style.display = "none";
+            } else if (txt == "Input_text") {
+                var x = document.getElementById("div_label");
+                x.style.display = "block";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "none";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "block";
+
+                var c = document.getElementById("div_category");
+                c.style.display = "block";
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "none";
+
+                var e = document.getElementById("div_samples");
+                e.style.display = "none";
+
+
+                var o = document.getElementById("div_gifts");
+                o.style.display = "none";
+                var d = document.getElementById("div_displays");
+                d.style.display = "none";
+            } else if (txt == "Column") {
+                var x = document.getElementById("div_label");
+                x.style.display = "block";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "none";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "block";
+
+                var c = document.getElementById("div_category");
+                c.style.display = "none";
+
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "block";
+
+                var e = document.getElementById("div_samples");
+                e.style.display = "none";
+
+
+                var o = document.getElementById("div_gifts");
+                o.style.display = "none";
+                var d = document.getElementById("div_displays");
+                d.style.display = "none";
+            }
+
+            else {
+                var x = document.getElementById("div_label");
+                x.style.display = "block";
+
+                var p = document.getElementById("div_products");
+                p.style.display = "none";
+
+                var b = document.getElementById("div_btnadd");
+                b.style.display = "block";
+
+                var c = document.getElementById("div_category");
+                c.style.display = "none";
+                var r = document.getElementById("div_resourceR");
+                r.style.display = "none";
+
+                var e = document.getElementById("div_samples");
+                e.style.display = "none";
+
+
+                var o = document.getElementById("div_gifts");
+                o.style.display = "none";
+                var d = document.getElementById("div_displays");
+                d.style.display = "none";
+            }
+
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $("#myBtn").click(function () {
+            $("#myModal").modal();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#myBtn_samples").click(function () {
+            $("#myModal_samples").modal();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#myBtn_gifts").click(function () {
+            $("#myModal_gift").modal();
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        $("#myBtn_displays").click(function () {
+            $("#myModal_displays").modal();
+        });
+    });
+</script>
+<!--<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+
+</script>
+    -->
+<script>
+    $(document).ready(function () {
+        
+
+    $('#products_list').multipleSelect();
+    $('#samples_list').multipleSelect();
+        $('#gifts_list').multipleSelect();
+        $('#displays_list').multipleSelect();
+    });
+</script>
+
+
+<script>
+    function getProducts() {
+        var vendorId = $("#vendors_list").val();
+        $.ajax
+            ({
+                url: '/FormsActions/Getproducts',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    vendorID: vendorId
+                }),
+                success: function (result) {
+
+                    $("#products_list").html("");
+                    $.each($.parseJSON(result), function (i, product) {
+                        $("#products_list").append
+                            ($('<option></option>').val(product.ItemCode).html(product.ItemName))
+
+                    }
+                    )
+                    $('#products_list').multipleSelect();
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                },
+            });
+    }
+</script>
+
+<script>
+    function getSamples() {
+        var vendorId = $("#vendors_list_samples").val();
+        $.ajax
+            ({
+                url: '/FormsActions/Getsamples',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    vendorID: vendorId
+                }),
+                success: function (result) {
+
+                    $("#samples_list").html("");
+                    $.each($.parseJSON(result), function (i, product) {
+                        $("#samples_list").append
+                            ($('<option></option>').val(product.ItemCode).html(product.ItemName))
+
+                    }
+                    )
+                    $('#samples_list').multipleSelect();
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                },
+            });
+    }
+</script>
+
+<script>
+    function getGifts() {
+        var vendorId = $("#vendors_list_gift").val();
+        $.ajax
+            ({
+                url: '/FormsActions/Getgifts',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    vendorID: vendorId
+                }),
+                success: function (result) {
+
+                    $("#gifts_list").html("");
+                    $.each($.parseJSON(result), function (i, product) {
+                        $("#gifts_list").append
+                            ($('<option></option>').val(product.ItemCode).html(product.ItemName))
+
+                    }
+                    )
+                    $('#gifts_list').multipleSelect();
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                },
+            });
+    }
+</script>
+
+<script>
+    $('.dd-item a#delete').on('mousedown', function (event) {
+        event.preventDefault();
+        return false;
+    });
+
+    $('a#category-item').on('mousedown', function (event) {
+        event.preventDefault();
+        return false;
+    });
+
+</script>
+
+<script>
+    function getProducts() {
+        var vendorId = $("#vendors_list").val();
+        $.ajax
+            ({
+                url: '/FormsActions/Getproducts',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    vendorID: vendorId
+                }),
+                success: function (result) {
+
+                    $("#products_list").html("");
+                    $.each($.parseJSON(result), function (i, product) {
+                        $("#products_list").append
+                            ($('<option></option>').val(product.ItemCode).html(product.ItemName))
+
+                    }
+                    )
+                    $('#products_list').multipleSelect();
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                },
+            });
+    }
+
+    function getSamples() {
+        var vendorId = $("#vendors_list_samples").val();
+        $.ajax
+            ({
+                url: '/FormsActions/Getsamples',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    vendorID: vendorId
+                }),
+                success: function (result) {
+
+                    $("#samples_list").html("");
+                    $.each($.parseJSON(result), function (i, product) {
+                        $("#samples_list").append
+                            ($('<option></option>').val(product.ItemCode).html(product.ItemName))
+
+                    }
+                    )
+                    $('#samples_list').multipleSelect();
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                },
+            });
+    }
+
+    function getGifts() {
+        var vendorId = $("#vendors_list_gift").val();
+        $.ajax
+            ({
+                url: '/FormsActions/Getgifts',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    vendorID: vendorId
+                }),
+                success: function (result) {
+
+                    $("#gifts_list").html("");
+                    $.each($.parseJSON(result), function (i, product) {
+                        $("#gifts_list").append
+                            ($('<option></option>').val(product.ItemCode).html(product.ItemName))
+
+                    }
+                    )
+                    $('#gifts_list').multipleSelect();
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                },
+            });
+    }
+
+</script>
+
+<script>
+    $(document).ready(function () {
+
+        var expandBtnHTML = '<button class="btn-icons btn-primary" data-action="expand" type="button">Expand</button>';
+        var collapseBtnHTML = '<button class="btn-icons btn-primary" data-action="collapse" type="button">Collapse</button>';
+
+        function setParentitem(li) {
+            $('.dd-item[data-idkey="' + li + '"]').prepend(expandBtnHTML);
+            $('.dd-item[data-idkey="' + li + '"]').prepend(collapseBtnHTML);
+            $('[data-action="expand"]').hide();
+        };
+
+
+        function BuildEditor(array, root) {
+
+            if (typeof root === 'undefined') {
+                root = $('ol#main_list');
+            }
+
+            array.forEach(function (element) {
+
+                var ID_tipo_recurso = element.id_resource;
+
+                var categoryID = document.getElementById("category_list").value;
+                var categoryText = "";
+                var Idkey = element.idkey;
+                var esPadre = "";
+                var $li = "";
+                if (element.children != null) {
+                    //Si tiene hijos por lo tanto sera padre del siguiente elemento a cargar
+                    var IDol = "sublist_" + Idkey;
+                    esPadre = "<ol class='dd-list' id='" + IDol + "'><ol/>"
+                } else { esPadre = ""; }
+
+                if (ID_tipo_recurso == "1") {
+
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-font icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li  class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Title" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+
+                } else if (ID_tipo_recurso == "8") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-text-width icon-md align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Subtitle" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "11") { //NUEVO
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-code-branch icon-fa icon-md align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "DynamicProducts" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "12") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-user icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Customers" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "13") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-blogger-b align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Brands" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "30") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-cat align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Categories" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "31") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-boxes align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "SubCategories" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "14") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-cube icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Product_line" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "15") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-gamepad icon-fa icon-md align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Brand_competitors" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "16") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-tasks icon-fa icon-md align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Multiple_choice" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "17") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-list-ul icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Select" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+                    
+                } else if (ID_tipo_recurso == "18") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-sort-numeric-up icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Input_number" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "21") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-usd-circle icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Input_number" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "19") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-check-circle icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Single_choice" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                } else if (ID_tipo_recurso == "6") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-comment icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    if (element.fvalue == "0") {
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Input_text" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "1"){ //Flavor
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Input_text" + " - " + "Flavor" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "2") { //Quality
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Input_text" + " - " + "Quality" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "3") { //Price
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Input_text" + " - " + "Price" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "4") { //Packing
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Input_text" + " - " + "Packing" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } 
+
+                } else if (ID_tipo_recurso == "28") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-barcode icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Barcode_scanner" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                   
+
+                } else if (ID_tipo_recurso == "24") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-columns icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    if (element.fvalue == "0") {
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Input_text" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "16") { //Multiple choice
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Column" + " - " + "Multiple_choice" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "21") { //Currency
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Column" + " - " + "Currency" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } else if (element.fvalue == "3") { //Currency
+                        $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fsource='' data-fvalue='" + element.fvalue + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Column" + " - " + "Product" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                    } 
+
+                }
+
+                else if (ID_tipo_recurso == "20") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-thumbtack icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Item_list" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                }else if (ID_tipo_recurso == "5") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-image icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Picture" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                } else if (ID_tipo_recurso == "29") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-image icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Reference Picture" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                } else if (ID_tipo_recurso == "4") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='mdi mdi-cube-outline icon-md align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Sample" + "</h6><p href='javascript:;'  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</p></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+                } else if (ID_tipo_recurso == "22") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-calendar icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Date" + "</h6><p href='javascript:;'  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</p></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+                } else if (ID_tipo_recurso == "3") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='mdi mdi-cube icon-md align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Product" + "</h6><p href='javascript:;'  id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</p></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+                } else if (ID_tipo_recurso == "9") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-file-signature icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='' data-fdescription='" + element.fdescription + "'><div class='dd-handle'> " + divlo + "<h6 class='mb-1'>" + "Electronic_signature" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fdescription + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+                }
+
+                root.append($li);
+                if (element.children != null) {
+                    setParentitem(Idkey);
+                }
+
+
+
+                if (element.children != null) {
+                    var newroot = $("ol#" + IDol);
+
+                    BuildEditor(element.children, newroot);
+                }
+
+                $("#label_toshow").val("");
+
+                $('.dd-item a').on('mousedown', function (event) {
+                    event.preventDefault();
+                    return false;
+                });
+
+                $('#nestable').trigger("change");
+
+
+
+
+
+                //if (element.parent != 0) { //ES NODO HIJO
+                //    if (element.children != null) {
+                //        console.log("   NODO PADRE E HIJO" + ": " + element.fsource);
+
+                //    } else {
+                //        console.log("        NODO HIJO" + ": " + element.fsource);
+                //    }
+
+                //} else if (element.parent == 0) { //ES NODO PADRE
+                //    console.log("NODO PADRE" + ": " + element.fsource);
+                //}
+
+
+
+            });
+
+
+
+        }
+
+        (function ($) {
+            'use strict';
+            $('#createModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+                var action = button.data('action'); // Extract info from data-* attributes
+
+
+                //Dependiendo se la acccion es crear o editar se modificara esto
+                var modal = $(this);
+                //LIMPIAMOS FORMULARIO
+                modal.find('#name').val("");
+                modal.find('#description').val("");
+                modal.find('#possibleID').val("");
+                modal.find('#action').val("");
+
+
+                $("ol#main_list").html("");
+
+
+                if (action != "create") { //EDITAR FORMULARIO
+                    //AJAX
+                    var idform = button.data('idform'); //Extraemos el ID del formulario
+
+                    $.ajax
+                        ({
+                            url: '/FormsActions/Getformdata',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                IDform: idform
+                            }),
+                            success: function (result) {
+
+                                modal.find('#titleform').text('Edit Form Template');
+                                modal.find('#desform').text('Edit form template.');
+
+                                modal.find('#possibleID').val(idform);
+                                modal.find('#action').val("update");
+
+                                modal.find('#name').val(button.data('name'));
+                                modal.find('#description').val(button.data('description'));
+                       
+                                $('#type').val(button.data('activity'));
+                                //console.log(result);
+                                //makeNestableListUsingJSONArray(result);
+                                BuildEditor(result);
+
+
+
+
+
+
+                            },
+                            error: function () {
+                                alert("Whooaaa! Something went wrong..")
+                            },
+                        });
+
+
+
+                } else {
+                    modal.find('#titleform').text('New Form');
+                    modal.find('#desform').text('Add new form to keep record of your activities.');
+                    modal.find('#possibleID').val("0");
+                    modal.find('#action').val("create");
+                }
+
+
+            })
+        })(jQuery);
+
+
+
+
+        (function ($) {
+            'use strict';
+            $('#deleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);// Button that triggered the modal
+
+                var ID = button.data("idform");// Extract info from data-* attributes
+
+
+
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                //modal.find('.modal-title').text('Edit data: ' + recipient)
+                modal.find('.modal-body input[name="idFormD"]').val(ID);
+
+
+            })
+        })(jQuery);
+    });
+</script>

@@ -37,5 +37,6 @@ namespace LimenawebApp.Models
         public Nullable<short> U_VisitFrequency { get; set; }
         public Nullable<int> Frequency { get; set; }
         public string Type { get; set; }
+        public string ZipCode { get; set; }
     }
 }

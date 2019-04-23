@@ -5,20 +5,43 @@
 
 <script>
     $('#data_tableEditor').DataTable({
-        dom: 'Bfrtip',
-        select: true
+        dom: 'ftip',
+        "ordering": false
 
     });
 
+    function getuomdata(control) {
 
+        $('#UOMshow').modal('show');
+        
+    }
 
     function getSOdata(control) {
         //Llamamos con AJAX
 
         var id_salesOrder = $(control).data('saleso');
         var sapdoc = $(control).data('saledoc');
+        var sapdocstorage = $(control).data('salestorage');
+        var sapdocpicker = $(control).data('picker');
+   
+        if (sapdocpicker == "") {
+            $("#pickerlst").val("0").change();
+        } else {
+            $("#pickerlst option").filter(function () {
+                return this.text == sapdocpicker;
+            }).attr('selected', true).change();
+        }
+
+
+
         $("#selectSOd").val(id_salesOrder);
         $("#docselnum").html("DOC NUM: " + sapdoc);
+        if (sapdocstorage == "COOLER") {
+            $("#storageselso").html("STORAGE TYPE: COOLER, FREEZER");
+        } else {
+            $("#storageselso").html("STORAGE TYPE: " + sapdocstorage);
+        }
+       
 
         $("#loading").show();
         $.ajax({
@@ -27,7 +50,8 @@
             datatype: 'application/json',
             contentType: 'application/json',
             data: JSON.stringify({
-                id: id_salesOrder
+                id: id_salesOrder,
+                id_storage: sapdocstorage
             }),
             cache: false,
             global: false,
@@ -43,13 +67,13 @@
                 $("#htmlgrid tfoot tr").remove()
                 $('#officeFltr').html("");
                 chtml += "<tr>";
-                chtml += "    <th>" + "LINE NUM" + "</th>";
+                chtml += "    <th class='rowselord' style='font-size:10px;'>" + "ROW" + "</th>";
                 chtml += "    <th>" + "VALIDATED" + "</th>";
                 chtml += "    <th>" + "STORAGE TYPE" + "</th>";
                 chtml += "    <th>" + "BIN LOC" + "</th>";
-
-                chtml += "    <th>" + "QUANTITY" + "</th>";
                 chtml += "    <th>" + "UOM" + "</th>";
+                chtml += "    <th >" + "QTY" + "</th>";
+                
                 chtml += "    <th>" + "ITEM CODE" + "</th>";
                 chtml += "    <th>" + "ITEM NAME" + "</th>";
 
@@ -75,14 +99,14 @@
 
            
                 $.each($.parseJSON(result.result), function (i, selSO) {
-                    
+
                     if (selSO.query1 == "DEL") {
                         chtml += "<tr id=" + selSO.ID_detail + " style='display:none;'>";
                     } else {
                         chtml += "<tr id=" + selSO.ID_detail + " >";
                     }
-                  
-                    chtml += "    <td>" + selSO.Line_num + "</td>";
+
+                    chtml += "    <td style='font-size:10px;'>" + selSO.Line_num + "</td>";
                     if (selSO.isvalidated) {
                         chtml += "<td><button  class='btn btn-outline-success btnselSuccess btnslso'>" + "YES" + "</button></td>";
                     } else {
@@ -91,17 +115,33 @@
                     chtml += "    <td>" + selSO.ID_storagetype + "</td>";
                     chtml += "    <td>" + selSO.Bin_loc + "</td>";
 
-                    chtml += '    <td><input style="padding:0;" class="form-control units" type="number" min="-9999" value="' + selSO.Quantity + '" /></td>';
-                    chtml += "    <td>" + selSO.ID_UOM + "</td>";
-
+                    
+                    chtml += '    <td><select class="form-control seluoms" style="width:100px">';
+                    $.each(selSO.lstuom, function (i, uom) {
+                        if (uom.UomEntry == selSO.UomEntry) {
+                            chtml += '    <option val="' + uom.UomEntry + '" selected>' + uom.UomCode + '</option>';
+                        } else {
+                            chtml += '    <option val="' + uom.UomEntry + '">' + uom.UomCode + '</option>';
+                        }
+                        
+                    });
+                   
+                    chtml += '</select ></td > ';
+                    chtml += '    <td><input style="padding:0;width: 60px;" class="form-control numord" type="number" min="1" value="' + selSO.Quantity + '" /></td>';
+                    //chtml += '    <td><input style="padding:0;" class="form-control units" type="number" min="-9999" value="' + selSO.Quantity + '" /></td>'; con botones
                     chtml += "    <td>" + selSO.ItemCode + "</td>";
                     chtml += "    <td>" + selSO.ItemName + "</td>";
 
 
                     if (selSO.query1 == "DEL") {
-                        chtml += "    <td>" + '<a><i class="fa fa-trash itemDelete">DEL</i></a>' + "</td>";
+                        chtml += "    <td>" + '<a><i style="cursor: pointer;font-size:22px;" class="fa fa-trash itemDelete">DEL</i></a>' + "</td>";
                     } else {
-                        chtml += "    <td>" + '<a><i class="fa fa-trash itemDelete"></i></a>' + "</td>";
+                        if (selSO.isvalidated) {
+                            chtml += "    <td>" + '<a><i style="display:none;cursor: pointer;font-size:22px" class="fa fa-trash itemDelete"></i></a>' + "</td>";
+                        } else {
+                            chtml += "    <td>" + '<a><i style="cursor: pointer;font-size:22px;" class="fa fa-trash itemDelete"></i></a>' + "</td>";
+                        }
+                        
                     }
 
                     chtml += " </tr>";
@@ -114,51 +154,53 @@
 
 
 
-                editableGrid = new EditableGrid("DemoGridAttach");
-                //editableGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "up.png", sortIconDown: "down.png" });
+                //editableGrid = new EditableGrid("DemoGridAttach");
+                ////editableGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "up.png", sortIconDown: "down.png" });
 
-                // we build and load the metadata in Javascript
-                editableGrid.load({
-                    metadata: [
-                        { name: "line_num", datatype: "string", editable: false },
-                        { name: "isvalidated", datatype: "html", editable: false },
-                        { name: "Storage", datatype: "string", editable: false },
-                        { name: "Bin_loc", datatype: "string", editable: false },
+                //// we build and load the metadata in Javascript
+                //editableGrid.load({
+                //    metadata: [
+                //        { name: "line_num", datatype: "string", editable: false },
+                //        { name: "isvalidated", datatype: "html", editable: false },
+                //        { name: "Storage", datatype: "string", editable: false },
+                //        { name: "Bin_loc", datatype: "string", editable: false },
 
-                        { name: "Quantity", datatype: "html", editable: false },
-                        {
-                            name: "UOM", datatype: "string", editable: true, values:
-                                {
-                                    "7": "CASE 6", "13": "CASE 12", "17": "CASE 17", "21": "CASE 24", "-1": "MANUAL"
-                                }
-                        },
-                        { name: "ItemCode", datatype: "string", editable: false },
-                        { name: "ItemName", datatype: "string", editable: false }
-
-
+                //        { name: "Quantity", datatype: "html", editable: false },
+                //        {
+                //            name: "UOM", datatype: "string", editable: true, values:
+                //                {
+                //                    "7": "CASE 6", "13": "CASE 12", "17": "CASE 17", "21": "CASE 24", "-1": "MANUAL"
+                //                }
+                //        },
+                //        { name: "ItemCode", datatype: "string", editable: false },
+                //        { name: "ItemName", datatype: "string", editable: false }
 
 
 
-                    ]
-                });
 
-                // then we attach to the HTML table and render it
-                editableGrid.attachToHTMLTable('htmlgrid');
-                editableGrid.renderGrid();
 
-                $(".units").bootstrapNumber({
-                    upClass: 'default btn-sm',
-                    downClass: 'default btn-sm',
-                    center: true
+                //    ]
+                //});
 
-                });
+                //// then we attach to the HTML table and render it
+                //editableGrid.attachToHTMLTable('htmlgrid');
+                //editableGrid.renderGrid();
+
+                //$(".units").bootstrapNumber({
+                //    upClass: 'default btn-sm',
+                //    downClass: 'default btn-sm',
+                //    center: true
+
+                //});
                 $('.btnslso').on('click', function () {
                     if ($(this).hasClass("btnselSuccess")) {
                         $(this).removeClass('btnselSuccess');
                         $(this).html('NO');
+                        $(this).closest('tr').find(".itemDelete").show();
                     } else {
                         $(this).addClass('btnselSuccess');
                         $(this).html('YES');
+                        $(this).closest('tr').find(".itemDelete").hide();
                     }
 
 
@@ -167,11 +209,21 @@
                     //do nothing
 
                     var table = $('#htmlgrid').DataTable({
-                        dom: 'Bflrtip',
+                        dom: 'frtip',
                         aLengthMenu: [
                             [15, 25, 50, 100, -1],
                             [15, 25, 50, 100, "All"]
                         ],
+                        "columnDefs": [
+                            {
+
+                                "targets": [2],
+                                "visible": false,
+                                "searchable": false
+                            }
+                        ],
+                        "ordering": false,
+                        paging: false,
                         initComplete: function () {
                             this.api().columns([2]).every(function () {
                                 var column = this;
@@ -211,11 +263,20 @@
                 }
                 else {
                     var table = $('#htmlgrid').DataTable({
-                        dom: 'Bflrtip',
+                        dom: 'frtip',
                         aLengthMenu: [
                             [15, 25, 50, 100, -1],
                             [15, 25, 50, 100, "All"]
                         ],
+                        "ordering": false,
+                        "columnDefs": [
+                            {
+                                "targets": [2],
+                                "visible": false,
+                                "searchable": false
+                            }
+                        ],
+                        paging: false,
                         initComplete: function () {
                             this.api().columns([2]).every(function () {
                                 var column = this;
@@ -273,71 +334,90 @@
     }
 
     function saveData() {
-        var table = $('#htmlgrid').DataTable();
-        // var oTable = $('#htmlgrid').dataTable();
-        //console.log(oTable.fnGetData());
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
 
-        oSettings = table.settings();
-        oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
-        table.search('').columns().search('').draw();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+            var table = $('#htmlgrid').DataTable();
+            // var oTable = $('#htmlgrid').dataTable();
+            //console.log(oTable.fnGetData());
+
+            oSettings = table.settings();
+            oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
+            table.search('').columns().search('').draw();
 
 
-        var data;
-        data = Array();
-       
+            var data;
+            data = Array();
 
 
-        $("#htmlgrid tr").each(function (i, v) {
-            data[i] = Array();
-            $(this).children('td').each(function (ii, vv) {
 
-                if ($(this).text() == "-+") {
-                    data[i][ii] = $(this).eq(0).find('input').val();
-                } else {
-                    data[i][ii] = $(this).text();
+            $("#htmlgrid tr").each(function (i, v) {
+                data[i] = Array();
+                $(this).children('td').each(function (ii, vv) {
+
+                    if (ii == 4) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+                    } else if (ii == 3) {
+                        data[i][ii] = $(this).eq(0).find('select option:selected').text();
+
+                    } else {
+                        data[i][ii] = $(this).text();
+                    }
+
+                });
+            })
+            var objects = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+
+                if (i != 0) {
+                    objects.push({
+                        lineNumber: data[i][0],
+                        validated: data[i][1],
+                        quantity: data[i][4],
+                        uom: data[i][3],
+                        ItemCode: data[i][5],
+                        ItemName: data[i][6],
+                        deleted: data[i][7]
+                    });
                 }
 
-            });
-        })
-        var objects = [];
-        for (var i = 0, len = data.length; i < len; i++) {
-
-            if (i != 0) {
-                objects.push({
-                    lineNumber: data[i][0],
-                    validated: data[i][1],
-                    quantity: data[i][4],
-                    uom: data[i][5],
-                    ItemCode: data[i][6],
-                    ItemName: data[i][7],
-                    deleted: data[i][8]
-                });
             }
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Save_SODetails',
+                    type: 'POST',
+                    data: { 'id': idt, 'objects': objects, 'idPicker': idpicker, 'pickername': pickername},
+                    success: function (result) {
 
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
         }
-        var idt = $("#selectSOd").val();
 
-        console.log(objects);
-        document.getElementById("loader").style.display = "block";
-        $.ajax
-            ({
-                url: '/Invoices/Save_SODetails',
-                type: 'POST',
-                data: { 'id': idt, 'objects': objects },
-                success: function (result) {
-
-                    
-                    toastr.success("Data saved successfully.", "Success");
-                    document.getElementById("loader").style.display = "none";
-                    window.location.reload(true); 
-
-                },
-                error: function () {
-
-                    toastr.warning("Something went wrong..", "Warning");
-                    document.getElementById("loader").style.display = "none";
-                },
-            });
+       
 
     }
 
@@ -346,8 +426,25 @@
 <script>
     window.onload = function () {
         $('#htmlgrid').on('click', '.itemDelete', function () {
-            $(this).closest('tr').hide();
-            $(this).html('DEL');
+
+            swal.fire({
+                title: 'Are you sure to delete this item?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $(this).closest('tr').hide();
+                    $(this).html('DEL');
+
+                }
+            })
+
+
             
             //$(this).closest('tr').find("input,button,select").attr("disabled", true);
             //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');

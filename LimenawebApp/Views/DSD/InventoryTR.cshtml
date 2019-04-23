@@ -187,6 +187,7 @@
                                     <thead>
                                         <tr>
                                             <th scope="col">ID</th>
+                                            <th scope="col">DOC NUM (SAP)</th>
                                             <th scope="col">DATE</th>
                                             <th scope="col">TOTAL UNITS</th>
                                             <th scope="col">ACTIONS</th>
@@ -199,6 +200,7 @@
                     {
                         <tr>
                             <td>@itemO.ID_InventoryDSD</td>
+                            <td>@itemO.ID_Company</td>
                             <td>@Convert.ToDateTime(itemO.Date).ToShortDateString()</td>
                             <td>@itemO.docNum_SAP</td>
                             <td><a href="@Url.Action("Print_InventoryDSD", "DSD", new { id = itemO.ID_InventoryDSD})" target="_blank" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-print mr-2"></i>Print</a></td>

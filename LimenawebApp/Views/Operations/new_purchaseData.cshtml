@@ -1,0 +1,154 @@
+﻿@{
+    ViewBag.Title = "Distribuidora Limeña - New Purchase Data";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Data list</div>
+                                <a href="@Url.Action("Purchase_data", "Operations")" class="btn btn-outline-info btn-sm">Back</a>
+                                <div class=" widget-action-link">
+                                    <a onclick="savePurchaseData()" class="btn btn-outline-success">Save Data</a>
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="col-3">
+                                        Category:
+                                        <select id="lstCategory" class="form-control" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-3">
+                                        Subcategory:
+                                        <select id="lstSubCategory" class="form-control" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-3">
+                                        Brand:
+                                        <select id="lstBrands" class="form-control" multiple="multiple"></select>
+                                    </div>
+                                    <div class="col-3">
+                                        Vendor:
+                                        <select id="lstProvider" class="form-control" multiple="multiple"></select>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="card-body pt-3 pb-4" style="font-size:12px;line-height:1.5;">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor2" class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+
+                                            <th>#</th><!--GENERADO POR DATATABLE-->
+                                            <!--MATRIZ COMPRA-->
+                                            <th>CODIGO SAP</th> <!--PROD CODIGO-->
+                                            <th>ITEM DESCRIPCION</th> <!--PROD NOMBRE-->
+                                            <!--FIN MATRIZ COMPRA-->
+                                            <!--MICRO CATALOGO-->
+                                            <th style="background-color:darkseagreen">FACTOR DE COMPRA REGULAR</th>
+                                            <th style="background-color:darkseagreen">FACTOR DE COMPRA QUIEBRE</th>
+                                            <th style="background-color:darkseagreen">POLITICA DE COBERTURA</th>
+                                            <!--FIN MICRO CATALOGO-->
+                                            <!--MATRIZ COMPRA-->
+                                            <!--FILTROS-->
+                                            <th hidden >MARCA</th>
+                                            <th hidden>SUB CATEGORIA</th>
+                                            <th hidden>CATEGORIA</th>
+                                            
+                                            <th hidden>PROVEEDOR</th>
+                                            <!--FIN FILTROS-->
+                                            <th>UoM GROUP</th> <!--UNIDAD MEDIDA LETRAS-->
+                                            <th>INVENTARIO (EACH)</th> <!--INVENTARIOEACH-->
+                                            <th>INVENTARIO (EN CASES)</th> <!--INVENTARIOCAJAS-->
+                                            <th>AVG 5 PERIODOS</th> <!--PROMEDIO-->
+                                            <th>DESVIACION</th><!--DESVIACION-->
+                                            <th>MAX 5 PERIODOS</th> <!--MAXIMO-->
+                                            <th>MIN 5 PERIODOS</th> <!--MINIMO-->
+                                            <th>PRONOSTICO PERIODO ACTUAL</th> <!--PRONOSTICOPERIODOACTUAL-->
+                                            <th>AVG 5 PERIODOS POSTERIORES AA</th> <!--PROMEDIO_AA-->
+                                            <th>PERIODO ANTERIOR</th> <!--VENTA B1-->
+                                            <th>VARIACION</th>
+                                            <th>TENDENCIA PERIODO ACTUAL</th> <!--TENDENCIAPERIODOACTUAL-->
+                                            <th>PRONOSTICO PERIODO SIGUIENTE 1</th> <!--PRONOSTICOSIGUIENTE1-->
+                                            <th>PRONOSTICO PERIODO SIGUIENTE 2</th><!--PRONOSTICOSIGUIENTE2-->
+                                            <th>PRONOSTICO PERIODO SIGUIENTE 3</th><!--PRONOSTICOSIGUIENTE3-->
+                                            <th>PRONOSTICO PERIODO SIGUIENTE 4</th><!--PRONOSTICOSIGUIENTE4-->
+                                            <th>COBERTURA ACTUAL</th><!--COBERTURA ACTUAL-->
+                                            <th>COBERTURA PROYECTADA</th><!--COBERTURAPROYECTADA-->
+
+                                            <th>OTB</th>
+                                            <th>COBERTURA DE OTB</th> <!--COBERTURA OTB-->
+                                            <th style="background-color:lightblue">ORDEN A COLOCAR</th>
+                                            <th>DELIVERY DATE</th>
+                                            <th>DOCUMENT DATE</th>
+
+                                            <th>TIER</th> <!--U_TI-->
+                                            <th>HEIGHT</th> <!--U_HI-->
+                                            <th>CASES PER PALLET</th> <!--U_PALLETCOUNT-->
+                                            <th>PALLETS DE ORDEN</th>
+                                            <th>INVENTARIO AL INGRESO DE PO</th> <!--COBERTURAPROYECTADANUME-->
+                                            <th>COBERTURA AL INGRESO DE PO</th>
+                                            <!--MICROCATALOGO-->
+                                            <th style="background-color:darkseagreen">COSTO</th>
+                                            <!--FIN MICROCATALOGO-->
+                                            <th style="background-color:lightblue">DESCUENTO / ALLOWANCE (%)</th>
+                                            <th style="background-color:lightblue">DESCUENTO / ALLOWANCE ($)</th>
+                                            <th>COSTO CON DESCUENTO</th>
+                                            <th>MONTO PO</th>
+                                            <!--MICROCATALOGO : ESTE TIENE QUE CAMBIAR EN AMBOS, ES DECIR, SI CAMBIA EN LA MATRIZ, CAMBIA EN EL MICROCATALOGO-->
+                                            <th style="background-color:darkseagreen">COMENTARIOS</th>
+                                            <!--FIN MICROCATALOGO-->
+                                            <!--COLUMNAS PARA FORMULAS(NO VISIBLES PERO SE DEBEN ALMACENAR-->
+                                            <th hidden>Prop 1</th> <!--COBERTURAPROYECTADADENO-->
+                                            <th hidden>Prop 2</th> <!--VENTAF1-->
+                                            <th hidden>Prop 3</th> <!--LEADTIME-->
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody id="maintbbo">
+
+
+                                    </tbody>
+
+                                </table>
+                               
+                                <span class="badge badge-info form-pill px-3 py-1" style="background-color:aliceblue !important">&nbsp;&nbsp;</span> Right click to show information
+                           
+                                    
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+</div>
+
+<menu id="html5menu" style="display:none" class="showcase">
+    <table class="table tb_editor">
+        <thead>
+            <tr>
+                <th>TN</th>
+                <th>DOC DATE</th>
+                <th>D WEEK</th>
+                <th>DF WEEK</th>
+                <th>INVOICE NUM</th>
+                <th>UNITS (BOX)</th>
+                <th>DF</th>
+                <th>WC</th>
+            </tr>
+        </thead>
+        <tbody class="tbodyid"></tbody>
+    </table>
+</menu>

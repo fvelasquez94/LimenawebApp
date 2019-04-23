@@ -17,9 +17,31 @@ namespace LimenawebApp.Controllers
         /// 
         /// </summary>
         /// <returns></returns>
+        /// 
+        [HttpPost]
+        public JsonResult KeepSessionAlive()
+        {
+            return new JsonResult { Data = "Success" };
+        }
+
         public ActionResult Index()
         {
             return View();
+        }
+        public ActionResult Test_barcode()
+        {
+
+            return View();
+
+
+
+        }        public ActionResult Test_barcode2()
+        {
+
+            return View();
+
+
+
         }
         public ActionResult Services()
         {
@@ -47,10 +69,32 @@ namespace LimenawebApp.Controllers
             if (access == false) {
                 ViewBag.warning = "Email or Password wrong." ;
             }
-            
+
+            HttpCookie aCookieCorreo = Request.Cookies["correo"];
+            HttpCookie aCookiePassword = Request.Cookies["pass"];
+            HttpCookie aCookieRememberme = Request.Cookies["rememberme"];
+
+            try
+            {
+                var correo = Server.HtmlEncode(aCookieCorreo.Value).ToString();
+                var pass = Server.HtmlEncode(aCookiePassword.Value).ToString();
+                int remember =Convert.ToInt32(Server.HtmlEncode(aCookieRememberme.Value));
+
+                if (remember == 1) { ViewBag.remember = true; } else { ViewBag.remember = false; }
+                ViewBag.correo = correo;
+                ViewBag.pass = pass;
+              
+            }
+            catch {
+               ViewBag.remember = false; 
+  
+            }
+           
+
+
             return View();
         }
-        public ActionResult Log_in(string email, string password, string date)
+        public ActionResult Log_in(string email, string password, string date, bool rememberme)
         {
  
 
@@ -59,35 +103,63 @@ namespace LimenawebApp.Controllers
             {
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
-                //Save log
-                Sys_LogCon newLog = new Sys_LogCon();
-                try
+                ///PARA RECORDAR DATOS
+                if (rememberme == true)
                 {
-                    newLog.ID_Company = activeuser.ID_Company;
-                    newLog.ID_User = activeuser.ID_User;
-                    newLog.date = Convert.ToDateTime(date);
+                    if (Request.Cookies["correo"] != null)
+                    {
+                        //COMO YA EXISTE NO NECESITAMOS RECREARLA
+                    }
+                    else
+                    {
+                        HttpCookie aCookie = new HttpCookie("correo");
+                        aCookie.Value = activeuser.Email.ToString();
+                        aCookie.Expires = DateTime.Now.AddMonths(3);
 
-                    newLog.City = "";
-                    newLog.Country_Code = "";
-                    newLog.Country_Name = "";
-                    newLog.Continent_Name = "";
-                    newLog.Region_Code = "";
-                    newLog.Region_Name = "";
-                    newLog.IP = "";
-                    newLog.TypeH = "";
-                    newLog.Hostname = "";
-                    newLog.Lat = "";
-                    newLog.Long = "";
+                        HttpCookie aCookie2 = new HttpCookie("pass");
+                        aCookie2.Value = activeuser.Password.ToString();
+                        aCookie2.Expires = DateTime.Now.AddMonths(3);
 
-                    dblim.Sys_LogCon.Add(newLog);
-                    dblim.SaveChanges();
+                        HttpCookie aCookie3 = new HttpCookie("rememberme");
+                        aCookie3.Value = "1";
+                        aCookie3.Expires = DateTime.Now.AddMonths(3);
+
+
+                        Response.Cookies.Add(aCookie);
+                        Response.Cookies.Add(aCookie2);
+                        Response.Cookies.Add(aCookie3);
+                    }
                 }
-                catch {
 
-                }
+                    ////Save log
+                    //Sys_LogCon newLog = new Sys_LogCon();
+                    //try
+                    //{
+                    //    newLog.ID_Company = activeuser.ID_Company;
+                    //    newLog.ID_User = activeuser.ID_User;
+                    //    newLog.date = Convert.ToDateTime(date);
+
+                    //    newLog.City = "";
+                    //    newLog.Country_Code = "";
+                    //    newLog.Country_Name = "";
+                    //    newLog.Continent_Name = "";
+                    //    newLog.Region_Code = "";
+                    //    newLog.Region_Name = "";
+                    //    newLog.IP = "";
+                    //    newLog.TypeH = "";
+                    //    newLog.Hostname = "";
+                    //    newLog.Lat = "";
+                    //    newLog.Long = "";
+
+                    //    dblim.Sys_LogCon.Add(newLog);
+                    //    dblim.SaveChanges();
+                    //}
+                    //catch {
+
+                    //}
 
 
-                if (activeuser.Departments.Contains("Sales")) {
+                    if (activeuser.Departments.Contains("Sales")) {
                     return RedirectToAction("Dashboard_sales", "Main", null);
                 }
                 else if (activeuser.Departments.Contains("DSD"))
@@ -95,8 +167,16 @@ namespace LimenawebApp.Controllers
                     return RedirectToAction("Dashboard_dsd", "Main", null);
 
                 }
+                else if (activeuser.Departments.Contains("Operations"))
+                {
+                    return RedirectToAction("Dashboard_operations", "Main", null);
 
+                }
+                else if (activeuser.Departments.Contains("Customer"))
+                {
+                    return RedirectToAction("Dashboard_customers", "Main", null);
 
+                }
 
             }
 

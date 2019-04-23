@@ -4,10 +4,16 @@
 }
 
 <script>
+
+
+
+
     var lastfilter = [];
     var allEvents = [];
     allEvents = @Html.Raw(ViewBag.calroutes);
     var flag = 0;
+    var flagbtn = 0;
+
     var nothinge = [];
     (function ($) {
         'use strict';
@@ -19,95 +25,107 @@
             if ($('#calendar').length) {
                 $('#calendar').fullCalendar({
                     header: {
-                        left: 'month, basicWeek',
+                        left: 'listDay,basicWeek',
                         center: 'title',
                         //right: 'month'
                         //right: 'month,listWeek'
                     },
                     views: {
-                       month: { buttonText: 'Month' },
                       
-                        basicWeek: { buttonText: 'Week' }
+                      
+                        basicWeek: { buttonText: 'Week' },
 
-                        //listDay: { buttonText: 'list day' }
+                        listDay: { buttonText: 'List day' }
                     },
                     defaultView: 'basicWeek',
 
                     defaultDate: today,
                     navLinks: false, // can click day/week names to navigate views
                     editable: true,
+                    height: 1800,
                     disableResizing: true,
-                    
+                    allDayText: 'Route:',
                     viewRender: function (view, element) {
                         //console.log(view.start, view.end);
                         //console.log($('#calendar').fullCalendar('getDate'));
                         //console.log($('#calendar').fullCalendar('getView').intervalStart)
                         //console.log($('#calendar').fullCalendar('getView').intervalEnd)
-
-                        var ndate = new Date($('#calendar').fullCalendar('getView').intervalStart); //Evaluar si le sumaremos un dia
-                        var fdate = new Date($('#calendar').fullCalendar('getView').intervalEnd);
-
-
-                        //var lastevents = $('#calendar').fullCalendar('clientEvents');
-
-                    
-                        if (flag == 0) {
-                            flag = 1;
-                            lastfilter.push({
-                                sd: ndate,
-                                ed: fdate
-                            });
-                            //console.log("no cargue nada porque es primera vez");
-                          
+                        if (view.name === 'listDay') {
+                            //view.el.find('.fc-widget-header').append('<span>&raquo; My Text</span>');//Para poner titulo al lado de nombre de dia de semana
+                           
                         } else {
+                            var ndate = new Date($('#calendar').fullCalendar('getView').intervalStart); //Evaluar si le sumaremos un dia
+                            var fdate = new Date($('#calendar').fullCalendar('getView').intervalEnd);
 
-                            var editp = lastfilter.filter(function (el) {
-     
-                                return el.sd.getTime() === ndate.getTime();
-                            });
 
-           
+                            //var lastevents = $('#calendar').fullCalendar('clientEvents');
 
-                            if (editp.length > 0) {
-                                //console.log("estos eventos ya fueron cargados");
-                            } else {
+
+                            if (flag == 0) {
+                                flag = 1;
                                 lastfilter.push({
                                     sd: ndate,
                                     ed: fdate
                                 });
+                                //console.log("no cargue nada porque es primera vez");
 
-                                document.getElementById("loader").style.display = "block";
-                                $.ajax
-                                    ({
-                                        url: '/Invoices/GetEvents',
-                                        type: 'POST',
-                                        datatype: 'application/json',
-                                        contentType: 'application/json',
-                                        data: JSON.stringify({
-                                            startf: ndate,
-                                            endf: fdate
-                                        }),
-                                        success: function (result) {
-                                          
-                                            $.each($.parseJSON(result), function (i, events) {
-                                                var event = events;
-                                             
-                                                   $('#calendar').fullCalendar('renderEvent', event, true);
-                   
-                                            }
+                            } else {
 
-                                            ) //END EACH
+                                var editp = lastfilter.filter(function (el) {
 
-         
-                                            document.getElementById("loader").style.display = "none";
+                                    return el.sd.getTime() === ndate.getTime();
+                                });
 
-                                        },
-                                        error: function () {
-                                            alert("Whooaaa! Something went wrong..")
-                                            document.getElementById("loader").style.display = "none";
-                                        },
+
+
+                                if (editp.length > 0) {
+                                    //console.log("estos eventos ya fueron cargados");
+                                } else {
+                                    lastfilter.push({
+                                        sd: ndate,
+                                        ed: fdate
                                     });
-                            }
+
+                                    document.getElementById("loader").style.display = "block";
+                                    $.ajax
+                                        ({
+                                            url: '/Invoices/GetEvents',
+                                            type: 'POST',
+                                            datatype: 'application/json',
+                                            contentType: 'application/json',
+                                            data: JSON.stringify({
+                                                startf: ndate,
+                                                endf: fdate
+                                            }),
+                                            success: function (result) {
+                                                try {
+                                                    console.log(result);
+                                                    $.each($.parseJSON(result), function (i, events) {
+                                                        var event = events;
+
+                                                        $('#calendar').fullCalendar('renderEvent', event, true);
+
+                                                    }
+
+                                                    ) //END EACH
+                                                } catch{
+                                                    alert("Whooaaa! Something went wrong..")
+                                                    document.getElementById("loader").style.display = "none";
+                                                }
+     
+
+
+                                                document.getElementById("loader").style.display = "none";
+
+                                            },
+                                            error: function () {
+                                                alert("Whooaaa! Something went wrong..")
+                                                document.getElementById("loader").style.display = "none";
+                                            },
+                                        });
+                                }
+                        }
+
 
 
                         }
@@ -157,9 +175,12 @@
                         }
 
                     },
+                   
                     eventRender: function (event, element) {
-                        element.find('.fc-title').html("<b>" + event.title + "</b>");;
+                        if (event.isfinished == "Y") { element.find('.fc-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-title').html("<b>" + event.title + "</b>"); }
+                        
                         element.find('.fc-title').append("<br/>Driver:");
+                        
                         element.find('.fc-title').append("<br/>" + event.driver);
                         element.find('.fc-title').append("<br/>Route Leader:");
                         element.find('.fc-title').append("<br/>" + event.route_leader);
@@ -167,6 +188,36 @@
                         element.find('.fc-title').append("<br/>" + event.truck);
                         element.find('.fc-title').append("<br/>Departure:");
                         element.find('.fc-title').append("<br/>" + event.departure);
+                        element.find('.fc-title').append("<br/>Total Amount: ");
+                        element.find('.fc-title').append(formatter.format(event.amount));
+                        element.find('.fc-title').append("<br/>Total Orders: ");
+                        element.find('.fc-title').append("" + event.orderscount);
+                        element.find('.fc-title').append("<br/>Total Customers: ");
+                        element.find('.fc-title').append("" + event.customerscount);
+                        element.find('.fc-title').append("<br/>Total Extra: ");
+                        element.find('.fc-title').append("" + formatter.format(event.extra));
+
+                        /*For List view*/
+
+                        if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-list-item-title').html("<b>" + event.title + "</b>"); }
+
+                        element.find('.fc-list-item-title').append("<br/>Driver:");
+
+                        element.find('.fc-list-item-title').append("<br/>" + event.driver);
+                        element.find('.fc-list-item-title').append("<br/>Route Leader:");
+                        element.find('.fc-list-item-title').append("<br/>" + event.route_leader);
+                        element.find('.fc-list-item-title').append("<br/>Truck:");
+                        element.find('.fc-list-item-title').append("<br/>" + event.truck);
+                        element.find('.fc-list-item-title').append("<br/>Departure:");
+                        element.find('.fc-list-item-title').append("<br/>" + event.departure);
+                        element.find('.fc-list-item-title').append("<br/>Total Amount: ");
+                        element.find('.fc-list-item-title').append(formatter.format(event.amount));
+                        element.find('.fc-list-item-title').append("<br/>Total Orders: ");
+                        element.find('.fc-list-item-title').append("" + event.orderscount);
+                        element.find('.fc-list-item-title').append("<br/>Total Customers: ");
+                        element.find('.fc-list-item-title').append("" + event.customerscount);
+                        element.find('.fc-list-item-title').append("<br/>Total Extra: ");
+                        element.find('.fc-list-item-title').append("" + formatter.format(event.extra));
                         
                     },
                     eventAfterRender: function (event, element, view) {
@@ -190,208 +241,304 @@
                     eventClick: function (calEvent, jsEvent, view) {
 
                         //Llamamos con AJAX
+                      
+                        if (flagbtn == 0) {
+                            flagbtn = 1;
+                            var id_route = calEvent.title.substr(0, calEvent.title.indexOf(' '));
+                            $("#selectedOrdersTitle").html("Selected Orders for: " + calEvent.title);
+                            var date = new Date(calEvent.start);
+                            var theDiv = document.getElementById("sortable2"); //PARA SALES ORDERS YA SELECCIONADAS
+                            var theDivReps = document.getElementById("sortable1");
+                            theDiv.innerHTML = "";
+                            theDivReps.innerHTML = "";
+                            //Guardamos en server
 
-                        var id_route = calEvent.title.substr(0, calEvent.title.indexOf(' '));
-                        $("#selectedOrdersTitle").html("Selected Orders for: " + calEvent.title);
-                        var date = new Date(calEvent.start);
+                            $.ajax({
+                                url: '/Invoices/GetSalesOrders',
+                                type: 'POST',
+                                datatype: 'application/json',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    id: id_route,
+                                    date: date
+                                }),
+                                cache: false,
+                                global: false,
+                                success: function (result) {
+                                    $("#loading").hide();
+                                    $("#selectedRoute").val(id_route);
+                                    $("#selectedRoute2").val(id_route);
 
-                        //Guardamos en server
-                        $("#loading").show();
-                        $.ajax({
-                            url: '/Invoices/GetSalesOrders',
-                            type: 'POST',
-                            datatype: 'application/json',
-                            contentType: 'application/json',
-                            data: JSON.stringify({
-                                id: id_route,
-                                date: date
-                            }),
-                            cache: false,
-                            global: false,
-                            success: function (result) {
-                                $("#loading").hide();
-                                $("#selectedRoute").val(id_route);
-                                
-                                var count = 0;
-                                var theDiv = document.getElementById("sortable2"); //PARA SALES ORDERS YA SELECCIONADAS
-                                var theDivReps = document.getElementById("sortable1");
-                                theDiv.innerHTML = "";
-                                theDivReps.innerHTML = "";
+                                    var count = 0;
 
-                                var contents = '';
 
-                                $.each($.parseJSON(result.result), function (i, selSO) {
-                                    count++;
-                                    var cCustomer = String(selSO.CardCode).charAt(0);
+                                    var url = '@Url.Action("Planning_order", "Invoices", new { id = "ID_ACT"})';
+                                    url = url.replace('ID_ACT', id_route);
+                                    $("#Sortbtn").attr("href", url)
 
-                                    contents = '<li id="' + selSO.NumSO + '">';
+                                    var contents = '';
 
-                                    contents += '<div class="media">';
-                                    if (cCustomer == "C") {
-                                        contents += '<div class="mr-4 rounded-circle bg-warning st-alphabet">' + selSO.NumSO + '</div>';
+                                    $.each($.parseJSON(result.result), function (i, selSO) {
+                                        count++;
+                                        var cCustomer = String(selSO.CardCode).charAt(0);
+
+                                        contents = '<li id="' + selSO.NumSO + '">';
+
+                                        contents += '<div class="media">';
+                                        if (cCustomer == "C") {
+                                            contents += '<div class="mr-4 rounded-circle bg-warning st-alphabet pillso">' + selSO.NumSO + '</div>';
+                                        } else {
+                                            contents += '<div class="mr-4 rounded-circle bg-info st-alphabet pillso">' + selSO.NumSO + '</div>';
+                                        }
+
+                                        contents += '<div class="media-body list-widget-border"><div class="float-left">';
+                                        //contents += '<h6 class="text-uppercase">' + selSO.CardCode + " -" + selSO.CustomerName + '</h6>';
+                                        contents += '<span style="font-size:12px;"  class="pillcc2"><strong>' + selSO.CardCode + "" + '  -  </strong></span><label style="font-size:12px;" class="text-uppercase pillCustomer2 text-black"><strong>' + selSO.CustomerName + '</strong></label><br>';
+                                        contents += '<small class="text-uppercase">Route: ' + selSO.DeliveryRoute + '</small><br/>';
+                                        contents += '<small class="text-uppercase">Sales Rep: ' + selSO.SalesPerson + '</small><br />';
+                                        //contents += '<small class="text-uppercase">Printed: ' + selSO.Printed + '</small><br />';
+
+                                        contents += '<small>Amount: $ </small><small class="pillAmount2">' + selSO.OpenAmount.toFixed(2) + '</small><br>';
+                                        //contents += '<div class="float-right">';
+                                        //contents += '<br><small class="text-muted text-sm">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US')  + '</small>';
+                                        contents += '<small class="text-muted text-sm pilldate2">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                        if (selSO.Remarks === null) {
+
+                                        } else {
+                                            if (selSO.Remarks != "") {
+                                                contents += '<br><a class="text-muted" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="' + selSO.Remarks + '">Remarks</a>';
+                                            }
+                                        }
+
+                                        contents += '</div></div></div>';
+
+                                        contents += '</li>';
+
+                                        theDiv.innerHTML += contents;
+                                    });
+
+                                    var contentOpenSO = "";  //PARA SALES ORDERS ABIERTAS
+
+                                    $.each($.parseJSON(result.result2), function (i, openSO) {
+                                        var cCustomer2 = String(openSO.CardCode).charAt(0);
+                                        contentOpenSO = '<li id="' + openSO.NumSO + '">';
+
+                                        contentOpenSO += '<div class="media">';
+                                        if (cCustomer2 == "C") {
+                                            contentOpenSO += '<div class="mr-4 rounded-circle bg-warning st-alphabet pillso">' + openSO.NumSO + '</div>';
+                                        } else {
+                                            contentOpenSO += '<div class="mr-4 rounded-circle bg-info st-alphabet pillso">' + openSO.NumSO + '</div>';
+                                        }
+
+                                        contentOpenSO += '<div class="media-body list-widget-border"><div class="float-left">';
+                                        contentOpenSO += '<span style="font-size:12px;" class="pillcc2"><strong>' + openSO.CardCode + "" + '  -  </strong></span><label style="font-size:12px;" class="text-uppercase pillCustomer2 text-black"><strong>' + openSO.CustomerName + '</strong></label><br>';
+                                        contentOpenSO += '<small class="text-uppercase pillRoute">Route: ' + openSO.DeliveryRoute + '</small><br />';
+                                        contentOpenSO += '<small class="text-uppercase">Sales Rep: ' + openSO.SalesPerson + '</small><br />';
+                                        if (openSO.Printed == "Y") {
+                                            contentOpenSO += '<small class="text-uppercase">Printed: ' + "YES" + '</small><br />';
+                                        } else {
+                                            contentOpenSO += '<small class="text-uppercase">Printed: ' + "NO" + '</small><br />';
+                                        }
+
+                                        if (openSO.OpenAmount == openSO.TotalSO) {
+                                            contentOpenSO += '<small>Amount: $ </small><small class="pillAmount2">' + openSO.OpenAmount.toFixed(2) + '</small><br>';
+
+                                        } else {
+                                            contentOpenSO += '<small>Amount: $ </small><small class="pillAmount2">' + openSO.OpenAmount.toFixed(2) + '</small><small class="text-muted" style="font-size:10px;">   -   Total SO: $ ' + openSO.TotalSO.toFixed(2) + '</small><br>';
+
+                                        }
+
+
+                                        //contentOpenSO += '<div class="float-right">';
+                                        //contentOpenSO += '<br/><small class="text-muted">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                        contentOpenSO += '<small class="text-muted pilldate2">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                        if (openSO.Remarks === null) {
+
+                                        } else {
+                                            if (openSO.Remarks != "") {
+                                                contentOpenSO += '<br><a class="text-muted" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="' + openSO.Remarks + '">Remarks</a>';
+                                            }
+                                        }
+                                        contentOpenSO += '</div></div></div>';
+
+                                        contentOpenSO += '</li>';
+                                        theDivReps.innerHTML += contentOpenSO;
+                                    });
+
+
+                                    var conf1 = 0;
+                                    $.each($.parseJSON(result.result6), function (i, conf) {
+                                        if (conf.isfinished == true) {
+                                            conf1 = 1;
+                                        }
+                                    });
+
+
+                                    if (conf1 == 0) {
+                                        $("#sortable1").sortable({
+                                            connectWith: ".connectedSortable"
+                                        }).disableSelection();
+
+
+                                        $("#sortable2").sortable({
+                                            connectWith: ".connectedSortable",
+                                            update: function () {
+                                                var column2RelArray = [];
+                                                $('ul#sortable2 small.pillAmount2').each(function () {
+                                                    column2RelArray.push($(this).text());
+                                                });
+
+                                                const result = column2RelArray.reduce((r, e) => r + +e.replace(',', '.'), 0)
+
+
+                                                $("#totalAmountSO").html("Total Amount: " + formatter.format(result.toFixed(2)));
+                                                $("#totalSO").html("Total Sales Orders: " + column2RelArray.length);
+
+                                                ///
+
+                                                var columnCustomerRelArray = [];
+                                                $('ul#sortable2 label').each(function () {
+                                                    columnCustomerRelArray.push($(this).text());
+                                                    $.unique(columnCustomerRelArray.sort());
+                                                });
+                                                $("#totalCustomers").html("Total Customers: " + columnCustomerRelArray.length);
+                        
+                                                $("#totalExtra").html("Total Extra: $" + result.result7);
+
+                                               
+                                            }
+                                        }).disableSelection();
+
+
+                                        $("#btneditr").show();
+                                        $("#delso").show();
+                                        $("#savso").show();
+                                     
+                                        $("#neworder").show();
+                                        $("#divopenso").show();
+                                        $('#divselos').addClass('col-md-6').removeClass('col-md-12');
+
                                     } else {
-                                        contents += '<div class="mr-4 rounded-circle bg-info st-alphabet">' + selSO.NumSO + '</div>';
+
+                                        $("#btneditr").hide();
+                                        $("#delso").hide();
+                                        $("#savso").hide();
+                                        $("#neworder").hide();
+                                        $("#divopenso").hide();
+                                        $('#divselos').addClass('col-md-12').removeClass('col-md-6');
                                     }
 
-                                    contents += '<div class="media-body list-widget-border"><div class="float-left">';
-                                    contents += '<h6 class="text-uppercase">' + selSO.CardCode + " -" + selSO.CustomerName + '</h6>';
-                                    contents += '<small class="text-uppercase">Route: ' + selSO.DeliveryRoute + '</small><br/>';
-                                    contents += '<small class="text-uppercase">Sales Rep: ' + selSO.SalesPerson + '</small><br />';
-                                    //contents += '<small class="text-uppercase">Printed: ' + selSO.Printed + '</small><br />';
+                                    //$(function () {
+                                    //    $("#sortable1, #sortable2").sortable({
+                                    //        connectWith: ".connectedSortable",
+                                    //        update: function () {
+                                    //            var column2RelArray = [];
+                                    //            $('ul#sortable2 small.pillAmount').each(function () {
+                                    //                column2RelArray.push($(this).text());
+                                    //            });
+                                    //            console.log(column2RelArray);
+                                    //        }
 
-                                    contents += '<small>Amount: $ </small><small class="pillAmount">' + selSO.OpenAmount.toFixed(2) + '</small><br>';
-                                    //contents += '<div class="float-right">';
-                                    //contents += '<br><small class="text-muted text-sm">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US')  + '</small>';
-                                    contents += '<small class="text-muted text-sm">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US')  + '</small>';
-                                    contents += '</div></div></div>';
+                                    //    }).disableSelection();
 
-                                    contents += '</li>';
 
-                                    theDiv.innerHTML += contents;
-                                });
+                                    //});
 
-                                var contentOpenSO = "";  //PARA SALES ORDERS ABIERTAS
+                                    $('[data-toggle="tooltip"]').tooltip()
 
-                                $.each($.parseJSON(result.result2), function (i, openSO) {
-                                    var cCustomer2 = String(openSO.CardCode).charAt(0);
-                                    contentOpenSO = '<li id="' + openSO.NumSO + '">';
 
-                                    contentOpenSO += '<div class="media">';
-                                    if (cCustomer2 == "C") {
-                                        contentOpenSO += '<div class="mr-4 rounded-circle bg-warning st-alphabet">' + openSO.NumSO + '</div>';
-                                    } else {
-                                        contentOpenSO += '<div class="mr-4 rounded-circle bg-info st-alphabet">' + openSO.NumSO + '</div>';
-                                    }
+                                    /* ---------------------------------------------
+                                     Configure popover globally
+                                     --------------------------------------------- */
+                                    $('[data-toggle="popover"]').popover();
 
-                                    contentOpenSO += '<div class="media-body list-widget-border"><div class="float-left">';
-                                    contentOpenSO += '<span style="font-size:12px;"><strong>' + openSO.CardCode + "" + '  -  </strong></span><label style="font-size:12px;" class="text-uppercase pillCustomer text-black"><strong>' + openSO.CustomerName + '</strong></label><br>';
-                                    contentOpenSO += '<small class="text-uppercase pillRoute">Route: ' + openSO.DeliveryRoute + '</small><br />';
-                                    contentOpenSO += '<small class="text-uppercase">Sales Rep: ' + openSO.SalesPerson + '</small><br />';
-                                    if (openSO.Printed == "Y") {
-                                        contentOpenSO += '<small class="text-uppercase">Printed: ' + "YES" + '</small><br />';
-                                    } else {
-                                        contentOpenSO += '<small class="text-uppercase">Printed: ' + "NO" + '</small><br />';
-                                    }
+
+
+
+
+                                    var column3RelArray = [];
+                                    $('ul#sortable2 small.pillAmount2').each(function () {
+                                        column3RelArray.push($(this).text());
+                                    });
+
+                                    const result2 = column3RelArray.reduce((r, e) => r + +e.replace(',', '.'), 0)
+
+
+                                    $("#totalAmountSO").html("Total Amount: " + formatter.format(result2.toFixed(2)));
+                                    $("#totalSO").html("Total Sales Orders: " + column3RelArray.length);
                                     
-                                    if (openSO.OpenAmount == openSO.TotalSO) {
-                                        contentOpenSO += '<small>Amount: $ </small><small class="pillAmount">' + openSO.OpenAmount.toFixed(2) + '</small><br>';
+                                        $("#totalExtra").html("Total Extra: $" + result.result7);
+                                   
+                                    ///
+                                    var columnCustomerRelArray2 = [];
+                                    $('ul#sortable2 label').each(function () {
+                                        columnCustomerRelArray2.push($(this).text());
+                                        $.unique(columnCustomerRelArray2.sort());
+                                    });
 
-                                    } else {
-                                        contentOpenSO += '<small>Amount: $ </small><small class="pillAmount">' + openSO.OpenAmount.toFixed(2) + '</small><small class="text-muted" style="font-size:10px;">   -   Total SO: $ ' + openSO.TotalSO.toFixed(2) + '</small><br>';
+                                    $("#totalCustomers").html("Total Customers: " + columnCustomerRelArray2.length);
 
-                                    }
-
-                                    
-                                    //contentOpenSO += '<div class="float-right">';
-                                    //contentOpenSO += '<br/><small class="text-muted">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
-                                    contentOpenSO += '<small class="text-muted pilldate">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
-                                    contentOpenSO += '</div></div></div>';
-
-                                    contentOpenSO += '</li>';
-                                    theDivReps.innerHTML += contentOpenSO;
-                                });
-
-                                //$(function () {
-                                //    $("#sortable1, #sortable2").sortable({
-                                //        connectWith: ".connectedSortable",
-                                //        update: function () {
-                                //            var column2RelArray = [];
-                                //            $('ul#sortable2 small.pillAmount').each(function () {
-                                //                column2RelArray.push($(this).text());
-                                //            });
-                                //            console.log(column2RelArray);
-                                //        }
-                                       
-                                //    }).disableSelection();
-
-
-                                //});
-                                $("#sortable1").sortable({
-                                    connectWith: ".connectedSortable"
-                                }).disableSelection();
-
-
-                                $("#sortable2").sortable({
-                                    connectWith: ".connectedSortable",
-                                    update: function () {
-                                       var column2RelArray = [];
-                                            $('ul#sortable2 small.pillAmount').each(function () {
-                                                column2RelArray.push($(this).text());
-                                            });
-                                        
-                                        const result = column2RelArray.reduce((r, e) => r + +e.replace(',', '.'), 0)
-                                        
-                                        
-                                        $("#totalAmountSO").html("Total Amount: $ " + result.toFixed(2));
-                                        $("#totalSO").html("Total Sales Orders: " + column2RelArray.length);
-                                    }
-                                }).disableSelection();
-
-
-                                var column3RelArray = [];
-                                $('ul#sortable2 small.pillAmount').each(function () {
-                                    column3RelArray.push($(this).text());
-                                });
-
-                                const result2 = column3RelArray.reduce((r, e) => r + +e.replace(',', '.'), 0)
-
-
-                                $("#totalAmountSO").html("Total Amount: $ " + result2.toFixed(2));
-                                $("#totalSO").html("Total Sales Orders: " + column3RelArray.length);
-
-                                $("#officeFltr").html('');
-                                var o = new Option("option text", "value");
-                                /// jquerify the DOM object 'o' so we can use the html method
-                                $(o).html("SELECT ALL ROUTES...");
-                                $("#officeFltr").append(o);
-                                $.each($.parseJSON(result.result3), function (i, routes) {
-                                    var o = new Option("option text", "value");
+                                    //
+                                    $("#officeFltr").html('');
+                                    var o = new Option("option text", "0");
                                     /// jquerify the DOM object 'o' so we can use the html method
-                                    $(o).html(routes);
+                                    $(o).html("SELECT ALL ROUTES...");
                                     $("#officeFltr").append(o);
-                                });
+                                    $.each($.parseJSON(result.result3), function (i, routes) {
+                                        var o = new Option("option text", "value");
+                                        /// jquerify the DOM object 'o' so we can use the html method
+                                        $(o).html(routes);
+                                        $("#officeFltr").append(o);
+                                    });
 
-                                //REPS
-                                $("#officeFltr2").html('');
-                                var o = new Option("option text", "value");
-                                /// jquerify the DOM object 'o' so we can use the html method
-                                $(o).html("SELECT ALL REPS...");
-                                $("#officeFltr2").append(o);
-                                $.each($.parseJSON(result.result4), function (i, reps) {
-                                    var o = new Option("option text", "value");
+                                    //REPS
+                                    $("#officeFltr2").html('');
+                                    var o = new Option("option text", "0");
                                     /// jquerify the DOM object 'o' so we can use the html method
-                                    $(o).html(reps);
+                                    $(o).html("SELECT ALL REPS...");
                                     $("#officeFltr2").append(o);
-                                });
+                                    $.each($.parseJSON(result.result4), function (i, reps) {
+                                        var o = new Option("option text", "value");
+                                        /// jquerify the DOM object 'o' so we can use the html method
+                                        $(o).html(reps);
+                                        $("#officeFltr2").append(o);
+                                    });
 
-                                ///
-                                //CUSTOMER
-                                $("#officeFltr3").html('');
-                                var o = new Option("option text", "value");
-                                /// jquerify the DOM object 'o' so we can use the html method
-                                $(o).html("SELECT ALL CUSTOMERS...");
-                                $("#officeFltr3").append(o);
-                                $.each($.parseJSON(result.result5), function (i, customer) {
-                                    var o = new Option("option text", "value");
+                                    ///
+                                    //CUSTOMER
+                                    $("#officeFltr3").html('');
+                                    var o = new Option("option text", "0");
                                     /// jquerify the DOM object 'o' so we can use the html method
-                                    $(o).html(customer);
+                                    $(o).html("SELECT ALL CUSTOMERS...");
                                     $("#officeFltr3").append(o);
-                                });
-                                //
-                            },
-                            error: function (request) {
-                                $("#loading").hide();
+                                    $.each($.parseJSON(result.result5), function (i, customer) {
+                                        var o = new Option("option text", "value");
+                                        /// jquerify the DOM object 'o' so we can use the html method
+                                        $(o).html(customer.CustomerName);
+                                        $("#officeFltr3").append(o);
+                                    });
+                                    //
 
 
-                            }
-                        });
+                                    $('#modal_SO').modal('show');
+                                    flagbtn = 0;
+                                },
+                                error: function (request) {
+                                    flagbtn = 0;
+
+
+                                }
+                            });
+                        }
+
                
                         // change the border color just for fun
                         $(".fc-h-event").css("border-color", "#eef2f5 !important");
                         $(".fc-h-event").css("background", "#eef2f5");
                         $(this).css("background", "#fab63f");
                         //$(this).css("border-color", "#fab63f");
-                        $('#modal_SO').modal('show');
+                        
+
                     }
 
 
@@ -413,7 +560,7 @@
         var rleaderCode = $("#lstRLeader").val();
         var rleaderName = $("#lstRLeader option:selected").text();
         var departure = $("#departure").val();
-
+        console.log(departure);
         document.getElementById("loader").style.display = "block";
         $.ajax
             ({
@@ -434,23 +581,29 @@
                     departure: departure
                 }),
                 success: function (result) {
+                    try {
+                        console.log(result);
 
-                    $.each($.parseJSON(result), function (i, events) {
-                        var event = events;
+                        $.each($.parseJSON(result), function (i, events) {
+                            var event = events;
 
-                        $('#calendar').fullCalendar('renderEvent', event, true);
+                            $('#calendar').fullCalendar('renderEvent', event, true);
 
+                        }
+
+                        ) //END EACH
+                        toastr.success("Route created successfully.", "Success");
+                        document.getElementById("loader").style.display = "none";
+                        $("#routeName").val('');
+                        $("#lstMaster").val('0').trigger('change');
+                        $("#lstDriver").val('0').trigger('change');
+                        $("#lstTruck").val('0').trigger('change');
+                        $("#lstRLeader").val('0').trigger('change');
+                        $('#createModal').modal('hide');
+                    }catch{
+                        window.location.reload(true);
                     }
 
-                    ) //END EACH
-                    toastr.success("Route created successfully.", "Success");
-                    document.getElementById("loader").style.display = "none";
-                    $("#routeName").val('');
-                    $("#lstMaster").val('0').trigger('change');
-                    $("#lstDriver").val('0').trigger('change');
-                    $("#lstTruck").val('0').trigger('change');
-                    $("#lstRLeader").val('0').trigger('change');
-                    $('#createModal').modal('hide');
                 },
                 error: function () {
                     
@@ -460,6 +613,14 @@
             });
 
     }
+
+    var formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        // the default value for minimumFractionDigits depends on the currency
+        // and is usually already 2
+    });
 
     function saveSalesOrders() {
         var column1RelArray = [];
@@ -484,11 +645,17 @@
 
                     if (result == "SUCCESS") {
                         toastr.success("Sales Orders saved successfully.", "Success");
+                        //sortSalesOrders()
                         document.getElementById("loader").style.display = "none";
-                        window.location.reload(true); 
-                    } else {
+                        window.location.reload(true);
+                    } else if (result == "NO DATA") {
                         toastr.warning("Please, choose at least one sales order to continue.", "Warning");
                         document.getElementById("loader").style.display = "none";
+                    } else {
+                        toastr.info("Saving new changes..", "Warning");
+                        
+                        document.getElementById("loader").style.display = "none";
+                        saveSalesOrders();
                     }
 
 
@@ -499,6 +666,141 @@
                     document.getElementById("loader").style.display = "none";
                 },
             });
+
+
+
+
+    }
+
+    function saveExtrasDet() {
+        var data;
+        data = Array();
+
+        $("#tbExtras tr").each(function (i, v) {
+            data[i] = Array();
+            $(this).children('td').each(function (ii, vv) {
+
+                    data[i][ii] = $(this).text();
+                
+
+
+            });
+        })
+
+
+
+        var objects = [];
+        for (var i = 0, len = data.length; i < len; i++) {
+            if (i != 0) {
+                objects.push({
+                    Description: data[i][0],
+                    Value: data[i][1].trim()
+                });
+            }
+
+        }
+
+
+        var id_route = $("#selectedRoute").val();
+        document.getElementById("loader").style.display = "block";
+        $.ajax
+            ({
+                url: '/Invoices/SaveExtras',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    objects: objects,
+                    id: id_route
+
+                }),
+                success: function (result) {
+
+                    if (result == "SUCCESS") {
+                        toastr.success("Data saved successfully.", "Success");
+                        window.location.reload(true);
+                    } else if (result == "NO DATA") {
+                        toastr.warning("Please, add at least one item to continue.", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    } else {
+                        toastr.info("Saving new changes..", "Warning");
+                        window.location.reload(true);
+                        document.getElementById("loader").style.display = "none";
+                       
+                    }
+
+
+                },
+                error: function () {
+
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+
+
+
+
+    }
+
+    function sortSalesOrders() {
+        //swal.fire({
+        //    title: 'Are you sure to sort this route?',
+        //    text: "You won't be able to revert this",
+        //    type: 'warning',
+        //    showCancelButton: true,
+        //    confirmButtonColor: '#3dba6f',
+        //    cancelButtonColor: '#aaa',
+        //    confirmButtonText: 'Yes'
+        //}).then((result) => {
+        //    if (result.value) {
+
+                var column1RelArray = [];
+                $('ul#sortable2 li').each(function () {
+                    column1RelArray.push($(this).attr('id'));
+                });
+
+                var id_route = $("#selectedRoute").val();
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Invoices/SortSalesOrders',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            salesOrders: column1RelArray,
+                            id_route: id_route
+
+                        }),
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                toastr.success("Sales Orders sorted successfully.", "Success");
+                                document.getElementById("loader").style.display = "none";
+                                window.location.reload(true);
+                            } else if (result == "NO DATA") {
+                                //toastr.warning("Please, choose at least one sales order to continue.", "Warning");
+
+                                document.getElementById("loader").style.display = "none";
+                                window.location.reload(true);
+                            } else {
+                                toastr.info("Saving new changes..", "Warning");
+
+                                document.getElementById("loader").style.display = "none";
+                                //sortSalesOrders();
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+        //    }
+        //});
 
     }
 </script>

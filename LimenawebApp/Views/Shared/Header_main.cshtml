@@ -5,7 +5,7 @@
 
 <!--header-->
 <nav class="navbar navbar-expand-lg fixed-top navbar-light" id="mainNav">
-    <div class="box-container">
+    <div class="box-container navmain">
         <!--brand name for responsive-->
         <a class="navbar-brand navbar-brand-responsive" href="#">
             <img class="pr-3 float-left" src="~/Content/appcontent/assets/img/ico.png" srcset="/Content/appcontent/assets/img/ico.png 2x" alt="" />
@@ -117,13 +117,23 @@
     </div>
 </nav>
 <nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="box-container">
+    <div class="box-container navmain">
         <div class="collapse navbar-collapse" id="navbarListResponsive">
             <!--header nav links-->
 
             <ul class="navbar-nav header-links">
-                <li class="nav-item dropdown" id="home_menu" style="display:none">
-                    <a class="nav-link mr-lg-3" id="dashNav" href="@Url.Action("Dashboard_sales", "Main")" aria-haspopup="true" aria-expanded="false">
+                <li class="nav-item dropdown" id="home_menuSales" style="display:none">
+                    <a class="nav-link mr-lg-3"  href="@Url.Action("Dashboard_sales", "Main")" aria-haspopup="true" aria-expanded="false">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item dropdown" id="home_menuCustomers" style="display:none">
+                    <a class="nav-link mr-lg-3"  href="@Url.Action("Dashboard_customers", "Main")" aria-haspopup="true" aria-expanded="false">
+                        Home
+                    </a>
+                </li>
+                <li class="nav-item dropdown" id="home_menuOper" style="display:none">
+                    <a class="nav-link mr-lg-3" href="@Url.Action("Dashboard_operations", "Main")" aria-haspopup="true" aria-expanded="false">
                         Home
                     </a>
                 </li>
@@ -141,11 +151,11 @@
                         Commercial
                     </a>
                     <div class="dropdown-menu" aria-labelledby="markNav">
-                        <a id="markact_submenu" class="dropdown-item" href="@Url.Action("Marketing_activities", "Commercial")">Marketing Activities</a>
+                        @*<a id="markact_submenu" class="dropdown-item" href="@Url.Action("Marketing_activities", "Commercial")">Marketing Activities</a>*@
                         @*<a id="markact_submenu" class="dropdown-item" href="#">Marketing Activities</a>*@
-                        <a id="routes_submenu" class="dropdown-item" href="@Url.Action("Routes", "Commercial")">Routes</a>
+                        <a style="display:none" id="routes_submenu" class="dropdown-item" href="@Url.Action("Routes", "Commercial")">Marketing Activities</a>
                         @*<a id="routes_submenu" class="dropdown-item" href="#">Routes</a>*@
-                        <a id="drop1" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu">Reports</a>
+                        <a style="display:none" id="drop1" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu">Reports</a>
                         <ul class="collapse" id="multi_menu" data-parent="#accordion">
                             <li>
                                 <a href="@Url.Action("Reports_RC", "Reports")" id="rep1_submenu" class="dropdown-item">Daily Routes Summary</a>
@@ -156,10 +166,12 @@
                             <li>
                                 <a href="#" class="dropdown-item">Credits Authorize</a>
                             </li>
-                            <li>
-                                <a href="#" class="dropdown-item">Prices Request</a>
+                            <li id="ss1_submenu" style="display:none">
+                                <a href="@Url.Action("Prices_request", "Commercial")" class="dropdown-item">Prices Request</a>
                             </li>
-
+                            <li style="display:none" id="ss2_submenu">
+                                <a href="@Url.Action("Prices_requestmicro", "Commercial")" class="dropdown-item">Prices Request Settings</a>
+                            </li>
                         </ul>
                     </div>
                 </li>
@@ -182,18 +194,21 @@
                     <div class="dropdown-menu" aria-labelledby="oper_nav">
                         <a id="drop3" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu3">Invoices</a>
                         <ul class="collapse" id="multi_menu3" data-parent="#accordion">
-                            <li>
+                            <li id="invo1_submenu" style="display:none">
                                 <a href="@Url.Action("Planning", "Invoices")" class="dropdown-item">Planning</a>
                             </li>
-                            <li>
+                            <li id="invo2_submenu" style="display:none">
                                 <a href="@Url.Action("QualityControl_planning", "Invoices")" class="dropdown-item">Quality Control</a>
                             </li>
 
                         </ul>
+                        <a id="operpur_submenu" style="display:none" href="@Url.Action("Purchase_data", "Operations")" class="dropdown-item">Purchase Data</a>
                         <a id="operrep_submenu" class="dropdown-item">Reports</a>
 
 
                     </div>
+
+
                 </li>
                 @*<li class="nav-item dropdown" id="reports_menu" style="display:none">
             <a class="nav-link dropdown-toggle mr-lg-3" id="rep1Nav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -209,6 +224,7 @@
                     </a>
                     <div class="dropdown-menu" aria-labelledby="orderNav">
                         <a id="users_submenu" class="dropdown-item" href="@Url.Action("Users", "Management")">Users</a>
+                        <a id="forms_submenu" class="dropdown-item" href="@Url.Action("FormsM", "Management")">Forms Builder</a>
 
                     </div>
                 </li>
