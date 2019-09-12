@@ -45,5 +45,7 @@ namespace LimenawebApp.Models
         public virtual DbSet<Purchase_data_details> Purchase_data_details { get; set; }
         public virtual DbSet<Tb_Planning_extra> Tb_Planning_extra { get; set; }
         public virtual DbSet<Tb_planning_print> Tb_planning_print { get; set; }
+        public virtual DbSet<Tb_NewCustomers> Tb_NewCustomers { get; set; }
+        public virtual DbSet<Tb_CreditsRequest> Tb_CreditsRequest { get; set; }
     }
 }

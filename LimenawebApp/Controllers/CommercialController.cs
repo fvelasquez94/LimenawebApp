@@ -1,4 +1,5 @@
 ﻿using ClosedXML.Excel;
+using CrystalDecisions.CrystalReports.Engine;
 using LimenawebApp.Models;
 using Newtonsoft.Json;
 using Postal;
@@ -9,6 +10,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -156,6 +160,89 @@ namespace LimenawebApp.Controllers
             return ret;
         }
 
+
+        public ActionResult Credits_request()
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Credits Request";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "ss5_submenu";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                //FIN HEADER
+
+                //Lista de productos con filtro de Pepperi, el dia 22/08/2019 se solicito eliminar el GOYA/PRE-SALE (114)
+                var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114 && a.Credits =="NO") select a);
+
+
+                var lstCategories = (from f in products select f.category_name).Distinct().OrderBy(c => c).ToList();
+                ViewBag.lstCategories = lstCategories;
+
+                var lstSubCategories = (from f in products select new MyObj_SubCat { id = f.id_subcategory, name = f.subcategory_name.Replace("'", ""), category = f.category_name }).Distinct().OrderBy(c => c.name).ToList();
+                ViewBag.lstSubCategories = lstSubCategories;
+
+
+                var lstBrands = (from f in products select new MyObj_SubCat { id = f.id_brand, name = f.Brand_Name.Replace("'", ""), category = f.subcategory_name.Replace("'", "") }).Distinct().OrderBy(c => c.name).ToList();
+                ViewBag.lstBrands = lstBrands;
+
+                List<string> uids = new List<string>() { "99","103","105","107","110","111", "114" };
+
+
+                var lstReturnReasons = (from dr in dlipro.UFD1 where (dr.TableID == "RDR1" && dr.FieldID == 0 && uids.Contains(dr.FldValue)) select new { id = dr.FldValue, text = dr.Descr }).ToArray();
+                ViewBag.lstReturnsR = JsonConvert.SerializeObject(lstReturnReasons);
+
+                var lstproducts = products.Select(c=>new { id=c.id, text=c.id + " | " + c.item_name }).ToArray();
+                ViewBag.lstproducts = JsonConvert.SerializeObject(lstproducts);
+
+                //LISTADO DE CLIENTES
+
+
+                //SABER SI ES ADMIN
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor") || activeuser.Roles.Contains("Credits Authorizer"))
+                {
+                    isAdmin = 1;
+                    var customers = (from b in dlipro.BI_Dim_Customer where (b.Customer.StartsWith("C") && b.Customer != null && b.Customer != "") select new { id = b.id_Customer, text = b.Customer }).OrderBy(a => a.text).ToArray();
+                    ViewBag.customers = JsonConvert.SerializeObject(customers);
+                }
+                else
+                {
+                    isAdmin = 0;
+                    int? sapdli = Convert.ToInt32(activeuser.IDSAP);
+                    var customers = (from b in dlipro.BI_Dim_Customer where (b.Customer.StartsWith("C") && b.Customer != null && b.Customer != "" && b.id_SalesRep== sapdli) select new { id = b.id_Customer, text = b.Customer }).OrderBy(a => a.text).ToArray();
+                    ViewBag.customers = JsonConvert.SerializeObject(customers);
+                }
+
+
+
+
+
+                return View(products);
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+
         public ActionResult Prices_request()
         {
             Sys_Users activeuser = Session["activeUser"] as Sys_Users;
@@ -179,22 +266,260 @@ namespace LimenawebApp.Controllers
                 ViewBag.lstAlerts = lstAlerts;
 
                 //FIN HEADER
-                var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES") select a);
 
-                if (activeuser.BolsaValor != 0 && activeuser.BolsaValor != null)
+                //Lista de productos con filtro de Pepperi, el dia 22/08/2019 se solicito eliminar el GOYA/PRE-SALE (114)
+                var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114) select new BI_Dim_ProductsUOM { id=a.id, Product=a.Product, Brand_Name=a.Brand_Name,id_subcategory=a.id_subcategory
+                                , subcategory_name=a.subcategory_name, id_category=a.id_category, category_name=a.category_name,Vendor =a.Vendor, LeadTime =a.LeadTime, BuyUnitMsr=a.BuyUnitMsr, NumInBuy=a.NumInBuy, Active=a.Active,
+                Blocked=a.Blocked,Pepperi=a.Pepperi, CatCommission=a.CatCommission,CommPerc=a.CommPerc, CodeBars=a.CodeBars, DSD=a.DSD, SRP=a.SRP,id_Vendor=a.id_Vendor, id_brand=a.id_brand, unitCost=a.unitCost,MinPorcent=a.MinPorcent,
+                MinPrice=a.MinPrice, item_name=a.item_name, Vendor_Name=a.Vendor,Bonificables=a.Bonificables, MinPercIndiv=a.MinPercIndiv,CantBonif=a.CantBonif, FactorBonif=a.FactorBonif, Credits=a.Credits,
+                lstuom= (from fd in dlipro.OpenSalesOrders_DetailsUOM where (fd.ItemCode == a.id) select new UomLstBIDIM { Units = fd.Units, UomCode = fd.UomCode }).ToList()
+
+            });
+
+
+                //foreach (var item in products)
+                //{
+                //    var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == item.id) select new UomLstBIDIM { UomCode = a.UomCode, UomEntry = a.UomEntry }).ToList();
+                //    item.lstuom = lstava;
+                //}
+
+
+                var usuarioBolsa = (from g in dblim.Sys_Users where (g.ID_User == activeuser.ID_User) select g.BolsaValor).FirstOrDefault();
+
+                if (usuarioBolsa != 0 && usuarioBolsa != null)
                 {
-                    ViewBag.bolsa = activeuser.BolsaValor;
+                    ViewBag.bolsa = usuarioBolsa;
                 }
-                else {
+                else
+                {
                     ViewBag.bolsa = 0;
                 }
 
-
-                var lstCategories = (from f in products select f.category_name).Distinct().ToList();
+                var lstCategories = (from f in products select f.category_name).Distinct().OrderBy(c => c).ToList();
                 ViewBag.lstCategories = lstCategories;
 
-                var lstSubCategories = (from f in products select new MyObj_SubCat { id = f.id_subcategory, name = f.subcategory_name, category = f.category_name }).Distinct().ToList();
+                var lstSubCategories = (from f in products select new MyObj_SubCat { id = f.id_subcategory, name = f.subcategory_name.Replace("'",""), category = f.category_name }).Distinct().OrderBy(c => c.name).ToList();
                 ViewBag.lstSubCategories = lstSubCategories;
+
+
+                var lstBrands = (from f in products select new MyObj_SubCat { id = f.id_brand, name = f.Brand_Name.Replace("'", ""), category = f.subcategory_name.Replace("'", "") }).Distinct().OrderBy(c => c.name).ToList();
+                ViewBag.lstBrands = lstBrands;
+
+                if (r.Contains("Sales Supervisor"))
+                {
+                    List<int?> TagIds = activeuser.prop01.Split(',').Select(int.Parse).Cast<int?>().ToList();
+
+                    int slpcode = Convert.ToInt32(activeuser.IDSAP);
+                    var pedidos = (from g in dlipro.view_ordenesAbiertasDet
+                                   join j in dlipro.OCRD on g.CardCode equals j.CardCode
+                                   where (TagIds.Contains(g.SlpCode))
+                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status=0 }).Distinct().OrderBy(c => c.cardname).ToArray();
+
+                    foreach (var item in pedidos)
+                    {
+                        item.cardname = item.cardname.Replace("'", "").Replace("\"", "").Replace(@"""", @"\""");
+                    }
+
+                    var docnumArray = pedidos.Select(c => c.docnum.ToString()).ToArray();
+                    var docnumArrayInt = pedidos.Select(c => c.docnum).ToArray();
+
+                    var existenBonif = (from s in internadli.Tb_Bonificaciones
+                                        where (docnumArray.Contains(s.CodPedido) && s.OrderClosed==true)
+                                        select s.CodPedido
+                                   ).Distinct().Cast<int>().ToArray();
+
+                    var existenCambiosPrecio = (from w in internadli.Tb_Autorizaciones
+                                                where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed==true)
+                                                select w.DocNum
+                                   ).Distinct().Cast<int>().ToArray();
+
+                    var pedidos2 = pedidos.Where(c => existenBonif.Contains(c.docnum)).ToArray();
+                   
+
+                    foreach (var item in pedidos2) {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else {
+                            existe.status = 2;
+                        }
+                    }
+                    pedidos2 = pedidos.Where(c => existenCambiosPrecio.Contains(c.docnum)).ToArray();
+                    foreach (var item in pedidos2)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 2;
+                        }
+                    }
+                    var existenBonifOpen = (from s in internadli.Tb_Bonificaciones
+                                            where (docnumArray.Contains(s.CodPedido) && s.OrderClosed == false)
+                                            select s.CodPedido
+).Distinct().Cast<int>().ToArray();
+
+                    var existenCambiosPrecioOpen = (from w in internadli.Tb_Autorizaciones
+                                                    where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed == false)
+                                                    select w.DocNum
+                                   ).Distinct().Cast<int>().ToArray();
+
+                    var pedidos3 = pedidos.Where(c => existenBonifOpen.Contains(c.docnum)).ToArray();
+                    
+                    foreach (var item in pedidos3)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 1;
+                        }
+                    }
+                    pedidos3 = pedidos.Where(c => existenCambiosPrecioOpen.Contains(c.docnum)).ToArray();
+                    foreach (var item in pedidos3)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 1;
+                        }
+                    }
+                    ArrayList myArrList = new ArrayList();
+                    myArrList.AddRange((from p in pedidos
+                                        select new
+                                        {
+                                            id = p.docnum,
+                                            text = p.cardcode + " - " + p.cardname + " | #" + p.docnum,
+                                            status = p.status
+                                        }).ToList());
+                    ViewBag.pedidos = JsonConvert.SerializeObject(myArrList);
+                }
+                else { //VENDEDORES
+                    int slpcode = Convert.ToInt32(activeuser.IDSAP);
+                    var pedidos = (from g in dlipro.view_ordenesAbiertasDet
+                                   join j in dlipro.OCRD on g.CardCode equals j.CardCode
+                                   where (g.SlpCode == slpcode)
+                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status=0 }).Distinct().OrderBy(c => c.cardname).ToArray();
+
+                    foreach (var item in pedidos) {
+                        item.cardname = item.cardname.Replace("'", "").Replace("\"", "").Replace(@"""", @"\""");
+                    }
+
+                    var docnumArray = pedidos.Select(c => c.docnum.ToString()).ToArray();
+                    var docnumArrayInt = pedidos.Select(c => c.docnum).ToArray();
+
+                    var existenBonif = (from s in internadli.Tb_Bonificaciones
+                                        where (docnumArray.Contains(s.CodPedido) && s.OrderClosed == true)
+                                        select s.CodPedido
+                                   ).Distinct().Cast<int>().ToArray();
+
+                    var existenCambiosPrecio = (from w in internadli.Tb_Autorizaciones
+                                                where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed == true)
+                                                select w.DocNum
+                                   ).Distinct().Cast<int>().ToArray();
+
+                    var pedidos2 = pedidos.Where(c => existenBonif.Contains(c.docnum)).ToArray();
+                    
+
+                    foreach (var item in pedidos2)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 2;
+                        }
+                    }
+                    pedidos2 = pedidos.Where(c => existenCambiosPrecio.Contains(c.docnum)).ToArray();
+
+                    foreach (var item in pedidos2)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 2;
+                        }
+                    }
+
+                    var existenBonifOpen = (from s in internadli.Tb_Bonificaciones
+                                        where (docnumArray.Contains(s.CodPedido) && s.OrderClosed == false)
+                                        select s.CodPedido
+               ).Distinct().Cast<int>().ToArray();
+
+                    var existenCambiosPrecioOpen = (from w in internadli.Tb_Autorizaciones
+                                                where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed == false)
+                                                select w.DocNum
+                                   ).Distinct().Cast<int>().ToArray();
+
+                    var pedidos3 = pedidos.Where(c => existenBonifOpen.Contains(c.docnum)).ToArray();
+                    
+
+                    foreach (var item in pedidos3)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 1;
+                        }
+                    }
+                    pedidos3 = pedidos.Where(c => existenCambiosPrecioOpen.Contains(c.docnum)).ToArray();
+
+                    foreach (var item in pedidos3)
+                    {
+                        var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
+
+                        if (existe == null)
+                        {
+
+                        }
+                        else
+                        {
+                            existe.status = 1;
+                        }
+                    }
+
+                    ArrayList myArrList = new ArrayList();
+                    myArrList.AddRange((from p in pedidos
+                                        select new
+                                        {
+                                            id = p.docnum,
+                                            text = p.cardcode + " - " + p.cardname + " | #" + p.docnum,
+                                            status = p.status
+                                        }).ToList());
+                    ViewBag.pedidos = JsonConvert.SerializeObject(myArrList);
+                    //ViewBag.pedidos = pedidos;
+                }
+
 
                 return View(products);
             }
@@ -206,6 +531,95 @@ namespace LimenawebApp.Controllers
             }
 
         }
+
+        public ActionResult Prices_requestHistory(string fstartd, string fendd)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Prices Request History";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "ss3_submenu";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                //FIN HEADER
+                //filtros de fecha //MENSUAL
+                var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                var saturday = sunday.AddMonths(1).AddDays(-1);
+                //FILTROS**************
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+                //if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = DateTime.ParseExact(fstartd, "MM/dd/yyyy", CultureInfo.InvariantCulture); }
+                //if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = DateTime.ParseExact(fendd, "MM/dd/yyyy", CultureInfo.InvariantCulture).AddHours(23).AddMinutes(59); }
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+
+
+                if (r.Contains("Sales Supervisor"))
+                {
+                    List<int?> TagIds = activeuser.prop02.Split(',').Select(int.Parse).Cast<int?>().ToList();
+                    List<string> TagIdsString = activeuser.prop02.Split(',').ToList();
+
+                    var products = (from a in internadli.Tb_Autorizaciones where ((a.FechaIngreso >= filtrostartdate && a.FechaIngreso <= filtroenddate) && TagIds.Contains(a.ID_user)) select a);
+                    var boni = (from b in internadli.Tb_Bonificaciones where ((b.FechaIngreso >= filtrostartdate && b.FechaIngreso <= filtroenddate) && TagIdsString.Contains(b.CodVendedor)) select b);
+
+                    ViewBag.bonif = boni;
+                    return View(products);
+                } else if (r.Contains("Super Admin")) {
+
+                    var products = (from a in internadli.Tb_Autorizaciones where ((a.FechaIngreso >= filtrostartdate && a.FechaIngreso <= filtroenddate)) select a);
+                    var boni = (from b in internadli.Tb_Bonificaciones where ((b.FechaIngreso >= filtrostartdate && b.FechaIngreso <= filtroenddate)) select b);
+
+                    ViewBag.bonif = boni;
+                    return View(products);
+                }
+                else {
+                    string slpcode = activeuser.ID_User.ToString();
+
+                    var products = (from a in internadli.Tb_Autorizaciones where ((a.FechaIngreso >= filtrostartdate && a.FechaIngreso <= filtroenddate) && a.ID_user == activeuser.ID_User) select a);
+                    var boni = (from b in internadli.Tb_Bonificaciones where ((b.FechaIngreso >= filtrostartdate && b.FechaIngreso <= filtroenddate) && b.CodVendedor == slpcode) select b);
+
+                    ViewBag.bonif = boni;
+                    return View(products);
+                }
+
+
+           
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+        public class lstPedidos
+        {
+            public int docnum { get; set; }
+            public DateTime? date { get; set; }
+            public string cardcode { get; set; }
+            public string cardname { get; set; }
+            public int status { get; set; }
+        
+        }
+
         public ActionResult PedidoExiste(int docnum)
         {
             try
@@ -235,6 +649,7 @@ namespace LimenawebApp.Controllers
 
         public class MyObjObj
         {
+            public Boolean? deleted { get; set; }
             public int lineNumber { get; set; }
             public string ItemCode { get; set; }
             public string Description { get; set; }
@@ -255,45 +670,119 @@ namespace LimenawebApp.Controllers
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
                 if (activeuser != null)
                 {
-
+                    var pedidostring = pedido.ToString();
                     //Primero borramos todo rastro
                     internadli.Database.ExecuteSqlCommand("delete from Tb_Autorizaciones where DocNum={0}", pedido);
+                    //Reiniciamos el estado de los productos eliminados para comprobar nuevamente
+                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set deleted=0 where CodPedido={0}", pedidostring);
                     //internadli.SaveChanges();
                     List<Tb_Autorizaciones> lsttosave = new List<Tb_Autorizaciones>();
 
-                    foreach (var items in objects)
+                    var so_details = (from a in dlipro.view_ordenesAbiertasDet where (a.DocNum == pedido) select a).FirstOrDefault();
+                    var cliente = (from a in dlipro.OCRD where (a.CardCode == so_details.CardCode) select a.CardName).FirstOrDefault();
+                    var nombrec = "";
+                    if (cliente == null)
                     {
-                        Tb_Autorizaciones newDet = new Tb_Autorizaciones();
-                        newDet.DocNum = pedido;
-                        newDet.ItemCode = items.ItemCode;
-                        newDet.Producto = items.Description;
-                        newDet.CodUOM = items.uom;
-                        newDet.UOM = "";
-                        newDet.Cantidad = items.Qty;
-                        newDet.PrecioPedido = items.Price;
-                        newDet.PrecioMin = items.MinPrice;
-                        newDet.NuevoPrecio = items.NewPrice;
-                        newDet.Estado = 1;
-                        newDet.FechaIngreso = DateTime.UtcNow;
-                        newDet.FechaValidacion = DateTime.UtcNow;
-                        newDet.LineNum = items.lineNumber;
-                        newDet.DocNumSAP = "";
-                        lsttosave.Add(newDet);
+                        nombrec = "XXXXXX";
+
+                    }
+                    else {
+                        nombrec = cliente;
+                    }
+
+                    var usuario = (from a in dblim.Sys_Users where (a.ID_User == activeuser.ID_User) select a).FirstOrDefault();
+
+                    if (objects != null && objects.Count >0) {
+                
+                        foreach (var items in objects)
+                        {
+                            Tb_Autorizaciones newDet = new Tb_Autorizaciones();
+                            newDet.DocNum = pedido;
+                            newDet.ItemCode = items.ItemCode;
+                            newDet.Producto = items.Description;
+                            newDet.CodUOM = items.uom;
+                            newDet.UOM = "";
+                            newDet.Cantidad = items.Qty;
+                            newDet.PrecioPedido = items.Price;
+                            newDet.PrecioMin = items.MinPrice;
+                          
+                            newDet.Estado = 1;
+                            newDet.FechaIngreso = DateTime.UtcNow;
+                            newDet.FechaValidacion = DateTime.UtcNow;
+                            newDet.LineNum = items.lineNumber;
+                            newDet.DocNumSAP = "";
+                            newDet.OrderClosed = false;
+                            newDet.ID_user = usuario.ID_User;
+                            newDet.UserName = usuario.Name + " " + usuario.Lastname;
+                            newDet.CodCustomer = so_details.CardCode;
+                            newDet.Customer = nombrec;
+                            newDet.DocPepperi = so_details.NoPepperi;
+                            
+
+                            if (items.deleted == true)
+                            {
+                                newDet.Deleted = true;
+                                newDet.NuevoPrecio = 0;
+                                
+                                //Buscamos si existen bonificaciones
+                                var existeProducto = (from a in internadli.Tb_Bonificaciones where (a.CodProducto == items.ItemCode && a.CodPedido == pedidostring) select a).ToList();
+
+                                if (existeProducto.Count > 0) {
+                                    foreach (var item in existeProducto) {
+                                        Tb_Bonificaciones bonificationUpdate = item;
+                                        bonificationUpdate.deleted = true;
+                                        internadli.Entry(bonificationUpdate).State = EntityState.Modified;
+                                    }
+                                    internadli.SaveChanges();
+                                }
+
+                                //
+                            }
+                            else {
+                                newDet.Deleted = false;
+                                newDet.NuevoPrecio = items.NewPrice;
+                            }
+
+                            lsttosave.Add(newDet);
+
+                        }
+
+                        try
+                        {
+
+                            internadli.BulkInsert(lsttosave);
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ttresult = "ERROR SAVING DATA: " + ex.Message;
+                            return Json(ttresult, JsonRequestBehavior.AllowGet);
+                        }
+
+
+                    }
+                    try
+                    {
+                        //Guardamos bolsa
+                        usuario.BolsaValor = bolsa;
+                        dblim.Entry(usuario).State = EntityState.Modified;
+                        dblim.SaveChanges();
+                    }
+                    catch {
 
                     }
 
-                    internadli.BulkInsert(lsttosave);
 
-                    var usuario = (from a in dblim.Sys_Users where (a.ID_User == activeuser.ID_User) select a).FirstOrDefault();
-                    usuario.BolsaValor = bolsa;
-                    dblim.Entry(usuario).State = EntityState.Modified;
-                    dblim.SaveChanges();
+
+
+
 
 
                     ttresult = "SUCCESS";
                     return Json(ttresult, JsonRequestBehavior.AllowGet);
                 }
-                ttresult = "NO DATA FOUND";
+                ttresult = "EXPIRED SESSION, PLEASE REFRESH THE PAGE";
                 return Json(ttresult, JsonRequestBehavior.AllowGet);
 
             }
@@ -309,17 +798,167 @@ namespace LimenawebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult ApproveBonification(int bonification, int cantidad)
+        public ActionResult Save_SODetailsAfterOrderClosed(List<MyObjObj> objects, int pedido, decimal bolsa)
+        {
+            string ttresult = "";
+            try
+            {
+
+
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                if (activeuser != null)
+                {
+                    var pedidostring = pedido.ToString();
+
+                    //internadli.SaveChanges();
+                    List<Tb_Autorizaciones> lsttosave = new List<Tb_Autorizaciones>();
+
+                    var so_details = (from a in dlipro.view_ordenesAbiertasDet where (a.DocNum == pedido) select a).FirstOrDefault();
+                    var cliente = (from a in dlipro.OCRD where (a.CardCode == so_details.CardCode) select a.CardName).FirstOrDefault();
+                    var nombrec = "";
+                    if (cliente == null)
+                    {
+                        nombrec = "XXXXXX";
+
+                    }
+                    else
+                    {
+                        nombrec = cliente;
+                    }
+
+                    var usuario = (from a in dblim.Sys_Users where (a.ID_User == activeuser.ID_User) select a).FirstOrDefault();
+
+                    if (objects != null && objects.Count > 0)
+                    {
+
+                        foreach (var items in objects)
+                        {
+                            Tb_Autorizaciones newDet = new Tb_Autorizaciones();
+                            newDet.DocNum = pedido;
+                            newDet.ItemCode = items.ItemCode;
+                            newDet.Producto = items.Description;
+                            newDet.CodUOM = items.uom;
+                            newDet.UOM = "";
+                            newDet.Cantidad = items.Qty;
+                            newDet.PrecioPedido = items.Price;
+                            newDet.PrecioMin = items.MinPrice;
+
+                            newDet.Estado = 1;
+                            newDet.FechaIngreso = DateTime.UtcNow;
+                            newDet.FechaValidacion = DateTime.UtcNow;
+                            newDet.LineNum = items.lineNumber;
+                            newDet.DocNumSAP = "";
+                            newDet.OrderClosed = true;
+                            newDet.ID_user = usuario.ID_User;
+                            newDet.UserName = usuario.Name + " " + usuario.Lastname;
+                            newDet.CodCustomer = so_details.CardCode;
+                            newDet.Customer = nombrec;
+                            newDet.DocPepperi = so_details.NoPepperi;
+
+
+                            if (items.deleted == true)
+                            {
+                                newDet.Deleted = true;
+                                newDet.NuevoPrecio = 0;
+
+                                //Se suprime esta funcion ya que NO HAY FORMA DE EVALUAR EL NUMERO DE LINEA DE LA BONIFICACION
+
+                                ////Buscamos si existen bonificaciones
+                                //var existeProducto = (from a in internadli.Tb_Bonificaciones where (a.CodProducto == items.ItemCode && a.CodPedido == pedidostring) select a).ToList();
+
+                                //if (existeProducto.Count > 0)
+                                //{
+                                //    foreach (var item in existeProducto)
+                                //    {
+                                //        Tb_Bonificaciones bonificationUpdate = item;
+                                //        bonificationUpdate.deleted = true;
+                                //        bonificationUpdate.DocNum = "";
+                                //        internadli.Entry(bonificationUpdate).State = EntityState.Modified;
+                                //    }
+                                //    internadli.SaveChanges();
+                                //}
+
+                                //
+                            }
+                            else
+                            {
+                                newDet.Deleted = false;
+                                newDet.NuevoPrecio = items.NewPrice;
+                            }
+
+                            lsttosave.Add(newDet);
+
+                        }
+
+                        try
+                        {
+
+                            internadli.BulkInsert(lsttosave);
+
+
+                        }
+                        catch (Exception ex)
+                        {
+                            ttresult = "ERROR SAVING DATA: " + ex.Message;
+                            return Json(ttresult, JsonRequestBehavior.AllowGet);
+                        }
+
+
+                    }
+                    try
+                    {
+                        //Guardamos bolsa
+                        usuario.BolsaValor = bolsa;
+                        dblim.Entry(usuario).State = EntityState.Modified;
+                        dblim.SaveChanges();
+                    }
+                    catch { }
+
+
+
+
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                ttresult = "EXPIRED SESSION, PLEASE REFRESH THE PAGE";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
+        [HttpPost]
+        public ActionResult ApproveBonification(int bonification, string producto, int unidades, decimal precio, DateTime date, string userID, string userName, int tipobonificacion, string uom)
         {
             string ttresult = "";
             try
             {
                 var bon = (from a in internadli.Tb_Bonificaciones where (a.ID_bonificacion == bonification) select a).FirstOrDefault();
+                var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == producto && a.UomCode == uom) select a.UomEntry).FirstOrDefault();
 
-                    bon.Estado = 2;
+
+                bon.Estado = 2;
                 bon.FechaValidacion = DateTime.UtcNow;
-                bon.Cantidad = cantidad;
-                    internadli.Entry(bon).State = EntityState.Modified;
+                bon.CantidadFinal = Convert.ToDecimal(unidades);
+                bon.CurrencyFinal = precio;
+                bon.FechaValidacion = date;
+                bon.CodAutorizo = Convert.ToInt32(userID);
+                bon.Autorizo = userName;
+                bon.TipoIngreso = tipobonificacion;
+                bon.CodUOM = uom;
+                bon.UOM = lstava.ToString();
+
+                internadli.Entry(bon).State = EntityState.Modified;
                     internadli.SaveChanges();
 
 
@@ -341,6 +980,7 @@ namespace LimenawebApp.Controllers
         [HttpPost]
         public ActionResult DenyBonification(int bonification)
         {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
             string ttresult = "";
             try
             {
@@ -348,6 +988,8 @@ namespace LimenawebApp.Controllers
 
                 bon.Estado = 4;
                 bon.FechaValidacion = DateTime.UtcNow;
+                bon.CodAutorizo = activeuser.ID_User;
+                bon.Autorizo = activeuser.Name + " " + activeuser.Lastname;
                 internadli.Entry(bon).State = EntityState.Modified;
                 internadli.SaveChanges();
 
@@ -366,20 +1008,25 @@ namespace LimenawebApp.Controllers
 
 
         }
-        public ActionResult Save_bonification(string pedido, string producto, int? unidades, DateTime date, string userID, string userName)
+        public ActionResult Save_bonification(string pedido, string producto, int? unidades,decimal precio, DateTime date, string userID, string userName, int tipobonificacion, string lineNum, string uom)
         {
 
             try
             {
+                if (unidades == null) { unidades = 0; }
                 int pedidodoc = Convert.ToInt32(pedido);
                 var so_details = (from a in dlipro.view_ordenesAbiertasDet where (a.DocNum == pedidodoc && a.Quantity > 0) select a).ToArray();
 
                 var codCliente = so_details.Select(a => a.CardCode).FirstOrDefault();
+                var pepperi = so_details.Select(a => a.NoPepperi).FirstOrDefault();
                 var cliente = (from a in dlipro.OCRD where (a.CardCode == codCliente) select a.CardName).FirstOrDefault();
                 var productinfo = (from a in dlipro.BI_Dim_Products where (a.id == producto) select a).FirstOrDefault();
-
+                var routedf = so_details.Select(a => a.U_DeliveryR).FirstOrDefault();
                 var productinfoPedido = (from c in so_details where (c.ItemCode == producto) select c).FirstOrDefault();
 
+                var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == producto && a.UomCode==uom) select  a.UomEntry).FirstOrDefault();
+              
+    
                 Tb_Bonificaciones newBonificacion = new Tb_Bonificaciones();
                 newBonificacion.CodPedido = pedido;
                 newBonificacion.CodCliente = codCliente;
@@ -388,8 +1035,8 @@ namespace LimenawebApp.Controllers
                 newBonificacion.Producto = productinfo.Product;
                 newBonificacion.ID_brand = productinfo.id_brand.ToString();
                 newBonificacion.Brand = productinfo.Brand_Name;
-                newBonificacion.CodUOM = productinfoPedido.UomCode;
-                newBonificacion.UOM = productinfoPedido.UomEntry.ToString();
+                newBonificacion.CodUOM = uom;
+                newBonificacion.UOM = lstava.ToString();
                 newBonificacion.CodVendedor = userID;
                 newBonificacion.Vendedor =userName;
                 newBonificacion.Cantidad = Convert.ToDecimal(unidades);
@@ -399,20 +1046,36 @@ namespace LimenawebApp.Controllers
                 newBonificacion.FechaValidacion = date;
                 newBonificacion.ID_Vendor = productinfo.id_Vendor;
                 newBonificacion.Vendor = productinfo.Vendor;
-
+                //--
+                newBonificacion.CodUOMAnt = uom;
+                newBonificacion.UOMAnt = lstava.ToString();
+                newBonificacion.CantidadFinal = Convert.ToDecimal(unidades);
+                newBonificacion.deleted = false;
+                newBonificacion.TipoIngreso = tipobonificacion;
+                newBonificacion.LineNum = lineNum;
+                newBonificacion.Currency = precio;
+                newBonificacion.CurrencyFinal = precio;
+                newBonificacion.Porcentaje = 0;
+                newBonificacion.PorcentajeFinal = 0;
+                newBonificacion.CodAutorizo = 0;
+                newBonificacion.Autorizo = "";
+                newBonificacion.OrderClosed = false;
+                newBonificacion.CantidadPedido = Convert.ToInt32(productinfoPedido.Quantity);
+                newBonificacion.DocPepperi =pepperi;
+                newBonificacion.RutaDef = routedf;
                 internadli.Tb_Bonificaciones.Add(newBonificacion);
                 internadli.SaveChanges();
 
 
-                    var userVendor = (from a in dblim.Sys_Users where (a.IDSAP == productinfo.id_Vendor) select a).FirstOrDefault();
+                    //var userVendor = (from a in dblim.Sys_Users where (a.IDSAP == productinfo.id_Vendor) select a).FirstOrDefault();
 
-                    if (userVendor != null) {
-                        //Send the email
-                        dynamic semail = new Email("email_confirmation_bonification");
-                        semail.To = userVendor.Email.ToString();
-                        semail.From = "donotreply@limenainc.net";
-                        semail.Send();
-                    }
+                    //if (userVendor != null) {
+                    //    //Send the email
+                    //    dynamic semail = new Email("email_confirmation_bonification");
+                    //    semail.To = userVendor.Email.ToString();
+                    //    semail.From = "donotreply@limenainc.net";
+                    //    semail.Send();
+                    //}
 
                 string ttresult = "SUCCESS";
                 return Json(ttresult, JsonRequestBehavior.AllowGet);
@@ -461,6 +1124,40 @@ namespace LimenawebApp.Controllers
 
 
 
+
+        }
+
+        public class MyObj_UOM
+        {
+            public string UOM { get; set; }
+            public int UOMEntry { get; set; }
+       
+        }
+
+
+        public ActionResult GetUOM(string product)
+        {
+            try
+            {
+                if (product != "")
+                {
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == product) select new MyObj_UOM { UOM = a.UomCode, UOMEntry = a.UomEntry }).ToList();
+
+
+                        //}
+                        JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                        string result = javaScriptSerializer.Serialize(lstava);
+                        return Json(result, JsonRequestBehavior.AllowGet);
+
+
+                }
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+            return Json("error", JsonRequestBehavior.AllowGet);
 
         }
 
@@ -579,9 +1276,115 @@ namespace LimenawebApp.Controllers
 
         }
 
+        public ActionResult Prices_requestCerrarOrden(string docnum)
+        {
+            
+            var result = "";
+            var docint = Convert.ToInt32(docnum);
+            try {
+                var bonif = (from a in internadli.Tb_Bonificaciones where (a.CodPedido == docnum) select a);
+                var not = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docint) select b).Count();
+
+                var pedido = (from a in dlipro.OpenSalesOrders where (a.NumSO == docint) select a).FirstOrDefault();
 
 
-        public ActionResult Prices_requestpdo(int docnum)
+                var bonifcount = bonif.Count();
+
+                int flag = 0;
+                if (bonifcount > 0) { flag = 1;
+                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=1 where CodPedido={0}", docnum);
+
+                    //Verificamos si hay bonificaciones eliminadas
+
+                    internadli.Database.ExecuteSqlCommand("delete from Tb_Bonificaciones where deleted=1 and CodPedido={0}", docnum);
+
+
+                    //PROCESO PARA ENVIAR TABLA DE BONIF A MARCA
+                    //var arrayProdBon = bonif.Select(a => a.ID_Vendor).Distinct().ToArray(); //cargamos los vendors unicos
+
+                    //foreach (var marca in arrayProdBon) { 
+                    //var productsmarca = bonif.Where(a => a.ID_Vendor == marca);//cargamos los productos bonificados por marca
+
+                    // var usersVendor = (from a in dblim.Sys_Users where (a.IDSAP == marca) select a).ToList(); //cargamos usuarios de vendors
+
+                    //if (usersVendor.Count>0)
+                    //{
+                    //var tabla = "";
+                    //foreach (var producto in productsmarca)//generamos la tabla a mostrar
+                    //{
+                    //    var tr = "";
+                    //    tr = "<tr>";
+                    //    tr += "<td>" + producto.Producto + "</td>";
+                    //    tr += "<td>" + producto.CodUOM + "</td>";
+                    //    if (producto.TipoIngreso == 1)
+                    //    {
+                    //        tr += "<td>" + "QUANTITY" + "</td>";
+                    //    }
+                    //    else if(producto.TipoIngreso==2){
+                    //        tr += "<td>" + "CURRENCY" + "</td>";
+                    //    }
+                    //    tr += "<td>" + producto.CantidadFinal + "</td>";
+                    //    tr += "<td>$ " + producto.CurrencyFinal + "</td>";
+                    //    tr += "</tr>";
+                    //    tabla += tr;
+                    //}
+
+                    //try {
+                    //    foreach (var user in usersVendor)
+                    //    { //enviamos mensaje a cada uno de los vendors
+                    //      //Send the email
+
+                    //        List<string> r = new List<string>(user.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                    //        if (r.Contains("Bonifications Emails"))
+                    //        {
+                    //            dynamic semail = new Email("email_confirmation_bonification");
+                    //            semail.To = user.Email.ToString();
+                    //            semail.From = "donotreply@limenainc.net";
+                    //            semail.Date = DateTime.Now.ToShortDateString();
+                    //            semail.SLP = pedido.SalesPerson.ToUpper();
+                    //            semail.Customer = pedido.CustomerName.ToUpper();
+                    //            semail.tabla = tabla;
+
+                    //            semail.Send();
+
+                    //        }
+
+
+                    //    }
+                    //}
+                    //catch{
+
+                    //}
+
+
+                    //}
+
+                    //}
+
+                }
+                if (not > 0) { flag = 1;
+                    internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1 where DocNum={0}", docint);
+                }
+
+                if (flag == 1) {
+                    
+                }
+
+                    
+            result = "SUCCESS";
+            return Json(result, JsonRequestBehavior.AllowGet);
+
+
+        }
+            catch (Exception ex)
+            {
+                result = "ERROR: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+    }
+
+}
+
+public ActionResult Prices_requestpdo(int docnum)
         {
             Sys_Users activeuser = Session["activeUser"] as Sys_Users;
             if (activeuser != null)
@@ -604,7 +1407,7 @@ namespace LimenawebApp.Controllers
                 ViewBag.lstAlerts = lstAlerts;
 
                 //FIN HEADER
-                var so_details = (from a in dlipro.view_ordenesAbiertasDet where(a.DocNum==docnum && a.Quantity >0) select a).ToArray();
+                var so_details = (from a in dlipro.view_ordenesAbiertasDet where(a.DocNum==docnum && a.Quantity >0 && !a.TreeType.Contains("I")) select a).ToArray();
                 var autolst = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum) select b).ToArray();
 
                 var products = so_details.Select(a => a.ItemCode).ToArray();
@@ -616,9 +1419,11 @@ namespace LimenawebApp.Controllers
                                    join c in infoproducts on a.ItemCode equals c.id
                                    from final in data.DefaultIfEmpty()             
                                    select new Pedidos_precios { LineNum = a.LineNum, Quantity = a.Quantity, CardCode = a.CardCode, UomCode = a.UomCode, UomEntry = a.UomEntry, ItemCode = a.ItemCode, ItemName = a.ItemName, DocNum = a.DocNum, DocDate = a.DocDate, Price = a.Price,
-                                       NewPrice = final == null ? 0 : final.NuevoPrecio, Estado = final == null ? 0 : final.Estado, MinPrice=(a.NumPerMsr * c.MinPrice)
+                                       NewPrice = final == null ? 0 : final.NuevoPrecio, Estado = final == null ? 0 : final.Estado, MinPrice=(a.NumPerMsr * c.MinPrice), Total=a.Price*a.Quantity, Brand_Name=c.Brand_Name, id_brand=c.id_brand,
+                                       category_name=c.category_name, id_subcategory=c.id_subcategory, subcategory_name=c.subcategory_name, Bonificable=c.Bonificables, CantBonif=c.CantBonif, FactorBonif=c.FactorBonif, deleted= final ==null ? false : final.Deleted
                                    });
 
+                //var arryprod = finaldetails.Select(a => a.ItemCode).ToArray();
                 var codCliente = "";
                 var cliente = "";
                 double montoDeuda = 0.0;
@@ -645,23 +1450,44 @@ namespace LimenawebApp.Controllers
                 ViewBag.deudaMonto = montoDeuda;
                 ViewBag.historialVentas = historial;
                 ViewBag.bonificaciones = bonificaciones;
-                ArrayList myArrList = new ArrayList();
-                myArrList.AddRange((from p in so_details
-                                    select new
-                                    {
-                                        id = p.ItemCode,
-                                        text = p.ItemCode + " | " + p.ItemName.Replace("'", "")
-                                    }).ToList());
+                //ArrayList myArrList = new ArrayList();
+                //myArrList.AddRange((from p in so_details
+                //                    select new
+                //                    {
+                //                        id = p.ItemCode,
+                //                        text = p.ItemCode + " | " + p.ItemName.Replace("'", "")
+                //                    }).ToList());
 
 
-                //LISTADO DE REPRESENTANTES
+                ////LISTADO DE REPRESENTANTES
 
-                ViewBag.lstproducts = JsonConvert.SerializeObject(myArrList);
+                //ViewBag.lstproducts = JsonConvert.SerializeObject(myArrList);
                 ViewBag.docnum = docnum;
 
-                if (activeuser.BolsaValor != 0 && activeuser.BolsaValor != null)
+                var detailsBonifications = finaldetails.Where(c => c.Bonificable == "Y");
+
+                var lstCategories = (from f in detailsBonifications select f.category_name).Distinct().OrderBy(c => c).ToList();
+                ViewBag.lstCategories = lstCategories;
+
+                var lstSubCategories = (from f in detailsBonifications select new MyObj_SubCat { id = f.id_subcategory, name = f.subcategory_name, category = f.category_name }).Distinct().OrderBy(c => c.name).ToList();
+                ViewBag.lstSubCategories = lstSubCategories;
+
+
+                var lstBrands = (from f in detailsBonifications select new MyObj_SubCat { id = f.id_brand, name = f.Brand_Name, category = f.subcategory_name }).Distinct().OrderBy(c => c.name).ToList();
+                ViewBag.lstBrands = lstBrands;
+                int slpcode = Convert.ToInt32(activeuser.IDSAP);
+                //var pedidos = (from g in dlipro.view_ordenesAbiertasDet
+                               //join j in dlipro.OCRD on g.CardCode equals j.CardCode
+                               //where (g.SlpCode == slpcode)
+                               //select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName }).Distinct().ToArray();
+
+
+
+                var usuarioBolsa = (from g in dblim.Sys_Users where (g.ID_User == activeuser.ID_User) select g.BolsaValor).FirstOrDefault();
+
+                if (usuarioBolsa != 0 && usuarioBolsa != null)
                 {
-                    ViewBag.bolsa = activeuser.BolsaValor;
+                    ViewBag.bolsa = usuarioBolsa;
                 }
                 else
                 {
@@ -669,7 +1495,62 @@ namespace LimenawebApp.Controllers
                 }
                 ViewBag.userID = activeuser.ID_User;
                 ViewBag.userName = activeuser.Name + " " + activeuser.Lastname;
+                var arraysexcept = bonificaciones.Select(a => a.CodProducto).ToArray();
+                ViewBag.products = detailsBonifications.Where(c => !arraysexcept.Contains(c.ItemCode));
 
+
+                int contadorOrderClosed = 0;
+
+                //Verificamos que boton mostrar
+                var bonif = bonificaciones.Count();
+    
+                var not = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum) select b).Count();
+
+                int flag = 0;
+                if (bonif > 0)
+                {
+                    flag = 1;
+                   
+                }
+                if (not > 0)
+                {
+                    flag = 1;
+                }
+
+                if (flag == 1)
+                {
+                    //EXISTEN BONIFICACIONES Y/O AUTORIZACIONES
+                    ViewBag.mostrarOrdenEditar = 1;
+
+                    var bonif2 = bonificaciones.Where(c => c.OrderClosed == true).Count();
+
+                    if (bonif2 > 0) {
+                        var bonCont = bonificaciones.Where(c => c.OrderClosed == true).Select(c => c.CantidadPedido).FirstOrDefault();
+                        contadorOrderClosed = bonCont;
+                    }
+                
+                    
+                    var not2 = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum && b.OrderClosed == true) select b).Count();
+                    if (not2 > 0) {
+                        var notCont = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum && b.OrderClosed == true) select b.Cantidad).FirstOrDefault();
+                        //contadorOrderClosed = notCont;
+                    }
+
+                    //NO MOSTRAMOS BOTONES PARA EDITAR NI PARA SALIR CON CERRAR ORDEN 
+                   
+                    if (bonif2 > 0) { ViewBag.mostrarOrdenEditar = 0; } //Como hay datos pero estan en true, no moestramos
+                    if (not2 > 0) { ViewBag.mostrarOrdenEditar = 0; }
+
+                    
+
+      
+                }
+                else {
+                    ViewBag.mostrarOrdenEditar = 2;
+                }
+
+
+               
                 return View(finaldetails);
             }
             else
@@ -711,6 +1592,7 @@ namespace LimenawebApp.Controllers
                     ViewBag.confbolsa = confbolsa.Value;
                     ViewBag.confbolsadate = confbolsa.Date;
                 }
+
 
                 var usuarios = dblim.Sys_Users.Where(c => c.ID_Company == 1 && c.Roles.Contains("Sales Representative"));
                 ViewBag.usuarios = usuarios;
@@ -1466,6 +2348,32 @@ namespace LimenawebApp.Controllers
 
 
         }
+
+        public ActionResult DelBonification(int id)
+        {
+            int docnum = 0;
+            try
+            {
+                Tb_Bonificaciones bon = internadli.Tb_Bonificaciones.Find(id);
+                if (bon != null)
+                {
+                    docnum = Convert.ToInt32(bon.CodPedido);
+            
+                    internadli.Tb_Bonificaciones.Remove(bon);
+                    internadli.SaveChanges();
+                }
+
+                return RedirectToAction("Prices_requestpdo", "Commercial", new { docnum = docnum });
+            }
+            catch
+            {
+
+                return RedirectToAction("Prices_request", "Commercial", null);
+            }
+
+
+
+        }
         [ValidateAntiForgeryToken]
         public ActionResult DeleteVisit(string ID_visitD)
         {
@@ -1885,7 +2793,7 @@ namespace LimenawebApp.Controllers
                     }
 
                     //List<VisitsM> selVisit = (from b in dbcmk.VisitsM where (b.ID_visit == IDV) select b).ToList();
-                    var areas = dbcmk.VisitsM.Where(x => x.ID_visit == IDV).Select(a => new { ID_Visit = a.ID_visit,storeDate=a.visit_date, storeName = a.store, ID_Store = a.ID_store, storeAddress = (a.address + ", " + a.state + ", " + a.city + ", " + a.zipcode), ID_visitstate = a.ID_visitstate, lng = a.geoLong, lat = a.geoLat });
+                    var areas = dbcmk.VisitsM.Where(x => x.ID_visit == IDV).Select(a => new { ID_Visit = a.ID_visit,storeDate=a.visit_date,comment=a.comments, storeName = a.store, ID_Store = a.ID_store, storeAddress = (a.address + ", " + a.state + ", " + a.city + ", " + a.zipcode), ID_visitstate = a.ID_visitstate, lng = a.geoLong, lat = a.geoLat });
 
 
                     JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
@@ -1973,7 +2881,39 @@ namespace LimenawebApp.Controllers
 
 
         }
+        //CHECK IN
+        public ActionResult saveComment(string ID_visit, string comments)
+        {
+            try
+            {
+                int IDvisita = Convert.ToInt32(ID_visit);
 
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                if (activeuser != null)
+                {
+                    VisitsM visita = dbcmk.VisitsM.Find(Convert.ToInt32(ID_visit));
+                    if (visita != null)
+                    {
+                        //Cambiamos estado de visita global
+                        visita.comments = comments;
+                        dbcmk.Entry(visita).State = EntityState.Modified;
+
+
+                        dbcmk.SaveChanges();
+                        return Json(new { Result = "Success" });
+                    }
+                }
+
+                return Json(new { Result = "Fail" });
+            }
+            catch
+            {
+                return Json(new { Result = "Error" });
+            }
+
+
+
+        }
 
         //CHECK OUT
         public ActionResult Check_out(string ID_visit, string check_in, string lat, string lng)
@@ -2002,7 +2942,7 @@ namespace LimenawebApp.Controllers
                         if (visita != null)
                         {
                             visita.ID_visitstate = 4; //FINALIZADO
-                            visita.check_in = Convert.ToDateTime(check_in);
+                            visita.check_out = Convert.ToDateTime(check_in);
                             dbcmk.Entry(visita).State = EntityState.Modified;
                             dbcmk.SaveChanges();
 
@@ -2789,6 +3729,15 @@ namespace LimenawebApp.Controllers
             public string subcategory { get; set; }
 
         }
+
+        public class MyObj_formtemplateMarketingReport
+        {
+            public string id { get; set; }
+            public string text { get; set; }
+            public string value { get; set; }
+        }
+
+
         public class MyObj_formtemplate
 
         {
@@ -2937,6 +3886,7 @@ namespace LimenawebApp.Controllers
             newOrderDSD.Sign = Sign;
             newOrderDSD.Comment = Comment;
             newOrderDSD.docNum_SAP = "";
+            newOrderDSD.canceled = false;
 
 
 
@@ -4107,6 +5057,740 @@ namespace LimenawebApp.Controllers
 
         }
 
+        public class customerlist {
+            public string id { get; set; }
+            public string name { get; set; }
+        }
+        public class brandlist {
+            public string name { get; set; }
+            public string id_customer { get; set; }
+        }
+
+        public ActionResult ActivitiesReport(string fstartd, string fendd)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Activities Report";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "rep2_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                //SECCION DE FILTROS
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                //filtros de fecha (DIARIO)
+                //var sunday = DateTime.Today;
+                //var saturday = sunday.AddHours(23);
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                //var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representatives")).ToArray().AsEnumerable();
+
+                //var activities = (from a in dbcmk.ActivitiesM where (a.date >= filtrostartdate && a.date <= filtroenddate && a.ID_empresa ==11 && a.ID_form==32) select a);
+                var lstActivities = (from a in dbcmk.ActivitiesM
+                                     join b in dbcmk.VisitsM on a.ID_visit equals b.ID_visit
+                            
+
+                                     where (a.date >= filtrostartdate && a.date <= filtroenddate && a.ID_empresa == 11 && a.ID_form == 32 && a.isfinished==true)
+                                     //where (a.ID_customer == id && (a.date >= filtrostartdate && a.date <= filtroenddate))
+                                     select new ActivitiesReport
+                                     {
+                                         ID_Activity = a.ID_activity,
+                                         Description = a.description,
+                                         Brand = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 13 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault(),
+                                        Customer = a.Customer,
+                                        ID_Customer = a.ID_customer,
+                                        ID_Store = b.ID_store,
+                                        Store = b.store,
+                                        Address = b.address,
+                                        City = b.city,
+                                        state = b.state,
+                                        date=a.date,
+                                        ID_SalesRep =0,
+                                        SalesRep="",
+                                         Category = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 30 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault(),
+                                         SubCategories = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 31 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault()
+
+                                     });
+
+                var categories = (from a in lstActivities select new customerlist { id = a.ID_Customer, name = a.Customer }).Distinct().ToList();
+                var brandslst = (from a in lstActivities select new brandlist { name = a.Brand, id_customer=a.ID_Customer }).Distinct().ToList();
+                ViewBag.customerlst = categories;
+                ViewBag.brandlst = brandslst;
+
+                return View(lstActivities);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+        public ActionResult Print_Activity(int id)
+        {
+            var total_demos = (from a in dbcmk.ActivitiesM
+                                                   join b in dbcmk.VisitsM on a.ID_visit equals b.ID_visit
+
+
+                                                   where (a.ID_activity ==id)
+                                                   //where (a.ID_customer == id && (a.date >= filtrostartdate && a.date <= filtroenddate))
+                                                   select new ActivitiesReport
+                                                   {
+                                                       ID_Activity = a.ID_activity,
+                                                       Description = a.description,
+                                                       Brand = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 13 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault(),
+                                                       Customer = a.Customer,
+                                                       ID_Customer = a.ID_customer,
+                                                       ID_Store = b.ID_store,
+                                                       Store = b.store,
+                                                       Address = b.address,
+                                                       City = b.city,
+                                                       state = b.state,
+                                                       date = a.date,
+                                                       ID_SalesRep = 0,
+                                                       SalesRep = "",
+                                                       Category = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 30 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault(),
+                                                       SubCategories = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 31 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault()
+
+                                                   }).ToList();
+
+            if (total_demos.Count > 0)
+            {
+                //Recuperamos los IDS de las demos en el dia especifico y del customer especifico
+                int[] demo_ids = (from f in dbcmk.ActivitiesM where (f.ID_activity == id) select f.ID_activity).ToArray();
+
+                //Existen datos
+                //Buscamos los detalles
+
+                var demo_details_items = (from b in dbcmk.FormsM_details where (demo_ids.Contains(b.ID_visit) && (b.ID_formresourcetype == 5 )) select b).OrderBy(b => b.ID_formresourcetype).ToList();
+                var result = demo_details_items;
+
+
+                if (result.Count > 0)
+
+                {
+
+
+                    ReportDocument rd = new ReportDocument();
+
+                    rd.Load(Path.Combine(Server.MapPath("~/Reports"), "rptMarketingActivity.rpt"));
+
+
+
+                    rd.SetDataSource(total_demos);
+
+                    rd.Subreports[0].SetDataSource(result);
+                    // rd.Subreports[1].SetDataSource(total_demos);
+
+                    var filePathOriginal = Server.MapPath("/Reports/pdfReports");
+
+                    Response.Buffer = false;
+
+                    Response.ClearContent();
+
+                    Response.ClearHeaders();
+
+
+                    //PARA VISUALIZAR
+                    Response.AppendHeader("Content-Disposition", "inline; filename=" + "Marketing Activity.pdf; ");
+
+
+
+                    Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+
+
+                    return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
+
+                }
+                else
+                {
+                    TempData["advertencia"] = "No data to send.";
+                    return RedirectToAction("ActivitiesReport", "Commercial", null);
+                }
+            }
+            else
+            {
+                TempData["advertencia"] = "No Demos assigned for today.";
+                return RedirectToAction("ActivitiesReport", "Commercial", null);
+            }
+        }
+
+
+        public ActionResult Print_Activities(List<MyObj_formtemplateMarketingReport> objects)
+        {
+            List<int> list = new List<int>();
+            foreach (var item in objects)
+            {
+                var idact = item.id.Substring(4);
+                list.Add(Convert.ToInt32(idact));
+            }
+
+            var total_demos = (from a in dbcmk.ActivitiesM
+                               join b in dbcmk.VisitsM on a.ID_visit equals b.ID_visit
+
+
+                               where (list.Contains(a.ID_activity))
+                               //where (a.ID_customer == id && (a.date >= filtrostartdate && a.date <= filtroenddate))
+                               select new ActivitiesReport
+                               {
+                                   ID_Activity = a.ID_activity,
+                                   Description = a.description,
+                                   Brand = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 13 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault(),
+                                   Customer = a.Customer,
+                                   ID_Customer = a.ID_customer,
+                                   ID_Store = b.ID_store,
+                                   Store = b.store,
+                                   Address = b.address + b.city + b.state,
+                                   City = b.city,
+                                   state = b.state,
+                                   date = a.date,
+                                   ID_SalesRep = 0,
+                                   SalesRep = "",
+                                   Category = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 30 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault(),
+                                   SubCategories = (from detalle in dbcmk.FormsM_details where (detalle.ID_formresourcetype == 31 && detalle.ID_visit == a.ID_activity) select detalle.fdescription).FirstOrDefault()
+
+                               }).ToList();
+
+            if (total_demos.Count > 0)
+            {
+                //Recuperamos los IDS de las demos en el dia especifico y del customer especifico
+                int[] demo_ids = (from f in dbcmk.ActivitiesM where (list.Contains(f.ID_activity)) select f.ID_activity).ToArray();
+
+                //Existen datos
+                //Buscamos los detalles
+
+                var demo_details_items = (from b in dbcmk.FormsM_details where (demo_ids.Contains(b.ID_visit) && (b.ID_formresourcetype == 5)) select b).OrderBy(b => b.ID_formresourcetype).ToList();
+
+                foreach (var item in demo_details_items) {
+                    item.fsource = Path.GetFullPath(Server.MapPath(item.fsource));
+                }
+                var result = demo_details_items;
+
+
+                if (result.Count > 0)
+
+                {
+
+
+                    ReportDocument rd = new ReportDocument();
+
+                    rd.Load(Path.Combine(Server.MapPath("~/Reports"), "rptMarketingActivity.rpt"));
+
+
+
+                    rd.SetDataSource(total_demos);
+
+                    rd.Subreports[0].SetDataSource(result);
+                    // rd.Subreports[1].SetDataSource(total_demos);
+
+                    var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                    Response.Buffer = false;
+
+                    Response.ClearContent();
+
+                    Response.ClearHeaders();
+
+
+                    //PARA VISUALIZAR
+                    Response.AppendHeader("Content-Disposition", "inline; filename=" + "Marketing Activity.pdf; ");
+
+
+
+                    Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+
+
+                    //return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
+
+                    try
+
+                    {
+                        //limpiamos el directorio
+
+                        System.IO.DirectoryInfo di = new DirectoryInfo(filePathOriginal);
+
+                        foreach (FileInfo file in di.GetFiles())
+
+                        {
+
+                            file.Delete();
+
+                        }
+
+                        foreach (DirectoryInfo dir in di.GetDirectories())
+
+                        {
+
+                            dir.Delete(true);
+
+                        }
+
+                    }
+
+                    catch (Exception e)
+
+                    {
+
+                        var mensaje = e.ToString();
+
+                    }
+
+                    var path2 = "";
+                    var filename = "MarketingActivity" + "" + ".pdf";
+                    path2 = Path.Combine(filePathOriginal, filename);
+                    rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, path2);
+
+                    var urlcontent = Url.Content("~/Reports/pdf/" + filename + "");
+                    //var other = Path.Combine(Server.MapPath("~/Reports"), "rptMarketingActivity.rpt"));
+                    return Json(urlcontent);
+
+                }
+                else
+                {
+                    TempData["advertencia"] = "No data to send.";
+                    return RedirectToAction("ActivitiesReport", "Commercial", null);
+                }
+            }
+            else
+            {
+                TempData["advertencia"] = "No Demos assigned for today.";
+                return RedirectToAction("ActivitiesReport", "Commercial", null);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult RequestCreditProduct(string orientation, string ItemCode, string ItemName, int IDRequest_reason, 
+            string Request_reason, int Quantity, string idcustomer, string customerName, string comment, string returnProduct, string returnProductName, string uomlstName, string UoMCode)
+        {
+
+            // Checking no of files injected in Request object  
+            if (Request.Files.Count > 0)
+            {
+                try
+                {
+
+                    var usercreate = 0;
+                    var usercreatename = "";
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                    if (activeuser != null)
+                    {
+                        usercreate = activeuser.ID_User;
+                        usercreatename = activeuser.Name + " " + activeuser.Lastname;
+                    }
+
+                        //Creamos modelo
+                        Tb_CreditsRequest newRequest = new Tb_CreditsRequest();
+                    newRequest.ItemCode = ItemCode;
+                    newRequest.ItemName = ItemName;
+                    newRequest.UoMCode = uomlstName;
+                    newRequest.UoMEntry = UoMCode;
+                    newRequest.IDRequest_reason = IDRequest_reason;
+                    newRequest.Request_reason = Request_reason;
+                    newRequest.Quantity = Quantity;
+                    newRequest.Validated = false;
+                    newRequest.DocNumSAP = "";
+                    newRequest.dateCreate = DateTime.UtcNow;
+                    newRequest.dateValidate = DateTime.UtcNow;
+                    newRequest.userValidate = 0;
+                    newRequest.userValidateName = "";
+                    newRequest.userCreate = usercreate;
+                    newRequest.userCreateName = usercreatename;
+                    newRequest.CardCode = idcustomer;
+                    newRequest.CardName = customerName;
+                    newRequest.estado = 0;
+                    newRequest.LineNum = 0;
+                    newRequest.URL_image = "";
+                    newRequest.URL_image2 = "";
+
+                    if (returnProduct == "0")
+                    {
+                        newRequest.ItemCodeReturn = "";
+                        newRequest.ItemNameReturn = "";
+                    }
+                    else {
+                        newRequest.ItemCodeReturn = returnProduct;
+                        newRequest.ItemNameReturn = returnProductName;
+                    }
+
+
+                    if (comment == null) {
+                        comment = "";
+                    }
+                    newRequest.comments = comment;
+
+                    //  Get all files from Request object  
+                    HttpFileCollectionBase files = Request.Files;
+                    for (int i = 0; i < files.Count; i++)
+                    {
+                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+                        HttpPostedFileBase file = files[i];
+                        string fname;
+
+                        // Checking for Internet Explorer  
+                        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                        {
+                            string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                            fname = testfiles[testfiles.Length - 1];
+                        }
+                        else
+                        {
+                            fname = file.FileName;
+                        }
+
+
+                        // Adding watermark to the image and saving it into the specified folder!!!!
+
+                        //Image image = Image.FromStream(file.InputStream, true, true);
+
+
+                        Image TargetImg = Image.FromStream(file.InputStream, true, true);
+
+                        if (i > 0)
+                        {
+
+                        }
+                        else {
+                        try
+                        {
+                            int or = Convert.ToInt32(orientation);
+
+                            switch (or)
+                            {
+                                case 1: // landscape, do nothing
+                                    break;
+
+                                case 8: // rotated 90 right
+                                        // de-rotate:
+                                    TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
+                                    break;
+
+                                case 3: // bottoms up
+                                    TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
+                                    break;
+
+                                case 6: // rotated 90 left
+                                    TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
+                                    break;
+                            }
+
+                        }
+                        catch
+                        {
+
+                        }
+                        }
+
+
+                        DateTime time = DateTime.Now;
+
+                        Image imagenfinal = (Image)TargetImg.Clone();
+                        Bitmap bitmapImg = new Bitmap(imagenfinal);// Original Image
+                        var path = "";
+
+                        if (i > 0)
+                        {
+
+                            path = Path.Combine(Server.MapPath("~/Content/images/creditRequest"), "cr2_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg");
+                            newRequest.URL_image2 = "~/Content/images/creditRequest/" + "cr2_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg";
+
+
+                            bitmapImg.Save(path, ImageFormat.Jpeg);
+                            bitmapImg.Dispose();
+                        }
+                        else {
+
+
+                            path = Path.Combine(Server.MapPath("~/Content/images/creditRequest"), "cr_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg");
+                            newRequest.URL_image = "~/Content/images/creditRequest/" + "cr_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg";
+
+
+                            bitmapImg.Save(path, ImageFormat.Jpeg);
+                            bitmapImg.Dispose();
+                        }
+
+
+
+
+                    }
+
+                    dblim.Tb_CreditsRequest.Add(newRequest);
+                    dblim.SaveChanges();
+
+                    // Returns message that successfully uploaded  
+                    return Json("File Uploaded Successfully!");
+                }
+                catch (Exception ex)
+                {
+                    return Json("Error occurred. Error details: " + ex.Message);
+                }
+            }
+            else
+            {
+                return Json("No files selected.");
+            }
+        }
+
+        public class routeCustomer
+        {
+            public string CardCode { get; set; }
+            public string DeliveryRoute { get; set; }
+        }
+
+        public ActionResult Credits_authorize()
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Credits Authorize";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "ss4_submenu";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+                //FIN HEADER
+
+                List<Tb_CreditsRequestWithRoute> lstCredits = new List<Tb_CreditsRequestWithRoute>();
+                var salesordersOpen = (from c in dlipro.OpenSalesOrders select new routeCustomer {CardCode=c.CardCode, DeliveryRoute=c.DeliveryRoute }).ToArray();
+
+
+                //SABER SI ES ADMIN
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor") || activeuser.Roles.Contains("Credits Authorizer"))
+                {
+                    isAdmin = 1;
+                    lstCredits = (from a in dblim.Tb_CreditsRequest select new Tb_CreditsRequestWithRoute { ID_creditRequest = a.ID_creditRequest, ItemCode = a.ItemCode, ItemName = a.ItemName, UoMCode = a.UoMCode, Request_reason = a.Request_reason, Quantity = a.Quantity, URL_image = a.URL_image, Validated = a.Validated, DocNumSAP = a.DocNumSAP, IDRequest_reason = a.IDRequest_reason, dateCreate = a.dateCreate, dateValidate = a.dateValidate,
+                        userValidate = a.userValidate, userValidateName = a.userValidateName, userCreate = a.userCreate, userCreateName = a.userCreateName, CardCode = a.CardCode, CardName = a.CardName, estado = a.estado,
+                        Route = "", comments = a.comments, LineNum=a.LineNum
+                    }).ToList();
+
+
+
+                    foreach (var item in lstCredits)
+                    {
+                        item.Route = salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault() == null ? "NA" : salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault();
+                    }
+                }
+                else
+                {
+                    isAdmin = 0;
+                    lstCredits= (from a in dblim.Tb_CreditsRequest where(a.userCreate==activeuser.ID_User)
+                                 select new Tb_CreditsRequestWithRoute
+                                 {
+                                     ID_creditRequest = a.ID_creditRequest,
+                                     ItemCode = a.ItemCode,
+                                     ItemName = a.ItemName,
+                                     ReturnItemCode = a.ItemCodeReturn,
+                                     ReturnItemName = a.ItemNameReturn,
+                                     UoMCode = a.UoMCode,
+                                     UoMEntry = a.UoMEntry,
+                                     Request_reason = a.Request_reason,
+                                     Quantity = a.Quantity,
+                                     URL_image = a.URL_image,
+                                     URL_image2 = a.URL_image2,
+                                     Validated = a.Validated,
+                                     DocNumSAP = a.DocNumSAP,
+                                     IDRequest_reason = a.IDRequest_reason,
+                                     dateCreate = a.dateCreate,
+                                     dateValidate = a.dateValidate,
+                                     userValidate = a.userValidate,
+                                     userValidateName = a.userValidateName,
+                                     userCreate = a.userCreate,
+                                     userCreateName = a.userCreateName,
+                                     CardCode = a.CardCode,
+                                     CardName = a.CardName,
+                                     estado = a.estado,
+                                     Route = "",
+                                     comments=a.comments,
+                                     LineNum=a.LineNum
+                                 }).ToList();
+
+                    foreach (var item in lstCredits)
+                    {
+                        item.Route = salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault() == null ? "NA" : salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault();
+                    }
+                }
+                ViewBag.isadmin = isAdmin;
+
+                return View(lstCredits);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+        public ActionResult DeleteRequestProduct(int id)
+        {
+            try
+            {
+
+                Tb_CreditsRequest creditReq = dblim.Tb_CreditsRequest.Find(id);
+                if (creditReq != null)
+                {
+                    var urlimg = creditReq.URL_image;
+                    dblim.Tb_CreditsRequest.Remove(creditReq);
+                    dblim.SaveChanges();
+
+                    try
+                    {
+
+                        if (System.IO.File.Exists(Server.MapPath(urlimg)))
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(Server.MapPath(urlimg));
+                            }
+                            catch (System.IO.IOException e)
+                            {
+                                Console.WriteLine(e.Message);
+
+                            }
+                        }
+                    }
+                    catch {
+
+                    }
+                }
+
+                return RedirectToAction("Credits_authorize", "Commercial", null);
+            }
+            catch
+            {
+
+                return RedirectToAction("Credits_authorize", "Commercial",null);
+            }
+
+
+
+        }
+
+        public ActionResult AuthorizeRequestProduct(int id)
+        {
+            try
+            {
+
+                Tb_CreditsRequest creditReq = dblim.Tb_CreditsRequest.Find(id);
+                if (creditReq != null)
+                {
+                    var usercreate = 0;
+                    var usercreatename = "";
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                    if (activeuser != null)
+                    {
+                        usercreate = activeuser.ID_User;
+                        usercreatename = activeuser.Name + " " + activeuser.Lastname;
+                    }
+
+
+                    creditReq.Validated = true;
+                    creditReq.estado = 2;
+                    creditReq.userValidate = usercreate;
+                    creditReq.userValidateName = usercreatename;
+                    creditReq.dateValidate = DateTime.UtcNow;
+                    dblim.Entry(creditReq).State = EntityState.Modified;
+                    dblim.SaveChanges();
+                }
+
+                return RedirectToAction("Credits_authorize", "Commercial", null);
+            }
+            catch
+            {
+
+                return RedirectToAction("Credits_authorize", "Commercial", null);
+            }
+
+
+
+        }
+
+        public ActionResult DisappoveRequestProduct(int id)
+        {
+            try
+            {
+
+                Tb_CreditsRequest creditReq = dblim.Tb_CreditsRequest.Find(id);
+                if (creditReq != null)
+                {
+                    var usercreate = 0;
+                    var usercreatename = "";
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                    if (activeuser != null)
+                    {
+                        usercreate = activeuser.ID_User;
+                        usercreatename = activeuser.Name + " " + activeuser.Lastname;
+                    }
+
+
+                    creditReq.Validated = true;
+                    creditReq.estado = 1;
+                    creditReq.userValidate = usercreate;
+                    creditReq.userValidateName = usercreatename;
+                    creditReq.dateValidate = DateTime.UtcNow;
+                    dblim.Entry(creditReq).State = EntityState.Modified;
+                    dblim.SaveChanges();
+                }
+
+                return RedirectToAction("Credits_authorize", "Commercial", null);
+            }
+            catch
+            {
+
+                return RedirectToAction("Credits_authorize", "Commercial", null);
+            }
+
+
+
+        }
+
 
     }
+
+
 }

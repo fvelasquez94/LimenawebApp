@@ -284,7 +284,11 @@
                             <td>@itemO.Doc_numCompany</td>
                             <td>@Convert.ToDateTime(itemO.Date).ToShortDateString()</td>
                             <td>$ @itemO.Comment</td>
-                            <td><a href="@Url.Action("Print_OrderDSD", "DSD", new { id = itemO.ID_OrderDSD})" target="_blank" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-print mr-2"></i>Print</a></td>
+                            <td>
+                            @if (itemO.canceled == false)
+                            {<a href="@Url.Action("Print_OrderDSD", "DSD", new { id = itemO.ID_OrderDSD })" target="_blank" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-print mr-2"></i>Print</a><a href="#" onclick="cancelOrder(@itemO.ID_OrderDSD)" class="btn btn-outline-danger btn-sm form-pill"><i class="fa fa-close mr-2"></i>Cancel</a> }
+                            else {<span class="badge text-danger">Canceled</span> }
+                            </td>
                         </tr>
 }
 

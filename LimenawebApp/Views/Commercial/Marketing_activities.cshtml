@@ -29,46 +29,8 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-xl-5 col-md-5">
-                                    <div class="mb-4">
-                                        <div class="progress-title">
-                                            <span>Forms</span>
-                                            <span id="forms_p1" class="float-right">0% (0/0)</span>
-                                        </div>
-                                        <div class="progress" style="height: 1px;">
-                                            <div id="forms_d1" class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
-                                        </div>
 
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="progress-title">
-                                            <span>Audits</span>
-                                            <span id="audits_p1" class="float-right">0% (0/0)</span>
-                                        </div>
-                                        <div class="progress" style="height: 1px;">
-                                            <div id="audits_d1" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="progress-title">
-                                            <span>Sales Orders </span>
-                                            <span id="sales_p1" class="float-right">0% (0/0)</span>
-                                        </div>
-                                        <div class="progress" style="height: 1px;">
-                                            <div id="sales_d1" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-4">
-                                        <div class="progress-title">
-                                            <span>Demos</span>
-                                            <span id="demos_p1" class="float-right">0% (0/0)</span>
-                                        </div>
-                                        <div class="progress" style="height: 1px;">
-                                            <div id="sales_d1" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-xl-7 col-md-7">
+                                <div class="col-xl-5 col-md-5">
                                     <div class="card card-shadow mb-4">
                                         <div class="card-body">
 
@@ -81,30 +43,30 @@
                                                 <p class="text-muted mb-0" id="storeDate">STORE DATE </p>
                                                 <div class="rattings mb-4">
                                                     @*<i class="fa fa-star-o text-warning"></i>
-                                        <i class="fa fa-star-o text-warning"></i>
-                                        <i class="fa fa-star-o text-warning"></i>
-                                        <i class="fa fa-star-o text-warning"></i>
-                                        <i class="fa fa-star-o text-warning"></i>*@
+                            <i class="fa fa-star-o text-warning"></i>
+                            <i class="fa fa-star-o text-warning"></i>
+                            <i class="fa fa-star-o text-warning"></i>
+                            <i class="fa fa-star-o text-warning"></i>*@
                                                 </div>
 
                                                 <div class="mb-2">
                                                     <a id="getdirections" href="#" class="btn btn-sm btn-pill btn-primary pl-4 pr-4"><i class="fa fa-map-o"></i> Get directions</a>
                                                     @if (ViewBag.isAdmin == 1)
-                                    {
-                                        if (ViewBag.estadovisita != 4)
-                                        {
-                                            <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
-                        }
-                    }
-                    else
-                    {
-                        if (ViewBag.estadovisita == 3)
                         {
+                            if (ViewBag.estadovisita != 4)
+                            {
+                                <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
+}
+}
+else
+{
+if (ViewBag.estadovisita == 3)
+{
                             <a href="#" onclick="checkinVisit()" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-user-times"></i> Check in</a>
-        }
-        else if (ViewBag.estadovisita == 2)
-        {
-                <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
+}
+else if (ViewBag.estadovisita == 2)
+{
+                            <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
 }
 
 
@@ -114,6 +76,65 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="col-xl-4 col-md-4">
+                                    <div class="card card-shadow">
+                                        <div class="card-body">
+                                            <div class="mb-4">
+                                                <div class="progress-title">
+                                                    <span>Forms</span>
+                                                    <span id="forms_p1" class="float-right">0% (0/0)</span>
+                                                </div>
+                                                <div class="progress" style="height: 1px;">
+                                                    <div id="forms_d1" class="progress-bar bg-warning" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                                </div>
+
+                                            </div>
+                                            <div class="mb-4">
+                                                <div class="progress-title">
+                                                    <span>Audits</span>
+                                                    <span id="audits_p1" class="float-right">0% (0/0)</span>
+                                                </div>
+                                                <div class="progress" style="height: 1px;">
+                                                    <div id="audits_d1" class="progress-bar bg-success" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-4">
+                                                <div class="progress-title">
+                                                    <span>Sales Orders </span>
+                                                    <span id="sales_p1" class="float-right">0% (0/0)</span>
+                                                </div>
+                                                <div class="progress" style="height: 1px;">
+                                                    <div id="sales_d1" class="progress-bar bg-danger" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                            <div class="mb-2">
+                                                <div class="progress-title">
+                                                    <span>Demos</span>
+                                                    <span id="demos_p1" class="float-right">0% (0/0)</span>
+                                                </div>
+                                                <div class="progress" style="height: 1px;">
+                                                    <div id="sales_d1" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuemax="100"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-xl-3 col-md-3">
+                                    <div class="card card-shadow mb-4">
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <p class="control-label col-md-10">Comment:</p>
+
+                                                <div class="col-md-12">
+                                                    <textarea style="font-size:11px;" id="visitComment" placeholder="There are no comments yet..." rows="5" class="form-control"></textarea><br />
+                                                    <button class="btn btn-sm btn-primary" onclick="saveComment()">Save</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -213,36 +234,39 @@
                             <option value="0">Select an activity</option>
                             <optgroup label="Demos">
                                 @foreach (var form in ViewBag.activeforms)
-                {
-                    if (form.ID_activity == 4)
-                    {
+        {
+            if (form.ID_activity == 4)
+            {
                         <option value="@form.ID_form">@form.name</option>
-    }
+}
 }
                             </optgroup>
                             <optgroup label="Forms"></optgroup>
                             @foreach (var form in ViewBag.activeforms)
-            {
-                if (form.ID_activity == 1)
-                {
-                    <option value="@form.ID_form">@form.name</option>
+    {
+        if (form.ID_activity == 1)
+        {
+
+                        <option value="@form.ID_form">@form.name</option>
+
+
 }
 }
                             <optgroup label="Audits"></optgroup>
                             @foreach (var form in ViewBag.activeforms)
-            {
-                if (form.ID_activity == 2)
-                {
-                    <option value="@form.ID_form">@form.name</option>
+    {
+        if (form.ID_activity == 2)
+        {
+                        <option value="@form.ID_form">@form.name</option>
 }
 }
                             <optgroup label="Sales Order">
                                 @foreach (var form in ViewBag.activeforms)
-                {
-                    if (form.ID_activity == 3)
-                    {
+        {
+            if (form.ID_activity == 3)
+            {
                         <option value="@form.ID_form">@form.name</option>
-    }
+}
 }
                             </optgroup>
                         </select>
@@ -364,6 +388,8 @@
     window.onload = function (e) {
 
         getVisitData();
+
+        
         @*var _scroll = true, _timer = false, _floatbox = $("#contact_form"), _floatbox_opener = $(".contact-opener");
         _floatbox.css("right", "-322px"); //initial contact form position
 

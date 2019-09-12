@@ -28,5 +28,6 @@ namespace LimenawebApp.Models
         public string docNum_SAP { get; set; }
         public string Comment { get; set; }
         public string Sign { get; set; }
+        public bool canceled { get; set; }
     }
 }

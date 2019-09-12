@@ -137,5 +137,16 @@ namespace LimenawebApp.Models
         public string PRWebAccss { get; set; }
         public string PrePRWeb { get; set; }
         public string BPLink { get; set; }
+        public string NaturalPer { get; set; }
+        public string DPPStatus { get; set; }
+        public string EnRligion { get; set; }
+        public string EnRligionP { get; set; }
+        public string EncryptIV { get; set; }
+        public string EnGovID { get; set; }
+        public string EnPassport { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public Nullable<int> CreateTS { get; set; }
+        public Nullable<int> UpdateTS { get; set; }
+        public string EnInsurNum { get; set; }
     }
 }

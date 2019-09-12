@@ -36,6 +36,9 @@ namespace LimenawebApp.Models
         public decimal query3 { get; set; }
         public System.DateTime Date { get; set; }
         public bool Invoiced { get; set; }
+        public Nullable<System.DateTime> DateCheckIn { get; set; }
+        public Nullable<System.DateTime> DateCheckOut { get; set; }
+        public Nullable<int> ID_userValidate { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Tb_PlanningSO> Tb_PlanningSO { get; set; }

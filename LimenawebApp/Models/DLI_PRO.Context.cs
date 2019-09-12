@@ -46,5 +46,8 @@ namespace LimenawebApp.Models
         public virtual DbSet<Supervisor> Supervisor { get; set; }
         public virtual DbSet<view_cuentascobrarCliente> view_cuentascobrarCliente { get; set; }
         public virtual DbSet<view_ordenesAbiertasDet> view_ordenesAbiertasDet { get; set; }
+        public virtual DbSet<view_VendorsData> view_VendorsData { get; set; }
+        public virtual DbSet<ITT1> ITT1 { get; set; }
+        public virtual DbSet<OITT> OITT { get; set; }
     }
 }

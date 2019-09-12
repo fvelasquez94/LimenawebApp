@@ -1,0 +1,230 @@
+﻿@model IQueryable<LimenawebApp.Models.BI_Dim_Products>
+
+@{
+    ViewBag.Title = "Distribuidora Limeña - Credits Request";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Credits Request</div>
+                            </div>
+
+                        </div>
+                        <div class="row col-md-12">
+                            <div class="col-md-4 mb-3">
+
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+
+                            <div class="col-md-8">
+
+                                <div class="col-12" style="float:right">
+                                    <div class="input-group">
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div><hr />
+                        <div class="custom-post-title">
+                            <div class=" mt-2">
+
+                                @foreach (var itemc in ViewBag.lstCategories)
+                                {
+                                    <button id="btn_@itemc" type="button" style="margin-top: 10px;" class="btn btn-outline-primary form-pill btnsl" onclick="filter('@itemc')">@itemc</button>
+                                }
+                                <button type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="filter_clear()">Clear filters</button>
+
+                            </div><hr />
+                            <div id="mainsub">
+
+                                @foreach (var itemc in ViewBag.lstCategories)
+                                {
+                                    <div class="mt-2" id="@itemc">
+                                        @foreach (var itemsc in ViewBag.lstsubCategories)
+                                        {
+                                            if (itemsc.category == itemc)
+                                            {
+                                                <button id="subbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-outline-warning form-pill subbtnsl" onclick="subfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+                                            }
+
+                                        }
+                                        @*<button id="subfilter" type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="subfilter_clear()">Clear Sub filters</button>*@
+                                    </div>}
+
+                            </div><hr />
+                            <div id="mainbrands">
+
+                                @foreach (var itemc in ViewBag.lstsubCategories)
+                                {
+                                    <div class="mt-2" id="@itemc.name">
+                                        @foreach (var itemsc in ViewBag.lstBrands)
+                                        {
+                                            if (itemsc.category == itemc.name)
+                                            {
+                                                <button id="brandbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-light form-pill brandbtnsl" onclick="brandfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+                                            }
+
+                                        }
+
+                                    </div>}
+
+                            </div>
+                        </div>
+                        <div class="card-body pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>CATEGORY</th>
+                                            <th>SUBCATEGORY</th>
+                                            <th>BRAND</th>
+
+                                            <th>PRODUCT</th>
+                                         
+
+                                            <th>ACTIONS</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var product in Model)
+                                        {
+                                            <tr>
+                                                <td>@product.category_name</td>
+                                                <td>@product.subcategory_name.Replace("'", "")</td>
+                                                <td>@product.Brand_Name.Replace("'", "")</td>
+
+                                                <td>@product.Product</td>
+                                                
+
+                                                <td>
+                                                    <button id="btntd_@product.id" type="button" data-toggle="modal" data-target="#addProductModal" data-ID="@product.id" data-description="@product.Product" class="btn btn-sm btn-outline-info">Add</button>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="modal fade bd-example-modal-sm" id="addProductModal" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySmallModalLabel">New request</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input id="IDProd" name="IDProd" hidden />
+                <p id="descriptionD" name="descriptionD"></p>
+
+                <select name="customerslst" id="customerslst" style="width:100%" class="form-control">
+                    <option value="0">Select a customer</option>
+                </select>
+
+                <hr />
+                <select name="UOMlst" id="UOMlst" style="width:100%" class="form-control">
+                    <option value="0">Select UoM</option>
+                </select>
+                <br />
+                <input class="form-control" type="number" id="units" min="1" value="1" />
+                <hr />
+                <select name="returnReason" id="returnReason" style=" width:100%" class="form-control">
+                    <option value="0">Select a return reason</option>
+                </select>
+                <br /><br />
+                      <div id="returnproductdiv" style="display:none">
+                          <select name="returnProduct" id="returnProduct" style=" width:100%;" class="form-control">
+                              <option value="0">Select a product to return</option>
+                          </select>
+                      </div>
+
+                <hr />
+                <p class="control-label col-md-10">Product image (*)</p>
+                <div class="col-md-12">
+
+
+                    <input type="file" data-changeflag="0" class="dropifyIMG" id="45" data-max-file-size-preview="15M">
+                    <img id="img_45" alt="your image" hidden />
+                    <img id="resultimg_45" alt="your image" hidden />
+                </div>
+                <br />
+                <p class="control-label col-md-10">Product image (optional)</p>
+                <div class="col-md-12">
+
+                    <input type="file" data-changeflag="0" class="dropifyIMG" id="90" data-max-file-size-preview="15M">
+
+                </div>
+                <br />
+
+                <textarea placeholder="Comments (optional)" id="messagetext" class="form-control" style="font-size:11px;"></textarea>
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-primary" onclick="addproduct()">Add</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    window.onload = function (e) {
+        //Returns Reasons
+        var dataReturns = @Html.Raw(ViewBag.lstReturnsR);
+
+        $('#returnReason').select2({
+            placeholder: "Select a return reason",
+            data: dataReturns
+        });
+
+        //Customers
+        var customers = @Html.Raw(ViewBag.customers);
+
+        $('#customerslst').select2({
+            placeholder: "Select a customer",
+            data: customers
+        });
+
+        //Products
+        var products = @Html.Raw(ViewBag.lstproducts);
+
+        $('#returnProduct').select2({
+            placeholder: "Select a product",
+            data: products
+        });
+
+
+
+      $("#units").bootstrapNumber();
+
+
+    }
+</script>

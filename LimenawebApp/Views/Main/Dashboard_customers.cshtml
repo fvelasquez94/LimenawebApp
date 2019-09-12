@@ -39,15 +39,39 @@
                         </div>
                         <div class="card-body">
                             <div class="row">
-                                <div class="col-xl-12">
-                                    <table class="table table-striped">
+                                <div class="col-12">
+                                    <table id="tablaordenesbon" class="table table-striped" >
                                         <thead>
                                             <tr>
+                                                <th>
+                                                    ID
+                                                </th>            
+                                                <th>
+                                                    DOC NUM
+                                                </th>
+                                                <th>
+                                                    ROUTE
+                                                </th>
+                                                <th>
+                                                    CUSTOMER
+                                                </th>                                                
+                                                <th>
+                                                    SALES REP
+                                                </th>
                                                 <th>
                                                     PRODUCT
                                                 </th>
                                                 <th>
+                                                    UOM
+                                                </th>
+                                                <th>
+                                                    TYPE
+                                                </th>
+                                                <th>
                                                     QTY
+                                                </th><th>ORDER QTY</th>
+                                                <th>
+                                                    DISC($)
                                                 </th>
                                                 <th>
                                                     DATE
@@ -58,28 +82,63 @@
                                         <tbody>
                                             @foreach (var item in Model)
                                             {
-                                                <tr>
-                                                    <td>@item.Producto</td>
-                                                    <td>@item.Cantidad</td>
-                                                    <td>@Convert.ToDateTime(item.FechaIngreso).ToShortDateString()</td>
-                                                    <td>
-                                                        @if (item.Estado == 1)
-                                                        {
-                                                            <button class="btn btn-sm btn-outline-info btnAutorizar" data-qty="@item.Cantidad" id="@item.ID_bonificacion">Approve</button>
-                                                            <button class="btn btn-sm btn-outline-danger btnDeny" id="@item.ID_bonificacion">Deny</button>
-                                                        }
-                                                        else if (item.Estado == 2 || item.Estado==3)
-                                                        {
-                                                            <span class="badge text-success">Approved</span>
-                                                        }
-                                                        else if (item.Estado == 4)
-                                                        {
-                                                            <span class="badge text-danger">Denied</span>
-                                                        }
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <td>@item.ID_bonificacion</td>
+
+                                                <td>@item.CodPedido</td>
+                                                <td>@item.RutaDef</td>
+                                                <td>@item.CodCliente | @item.Cliente</td>
+                                                <td>@item.Vendedor.ToUpper()</td>
+                                                <td>@item.Producto</td>
+                                                <td>@item.CodUOM</td>
+                                                <td>@if (item.TipoIngreso == 1)
+    {<span class="badge text-success">QUANTITY</span>}
+else if (item.TipoIngreso == 2)
+{ <span class="badge text-info">CURRENCY</span>}</td>
+                                                <td>@item.CantidadFinal</td>
+                                                <td>@item.CantidadPedido</td>
+                                                <td>@item.CurrencyFinal</td>
+                                                <td>@Convert.ToDateTime(item.FechaIngreso).ToShortDateString()</td>
+                                                <td>
+                                                    @if (item.Estado == 1)
+    {
+                                                <button class="btn btn-sm btn-outline-info btnAutorizar" data-codprod="@item.CodProducto" data-tipoBon="@item.TipoIngreso" data-uom="@item.CodUOM" data-product="@item.Producto" data-qty="@item.CantidadFinal" data-price="@item.CurrencyFinal" id="@item.ID_bonificacion">Approve</button>
+                                                <button class="btn btn-sm btn-outline-danger btnDeny" id="@item.ID_bonificacion">Deny</button>
+}
+else if (item.Estado == 2 || item.Estado == 3)
+{
+                                                <span class="badge text-success">APPROVED</span>
+}
+else if (item.Estado == 4)
+{
+                                                <span class="badge text-danger">DENIED</span>
+}
+else if (item.Estado == 5)
+{
+                                                <span class="badge text-danger">OUT OF TIME</span>
+}
+else if (item.Estado == 6)
+{
+                                                <span class="badge badge-danger">IN ROUTE</span>
+}
+                                                </td>
+                                            </tr>
                                             }
                                         </tbody>
+                                        <tfoot>
+
+                                            <tr>
+                                                <th colspan="8" style="text-align:right">TOTAL:</th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
+
+
+                                            </tr>
+
+                                        </tfoot>
                                     </table>
                                 </div>
 
@@ -100,7 +159,7 @@
 <!--/main content wrapper-->
 
 <div class="modal fade bd-example-modal-lg" id="tbbonificaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm">
+    <div class="modal-dialog ">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="myLargeModalLabel">Approve bonification</h5>
@@ -109,17 +168,37 @@
                 </button>
 
             </div>
-            
+
             <div class="modal-body">
-                <span class="text-muted">Are you sure you want to approved this bonification?</span>
                 <div class="form-group">
-                    <label >Quantity to approve:</label>
-                    <input id="idAut" hidden />
-                    <input id="CantAut" type="text" class="form-control filternumbers" />
+                    Product:
+                    <input type="text" hidden id="idproductoBon" value="" class="form-control" />
+                    <input type="text" hidden id="idAut" value="" class="form-control" />
+                    <input type="text" id="productBon" readonly value="" class="form-control" />
+                </div>
+                <div class="form-group">
+                    UOM:
+                    <select id="tipoUOM" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    Bonification type:
+                    <select id="tipobonificacion" class="form-control">
+                        <option value="0">Select type...</option>
+                        <option value="1">Quantity</option>
+                        <option value="2">Currency</option>
+                    </select>
+                </div>
+                <div class="form-group" id="typeUnits" style="display:none;">
+                    Units:
+                    <input class="form-control" type="number" id="cantidadBonificar" min="0" value="0" />
+                </div>
+                <div class="form-group" id="typeCurrency" style="display:none;">
+                    Price:
+                    <input class="form-control" id="pricebon" type="number" min="0" value="0" />
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnAutorizar" class="btn btn-success" >Save</button>
+                <button type="button" id="btnAutorizar" class="btn btn-success">Save</button>
 
             </div>
         </div>

@@ -33,5 +33,21 @@ namespace LimenawebApp.Models
         public System.DateTime FechaValidacion { get; set; }
         public string ID_Vendor { get; set; }
         public string Vendor { get; set; }
+        public string CodUOMAnt { get; set; }
+        public string UOMAnt { get; set; }
+        public int TipoIngreso { get; set; }
+        public decimal CantidadFinal { get; set; }
+        public string LineNum { get; set; }
+        public decimal Currency { get; set; }
+        public decimal CurrencyFinal { get; set; }
+        public decimal Porcentaje { get; set; }
+        public decimal PorcentajeFinal { get; set; }
+        public int CodAutorizo { get; set; }
+        public string Autorizo { get; set; }
+        public bool OrderClosed { get; set; }
+        public int CantidadPedido { get; set; }
+        public string DocPepperi { get; set; }
+        public string RutaDef { get; set; }
+        public bool deleted { get; set; }
     }
 }

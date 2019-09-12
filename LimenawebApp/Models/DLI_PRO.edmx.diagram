@@ -26,6 +26,9 @@
         <EntityTypeShape EntityType="DLI_PROModel.Supervisor" Width="1.5" PointX="13.375" PointY="8.75" />
         <EntityTypeShape EntityType="DLI_PROModel.view_cuentascobrarCliente" Width="1.5" PointX="13.375" PointY="11.75" />
         <EntityTypeShape EntityType="DLI_PROModel.view_ordenesAbiertasDet" Width="1.5" PointX="3.375" PointY="14.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.view_VendorsData" Width="1.5" PointX="5.375" PointY="14.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.ITT1" Width="1.5" PointX="7.375" PointY="14.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.OITT" Width="1.5" PointX="15.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

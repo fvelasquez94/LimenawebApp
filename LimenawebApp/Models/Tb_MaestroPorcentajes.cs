@@ -23,5 +23,7 @@ namespace LimenawebApp.Models
         public string subcategory_name { get; set; }
         public Nullable<double> min_porc { get; set; }
         public Nullable<bool> updated { get; set; }
+        public string id_item { get; set; }
+        public string item { get; set; }
     }
 }

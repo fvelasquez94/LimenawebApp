@@ -26,5 +26,7 @@ namespace LimenawebApp.Models
         public string Prop03 { get; set; }
         public Nullable<double> FactorUnidadCompra { get; set; }
         public Nullable<double> Costo { get; set; }
+        public string id_Vendor { get; set; }
+        public string Vendor_Name { get; set; }
     }
 }

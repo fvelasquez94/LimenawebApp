@@ -71,11 +71,62 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Office.Client.Policy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.Office.Client.Policy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Client.TranslationServices, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.Office.Client.TranslationServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.SharePoint.Tools, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.Office.SharePoint.Tools.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.Client.Tenant, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ProjectServer.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.ProjectServer.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.DocumentManagement, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.DocumentManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Publishing, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.Publishing.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime.Windows, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.Runtime.Windows.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.Search.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Search.Applications, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.Search.Applications.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Taxonomy, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.Taxonomy.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.UserProfiles, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.UserProfiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.WorkflowServices, Version=16.1.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SharePointOnline.CSOM.16.1.9119.1200\lib\net45\Microsoft.SharePoint.Client.WorkflowServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Postal, Version=1.0.0.0, Culture=neutral, PublicKeyToken=45719375b8b4d528, processorArchitecture=MSIL">
       <HintPath>..\packages\Postal.Mvc5.1.2.0\lib\net45\Postal.dll</HintPath>
     </Reference>
     <Reference Include="RazorEngine, Version=3.4.1.0, Culture=neutral, PublicKeyToken=9ee697374c7e744a, processorArchitecture=MSIL">
       <HintPath>..\packages\RazorEngine.3.4.1\lib\net45\RazorEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="Recaptcha.Web, Version=2.1.0.0, Culture=neutral, PublicKeyToken=171a6ec5fa4b1644, processorArchitecture=MSIL">
+      <HintPath>..\packages\RecaptchaNet.2.1.0\lib\net451\Recaptcha.Web.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -148,14 +199,11 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=3.17.3.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.3.17.3\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=3.22.6.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.3.22.6\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.ApplicationInsights">
       <HintPath>..\packages\Microsoft.ApplicationInsights.2.2.0\lib\net45\Microsoft.ApplicationInsights.dll</HintPath>
     </Reference>
@@ -259,6 +307,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>dbLimena.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\dbLimena1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\dbMatrizCompras.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -316,7 +369,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Interna_DLI.edmx</DependentUpon>
     </Compile>
+    <Compile Include="Models\Interna_DLI1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ITM1.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ITT1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Matriz_Formato.cs">
@@ -326,6 +387,9 @@
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OHEM.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OITT.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OpenSalesOrders.cs">
@@ -391,6 +455,9 @@
     <Compile Include="Models\Tb_ConfigBolsa.cs">
       <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_CreditsRequest.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_InventoryDetailsTRDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
@@ -399,6 +466,9 @@
     </Compile>
     <Compile Include="Models\Tb_MaestroPorcentajes.cs">
       <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_NewCustomers.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_OrdersDetailsDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -448,6 +518,9 @@
     <Compile Include="Models\view_ordenesAbiertasDet.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\view_VendorsData.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\VisitsM.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
@@ -473,6 +546,24 @@
       <DependentUpon>Resume_DSD.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\rptMarketingActivity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptMarketingActivity.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptRoadmap.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptRoadmap.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptSubMarketingActivity.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptSubMarketingActivity.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\appcontent\assets\css\dropify.min.css" />
@@ -488,6 +579,11 @@
     <Content Include="Content\appcontent\assets\css\svgicons.css" />
     <Content Include="Content\appcontent\assets\css\sweetalert.css" />
     <Content Include="Content\appcontent\assets\fonts\dropify.svg" />
+    <Content Include="Content\appcontent\assets\img\badge\1063141.png" />
+    <Content Include="Content\appcontent\assets\img\badge\credit-card.png" />
+    <Content Include="Content\appcontent\assets\img\badge\newspaper.png" />
+    <Content Include="Content\appcontent\assets\img\badge\tags.png" />
+    <Content Include="Content\appcontent\assets\js\countrystatecity.js" />
     <Content Include="Content\appcontent\assets\js\dropify.js" />
     <Content Include="Content\appcontent\assets\js\dropify.min.js" />
     <Content Include="Content\appcontent\assets\js\JIC.js" />
@@ -1767,7 +1863,7 @@
     <Content Include="Models\dbLimena.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>dbLimena.edmx</DependentUpon>
-      <LastGenOutput>dbLimena.cs</LastGenOutput>
+      <LastGenOutput>dbLimena1.cs</LastGenOutput>
     </Content>
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -2145,7 +2241,7 @@
     <Content Include="Models\Interna_DLI.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>Interna_DLI.edmx</DependentUpon>
-      <LastGenOutput>Interna_DLI.cs</LastGenOutput>
+      <LastGenOutput>Interna_DLI1.cs</LastGenOutput>
     </Content>
     <Content Include="Models\Reports.xsc">
       <DependentUpon>Reports.xsd</DependentUpon>
@@ -2194,6 +2290,7 @@
       <DependentUpon>DLI_PRO.edmx</DependentUpon>
       <LastGenOutput>DLI_PRO.cs</LastGenOutput>
     </Content>
+    <Content Include="RecaptchaNet.Readme.txt" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -2265,11 +2362,24 @@
     <Content Include="Views\Commercial\Prices_requestMicro.cshtml" />
     <Content Include="Views\Main\Dashboard_customers.cshtml" />
     <Content Include="Views\Emails\email_confirmation_bonification.cshtml" />
+    <Content Include="Views\Emails\email_confirmation_bonification.Text.cshtml" />
+    <Content Include="Views\Emails\email_confirmation_bonification.Html.cshtml" />
+    <Content Include="Views\Invoices\OpenSalesOrders.cshtml" />
+    <Content Include="Views\Emails\emailContact.cshtml" />
+    <Content Include="Views\Commercial\Prices_requestHistory.cshtml" />
+    <Content Include="Views\Commercial\ActivitiesReport.cshtml" />
+    <Content Include="Views\Home\Enroll.cshtml" />
+    <Content Include="Views\Management\New_customers.cshtml" />
+    <Content Include="Views\Commercial\Credits_request.cshtml" />
+    <Content Include="Views\Commercial\Credits_authorize.cshtml" />
+    <Content Include="Views\Invoices\Routes_Report.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Content\images\activities\" />
     <Folder Include="Content\images\activities_refimg\" />
+    <Folder Include="Content\images\creditRequest\" />
+    <Folder Include="Content\images\enroll\" />
     <Folder Include="Content\images\temp_sign\" />
     <Folder Include="Reports\pdf\" />
     <Folder Include="Views\FormsActions\" />
@@ -2302,6 +2412,18 @@
     <EmbeddedResource Include="Reports\Resume_DSD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Resume_DSD.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptMarketingActivity.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptMarketingActivity.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptRoadmap.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptRoadmap.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptSubMarketingActivity.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptSubMarketingActivity.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

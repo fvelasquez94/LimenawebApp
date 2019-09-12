@@ -29,5 +29,7 @@ namespace LimenawebApp.Models
         public string Ovrwrite1 { get; set; }
         public string Ovrwrite2 { get; set; }
         public Nullable<short> BasePLNum { get; set; }
+        public Nullable<int> UomEntry { get; set; }
+        public string PriceType { get; set; }
     }
 }

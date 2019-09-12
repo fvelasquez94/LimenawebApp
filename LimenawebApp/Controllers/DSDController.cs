@@ -3,6 +3,7 @@ using LimenawebApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -140,7 +141,24 @@ namespace LimenawebApp.Controllers
             stream.Seek(0, SeekOrigin.Begin);
             return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);      
         }
+        public ActionResult Cancel_OrderDSD(int? id)
+        {
+            var header = (from b in dblim.Tb_OrdersDSD where (b.ID_OrderDSD == id) select b).FirstOrDefault();
+            var result = "";
 
+       
+            if (header != null)
+            {
+
+                header.canceled = true;
+                dblim.Entry(header).State = EntityState.Modified;
+                dblim.SaveChanges();
+
+                result = "SUCCESS";
+            }
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         public ActionResult Pre_Print_OrderDSD(int? id)
         {
             var header = (from b in dblim.Tb_PreOrdersDSD where (b.ID_OrderDSD == id) select b).FirstOrDefault();
@@ -247,7 +265,7 @@ namespace LimenawebApp.Controllers
             ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
             ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
 
-            List<ResumeSO_DSD> lstOrders = (from o in dblim.Tb_OrdersDSD where (o.Date >= filtrostartdate && o.Date <= filtroenddate) select new ResumeSO_DSD { ID_OrderDSD = o.ID_OrderDSD,
+            List<ResumeSO_DSD> lstOrders = (from o in dblim.Tb_OrdersDSD where (o.Date >= filtrostartdate && o.Date <= filtroenddate && o.canceled==false) select new ResumeSO_DSD { ID_OrderDSD = o.ID_OrderDSD,
                 ID_customer = o.ID_customer, CustomerName = o.CustomerName, ID_payment = o.ID_payment, Payment = o.Payment, Doc_numP = o.Doc_numP, Doc_numCompany = o.Doc_numCompany, docNum_SAP = o.docNum_SAP, Date = o.Date.ToString()
             , ID_User = o.ID_User, User_name = o.User_name, ID_Company = o.ID_Company, Comment = o.Comment, Sign = o.Sign, Total = 0, Direction="" }).OrderBy(b=>b.Date).ToList();
 
@@ -409,7 +427,7 @@ namespace LimenawebApp.Controllers
                 {
                     foreach (var item in lstOrders)
                     {
-                        var sumtotal = (from se in dblim.Tb_InventoryDetailsTRDSD where (se.ID_InventoryDSD == item.ID_InventoryDSD) select se.Units).Sum();
+                        var sumtotal = (from se in dblim.Tb_InventoryDetailsTRDSD where (se.ID_InventoryDSD == item.ID_InventoryDSD) select (int ?)se.Units).Sum() ?? 0;
                         try
                         {
                             item.ID_Company = Convert.ToInt32(item.docNum_SAP);
@@ -445,42 +463,61 @@ namespace LimenawebApp.Controllers
 
             Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
-  
-
-
-            Tb_InventoryTRDSD newOrderDSD = new Tb_InventoryTRDSD();
-
-            newOrderDSD.Date = DateTime.UtcNow;
-            newOrderDSD.ID_User = activeuser.ID_User;
-            newOrderDSD.User_name = activeuser.Name + " " + activeuser.Lastname;
-            newOrderDSD.ID_Company = activeuser.ID_Company;
-            newOrderDSD.docNum_SAP = "";
-
-            dblim.Tb_InventoryTRDSD.Add(newOrderDSD);
-            dblim.SaveChanges();
-
-            //Guardamos el detalle;
-
-            foreach (var item in objectsProducts)
+            var result = "";
+            if (activeuser == null)
             {
-
-                Tb_InventoryDetailsTRDSD newDetail = new Tb_InventoryDetailsTRDSD();
-
-                newDetail.ID_InventoryDSD = newOrderDSD.ID_InventoryDSD;
-                newDetail.ID_Product = item.id;
-                newDetail.Product_Name = item.text;
-                newDetail.Units = Convert.ToInt32(item.units);
-                newDetail.UPC = item.UPC;
-
-                dblim.Tb_InventoryDetailsTRDSD.Add(newDetail);
-                dblim.SaveChanges();
-
-
+                result = "Session expired. Please refresh and try again";
             }
+            else
+            {
+                if (objectsProducts.Count > 0)
+                {
+                    try
+                    {
+                        Tb_InventoryTRDSD newOrderDSD = new Tb_InventoryTRDSD();
+
+                        newOrderDSD.Date = DateTime.UtcNow;
+                        newOrderDSD.ID_User = activeuser.ID_User;
+                        newOrderDSD.User_name = activeuser.Name + " " + activeuser.Lastname;
+                        newOrderDSD.ID_Company = activeuser.ID_Company;
+                        newOrderDSD.docNum_SAP = "";
+
+                        dblim.Tb_InventoryTRDSD.Add(newOrderDSD);
+                        dblim.SaveChanges();
+
+                        //Guardamos el detalle;
+
+                        foreach (var item in objectsProducts)
+                        {
+
+                            Tb_InventoryDetailsTRDSD newDetail = new Tb_InventoryDetailsTRDSD();
+
+                            newDetail.ID_InventoryDSD = newOrderDSD.ID_InventoryDSD;
+                            newDetail.ID_Product = item.id;
+                            newDetail.Product_Name = item.text;
+                            newDetail.Units = Convert.ToInt32(item.units);
+                            newDetail.UPC = item.UPC;
+
+                            dblim.Tb_InventoryDetailsTRDSD.Add(newDetail);
+                            dblim.SaveChanges();
 
 
+                        }
 
-            var result = "Success";
+                        result = "Success";
+                    }
+                    catch (Exception ex)
+                    {
+                        result = "Something went wrong. " + ex.Message;
+                    }
+
+                }
+                else
+                {
+                    result = "No data to load";
+
+                }
+            }
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

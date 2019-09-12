@@ -1,0 +1,82 @@
+﻿@model IEnumerable<LimenawebApp.Models.Tb_NewCustomers>
+@{
+    ViewBag.Title = "Distribuidora Limeña - New Customers";
+}
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">New Customers</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+                                        <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                            <i class=" vl_ellipsis-fill-h"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>CardName</th>
+                                            <th>TAX ID</th>
+                                            <th>TAX CERT NUM</th>
+                                            <th>Name</th>
+                                            <th>Telephone</th>
+                                            <th>Email</th>
+                                            <th>Country</th>
+                                            <th>State</th>
+                                            <th>TAX ID</th>
+                                            <th>TAX CERT NUM</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var user in Model)
+                                        {
+                                        <tr>
+                                            <td>@user.CardName</td>
+                                            <td>@user.TAXID</td>
+                                            <td>@user.TAXCERTNUM</td>
+                                            <td>@user.FirstName @user.LastName</td>
+                                            <td>@user.Tel1</td>
+                                            <td>@user.E_MailL</td>
+                                            <td>@user.Country</td>
+                                            <td>@user.State</td>
+                                            <td><img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXID_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERT)" alt="@user.CardName" /></td>
+                                            <td><img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXCERT_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERNUM)" alt="@user.CardName" /></td>
+                                            <td>
+
+                                                <a href="@Url.Action("SendToSharepoint", "Management", new { id=user.ID_customer})" class="btn btn-dark btn-sm form-pill text-light" title="Approve"><i class="fa fa-check"></i></a>
+                                                <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+
+
+                                            </td>
+                                        </tr>
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

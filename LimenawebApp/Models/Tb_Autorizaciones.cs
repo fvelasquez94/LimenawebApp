@@ -22,12 +22,19 @@ namespace LimenawebApp.Models
         public string UOM { get; set; }
         public decimal Cantidad { get; set; }
         public decimal PrecioPedido { get; set; }
+        public decimal PrecioMin { get; set; }
         public decimal NuevoPrecio { get; set; }
         public int Estado { get; set; }
         public string DocNumSAP { get; set; }
         public System.DateTime FechaIngreso { get; set; }
         public System.DateTime FechaValidacion { get; set; }
-        public Nullable<int> LineNum { get; set; }
-        public decimal PrecioMin { get; set; }
+        public int LineNum { get; set; }
+        public bool OrderClosed { get; set; }
+        public int ID_user { get; set; }
+        public string UserName { get; set; }
+        public string DocPepperi { get; set; }
+        public string CodCustomer { get; set; }
+        public string Customer { get; set; }
+        public bool Deleted { get; set; }
     }
 }

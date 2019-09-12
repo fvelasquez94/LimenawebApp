@@ -31,5 +31,6 @@ namespace LimenawebApp.Models
         public string Classification { get; set; }
         public string Remarks { get; set; }
         public Nullable<int> IDSalesPerson { get; set; }
+        public string BonifPendientes { get; set; }
     }
 }

@@ -8,6 +8,9 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using Microsoft.SharePoint.Client;
+using System.Security;
+
 namespace LimenawebApp.Controllers
 {
     public class ManagementController : Controller
@@ -15,7 +18,7 @@ namespace LimenawebApp.Controllers
         private dbLimenaEntities dblim = new dbLimenaEntities();
         private dbComerciaEntities dbcmk = new dbComerciaEntities();
         private DLI_PROEntities dlipro = new DLI_PROEntities();
-
+        private Interna_DLIEntities internadli = new Interna_DLIEntities();
         public class repsU {
             public int id_Sales_Rep { get; set; }
             public string Slp_name { get; set; }
@@ -48,6 +51,169 @@ namespace LimenawebApp.Controllers
                 List<Sys_Users> lstUsers = (from a in dblim.Sys_Users select a).ToList();
 
                 return View(lstUsers);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+        public ActionResult SendToSharepoint(int? id)
+        {
+            try
+            {
+                var user = (from a in dblim.Tb_NewCustomers where (a.ID_customer == id) select a).FirstOrDefault();
+                if (user != null) {
+                    user.Validated = true;
+                    dblim.Entry(user).State = EntityState.Modified;
+                    dblim.SaveChanges();
+                    try //Enviamos a lista de Sharepoint
+                    {
+                        var contrasena = "VaL3nZuEl@2017";
+                        ClientContext ClienteCTX = new ClientContext("https://limenainc.sharepoint.com/sites/DatosMaestrosFlujos");
+                        var seguridad = new SecureString();
+
+                        foreach (Char item in contrasena) {
+                            seguridad.AppendChar(item);
+                        }
+
+                        ClienteCTX.Credentials = new SharePointOnlineCredentials("s.valenzuela@limenainc.net", seguridad);
+                        Web oWebsite = ClienteCTX.Web;
+                        ListCollection CollList = oWebsite.Lists;
+
+                        List oList = CollList.GetByTitle("Customer_Web");
+                        ClienteCTX.Load(oList);
+                        ClienteCTX.ExecuteQuery();
+
+                        ListItemCreationInformation itemCreateInfo = new ListItemCreationInformation();
+                        ListItem oListItem = oList.AddItem(itemCreateInfo);
+                        oListItem["Title"] = user.ID_customer.ToString();
+                        //Cardname
+                        oListItem["_x006a_525"] = user.CardName;
+                        //Phone1
+                        oListItem["f5nt"] = user.Phone1;
+                        //Email
+                        oListItem["_x007a_vg9"] = user.E_Mail;
+                        //Website
+                        oListItem["g0qp"] = user.IntrntSite;
+                        //TAXID
+                        oListItem["_x006a_357"] = user.TAXID;
+                        //TAC CERT NUM
+                        oListItem["svcl"] = user.TAXCERTNUM;
+                        //FirstName
+                        oListItem["jhpd"] = user.FirstName;
+                        //Lastname
+                        oListItem["_x0076_ai5"] = user.LastName;
+                        //Position
+                        oListItem["_x0073_qi8"] = user.Position;
+                        //Tel1
+                        oListItem["tlej"] = user.Tel1;
+                        //EmailL
+                        oListItem["b3yn"] = user.E_MailL;
+                        //Street
+                        oListItem["tila"] = user.Street;
+                        //City
+                        oListItem["geny"] = user.City;
+                        //State
+                        oListItem["bnwd"] = user.State;
+                        //ZipCode
+                        oListItem["s0nc"] = user.ZipCode;
+                        //Country
+                        oListItem["x2nn"] = user.Country;
+                        //StoreServices
+                        oListItem["ilow"] = user.StoreServices;
+                        //Etnias
+                        oListItem["_x0066_dt3"] = user.Etnias;
+                        //URL Image TAX ID
+                        oListItem["hzfz"] = user.url_imageTAXCERT;
+                        //URL IMAGE TAX CERT NUM
+                        oListItem["iiah"] = user.url_imageTAXCERNUM;
+                        //Operation Time
+                        oListItem["yvmx"] = user.OperationTime;
+                        //Recibo Mercaderia Dia
+                        oListItem["odzu"] = user.ReciboMercaderia_dia;
+                        //Recibo Mercaderia Area
+                        oListItem["tzqf"] = user.ReciboMercaderia_area;
+                        //Muelle descarga //Tipo Boolean Evaluamos que cadena enviar
+                        if (user.Muelle_descarga == true)
+                        {
+                            oListItem["_x007a_xh4"] = "YES";
+                        }
+                        else {
+                            oListItem["_x007a_xh4"] = "NO";
+                        }
+                      
+                        //Store Size
+                        oListItem["rzmy"] = user.Store_size;
+                        //Validated
+                        oListItem["yufn"] = "YES";
+                        //OnSharepoint
+                        oListItem["li8o"] = "YES";
+                        ////Modificado
+                        //oListItem["Modified"] = DateTime.UtcNow;
+                        ////Creado
+                        //oListItem["Created"] = DateTime.UtcNow;
+                        ////Creador
+                        //oListItem["Author"] = "Limena";
+                        ////Editor
+                        //oListItem["Editor"] = "Limena";
+
+                        oListItem.Update();
+
+                        ClienteCTX.ExecuteQuery();
+
+                        user.OnSharepoint = true;
+
+                        dblim.Entry(user).State = EntityState.Modified;
+                        dblim.SaveChanges();
+
+                    }
+                    catch(Exception ex) {
+
+                    }
+
+                }
+
+                return RedirectToAction("New_customers", "Management", null);
+            }
+            catch
+            {
+                return RedirectToAction("New_customers", "Management", null);
+            }
+
+
+        }
+
+        public ActionResult New_customers()
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Management";
+                ViewData["Page"] = "New Customers";
+                ViewBag.menunameid = "manag_menu";
+                ViewBag.submenunameid = "newcustomers_submenu";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+                //FIN HEADER
+
+                List<Tb_NewCustomers> lstCustomers = (from a in dblim.Tb_NewCustomers select a).ToList();
+
+                return View(lstCustomers);
 
             }
             else
@@ -505,6 +671,8 @@ namespace LimenawebApp.Controllers
             public int parent { get; set; }
             public IList<MyObj> children { get; set; }
         }
+
+
 
         public ActionResult Template_preview(int? id)
         {

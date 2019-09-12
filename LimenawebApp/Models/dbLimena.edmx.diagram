@@ -32,6 +32,8 @@
         <AssociationConnector Association="dbLimenaModel.FK_Purchase_data_details_Purchase_data" />
         <EntityTypeShape EntityType="dbLimenaModel.Tb_Planning_extra" Width="1.5" PointX="9.375" PointY="11.75" />
         <EntityTypeShape EntityType="dbLimenaModel.Tb_planning_print" Width="1.5" PointX="7.375" PointY="14.75" />
+        <EntityTypeShape EntityType="dbLimenaModel.Tb_NewCustomers" Width="1.5" PointX="9.375" PointY="14.75" />
+        <EntityTypeShape EntityType="dbLimenaModel.Tb_CreditsRequest" Width="1.5" PointX="3.375" PointY="15.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

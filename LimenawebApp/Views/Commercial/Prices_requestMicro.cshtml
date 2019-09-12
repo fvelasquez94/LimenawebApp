@@ -42,7 +42,7 @@
                             <div class="card-body">
                                 <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
                                     <li class="nav-item">
-                                        <a class="nav-link active" data-toggle="tab" href="#tab-j_1"> <i class="fa fa-book pr-2"></i> By Category, SubCategory and Brand</a>
+                                        <a class="nav-link active" data-toggle="tab" href="#tab-j_1"> <i class="fa fa-book pr-2"></i> By Product</a>
                                     </li>
 
                                     <li class="nav-item">
@@ -60,12 +60,10 @@
                                             <thead>
                                                 <tr>
                                                     <th>ID</th>
-                                                    <th>CATEGORY</th>
-                                                    <th>SUBCATEGORY</th>
-                                                    <th>BRAND</th>
+                                                    <th>ITEM</th>
+                                                    <th>DESCRIPTION</th>
                                                     <th>PORC MIN(%)</th>
                                                     <th></th>
-
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -73,9 +71,8 @@
             {
                                     <tr>
                                         <td class="editID">@item.ID_detail</td>
-                                        <td>@item.category_name</td>
-                                        <td>@item.subcategory_name</td>
-                                        <td>@item.Brand_Name</td>
+                                        <td>@item.id_item</td>
+                                        <td>@item.item</td>
                                         <td class="editable editFactorN">@item.min_porc</td>
                                         <td style="padding: .25rem;"><a href="JavaScript:Void(0);" class="btn btn-sm btn-outline-success btn-sm form-pill savebtn" style="display:none;">Save</a> </td>
                                     </tr>

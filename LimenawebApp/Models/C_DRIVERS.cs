@@ -16,5 +16,7 @@ namespace LimenawebApp.Models
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public Nullable<decimal> U_Salario { get; set; }
+        public Nullable<decimal> U_Bono { get; set; }
     }
 }

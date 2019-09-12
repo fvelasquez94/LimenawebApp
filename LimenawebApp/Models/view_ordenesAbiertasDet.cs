@@ -23,10 +23,16 @@ namespace LimenawebApp.Models
         public Nullable<decimal> NumPerMsr { get; set; }
         public string ItemCode { get; set; }
         public string ItemName { get; set; }
+        public Nullable<decimal> Price { get; set; }
         public string U_Storage { get; set; }
         public int DocNum { get; set; }
         public Nullable<System.DateTime> DocDate { get; set; }
         public string CardCode { get; set; }
-        public Nullable<decimal> Price { get; set; }
+        public Nullable<int> SlpCode { get; set; }
+        public string OpenTotalSO { get; set; }
+        public int Blocked { get; set; }
+        public string TreeType { get; set; }
+        public string NoPepperi { get; set; }
+        public string U_DeliveryR { get; set; }
     }
 }

@@ -25,9 +25,9 @@ namespace LimenawebApp.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Tb_Bonificaciones> Tb_Bonificaciones { get; set; }
         public virtual DbSet<Tb_MaestroPorcentajes> Tb_MaestroPorcentajes { get; set; }
-        public virtual DbSet<Tb_Autorizaciones> Tb_Autorizaciones { get; set; }
         public virtual DbSet<Tb_ConfigBolsa> Tb_ConfigBolsa { get; set; }
+        public virtual DbSet<Tb_Autorizaciones> Tb_Autorizaciones { get; set; }
+        public virtual DbSet<Tb_Bonificaciones> Tb_Bonificaciones { get; set; }
     }
 }

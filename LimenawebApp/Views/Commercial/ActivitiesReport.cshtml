@@ -1,0 +1,272 @@
+﻿@model IEnumerable<LimenawebApp.Models.ActivitiesReport>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Activities Report";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+
+    <!--/creative states-->
+    <div class="box-container">
+        <div class="container-fluid">
+            <!--sales statistical overview-->
+
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-success">
+                                <div class="custom-title">
+                                    Activities Report
+                                    <button class="btn btn-icon btn-info float-right ml-2" data-toggle="tooltip" title="Print .pdf" id="btn-print">
+                                        <i class="fa fa-print"></i>
+                                    </button>
+                                </div>
+                    
+               
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="form-group row col-xl-4">
+                                <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Date</label>
+                                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                                    <i class="mdi mdi-calendar"></i>&nbsp;
+                                    <span></span> <i class="fa fa-caret-down"></i>
+                                </div>
+
+                            </div>
+                            <div class="form-group row col-xl-4">
+                                <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Customer</label>
+                                <select id="customerlst" class="form-control" style="width:100%;">
+                                    <option value="" class="rhth">All Customers</option>
+                                    @foreach (var item in ViewBag.customerlst)
+            {
+                        <option class="@item.id" value="@item.id">@item.name</option>
+}
+                                </select>
+
+                            </div>
+                            <div class="form-group row col-xl-4">
+                                <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Brand</label>
+                                <select id="brandlst" class="form-control" style="width:100%;">
+                                    <option value="" class="rhth23">All Brands</option>
+                                    @foreach (var item in ViewBag.brandlst)
+            {
+                        <option value="@item.name" class="@item.id_customer brandopt">@item.name</option>
+}
+                                </select>
+
+                            </div>
+                        </div>
+
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_table2" class="table table-hover table-custom" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><input type="checkbox" class="selectchkAll" id="chk_all" value="0"></th>
+                                            <th scope="col">ID</th>
+                                            <th scope="col">STORE</th>
+                                            <th scope="col">DATE</th>
+                                            <th scope="col" hidden>ID CUSTOMER</th>
+                                            <th scope="col">CUSTOMER</th>
+                                            <th scope="col">BRAND</th>
+                                            <th scope="col">CATEGORY</th>
+                                            <th scope="col">SUBCATEGORIES</th>
+
+
+                                            @*<th scope="col">ACTIONS</th>*@
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var itemO in Model)
+                    {
+                        <tr>
+                            <td><input type="checkbox" class="selectchk" id="chk_@itemO.ID_Activity" value="0"></td>
+                            <td>@itemO.ID_Activity</td>
+                            <td>@itemO.Store , @itemO.City , @itemO.state</td>
+                            <td>@Convert.ToDateTime(itemO.date).ToShortDateString()</td>
+                            <td hidden>@itemO.ID_Customer</td>
+                            <td>@itemO.Customer</td>
+                            <td>@itemO.Brand</td>
+                            <td>@itemO.Category</td>
+                            <td>@itemO.SubCategories</td>
+
+                            @*<td><a href="Url.Action("Print_Activity", "Commercial", new { id = itemO.ID_Activity})" target="_blank" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-print mr-2"></i>Print</a></td>*@
+                        </tr>
+}
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+
+
+
+<script type="text/javascript">
+    window.onload = function (e) {
+     
+        var flag = 0;
+
+
+                //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+           
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = '@Url.Action("ActivitiesReport", "Commercial", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+     
+            window.location.href = newurl;
+        };
+
+
+ 
+        var allOptions = $('#brandlst option')
+
+        $('#customerlst').change(function () {
+            $('#brandlst option.brandopt').remove()
+            var classN = $('#customerlst option:selected').prop('class');
+                var opts = allOptions.filter('.' + classN);
+                $.each(opts, function (i, j) {
+                    $(j).appendTo('#brandlst');
+            });
+
+            //filtramos dt
+            var table = $('#data_table2').DataTable();
+            var customer = $(this).val();
+
+            table.column(4).search(customer).draw();
+
+            if ($(this).val() == "") {
+                $.each(allOptions, function (i, j) {
+                    $(j).appendTo('#brandlst');
+                });
+             
+                $("#brandlst").val("");
+                $("#brandlst").trigger("change");
+
+            }
+        });
+
+        $('#brandlst').change(function () {
+            //filtramos dt
+            var table = $('#data_table2').DataTable();
+            var brand = $(this).val();
+
+            table.column(6).search(brand).draw();
+        });
+
+        $('#chk_all').change(function () {
+            if (this.checked) {
+                $('input.selectchk').prop("checked", true);
+            } else {
+                $('input.selectchk').prop("checked", false);
+            }
+
+        });
+        
+                 $("#btn-print").click(function () {
+                var objects = [];
+
+                $.each($('input.selectchk'), function () {
+
+                    if ($(this).prop('checked')) {
+                        objects.push({
+                            id: $(this).attr('id'),
+                            value: $(this).prop('checked'),
+                            text: ""
+                        });
+                    }
+
+
+                });
+
+                if (objects.length > 0) {
+                    $.ajax({
+                        url: '/Commercial/Print_Activities',
+                        type: 'POST',
+                        data: { 'objects': objects },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+                         
+                            var link = document.createElement('a');
+
+                            console.log(result);
+
+                            link.href = result;
+                            link.download = "MarketingActivity.pdf";
+                            link.click();
+               
+
+
+                        },
+                        error: function (request) {
+
+
+
+
+                        }
+                    });
+                } else {
+                    alert("Select at least one activity");
+                }
+
+            });
+
+    }
+</script>
+

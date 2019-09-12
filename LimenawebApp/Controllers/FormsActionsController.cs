@@ -1453,12 +1453,24 @@ namespace LimenawebApp.Controllers
             try
             {
                 List<FormsM_details> detailsForm = Session["detailsForm"] as List<FormsM_details>;
+                int act = Convert.ToInt32(id);
                 if (detailsForm != null)
                 {
-                    int IDU = Convert.ToInt32(Session["IDusuario"]);
-                    if (id != null)
+
+                }
+                else
+                {
+                    using (var dbs = new dbComerciaEntities())
                     {
-                        int act = Convert.ToInt32(id);
+
+                        detailsForm = dbs.FormsM_details.Where(a => a.ID_visit == act).ToList();
+                    }
+
+                }
+                //int IDU = Convert.ToInt32(Session["IDusuario"]);
+                if (id != null)
+                    {
+                        
                         //Guardamos el detalle del formlario
                         foreach (var item in objects)
                         {
@@ -1644,7 +1656,7 @@ namespace LimenawebApp.Controllers
 
                         return Json(new { Result = "Success" });
                     }
-                }
+                //}
                 return Json(new { Result = "Warning" });
             }
             catch (Exception ex)
@@ -1656,7 +1668,21 @@ namespace LimenawebApp.Controllers
         [HttpPost]
         public ActionResult UploadFiles(string id, string idvisita, string orientation)
         {
+            List<FormsM_details> detailsForm = Session["detailsForm"] as List<FormsM_details>;
+            int act = Convert.ToInt32(id);
+            if (detailsForm != null)
+            {
 
+            }
+            else
+            {
+                using (var dbs = new dbComerciaEntities())
+                {
+
+                    detailsForm = dbs.FormsM_details.Where(a => a.ID_visit == act).ToList();
+                }
+
+            }
 
             // Checking no of files injected in Request object  
             if (Request.Files.Count > 0)
@@ -1723,11 +1749,11 @@ namespace LimenawebApp.Controllers
                         int idf = Convert.ToInt32(id);
                         FormsM_details detail = new FormsM_details();
                         FormsM_details detailBrand = new FormsM_details();
-              
+
                         try
                         {
                             int idvisit = Convert.ToInt32(idvisita);
-                            detail = (from d in dbcmk.FormsM_details where (d.idkey == idf && d.ID_visit == idvisit) select d).FirstOrDefault();
+                            detail = (from d in detailsForm where (d.idkey == idf && d.ID_visit == idvisit) select d).FirstOrDefault();
                         }
                         catch
                         {
@@ -1738,7 +1764,7 @@ namespace LimenawebApp.Controllers
                         try
                         {
                             int idvisit2 = Convert.ToInt32(idvisita);
-                            detailBrand = (from d in dbcmk.FormsM_details where (d.ID_visit == idvisit2 && d.ID_formresourcetype==13) select d).FirstOrDefault();
+                            detailBrand = (from d in detailsForm where (d.ID_visit == idvisit2 && d.ID_formresourcetype==13) select d).FirstOrDefault();
                         }
                         catch { }
 
@@ -1802,7 +1828,7 @@ namespace LimenawebApp.Controllers
 
 
 
-                            var path = Path.Combine(Server.MapPath("~/Content/images/activities"), id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg");
+                            var path = Path.Combine(Server.MapPath("~/SharedContent/images/activities"), id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg");
 
 
                             var tam = file.ContentLength;
@@ -1824,7 +1850,7 @@ namespace LimenawebApp.Controllers
 
                         //Luego guardamos la url en la db
                         //Forms_details detail = dbcmk.Forms_details.Find(Convert.ToInt32(id));  //se movio hacia arriba
-                        detail.fsource = "~/Content/images/activities/" + id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg";
+                        detail.fsource = "~/SharedContent/images/activities/" + id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg";
 
                         dbcmk.Entry(detail).State = EntityState.Modified;
                         dbcmk.SaveChanges();

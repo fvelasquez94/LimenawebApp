@@ -36,7 +36,14 @@ namespace LimenawebApp.Models
         public string id_Vendor { get; set; }
         public Nullable<int> id_brand { get; set; }
         public Nullable<decimal> unitCost { get; set; }
-        public Nullable<int> MinPorcent { get; set; }
+        public int MinPorcent { get; set; }
         public Nullable<decimal> MinPrice { get; set; }
+        public string item_name { get; set; }
+        public string Vendor_Name { get; set; }
+        public string Bonificables { get; set; }
+        public string MinPercIndiv { get; set; }
+        public decimal CantBonif { get; set; }
+        public decimal FactorBonif { get; set; }
+        public string Credits { get; set; }
     }
 }

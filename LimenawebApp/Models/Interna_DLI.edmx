@@ -11,19 +11,26 @@
           </Key>
           <Property Name="ID_detalle" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="DocNum" Type="int" Nullable="false" />
-          <Property Name="ItemCode" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="ItemCode" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Producto" Type="varchar" MaxLength="500" Nullable="false" />
-          <Property Name="CodUOM" Type="varchar" MaxLength="10" Nullable="false" />
-          <Property Name="UOM" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="CodUOM" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="UOM" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Cantidad" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="PrecioPedido" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="PrecioMin" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="NuevoPrecio" Type="decimal" Precision="18" Scale="4" Nullable="false" />
           <Property Name="Estado" Type="int" Nullable="false" />
-          <Property Name="DocNumSAP" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="DocNumSAP" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="FechaIngreso" Type="datetime" Nullable="false" />
           <Property Name="FechaValidacion" Type="datetime" Nullable="false" />
           <Property Name="LineNum" Type="int" />
+          <Property Name="OrderClosed" Type="bit" Nullable="false" />
+          <Property Name="ID_user" Type="int" />
+          <Property Name="UserName" Type="varchar" MaxLength="500" />
+          <Property Name="DocPepperi" Type="varchar" MaxLength="50" />
+          <Property Name="CodCustomer" Type="varchar" MaxLength="50" />
+          <Property Name="Customer" Type="varchar" MaxLength="500" />
+          <Property Name="Deleted" Type="bit" />
         </EntityType>
         <EntityType Name="Tb_Bonificaciones">
           <Key>
@@ -48,6 +55,22 @@
           <Property Name="FechaValidacion" Type="datetime" Nullable="false" />
           <Property Name="ID_Vendor" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Vendor" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="CodUOMAnt" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="UOMAnt" Type="varchar" MaxLength="80" Nullable="false" />
+          <Property Name="TipoIngreso" Type="int" Nullable="false" />
+          <Property Name="CantidadFinal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="LineNum" Type="varchar" MaxLength="5" Nullable="false" />
+          <Property Name="Currency" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CurrencyFinal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Porcentaje" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="PorcentajeFinal" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="CodAutorizo" Type="int" Nullable="false" />
+          <Property Name="Autorizo" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="OrderClosed" Type="bit" Nullable="false" />
+          <Property Name="CantidadPedido" Type="int" />
+          <Property Name="DocPepperi" Type="varchar" MaxLength="50" />
+          <Property Name="RutaDef" Type="varchar(max)" />
+          <Property Name="deleted" Type="bit" />
         </EntityType>
         <EntityType Name="Tb_ConfigBolsa">
           <Key>
@@ -74,6 +97,8 @@
           <Property Name="subcategory_name" Type="nvarchar" MaxLength="255" />
           <Property Name="min_porc" Type="float" />
           <Property Name="updated" Type="bit" />
+          <Property Name="id_item" Type="varchar" MaxLength="50" />
+          <Property Name="item" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityContainer Name="Interna_DLIModelStoreContainer">
           <EntitySet Name="Tb_Autorizaciones" EntityType="Self.Tb_Autorizaciones" Schema="dbo" store:Type="Tables" />
@@ -85,30 +110,6 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="Interna_DLIModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-        <EntityType Name="Tb_Bonificaciones">
-          <Key>
-            <PropertyRef Name="ID_bonificacion" />
-          </Key>
-          <Property Name="ID_bonificacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="CodPedido" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CodCliente" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Cliente" Type="String" MaxLength="250" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CodProducto" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Producto" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ID_brand" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Brand" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CodUOM" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="UOM" Type="String" MaxLength="80" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="CodVendedor" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Vendedor" Type="String" MaxLength="150" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Cantidad" Type="Decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="Estado" Type="Int32" Nullable="false" />
-          <Property Name="DocNum" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="FechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FechaValidacion" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ID_Vendor" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Vendor" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-        </EntityType>
         <EntityType Name="Tb_MaestroPorcentajes">
           <Key>
             <PropertyRef Name="ID_detail" />
@@ -122,33 +123,15 @@
           <Property Name="subcategory_name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
           <Property Name="min_porc" Type="Double" />
           <Property Name="updated" Type="Boolean" />
+          <Property Name="id_item" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="item" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityContainer Name="Interna_DLIEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Tb_Bonificaciones" EntityType="Self.Tb_Bonificaciones" />
           <EntitySet Name="Tb_MaestroPorcentajes" EntityType="Self.Tb_MaestroPorcentajes" />
-          <EntitySet Name="Tb_Autorizaciones" EntityType="Interna_DLIModel.Tb_Autorizaciones" />
           <EntitySet Name="Tb_ConfigBolsa" EntityType="Interna_DLIModel.Tb_ConfigBolsa" />
+          <EntitySet Name="Tb_Autorizaciones" EntityType="Interna_DLIModel.Tb_Autorizaciones" />
+          <EntitySet Name="Tb_Bonificaciones" EntityType="Interna_DLIModel.Tb_Bonificaciones" />
         </EntityContainer>
-        <EntityType Name="Tb_Autorizaciones">
-          <Key>
-            <PropertyRef Name="ID_detalle" />
-          </Key>
-          <Property Name="ID_detalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DocNum" Type="Int32" Nullable="false" />
-          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="Producto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-          <Property Name="CodUOM" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="UOM" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
-          <Property Name="Cantidad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="PrecioPedido" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
-          <Property Name="NuevoPrecio" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
-          <Property Name="Estado" Type="Int32" Nullable="false" />
-          <Property Name="DocNumSAP" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
-          <Property Name="FechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="FechaValidacion" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LineNum" Type="Int32" />
-          <Property Name="PrecioMin" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
-        </EntityType>
         <EntityType Name="Tb_ConfigBolsa">
           <Key>
             <PropertyRef Name="ID_detail" />
@@ -161,40 +144,84 @@
           <Property Name="prop01" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="ID_userSAP" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="Tb_Autorizaciones">
+          <Key>
+            <PropertyRef Name="ID_detalle" />
+          </Key>
+          <Property Name="ID_detalle" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocNum" Type="Int32" Nullable="false" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Producto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CodUOM" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="UOM" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PrecioPedido" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="PrecioMin" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="NuevoPrecio" Type="Decimal" Nullable="false" Precision="18" Scale="4" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <Property Name="DocNumSAP" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaValidacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LineNum" Type="Int32" />
+          <Property Name="OrderClosed" Type="Boolean" Nullable="false" />
+          <Property Name="ID_user" Type="Int32" />
+          <Property Name="UserName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="DocPepperi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CodCustomer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Customer" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Deleted" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Tb_Bonificaciones">
+          <Key>
+            <PropertyRef Name="ID_bonificacion" />
+          </Key>
+          <Property Name="ID_bonificacion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CodPedido" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CodCliente" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Cliente" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="CodProducto" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Producto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_brand" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Brand" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="CodUOM" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UOM" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="CodVendedor" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Vendedor" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Cantidad" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Estado" Type="Int32" Nullable="false" />
+          <Property Name="DocNum" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaIngreso" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FechaValidacion" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_Vendor" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Vendor" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="CodUOMAnt" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="UOMAnt" Type="String" Nullable="false" MaxLength="80" FixedLength="false" Unicode="false" />
+          <Property Name="TipoIngreso" Type="Int32" Nullable="false" />
+          <Property Name="CantidadFinal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="LineNum" Type="String" Nullable="false" MaxLength="5" FixedLength="false" Unicode="false" />
+          <Property Name="Currency" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CurrencyFinal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Porcentaje" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="PorcentajeFinal" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="CodAutorizo" Type="Int32" Nullable="false" />
+          <Property Name="Autorizo" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="OrderClosed" Type="Boolean" Nullable="false" />
+          <Property Name="CantidadPedido" Type="Int32" />
+          <Property Name="DocPepperi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RutaDef" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="deleted" Type="Boolean" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="Interna_DLIModelStoreContainer" CdmEntityContainer="Interna_DLIEntities">
-          <EntitySetMapping Name="Tb_Bonificaciones">
-            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Bonificaciones">
-              <MappingFragment StoreEntitySet="Tb_Bonificaciones">
-                <ScalarProperty Name="Vendor" ColumnName="Vendor" />
-                <ScalarProperty Name="ID_Vendor" ColumnName="ID_Vendor" />
-                <ScalarProperty Name="ID_bonificacion" ColumnName="ID_bonificacion" />
-                <ScalarProperty Name="CodPedido" ColumnName="CodPedido" />
-                <ScalarProperty Name="CodCliente" ColumnName="CodCliente" />
-                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
-                <ScalarProperty Name="CodProducto" ColumnName="CodProducto" />
-                <ScalarProperty Name="Producto" ColumnName="Producto" />
-                <ScalarProperty Name="ID_brand" ColumnName="ID_brand" />
-                <ScalarProperty Name="Brand" ColumnName="Brand" />
-                <ScalarProperty Name="CodUOM" ColumnName="CodUOM" />
-                <ScalarProperty Name="UOM" ColumnName="UOM" />
-                <ScalarProperty Name="CodVendedor" ColumnName="CodVendedor" />
-                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
-                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
-                <ScalarProperty Name="FechaValidacion" ColumnName="FechaValidacion" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Tb_MaestroPorcentajes">
             <EntityTypeMapping TypeName="Interna_DLIModel.Tb_MaestroPorcentajes">
               <MappingFragment StoreEntitySet="Tb_MaestroPorcentajes">
+                <ScalarProperty Name="item" ColumnName="item" />
+                <ScalarProperty Name="id_item" ColumnName="id_item" />
                 <ScalarProperty Name="updated" ColumnName="updated" />
                 <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
                 <ScalarProperty Name="id_brand" ColumnName="id_brand" />
@@ -204,27 +231,6 @@
                 <ScalarProperty Name="id_subcategory" ColumnName="id_subcategory" />
                 <ScalarProperty Name="subcategory_name" ColumnName="subcategory_name" />
                 <ScalarProperty Name="min_porc" ColumnName="min_porc" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Tb_Autorizaciones">
-            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Autorizaciones">
-              <MappingFragment StoreEntitySet="Tb_Autorizaciones">
-                <ScalarProperty Name="PrecioMin" ColumnName="PrecioMin" />
-                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
-                <ScalarProperty Name="FechaValidacion" ColumnName="FechaValidacion" />
-                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
-                <ScalarProperty Name="DocNumSAP" ColumnName="DocNumSAP" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="NuevoPrecio" ColumnName="NuevoPrecio" />
-                <ScalarProperty Name="PrecioPedido" ColumnName="PrecioPedido" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="UOM" ColumnName="UOM" />
-                <ScalarProperty Name="CodUOM" ColumnName="CodUOM" />
-                <ScalarProperty Name="Producto" ColumnName="Producto" />
-                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
-                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
-                <ScalarProperty Name="ID_detalle" ColumnName="ID_detalle" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -238,6 +244,75 @@
                 <ScalarProperty Name="Value" ColumnName="Value" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Autorizaciones">
+            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Autorizaciones">
+              <MappingFragment StoreEntitySet="Tb_Autorizaciones">
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="Customer" ColumnName="Customer" />
+                <ScalarProperty Name="CodCustomer" ColumnName="CodCustomer" />
+                <ScalarProperty Name="DocPepperi" ColumnName="DocPepperi" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ID_user" ColumnName="ID_user" />
+                <ScalarProperty Name="OrderClosed" ColumnName="OrderClosed" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="FechaValidacion" ColumnName="FechaValidacion" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="DocNumSAP" ColumnName="DocNumSAP" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="NuevoPrecio" ColumnName="NuevoPrecio" />
+                <ScalarProperty Name="PrecioMin" ColumnName="PrecioMin" />
+                <ScalarProperty Name="PrecioPedido" ColumnName="PrecioPedido" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="UOM" ColumnName="UOM" />
+                <ScalarProperty Name="CodUOM" ColumnName="CodUOM" />
+                <ScalarProperty Name="Producto" ColumnName="Producto" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="ID_detalle" ColumnName="ID_detalle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_Bonificaciones">
+            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Bonificaciones">
+              <MappingFragment StoreEntitySet="Tb_Bonificaciones">
+                <ScalarProperty Name="deleted" ColumnName="deleted" />
+                <ScalarProperty Name="RutaDef" ColumnName="RutaDef" />
+                <ScalarProperty Name="DocPepperi" ColumnName="DocPepperi" />
+                <ScalarProperty Name="CantidadPedido" ColumnName="CantidadPedido" />
+                <ScalarProperty Name="OrderClosed" ColumnName="OrderClosed" />
+                <ScalarProperty Name="Autorizo" ColumnName="Autorizo" />
+                <ScalarProperty Name="CodAutorizo" ColumnName="CodAutorizo" />
+                <ScalarProperty Name="PorcentajeFinal" ColumnName="PorcentajeFinal" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="CurrencyFinal" ColumnName="CurrencyFinal" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="CantidadFinal" ColumnName="CantidadFinal" />
+                <ScalarProperty Name="TipoIngreso" ColumnName="TipoIngreso" />
+                <ScalarProperty Name="UOMAnt" ColumnName="UOMAnt" />
+                <ScalarProperty Name="CodUOMAnt" ColumnName="CodUOMAnt" />
+                <ScalarProperty Name="Vendor" ColumnName="Vendor" />
+                <ScalarProperty Name="ID_Vendor" ColumnName="ID_Vendor" />
+                <ScalarProperty Name="FechaValidacion" ColumnName="FechaValidacion" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="Vendedor" ColumnName="Vendedor" />
+                <ScalarProperty Name="CodVendedor" ColumnName="CodVendedor" />
+                <ScalarProperty Name="UOM" ColumnName="UOM" />
+                <ScalarProperty Name="CodUOM" ColumnName="CodUOM" />
+                <ScalarProperty Name="Brand" ColumnName="Brand" />
+                <ScalarProperty Name="ID_brand" ColumnName="ID_brand" />
+                <ScalarProperty Name="Producto" ColumnName="Producto" />
+                <ScalarProperty Name="CodProducto" ColumnName="CodProducto" />
+                <ScalarProperty Name="Cliente" ColumnName="Cliente" />
+                <ScalarProperty Name="CodCliente" ColumnName="CodCliente" />
+                <ScalarProperty Name="CodPedido" ColumnName="CodPedido" />
+                <ScalarProperty Name="ID_bonificacion" ColumnName="ID_bonificacion" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

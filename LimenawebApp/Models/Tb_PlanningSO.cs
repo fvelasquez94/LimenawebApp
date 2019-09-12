@@ -35,6 +35,9 @@ namespace LimenawebApp.Models
         public string Volume { get; set; }
         public string Printed { get; set; }
         public string Remarks { get; set; }
+        public System.DateTime DateCheckIn { get; set; }
+        public System.DateTime DateCheckOut { get; set; }
+        public int ID_userValidate { get; set; }
     
         public virtual Tb_Planning Tb_Planning { get; set; }
     }

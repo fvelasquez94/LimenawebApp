@@ -1,0 +1,172 @@
+﻿@model IEnumerable<LimenawebApp.Models.Tb_CreditsRequestWithRoute>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Credits authorize";
+}
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Credits Authorize</div>
+                                <div class=" widget-action-link">
+                                    <div class="dropdown">
+                                        <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
+                                            <i class=" vl_ellipsis-fill-h"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right vl-dropdown">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_table" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="font-size:10px;">ID</th>
+                                            <th style="font-size:10px;">SAP NUM</th>
+                                            <th style="display:none;">LINE NUM</th>
+                                            <th style="font-size:12px;">ROUTE</th>
+                                            <th style="font-size:12px;">Customer</th>
+                                            <th style="font-size:12px;">Product</th>
+                                            <th style="font-size:12px;">UoM</th>
+                                            <th style="font-size:12px;">QTY</th>
+                                            <th style="font-size:12px;">Reason</th>
+                                            <th style="font-size:12px;">Product to return</th>
+                                            <th style="font-size:12px;">User</th>
+                                            <th style="font-size:12px;">Date</th>
+                                            <th>IMG</th>
+                                            <th>Comments</th>
+                                            <th style="font-size:12px;">Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var product in Model)
+                                        {
+                                            <tr>
+                                                <td style="font-size:10px;">@product.ID_creditRequest</td>
+                                                <td style="font-size:10px;">@product.DocNumSAP</td>
+                                                <td style="display:none">@product.LineNum</td>
+                                                <td style="font-size:11px;">@product.Route</td>
+                                                <td style="font-size:11px;">@product.CardName</td>
+                                                <td style="font-size:11px;">@product.ItemName</td>
+                                                <td style="font-size:11px;">@product.UoMCode</td>
+                                                <td style="font-size:11px;">@product.Quantity</td>
+                                                <td style="font-size:11px;">@product.Request_reason</td>
+                                                <td style="font-size:11px;">
+                                                @if (product.ReturnItemCode == "" || product.ReturnItemCode==null) {
+                                                    <label>NA</label>
+                                                } else {
+
+                                                    <label>@product.ReturnItemName</label> 
+                                                }</td>
+                                                <td style="font-size:11px;">@product.userCreateName</td>
+                                                <td style="font-size:11px;">@product.dateCreate.ToShortDateString()</td>
+
+                                                <td>
+                                                    @if (product.URL_image == "" || product.URL_image == null)
+    {
+
+    }
+    else
+    {
+                                                <img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="img_@product.ID_creditRequest" src="@Url.Content(product.URL_image)" alt="" />
+}
+                                                    @if (product.URL_image2 == "" || product.URL_image2 == null)
+    {
+
+    }
+    else
+    {
+                                                <img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="img2_@product.ID_creditRequest" src="@Url.Content(product.URL_image2)" alt="" />
+}
+
+                                                </td>
+                                                <td style="font-size:10px;">@product.comments</td>
+                                                <td style="font-size:11px;">
+
+                                                    @if (product.estado==0) {
+                                                        
+                                                         <label class="text-warning"> Waiting for authorization</label>
+                                                    }
+                                                    else if (product.estado == 2)
+                                                    {
+                                                        <label class="text-success">Authorized</label>
+                                                    }
+                                                    else if (product.estado == 1)
+                                                    {
+                                                        <label class="text-danger">Not Authorized</label>
+                                                    }else if (product.estado == 3)
+                                                    {
+                                                        <label class="text-success">On SAP</label>
+                                                    }else if (product.estado == 4)
+                                                    {
+                                                        <label class="text-warning">Waiting Order</label>
+                                                    }else if (product.estado == 5)
+                                                    {
+                                                        <label class="text-danger">Expired</label>
+                                                    }
+                                                </td>
+                                                <td>
+
+        @if (ViewBag.isadmin == 0)
+        {
+            if (product.estado == 2 || product.estado == 1 || product.estado == 3 || product.estado == 4)
+            {
+
+            }
+            else
+            {
+                                                <a href="javascript:void(0)" onclick="deleteRequest(@product.ID_creditRequest)" class="btn btn-outline-danger btn-sm form-pill" title="Delete"><i class="fa fa-trash-o"></i></a>
+}
+
+
+}
+else
+{
+if (product.estado == 2 || product.estado == 1 || product.estado == 3 || product.estado == 4)
+{
+
+}
+else
+{
+                                                <a href="javascript:void(0)" onclick="approveRequest(@product.ID_creditRequest)" class="btn btn-outline-success btn-sm form-pill" title="Authorize"><i class="fa fa-check"></i></a>
+                                                <a href="javascript:void(0)" onclick="disapproveRequest(@product.ID_creditRequest)" class="btn btn-outline-danger btn-sm form-pill" title="Reject/Refuse"><i class="fa fa-close"></i></a>
+}
+
+}
+
+
+
+                                                </td>
+                                            </tr>
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+    <span class="close">&times;</span>
+</div>
+

@@ -7,10 +7,196 @@
     @if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos")
     {
         @Html.Partial("~/Views/Shared/Style_landingpage.cshtml")
+
+    }
+
+    else if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll")
+    {
+        @Html.Partial("~/Views/Shared/Style_landingpage.cshtml")
+
+        <style>
+            .select-box select {
+                background: transparent;
+                width: 200px;
+                height: 35px;
+                padding: 5px;
+                font-size: 12px;
+                line-height: 1;
+                border: 0;
+                border-radius: 0;
+                -webkit-appearance: none;
+            }
+
+            .select-box {
+                width: 100%;
+                height: 35px;
+                overflow: hidden;
+                background: url(https://dl.dropbox.com/u/122540013/img/arrow.png) no-repeat right #fff;
+                border: 1px solid #ddd;
+                border-radius: 3px 5px 5px 3px;
+            }
+
+                .select-box select {
+                    padding-right: 0;
+                    vertical-align: top !important;
+                    text-align: left;
+                    height: auto;
+                    line-height: 1em;
+                }
+
+            .form-group input {
+                padding: 0;
+                height: initial;
+                width: initial;
+                margin-bottom: 0;
+                display: none;
+                cursor: pointer;
+            }
+
+            .form-group label {
+                position: relative;
+                cursor: pointer;
+                font-size: 11px;
+                font-weight: normal;
+                margin-bottom: 8px;
+            }
+
+                .form-group label:before {
+                    content: '';
+                    -webkit-appearance: none;
+                    background-color: transparent;
+                    border: 2px solid #e6e6e6;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), inset 0px -15px 10px -12px rgba(0, 0, 0, 0.05);
+                    padding: 10px;
+                    display: inline-block;
+                    position: relative;
+                    vertical-align: middle;
+                    cursor: pointer;
+                    margin-right: 5px;
+                }
+
+            .form-group input:checked + label:after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: 2px;
+                left: 9px;
+                width: 6px;
+                height: 14px;
+                border: solid #0079bf;
+                border-width: 0 2px 2px 0;
+                transform: rotate(45deg);
+            }
+        </style>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="~/Content/appcontent/assets/js/countrystatecity.js"></script>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/dmhendricks/bootstrap-grid-css@4.1.3/dist/css/bootstrap-grid.min.css" />
+
     }
     else
     {
         @Html.Partial("~/Views/Shared/Style_main.cshtml")
+        <style>
+            @@media (max-width: 1024px) and (min-width: 992px) {
+                .navSetLimena {
+                    width: fit-content;
+                }
+            }
+        </style>
+    }
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Credits authorize")
+    {
+
+        <style>
+
+.myImg {
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.myImg:hover {opacity: 0.7;}
+
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 99999; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@@-webkit-keyframes zoom {
+  from {-webkit-transform:scale(0)}
+  to {-webkit-transform:scale(1)}
+}
+
+@@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@@media only screen and (max-width: 700px){
+  .modal-content {
+    width: 100%;
+  }
+}
+        </style>
     }
 
 
@@ -101,6 +287,7 @@
             width: 100% !important;
             display: inline-block;
         }
+
         #data_tableEditor2_wrapper {
             width: 100% !important;
             display: inline-block;
@@ -120,6 +307,12 @@
             background-color: #ddd !important;
             color: black;
         }
+
+        .brandsbtnsl {
+            background-color: #328dff !important;
+            color: white;
+        }
+
 
         tr.selected {
             background-color: rgba(0, 0, 0, .02) !important;
@@ -184,6 +377,32 @@
         .select2-results__option[aria-selected=true] {
             display: none;
         }
+
+
+        div.item {
+            vertical-align: top;
+            display: inline-block;
+            text-align: center;
+            width: 120px;
+            cursor: pointer;
+        }
+
+        img.itemqa {
+            width: 100px;
+            height: 100px;
+        }
+
+        .caption {
+            display: block;
+        }
+
+        .optred {
+            color: orangered !important;
+        }
+
+        .optgreen {
+            color: limegreen !important;
+        }
     </style>
 
 </head>
@@ -211,6 +430,12 @@
         @RenderBody()
         @Html.Partial("~/Views/Shared/Footer_landingpage.cshtml")
     }
+    else if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll")
+    {
+        @Html.Partial("~/Views/Shared/Menu_landingpage.cshtml")
+        @RenderBody()
+        @Html.Partial("~/Views/Shared/Footer_landingpage.cshtml")
+    }
     else
     {
         @Html.Partial("~/Views/Shared/Header_main.cshtml")
@@ -227,6 +452,12 @@
 {
     @Html.Partial("~/Views/Shared/Scripts_landingpage.cshtml")
 }
+else if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll")
+{
+
+    @Html.Partial("~/Views/Shared/Scripts_landingpage.cshtml")
+
+}
 else
 {
     @Html.Partial("~/Views/Shared/Scripts_main.cshtml")
@@ -234,9 +465,168 @@ else
 
 }
 </html>
+@if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll")
+{
+    <script type="text/javascript">
+        $(document).ready(function () {
+            //option A
+
+
+
+            $("#myform").submit(function (e) {
+                e.preventDefault();
+                //General
+
+
+                var CardName = $("#CardName").val();
+                var Phone1 = $("#Phone1").val();
+                var E_Mail = $("#E_Mail").val();
+
+                if (E_Mail == null) {
+                    E_Mail = "";
+                }
+
+                var IntrntSite = $("#IntrntSite").val();
+                if (IntrntSite == null) {
+                    IntrntSite = "";
+                }
+                var TAXID = $("#TAXID").val();
+                var TAXCERTNUM = $("#TAXCERTNUM").val();
+                //Datos de contacto
+                var FirstName = $("#FirstName").val();
+                var LastName = $("#LastName").val();
+                var Position = $("#Position").val();
+                var Tel1 = $("#Tel1").val();
+                var E_MailL = $("#E_MailL").val();
+                //Direccion
+                var countryId = $("#countryId").val();
+                var stateId = $("#stateId").val();
+                var cityId = $("#cityId").val();
+                var Street = $("#Street").val();
+                var ZipCode = $("#ZipCode").val();
+
+                //Verificamos servicios seleccionados
+                var services = [];
+                $.each($("input[name='services']:checked"), function () {
+                    services.push($(this).val());
+                });
+
+                var servicesSelected = services.join(", ");
+                //Verificamos Etnias seleccionadas
+                var etnias = [];
+                $.each($("input[name='etnias']:checked"), function () {
+                    etnias.push($(this).val());
+                });
+                var etniasselected= etnias.join(", ");
+
+                var validar = 1;
+                if (services.length <= 0 || services.length == null) {
+                    validar = 0;
+                }
+                if (etnias.length <= 0 || etnias.length == null) {
+                    validar = 0;
+                }
+
+                //OTROS
+                var HorarioOperacion = $("#HorarioOperacion").val();
+                var ReciboMercaderiaDia = $("#ReciboMercaderiaDia").val();
+                var ReciboMercaderiaArea = $("#ReciboMercaderiaArea").val();
+                var MuelleDescarga = $("#MuelleDescarga").val();
+                var TamanoTienda = $("#TamanoTienda").val();
+
+                var fileData = new FormData();
+                //IMAGENES
+                var files = $(".fileTAX").get(0).files;
+                 //Recorremos los elementos tipo file
+                for (var i = 0; i < files.length; i++) {
+                    fileData.append(files[i].name, files[i]);
+                }
+                var files2 = $(".fileTAX").get(1).files;
+                //Recorremos los elementos tipo file
+                for (var i = 0; i < files2.length; i++) {
+                    fileData.append(files2[i].name, files2[i]);
+                }
+                // Agregamos informaacion adicional
+            fileData.append('CardName', CardName);
+            fileData.append('Phone1', Phone1);
+            fileData.append('E_Mail', E_Mail);
+                fileData.append('IntrntSite', IntrntSite);
+            fileData.append('TAXID', TAXID);
+            fileData.append('TAXCERTNUM', TAXCERTNUM);
+            fileData.append('FirstName', FirstName);
+            fileData.append('LastName', LastName);
+            fileData.append('Position', Position);
+            fileData.append('Tel1', Tel1);
+            fileData.append('E_MailL', E_MailL);
+            fileData.append('countryId', countryId);
+            fileData.append('stateId', stateId);
+            fileData.append('cityId', cityId);
+            fileData.append('Street', Street);
+            fileData.append('ZipCode', ZipCode);
+            fileData.append('servicesSelected', servicesSelected);
+            fileData.append('etniasselected', etniasselected);
+            fileData.append('HorarioOperacion', HorarioOperacion);
+            fileData.append('ReciboMercaderiaDia', ReciboMercaderiaDia);
+                fileData.append('ReciboMercaderiaArea', ReciboMercaderiaArea);
+
+                if ($('#MuelleDescarga').is(":checked")) {
+                    fileData.append('MuelleDescarga', true);
+
+                } else {
+                    fileData.append('MuelleDescarga', false);
+                }
+
+            fileData.append('TamanoTienda', TamanoTienda);
+
+
+                //if true rotate to the right
+
+
+
+
+
+                if (validar == 1) {
+                    //Ajax
+
+                    $.ajax({
+                        url: '/Home/UploadInformationNewCustomer',
+                        type: "POST",
+                        contentType: false, // Not to set any content header
+                        processData: false, // Not to process data
+                        //async: true,
+                        timeout: 80000,
+                        data: fileData,
+                        success: function (result) {
+                            //$("#modal_demoform_saving").modal('hide');
+                            document.getElementById("loader").style.display = "none";
+                            if (result == "File Uploaded Successfully!") {
+
+                                  window.location.href = '@Url.Action("Enroll", "Home", new { token =1})';
+                            } else {
+
+                            }
+
+                        },
+                        error: function (err) {
+                            //$("#modal_demoform_saving").modal('hide');
+                            //alert("An error is reported. Maximum request length exceeded");
+                            document.getElementById("loader").style.display = "none";
+                        }
+                    });
+
+
+                } else {
+                    //Alert
+                    alert("faltan campos");
+                }
+
+            });
+        });
+    </script>
+}
 <script type="text/javascript">
     // initialize Session Updater on page
-    SessionUpdater.Setup('@Url.Action("KeepSessionAlive","Home")');
+    //SessionUpdater.Setup('@Url.Action("KeepSessionAlive","Home")');
 </script>
 @if (ViewBag.Title == "Distribuidora Limeña - Users")
 {
@@ -377,6 +767,11 @@ else
         $(document.body).find('#multi_menu3').stop(true, true).delay(100).fadeIn(500);
     }, function () {
         $(document.body).find('#multi_menu3').stop(true, true).delay(6600).fadeOut(500);
+    });
+    $('#operrep_submenu').hover(function () {
+        $(document.body).find('#multi_menu5').stop(true, true).delay(100).fadeIn(500);
+    }, function () {
+        $(document.body).find('#multi_menu5').stop(true, true).delay(6600).fadeOut(500);
     });
 </script>
 
@@ -593,6 +988,61 @@ else
             value = value.toString().split('e');
             return +(value[0] + 'e' + (value[1] ? (+value[1] - exp) : -exp));
         };
+
+        function cancelOrder(id) {
+
+            swal.fire({
+                title: 'Cancel Order',
+                text: "Are you sure you want to cancel this order?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    document.getElementById("loader").style.display = "block";
+                    $.ajax
+                        ({
+                            url: '/DSD/Cancel_OrderDSD',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                id: id,
+
+
+                            }),
+                            success: function (data) {
+
+                                if (data == "SUCCESS") {
+
+                                    toastr.success("Order canceled successfully.", "Success");
+
+                                    document.getElementById("loader").style.display = "none";
+
+                                    location.reload();
+                                } else {
+                                    document.getElementById("loader").style.display = "none";
+                                    toastr.warning(data, "Warning");
+                                    return false;
+                                }
+                            },
+                            error: function (xhr, status, error) {
+                                document.getElementById("loader").style.display = "none";
+                                var err = eval("(" + xhr.responseText + ")");
+                                toastr.error(err.Message, "Error");
+                                return false;
+                            },
+                        });
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+
+
+        }
 
         //Ajax
         $(function () {
@@ -1287,6 +1737,14 @@ else
 }
 @if (ViewBag.Title == "Distribuidora Limeña - Marketing activities")
 {
+
+    <script>
+        $(document).ready(function () {
+            $("#ID_form").val("32");
+            getActivity();
+        });
+    </script>
+
     <script>
 
         $("#ID_subcat").select2({
@@ -1403,6 +1861,59 @@ else
             });
 
         }
+
+        //SAVE COMMENT
+        //CHECK IN
+        function saveComment() {
+            $("#loading").show();
+            var idvisita = "";
+            idvisita = '@ViewBag.id_visit';
+            var comment = "";
+            comment = $.trim($("#visitComment").val());
+            swal.fire({
+                title: 'Save Comment',
+                text: "Are you sure you want to save this comment?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Commercial/saveComment',
+                        type: 'POST',
+                        data: { 'ID_visit': idvisita, 'comments': comment },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result.Result == "Success") {
+                                showSuccessToast();
+                                $("#loading").hide();
+                                //window.location.reload(true);
+                            } else {
+                                //showWarning2Toast();
+                                $("#loading").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            //showWarning2Toast();
+                            $("#loading").hide();
+                        }
+                    });
+                } else if (result.dismiss == 'cancel') {
+                    $("#loading").hide();
+                }
+
+            });
+
+        }
+
+
 
         //CHECK OUT
         //CHECK OUT
@@ -1795,6 +2306,7 @@ else
 
                         $("#storeName").html(result.resultV[0].storeName);
                         $("#storeAddress").html(result.resultV[0].storeAddress);
+                        $("#visitComment").html(result.resultV[0].comment);
 
                         var bdate = new Date(parseInt(result.resultV[0].storeDate.substr(6)));
 
@@ -2831,9 +3343,240 @@ Configure tooltips globally
     });
     </script>
 }
+@if (ViewBag.Title == "Distribuidora Limeña - Open Sales Orders")
+{
+    <script>
+        $(".filterTable").select2({
+            multiple: true
+        });
+
+
+        var table = $('#data_tableEditor').DataTable({
+
+            initComplete: function () {
+                this.api().columns([2]).every(function () {
+                    var column = this;
+                    var select = $("#numSOfilter");
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                this.api().columns([3]).every(function () {
+                    var column = this;
+                    var select = $("#dateFilter");
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                this.api().columns([4]).every(function () {
+                    var column = this;
+                    var select = $("#customerFilter");
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                this.api().columns([5]).every(function () {
+                    var column = this;
+                    var select = $("#routeFilter");
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                this.api().columns([6]).every(function () {
+                    var column = this;
+                    var select = $("#salesFilter");
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                this.api().columns([7]).every(function () {
+                    var column = this;
+                    var select = $("#printFilter");
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>')
+                    });
+                });
+                //this.api().columns('.selectfilter').every(function () {
+                //    var column = this;
+                //    var select = $('<select><option value=""></option></select>')
+                //        .appendTo($(column.header()))
+                //        .on('change', function () {
+                //            var val = $.fn.dataTable.util.escapeRegex(
+                //                $(this).val()
+                //            );
+
+                //            column
+                //                .search(val ? '^' + val + '$' : '', true, false)
+                //                .draw();
+                //        });
+
+                //    column.data().unique().sort().each(function (d, j) {
+                //        select.append('<option value="' + d + '">' + d + '</option>')
+                //    });
+
+                //});
+
+
+
+            }
+        });
+
+        table.on('order.dt search.dt', function () {
+            table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        //filters
+        $('#numSOfilter').on('change', function () {
+            var search = [];
+
+            $.each($('#numSOfilter option:selected'), function () {
+                search.push($(this).val());
+            });
+
+            search = search.join('|');
+            table.column(2).search(search, true, false).draw();
+        });
+        $('#dateFilter').on('change', function () {
+            var search = [];
+
+            $.each($('#dateFilter option:selected'), function () {
+                search.push($(this).val());
+            });
+
+            search = search.join('|');
+            table.column(3).search(search, true, false).draw();
+        });
+        $('#customerFilter').on('change', function () {
+            var search = [];
+
+            $.each($('#customerFilter option:selected'), function () {
+                search.push($(this).val());
+            });
+
+            search = search.join('|');
+            table.column(4).search(search, true, false).draw();
+        });
+        $('#routeFilter').on('change', function () {
+            var search = [];
+
+            $.each($('#routeFilter option:selected'), function () {
+                search.push($(this).val());
+            });
+
+            search = search.join('|');
+            table.column(5).search(search, true, false).draw();
+        });
+        $('#salesFilter').on('change', function () {
+            var search = [];
+
+            $.each($('#salesFilter option:selected'), function () {
+                search.push($(this).val());
+            });
+
+            search = search.join('|');
+            table.column(6).search(search, true, false).draw();
+        });
+        $('#printFilter').on('change', function () {
+            var search = [];
+
+            $.each($('#printFilter option:selected'), function () {
+                search.push($(this).val());
+            });
+
+            search = search.join('|');
+            table.column(7).search(search, true, false).draw();
+        });
+        //filters
+
+
+        $('#chk_all').change(function () {
+            if (this.checked) {
+                $('input.selectchk').prop("checked", true);
+            } else {
+                $('input.selectchk').prop("checked", false);
+            }
+
+        });
+
+        // Handle form submission event
+        function PrintResume() {
+            var objects = [];
+
+            $.each($('input.selectchk'), function () {
+
+                if ($(this).prop('checked')) {
+                    objects.push({
+                        NumSO: $(this).attr('id')
+                    });
+                }
+
+
+            });
+
+            if (objects.length > 0) {
+                //console.log(objects);
+                swal.fire({
+                    title: 'Are you sure to print this sales orders?',
+                    text: "",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
+
+                        $.ajax({
+                            url: '/Invoices/Print_OpenSalesOrders',
+                            type: 'POST',
+                            data: { 'objects': objects },
+                            cache: false,
+                            global: false,
+                            success: function (result) {
+
+
+                                if (result == "success") {
+
+                                    Swal.fire(
+                                        'Sales Orders Printed!',
+                                        'The Sales Orders has been printed.',
+                                        'success'
+                                    )
+                                    window.location.reload(true);
+                                } else {
+                                    alert("Something went wrong..");
+                                }
+
+
+
+
+                            },
+                            error: function (request) {
+
+                                alert("Something went wrong..");
+
+
+                            }
+                        });
+
+                    }
+                })
+
+
+            } else {
+                alert("Select at least one activity");
+            }
+
+        };
+    </script>
+}
+
 @if (ViewBag.Title == "Distribuidora Limeña - Quality Control planning")
 {
     <script>
+
 
         function closeRoute(id_route) {
 
@@ -3072,6 +3815,1115 @@ Configure tooltips globally
         });
     </script>
 }
+
+@if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data")
+
+{
+
+
+
+    <script type="text/javascript">
+
+        //$('#data_tableEditor2').DataTable({
+
+        //    'paging':false
+
+        //});
+
+
+
+
+
+        function test() {
+
+                 var objects = @Html.Raw(Json.Encode(ViewBag.data));
+
+            var myArray = [];
+
+            if (objects.length > 0) {
+
+
+
+                try {
+
+                    $("#maintbbo").empty();
+
+                    $("#data_tableEditor2").append();
+
+                    for (var i = 0; i < objects.length; i++) {
+
+                        //console.log(objects[i]["ProdCodigo"]);
+                        //var tr = "";
+
+                        if (objects[i]["transito"] > 0) {
+                            myArray.push('<tr class="context-menu-one" style="background-color:aliceblue" id="' + objects[i]["ProdCodigo"] + '">');
+                        } else {
+                            myArray.push('<tr  class="context-menu-one" id="' + objects[i]["ProdCodigo"] + '">');
+                        }
+                        myArray.push('<td></td>');
+                        myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;display:none">' + objects[i]["FactorCompra_quiebre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;display:none">' + objects[i]["Politica_cobertura"] + "</td>");
+
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Marca"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["SubCategory"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Category"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["InventarioCajas"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Desviacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Maximo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Minimo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio_AA"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["VentaB1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Variacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["TendenciaPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente2"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente3"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente4"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"].toFixed(2) + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
+
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_TI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + Math.round(objects[i]["CoberturaProyectadaNume"]) + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
+
+
+
+                        if (objects[i]["Comentarios"] != null) {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea>' + objects[i]["Comentarios"] + '</textarea>' + "</td>");
+                        } else {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea></textarea>' + "</td>");
+                        }
+
+
+                        myArray.push('<td hidden style="padding: .25rem;" class="editCoberturaProyectadaDeno">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["VentaF1"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["LeadTime"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;" class="editCoberturaProyectadaNumeOriginal">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
+                        myArray.push('</tr >');
+
+                    }
+
+                    $('#maintbbo').append(myArray.join(''));
+
+
+
+                }
+
+                catch (err) {
+
+                    console.log("error: " + err.message);
+
+                    $("#maintbbo").empty();
+
+                    $("#data_tableEditor2").append();
+
+                }
+
+            } else {
+
+                console.log("error2");
+
+                $("#maintbbo").empty();
+
+                $("#data_tableEditor2").append();
+
+            }
+
+
+
+
+
+
+
+        }
+
+
+
+        $(document).ready(function () {
+
+            //Llamamos los datos
+
+            test();
+
+
+
+            var table = $('#data_tableEditor2').DataTable({
+
+                dom: 'flrtip',
+
+                scrollY: "600px",
+                fixedHeader: true,
+                scrollX: true,
+
+                scrollCollapse: true,
+
+                paging: false,
+
+                //"columnDefs": [
+
+                //    {
+
+                //        "targets": [6],
+
+                //        "visible": false
+
+                //    },
+
+                //    {
+
+                //        "targets": [7],
+
+                //        "visible": false
+
+                //    },
+
+                //    {
+
+                //        "targets": [8],
+
+                //        "visible": false
+
+                //    },
+
+                //    {
+
+                //        "targets": [9],
+
+                //        "visible": false
+
+                //    },
+
+                //    {
+
+                //        "targets": [45],
+
+                //        "visible": false
+
+                //    },
+
+                //    {
+
+                //        "targets": [46],
+
+                //        "visible": false
+
+                //    },
+
+                //    {
+
+                //        "targets": [47],
+
+                //        "visible": false
+
+                //    }
+
+                //],
+
+                fixedColumns: {
+
+                    leftColumns: 3
+
+                },
+
+                initComplete: function () {
+
+                    this.api().columns([8]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstCategory");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    this.api().columns([7]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstSubCategory");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    this.api().columns([9]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstProvider");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    this.api().columns([6]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstBrands");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    $("#lstCategory").select2({ multiple: true });
+
+                    $("#lstSubCategory").select2({ multiple: true });
+
+                    $("#lstProvider").select2({ multiple: true });
+
+                    $("#lstBrands").select2({ multiple: true });
+
+                }
+
+            });
+
+
+
+            table.on('order.dt search.dt', function () {
+
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+
+                    cell.innerHTML = i + 1;
+
+                });
+
+            }).draw();
+
+
+
+            function sort_unique(arr) {
+
+                return arr.sort().filter(function (el, i, a) {
+
+                    return (i == a.indexOf(el));
+
+                });
+
+            }
+
+
+
+            $(function () {
+
+                $('input.filternumbers').on('input', function () {
+
+                    this.value = this.value
+
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+
+                });
+
+            });
+
+
+
+            $('#lstCategory').on('change', function () {
+
+                var search = [];
+
+
+
+                var data2;
+
+                data2 = Array();
+
+
+
+
+
+
+
+                $.each($('#lstCategory option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(8).search(search, true, false).draw();
+
+
+
+                var select = $("#lstSubCategory");
+
+                select.empty();
+
+
+
+                table.rows({ search: 'applied' }).data().unique().sort().each(function (value, index) {
+
+
+
+                    data2.push(value[7]);
+
+
+
+
+
+                });
+
+                data2 = sort_unique(data2);
+
+                $.each(data2, function (key, value) {
+
+                    select.append('<option value="' + value + '">' + value + '</option>')
+
+                });
+
+
+
+
+
+            });
+
+
+
+            $('#lstSubCategory').on('change', function () {
+
+                var search = [];
+
+
+
+                $.each($('#lstSubCategory option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(7).search(search, true, false).draw();
+
+            });
+
+
+
+            $('#lstBrands').on('change', function () {
+
+                var search = [];
+
+
+
+                $.each($('#lstBrands option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(6).search(search, true, false).draw();
+
+            });
+
+
+
+            $('#lstProvider').on('change', function () {
+
+                var search = [];
+
+
+
+                $.each($('#lstProvider option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(9).search(search, true, false).draw();
+
+            });
+
+
+            $('input.editPedido[type = "text"]').on('focusout', function () {
+                //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
+                var pedido = parseFloat($(this).val());
+                var coberturaProyectadaNume = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaNumeOriginal').text());
+                var coberturaProyectadaDeno = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaDeno').text());
+                var total = 0.0;
+                if (coberturaProyectadaDeno > 0) {
+                    total = ((coberturaProyectadaNume + pedido) / coberturaProyectadaDeno);
+
+                }
+
+                $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
+                //            //$(this).html('DEL');
+
+                ///Monto PO
+                var desc = 0;
+
+                desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                var monto = desc * pedido;
+                if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                //Pallet de orden editPalletOrden
+                var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
+                var palletstotal = (pedido / casesPallet);
+
+                if (casesPallet == 0) { palletstotal = 0; }
+                if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
+
+                $(this).closest('tr').find('.editCoberturaProyectadaNume').html(pedido + coberturaProyectadaNume);
+
+            });
+
+            $('input.editDAp[type = "text"]').on('focusout', function () {
+
+                var x = $(this).closest('tr').find('.editDAp').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAn').val('');
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - ((descuentop * costo) / 100));
+                    //costo con descuento
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var desc = 0;
+
+                    desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                    var monto = desc * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+                    //$(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2));
+
+                }
+
+
+            });
+
+            $('input.editDAn[type = "text"]').on('focusout', function () {
+                var x = $(this).closest('tr').find('.editDAn').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAp').val('');
+
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - descuentop);
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var monto = total * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                }
+
+
+            });
+
+
+        });
+
+
+
+
+
+
+
+        $('#data_tableEditor2 tbody').on('click', 'tr', function () {
+
+            if ($(this).hasClass('selected')) {
+
+                $(this).removeClass('selected');
+
+            }
+
+            else {
+
+                $('#data_tableEditor2 tr.selected').removeClass('selected');
+
+                $(this).addClass('selected');
+
+            }
+
+        });
+
+
+
+        //$('#data_tableEditor2').treegrid();
+
+        //$('#data_tableEditor2').treegrid('collapseAll');
+
+
+
+
+
+
+
+
+
+        $(function () {
+
+            $.contextMenu({
+
+                selector: '.context-menu-one',
+
+                trigger: 'right',
+
+                items: $.contextMenu.fromMenu($('#html5menu'))
+
+            });
+
+
+
+            $('.context-menu-one').on('contextmenu', function (e) {
+
+                var product = this.id;
+
+                //Cargamos Transito final
+
+
+
+                $.ajax({
+
+                    url: '/Operations/getTransitoFinal',
+
+                    type: 'GET',
+
+                    data: { 'id': product },
+
+                    cache: false,
+
+                    global: false,
+
+                    success: function (result) {
+
+
+
+                        var obj = JSON.parse(result);
+
+
+
+                        if (obj.length > 0) {
+
+
+
+                            obj.sort(function (a, b) {
+
+                                if (a.NumTransito > b.NumTransito) {
+
+                                    return 1;
+
+                                }
+
+                                if (a.NumTransito < b.NumTransito) {
+
+                                    return -1;
+
+                                }
+
+                                // a must be equal to b
+
+                                return 0;
+
+                            });
+
+
+
+                            try {
+
+                                $(".tbodyid").empty();
+
+                                $(".tb_editor").append();
+
+                                for (var i = 0; i < obj.length; i++) {
+
+                                    var tr = "<tr>";
+
+                                    tr += "<td>" + obj[i]["NumTransito"] + "</td>";
+
+                                    tr += "<td>" + (new Date(parseInt(obj[i]["DocDate"].substr(6)))).toLocaleDateString('en-US') + "</td>";
+
+                                    tr += "<td>" + obj[i]["DiaSemana"] + "</td>";
+
+                                    tr += "<td>" + obj[i]["DifSemanas"] + "</td>";
+
+                                    tr += "<td>" + obj[i]["NumFactura"] + "</td>";
+
+                                    tr += "<td>" + obj[i]["CantCajas"] + "</td>";
+
+                                    tr += "<td>" + obj[i]["FormulaDia"] + "</td>";
+
+                                    tr += "<td>" + obj[i]["CoberturaSemanal"] + "</td>";
+
+                                    tr += '</tr > ';
+
+
+
+                                    $(".tb_editor").append(tr);
+
+
+
+
+
+                                }
+
+
+
+                                $.contextMenu({
+
+                                    selector: '.context-menu-one',
+
+                                    trigger: 'right',
+
+                                    items: $.contextMenu.fromMenu($('#html5menu'))
+
+                                });
+
+                            }
+
+                            catch (err) {
+
+
+
+                                $(".tbodyid").empty();
+
+                                $(".tb_editor").append();
+
+                            }
+
+                        } else {
+
+
+
+                            $(".tbodyid").empty();
+
+                            $(".tb_editor").append();
+
+                        }
+
+
+
+                    },
+
+                    error: function (request) {
+
+                        alert("Something went wrong..Please, try again");
+
+
+
+                    }
+
+
+
+                });
+
+
+
+            });
+
+        });
+
+
+
+
+
+        function savePurchaseData() {
+
+            var data;
+
+            data = Array();
+
+
+
+
+
+
+
+            $("#data_tableEditor2 tr").each(function (i, v) {
+
+                data[i] = Array();
+
+                $(this).children('td').each(function (ii, vv) {
+
+                    if (ii == 30) {
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    } else if (ii == 44) {
+
+                        data[i][ii] = $(this).eq(0).find('textarea').val();
+
+
+
+                    } else if (ii == 40) {
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+
+
+                    } else if (ii == 41) {
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+
+
+                    }  else {
+
+                        data[i][ii] = $(this).text();
+
+                    }
+
+
+
+
+
+                });
+
+            })
+
+
+
+            var dataCategory = [];
+
+            if ($("#lstCategory").select2('data').length) {
+
+                $.each($("#lstCategory").select2('data'), function (key, item) {
+
+                    dataCategory.push(item.text);
+
+                });
+
+            }
+
+
+
+            var dataSubCategory = [];
+
+            if ($("#lstSubCategory").select2('data').length) {
+
+                $.each($("#lstSubCategory").select2('data'), function (key, item) {
+
+                    dataSubCategory.push(item.text);
+
+                });
+
+            }
+
+
+
+            var dataProvider = [];
+
+            if ($("#lstProvider").select2('data').length) {
+
+                $.each($("#lstProvider").select2('data'), function (key, item) {
+
+                    dataProvider.push(item.text);
+
+                });
+
+            }
+
+
+
+            var dataBrands = [];
+
+            if ($("#lstBrands").select2('data').length) {
+
+                $.each($("#lstBrands").select2('data'), function (key, item) {
+
+                    dataBrands.push(item.text);
+
+                });
+
+            }
+
+
+
+
+
+            var objects = [];
+
+            for (var i = 0, len = data.length; i < len; i++) {
+
+                if (i != 0) {
+
+                    objects.push({
+
+                        num: data[i][0],
+
+                        ProdCodigo: data[i][1].trim(),
+
+                        ProdNombre: data[i][2],
+
+                        FactorCompra: data[i][3],
+
+                        FactorCompra_quiebre: data[i][4],
+
+                        Politica_cobertura: data[i][5],
+
+                        Marca: data[i][6],
+
+                        SubCategory: data[i][7],
+
+                        Category: data[i][8],
+
+                        ProvNombre: data[i][9],
+
+                        UnidadMedidaLetras: data[i][10],
+
+                        InventarioEach: data[i][11],
+
+                        InventarioCajas: data[i][12],
+
+                        Promedio: data[i][13],
+
+                        Desviacion: data[i][14],
+
+                        Maximo: data[i][15],
+
+                        Minimo: data[i][16],
+
+                        PronosticoPeriodoActual: data[i][17],
+
+                        Promedio_AA: data[i][18],
+
+                        VentaB1: data[i][19],
+
+                        Variacion: data[i][20],
+
+                        TendenciaPeriodoActual: data[i][21],
+
+                        PronosticoSiguiente1: data[i][22],
+
+                        PronosticoSiguiente2: data[i][23],
+
+                        PronosticoSiguiente3: data[i][24],
+
+                        PronosticoSiguiente4: data[i][25],
+
+                        CoberturaActual: data[i][26],
+
+                        CoberturaProyectada: data[i][27],
+
+                        OTB: data[i][28],
+
+                        Cobertura_OTB: data[i][29],
+
+                        Pedido: data[i][30],
+
+                        DeliveryDate: data[i][31],
+
+                        DocumentDate: data[i][32],
+
+                        U_TI: data[i][33],
+
+                        U_HI: data[i][34],
+
+                        U_PalletCount: data[i][35],
+
+                        PalletsdeOrden: data[i][36],
+
+                        CoberturaProyectadaNume: data[i][37],
+
+                        CoberturaIngresoPO: data[i][38],
+
+                        Costo:data[i][39],
+
+                        DescuentoAn: data[i][40],
+
+                        DescuentoAp: data[i][41],
+
+                        CostoconDescuento: data[i][42],
+
+                        MontoPO: data[i][43],
+
+                        Comentarios: data[i][44],
+
+                        CoberturaProyectadaDeno: data[i][45],
+
+                        VentaF1: data[i][46],
+
+                        LeadTime: data[i][47],
+
+                        transito:0
+
+                    });
+
+                }
+
+
+
+            }
+
+
+
+            document.getElementById("loader").style.display = "block";
+
+            $.ajax
+
+                ({
+
+                    url: '/Operations/Save_PurchaseData',
+
+                    type: 'POST',
+
+                    data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString() },
+
+                    success: function (result) {
+
+
+
+                        if (result == "SUCCESS") {
+
+                            toastr.success("Data saved successfully.", "Success");
+
+                            document.getElementById("loader").style.display = "none";
+
+                            window.location.href = '@Url.Action("Purchase_data", "Operations")';
+
+                        } else {
+
+                            toastr.warning("Something went wrong.." + result, "Warning");
+
+                            document.getElementById("loader").style.display = "none";
+
+                        }
+
+
+
+
+
+                    },
+
+                    error: function () {
+
+
+
+                        toastr.warning("Something went wrong..", "Warning");
+
+                        document.getElementById("loader").style.display = "none";
+
+                    },
+
+                });
+
+
+
+
+
+
+
+            //$('.editPedido').on('change', function () {
+
+            //    console.log("editing");
+
+            //            //$(this).closest('tr').hide();
+
+            //            //$(this).html('DEL');
+
+
+
+
+
+
+
+
+
+
+
+            //    //$(this).closest('tr').find("input,button,select").attr("disabled", true);
+
+            //    //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
+
+            //    //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
+
+            //});
+
+
+
+        }
+
+        //SECCION PARA EDICION Y FORMULAS
+
+
+
+
+
+    </script>
+
+
+
+}
+
 @if (ViewBag.Title == "Distribuidora Limeña - Edit Purchase Data")
 {
 
@@ -3102,36 +4954,36 @@ Configure tooltips globally
                         myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
                         myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
                         myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra_quiebre"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["Politica_cobertura"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;display:none;">' + objects[i]["FactorCompra_quiebre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;display:none;">' + objects[i]["Politica_cobertura"] + "</td>");
 
                         myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Marca"] + "</td>");
                         myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["SubCategory"] + "</td>");
                         myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Category"] + "</td>");
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
 
                         myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
                         myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioCajas"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Desviacion"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Maximo"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Minimo"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoPeriodoActual"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio_AA"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["VentaB1"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Variacion"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["TendenciaPeriodoActual"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente1"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente2"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente3"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente4"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["InventarioCajas"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio"])  + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Desviacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Maximo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Minimo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio_AA"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["VentaB1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Variacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["TendenciaPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente2"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente3"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente4"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"].toFixed(2) + "</td>");
 
-                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers' value='" + objects[i]["Pedido"] + "'  style='text-align: right;width:120px' type='text' />" + "</td>");
 
 
                         myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
@@ -3142,13 +4994,14 @@ Configure tooltips globally
                         myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
                         myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
                         myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + Math.round(objects[i]["CoberturaProyectadaNume"]) + "</td>");
                         myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
                         myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp value='" + objects[i]["DescuentoAp"] + "' form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn value='" + objects[i]["DescuentoAn"] + "' form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
                         myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
                         myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
+
 
 
 
@@ -3159,10 +5012,10 @@ Configure tooltips globally
                         }
 
 
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;" class="editCoberturaProyectadaDeno">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
                         myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["VentaF1"] + "</td>");
                         myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["LeadTime"] + "</td>");
-
+                        myArray.push('<td hidden style="padding: .25rem;" class="editCoberturaProyectadaNumeOriginal">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
                         myArray.push('</tr >');
 
 
@@ -3227,15 +5080,16 @@ Configure tooltips globally
             });
 
 
-
-
             $('input.editPedido[type = "text"]').on('focusout', function () {
                 //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
-                var pedido = $(this).val();
-                var coberturaProyectadaNume = $(this).closest('tr').find('.editCoberturaProyectadaNume').text();
-                var coberturaProyectadaDeno = $(this).closest('tr').find('.editCoberturaProyectadaDeno').text();
-                var total = (coberturaProyectadaNume + pedido) / coberturaProyectadaDeno
-                if (coberturaProyectadaDeno == 0) { total = 0.0; }
+                var pedido = parseFloat($(this).val());
+                var coberturaProyectadaNume = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaNumeOriginal').text());
+                var coberturaProyectadaDeno = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaDeno').text());
+                var total = 0.0;
+                if (coberturaProyectadaDeno > 0) {
+                    total = ((coberturaProyectadaNume + pedido) / coberturaProyectadaDeno);
+
+                }
 
                 $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
                 //            //$(this).html('DEL');
@@ -3255,6 +5109,7 @@ Configure tooltips globally
                 if (casesPallet == 0) { palletstotal = 0; }
                 if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
 
+                $(this).closest('tr').find('.editCoberturaProyectadaNume').html(pedido + coberturaProyectadaNume);
 
             });
 
@@ -3548,639 +5403,7 @@ Configure tooltips globally
     </script>
 
 }
-@if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data")
-{
 
-    <script type="text/javascript">
-        //$('#data_tableEditor2').DataTable({
-        //    'paging':false
-        //});
-
-
-        function test() {
-                 var objects = @Html.Raw(Json.Encode(ViewBag.data));
-            var myArray = [];
-            if (objects.length > 0) {
-
-                try {
-                    $("#maintbbo").empty();
-                    $("#data_tableEditor2").append();
-                    for (var i = 0; i < objects.length; i++) {
-                        //console.log(objects[i]["ProdCodigo"]);
-                        //var tr = "";
-
-                        if (objects[i]["transito"] > 0) {
-                            myArray.push('<tr class="context-menu-one" style="background-color:aliceblue" id="' + objects[i]["ProdCodigo"] + '">');
-                        } else {
-                            myArray.push('<tr  class="context-menu-one" id="' + objects[i]["ProdCodigo"] + '">');
-                        }
-                        myArray.push('<td></td>');
-                        myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra_quiebre"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["Politica_cobertura"] + "</td>");
-
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Marca"] + "</td>");
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["SubCategory"] + "</td>");
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Category"] + "</td>");
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
-
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioCajas"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Desviacion"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Maximo"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Minimo"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoPeriodoActual"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Promedio_AA"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["VentaB1"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Variacion"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["TendenciaPeriodoActual"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente1"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente2"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente3"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["PronosticoSiguiente4"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"] + "</td>");
-
-                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
-
-
-                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
-
-                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
-
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_TI"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
-
-
-
-                        if (objects[i]["Comentarios"] != null) {
-                            myArray.push('<td style="padding: .25rem;">' + '<textarea>' + objects[i]["Comentarios"] + '</textarea>' + "</td>");
-                        } else {
-                            myArray.push('<td style="padding: .25rem;">' + '<textarea></textarea>' + "</td>");
-                        }
-
-
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["VentaF1"] + "</td>");
-                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["LeadTime"] + "</td>");
-
-                        myArray.push('</tr >');
-
-
-
-
-                    }
-                    $('#maintbbo').append(myArray.join(''));
-
-                }
-                catch (err) {
-                    console.log("error: " + err.message);
-                    $("#maintbbo").empty();
-                    $("#data_tableEditor2").append();
-                }
-            } else {
-                console.log("error2");
-                $("#maintbbo").empty();
-                $("#data_tableEditor2").append();
-            }
-
-
-
-        }
-
-        $(document).ready(function () {
-            //Llamamos los datos
-            test();
-
-            var table = $('#data_tableEditor2').DataTable({
-                dom: 'lrtip',
-                scrollY: "600px",
-                scrollX: true,
-                scrollCollapse: true,
-                paging: false,
-                //"columnDefs": [
-                //    {
-                //        "targets": [6],
-                //        "visible": false
-                //    },
-                //    {
-                //        "targets": [7],
-                //        "visible": false
-                //    },
-                //    {
-                //        "targets": [8],
-                //        "visible": false
-                //    },
-                //    {
-                //        "targets": [9],
-                //        "visible": false
-                //    },
-                //    {
-                //        "targets": [45],
-                //        "visible": false
-                //    },
-                //    {
-                //        "targets": [46],
-                //        "visible": false
-                //    },
-                //    {
-                //        "targets": [47],
-                //        "visible": false
-                //    }
-                //],
-                fixedColumns: {
-                    leftColumns: 3
-                },
-                initComplete: function () {
-                    this.api().columns([8]).every(function () {
-                        var column = this;
-
-                        var select = $("#lstCategory");
-                        column.data().unique().sort().each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>')
-                        });
-                    });
-                    this.api().columns([7]).every(function () {
-                        var column = this;
-
-                        var select = $("#lstSubCategory");
-                        column.data().unique().sort().each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>')
-                        });
-                    });
-                    this.api().columns([9]).every(function () {
-                        var column = this;
-
-                        var select = $("#lstProvider");
-                        column.data().unique().sort().each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>')
-                        });
-                    });
-                    this.api().columns([6]).every(function () {
-                        var column = this;
-
-                        var select = $("#lstBrands");
-                        column.data().unique().sort().each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>')
-                        });
-                    });
-                    $("#lstCategory").select2({ multiple: true });
-                    $("#lstSubCategory").select2({ multiple: true });
-                    $("#lstProvider").select2({ multiple: true });
-                    $("#lstBrands").select2({ multiple: true });
-                }
-            });
-
-            table.on('order.dt search.dt', function () {
-                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            }).draw();
-
-            function sort_unique(arr) {
-                return arr.sort().filter(function (el, i, a) {
-                    return (i == a.indexOf(el));
-                });
-            }
-
-            $(function () {
-                $('input.filternumbers').on('input', function () {
-                    this.value = this.value
-                        .replace(/[^\d.]/g, '')             // numbers and decimals only
-                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
-                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
-                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
-                });
-            });
-
-            $('#lstCategory').on('change', function () {
-                var search = [];
-
-                var data2;
-                data2 = Array();
-
-
-
-                $.each($('#lstCategory option:selected'), function () {
-                    search.push($(this).val());
-                });
-
-                search = search.join('|');
-                table.column(8).search(search, true, false).draw();
-
-                var select = $("#lstSubCategory");
-                select.empty();
-
-                table.rows({ search: 'applied' }).data().unique().sort().each(function (value, index) {
-
-                    data2.push(value[7]);
-
-
-                });
-                data2 = sort_unique(data2);
-                $.each(data2, function (key, value) {
-                    select.append('<option value="' + value + '">' + value + '</option>')
-                });
-
-
-            });
-
-            $('#lstSubCategory').on('change', function () {
-                var search = [];
-
-                $.each($('#lstSubCategory option:selected'), function () {
-                    search.push($(this).val());
-                });
-
-                search = search.join('|');
-                table.column(7).search(search, true, false).draw();
-            });
-
-            $('#lstBrands').on('change', function () {
-                var search = [];
-
-                $.each($('#lstBrands option:selected'), function () {
-                    search.push($(this).val());
-                });
-
-                search = search.join('|');
-                table.column(6).search(search, true, false).draw();
-            });
-
-            $('#lstProvider').on('change', function () {
-                var search = [];
-
-                $.each($('#lstProvider option:selected'), function () {
-                    search.push($(this).val());
-                });
-
-                search = search.join('|');
-                table.column(9).search(search, true, false).draw();
-            });
-
-
-            $('input.editPedido[type = "text"]').on('focusout', function () {
-                //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
-                var pedido = $(this).val();
-                var coberturaProyectadaNume = $(this).closest('tr').find('.editCoberturaProyectadaNume').text();
-                var coberturaProyectadaDeno = $(this).closest('tr').find('.editCoberturaProyectadaDeno').text();
-                var total = (coberturaProyectadaNume + pedido) / coberturaProyectadaDeno
-                if (coberturaProyectadaDeno == 0) { total = 0.0; }
-
-                $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
-                //            //$(this).html('DEL');
-
-                ///Monto PO
-                var desc = 0;
-
-                desc = $(this).closest('tr').find('.editCostoDescuento').text();
-
-                var monto = desc * pedido;
-                if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
-
-                //Pallet de orden editPalletOrden
-                var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
-                var palletstotal = (pedido / casesPallet);
-
-                if (casesPallet == 0) { palletstotal = 0; }
-                if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
-
-
-            });
-
-            $('input.editDAp[type = "text"]').on('focusout', function () {
-
-                var x = $(this).closest('tr').find('.editDAp').val();
-                if (x != "") {
-                    $(this).closest('tr').find('.editDAn').val('');
-                    var descuentop = $(this).val();
-                    var costo = $(this).closest('tr').find('.editCosto').text();
-
-                    var total = (+costo - ((descuentop * costo) / 100));
-                    //costo con descuento
-                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
-
-
-                    ///Monto PO
-                    var pedido = $(this).closest('tr').find('.editPedido').val();
-                    var desc = 0;
-
-                    desc = $(this).closest('tr').find('.editCostoDescuento').text();
-
-                    var monto = desc * pedido;
-
-                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
-                    //$(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2));
-
-                }
-
-
-            });
-
-            $('input.editDAn[type = "text"]').on('focusout', function () {
-                var x = $(this).closest('tr').find('.editDAn').val();
-                if (x != "") {
-                    $(this).closest('tr').find('.editDAp').val('');
-
-                    var descuentop = $(this).val();
-                    var costo = $(this).closest('tr').find('.editCosto').text();
-
-                    var total = (+costo - descuentop);
-                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
-
-
-                    ///Monto PO
-                    var pedido = $(this).closest('tr').find('.editPedido').val();
-                    var monto = total * pedido;
-
-                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
-
-                }
-
-
-            });
-        });
-
-
-
-        $('#data_tableEditor2 tbody').on('click', 'tr', function () {
-            if ($(this).hasClass('selected')) {
-                $(this).removeClass('selected');
-            }
-            else {
-                $('#data_tableEditor2 tr.selected').removeClass('selected');
-                $(this).addClass('selected');
-            }
-        });
-
-        //$('#data_tableEditor2').treegrid();
-        //$('#data_tableEditor2').treegrid('collapseAll');
-
-
-
-
-        $(function () {
-            $.contextMenu({
-                selector: '.context-menu-one',
-                trigger: 'right',
-                items: $.contextMenu.fromMenu($('#html5menu'))
-            });
-
-            $('.context-menu-one').on('contextmenu', function (e) {
-                var product = this.id;
-                //Cargamos Transito final
-
-                $.ajax({
-                    url: '/Operations/getTransitoFinal',
-                    type: 'GET',
-                    data: { 'id': product },
-                    cache: false,
-                    global: false,
-                    success: function (result) {
-
-                        var obj = JSON.parse(result);
-
-                        if (obj.length > 0) {
-
-                            obj.sort(function (a, b) {
-                                if (a.NumTransito > b.NumTransito) {
-                                    return 1;
-                                }
-                                if (a.NumTransito < b.NumTransito) {
-                                    return -1;
-                                }
-                                // a must be equal to b
-                                return 0;
-                            });
-
-                            try {
-                                $(".tbodyid").empty();
-                                $(".tb_editor").append();
-                                for (var i = 0; i < obj.length; i++) {
-                                    var tr = "<tr>";
-                                    tr += "<td>" + obj[i]["NumTransito"] + "</td>";
-                                    tr += "<td>" + (new Date(parseInt(obj[i]["DocDate"].substr(6)))).toLocaleDateString('en-US') + "</td>";
-                                    tr += "<td>" + obj[i]["DiaSemana"] + "</td>";
-                                    tr += "<td>" + obj[i]["DifSemanas"] + "</td>";
-                                    tr += "<td>" + obj[i]["NumFactura"] + "</td>";
-                                    tr += "<td>" + obj[i]["CantCajas"] + "</td>";
-                                    tr += "<td>" + obj[i]["FormulaDia"] + "</td>";
-                                    tr += "<td>" + obj[i]["CoberturaSemanal"] + "</td>";
-                                    tr += '</tr > ';
-
-                                    $(".tb_editor").append(tr);
-
-
-                                }
-
-                                $.contextMenu({
-                                    selector: '.context-menu-one',
-                                    trigger: 'right',
-                                    items: $.contextMenu.fromMenu($('#html5menu'))
-                                });
-                            }
-                            catch (err) {
-
-                                $(".tbodyid").empty();
-                                $(".tb_editor").append();
-                            }
-                        } else {
-
-                            $(".tbodyid").empty();
-                            $(".tb_editor").append();
-                        }
-
-                    },
-                    error: function (request) {
-                        alert("Something went wrong..Please, try again");
-
-                    }
-
-                });
-
-            });
-        });
-
-
-        function savePurchaseData() {
-            var data;
-            data = Array();
-
-
-
-            $("#data_tableEditor2 tr").each(function (i, v) {
-                data[i] = Array();
-                $(this).children('td').each(function (ii, vv) {
-                    if (ii == 30) {
-                        data[i][ii] = $(this).eq(0).find('input').val();
-                    } else if (ii == 44) {
-                        data[i][ii] = $(this).eq(0).find('textarea').val();
-
-                    } else if (ii == 40) {
-                        data[i][ii] = $(this).eq(0).find('input').val();
-
-                    } else if (ii == 41) {
-                        data[i][ii] = $(this).eq(0).find('input').val();
-
-                    }  else {
-                        data[i][ii] = $(this).text();
-                    }
-
-
-                });
-            })
-
-            var dataCategory = [];
-            if ($("#lstCategory").select2('data').length) {
-                $.each($("#lstCategory").select2('data'), function (key, item) {
-                    dataCategory.push(item.text);
-                });
-            }
-
-            var dataSubCategory = [];
-            if ($("#lstSubCategory").select2('data').length) {
-                $.each($("#lstSubCategory").select2('data'), function (key, item) {
-                    dataSubCategory.push(item.text);
-                });
-            }
-
-            var dataProvider = [];
-            if ($("#lstProvider").select2('data').length) {
-                $.each($("#lstProvider").select2('data'), function (key, item) {
-                    dataProvider.push(item.text);
-                });
-            }
-
-            var dataBrands = [];
-            if ($("#lstBrands").select2('data').length) {
-                $.each($("#lstBrands").select2('data'), function (key, item) {
-                    dataBrands.push(item.text);
-                });
-            }
-
-
-            var objects = [];
-            for (var i = 0, len = data.length; i < len; i++) {
-                if (i != 0) {
-                    objects.push({
-                        num: data[i][0],
-                        ProdCodigo: data[i][1].trim(),
-                        ProdNombre: data[i][2],
-                        FactorCompra: data[i][3],
-                        FactorCompra_quiebre: data[i][4],
-                        Politica_cobertura: data[i][5],
-                        Marca: data[i][6],
-                        SubCategory: data[i][7],
-                        Category: data[i][8],
-                        ProvNombre: data[i][9],
-                        UnidadMedidaLetras: data[i][10],
-                        InventarioEach: data[i][11],
-                        InventarioCajas: data[i][12],
-                        Promedio: data[i][13],
-                        Desviacion: data[i][14],
-                        Maximo: data[i][15],
-                        Minimo: data[i][16],
-                        PronosticoPeriodoActual: data[i][17],
-                        Promedio_AA: data[i][18],
-                        VentaB1: data[i][19],
-                        Variacion: data[i][20],
-                        TendenciaPeriodoActual: data[i][21],
-                        PronosticoSiguiente1: data[i][22],
-                        PronosticoSiguiente2: data[i][23],
-                        PronosticoSiguiente3: data[i][24],
-                        PronosticoSiguiente4: data[i][25],
-                        CoberturaActual: data[i][26],
-                        CoberturaProyectada: data[i][27],
-                        OTB: data[i][28],
-                        Cobertura_OTB: data[i][29],
-                        Pedido: data[i][30],
-                        DeliveryDate: data[i][31],
-                        DocumentDate: data[i][32],
-                        U_TI: data[i][33],
-                        U_HI: data[i][34],
-                        U_PalletCount: data[i][35],
-                        PalletsdeOrden: data[i][36],
-                        CoberturaProyectadaNume: data[i][37],
-                        CoberturaIngresoPO: data[i][38],
-                        Costo:data[i][39],
-                        DescuentoAn: data[i][40],
-                        DescuentoAp: data[i][41],
-                        CostoconDescuento: data[i][42],
-                        MontoPO: data[i][43],
-                        Comentarios: data[i][44],
-                        CoberturaProyectadaDeno: data[i][45],
-                        VentaF1: data[i][46],
-                        LeadTime: data[i][47],
-                        transito:0
-                    });
-                }
-
-            }
-
-            document.getElementById("loader").style.display = "block";
-            $.ajax
-                ({
-                    url: '/Operations/Save_PurchaseData',
-                    type: 'POST',
-                    data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString() },
-                    success: function (result) {
-
-                        if (result == "SUCCESS") {
-                            toastr.success("Data saved successfully.", "Success");
-                            document.getElementById("loader").style.display = "none";
-                            window.location.href = '@Url.Action("Purchase_data", "Operations")';
-                        } else {
-                            toastr.warning("Something went wrong.." + result, "Warning");
-                            document.getElementById("loader").style.display = "none";
-                        }
-
-
-                    },
-                    error: function () {
-
-                        toastr.warning("Something went wrong..", "Warning");
-                        document.getElementById("loader").style.display = "none";
-                    },
-                });
-
-
-
-            //$('.editPedido').on('change', function () {
-            //    console.log("editing");
-            //            //$(this).closest('tr').hide();
-            //            //$(this).html('DEL');
-
-
-
-
-
-            //    //$(this).closest('tr').find("input,button,select").attr("disabled", true);
-            //    //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
-            //    //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
-            //});
-
-        }
-        //SECCION PARA EDICION Y FORMULAS
-
-
-    </script>
-
-}
 @if (ViewBag.Title == "Distribuidora Limeña - Product Catalog")
 {
     <script>
@@ -4188,7 +5411,11 @@ Configure tooltips globally
 
             var table = $('#data_tableEditor2').DataTable({
                 paging: false,
-                searching: false,
+                searching: true,
+                fixedHeader: true,
+                //scrollY: "900px",
+                //scrollX: true,
+                //scrollCollapse: true,
                 drawCallback: function (settings) {
                     var api = this.api();
 
@@ -4271,16 +5498,70 @@ Configure tooltips globally
     <script>
         $(document).ready(function () {
             var table = $('#tbOrder').DataTable({
-                rowReorder: {
-                    selector: 'tr'
-                },
+                //rowReorder: {
+                //    selector: 'tr'
+                //},
                 columnDefs: [
                     //{ targets: 0, visible: false }
                 ],
                 scrollY: 450,
                 "order": [[0, 'asc']],
                 searching: false,
-                paging: false
+                paging: false,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    // Total over all pages
+                    total = api
+                        .column(8)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api
+                        .column(8, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    pageTotal2 = api
+                        .column(8, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+
+                    var a = api
+                        .column(4, { page: 'current' })
+                        .data()
+                        .unique();
+                    // Update footer
+                    //$(api.column(7).footer()).html(
+                    //    pageTotal
+                    //);
+                    $(api.column(6).footer()).html(
+                        "TOTAL AMOUNT: $" + pageTotal2.toLocaleString()
+                    );
+
+                    $(api.column(0).footer()).html(
+                        "TOTAL CUSTOMERS: " + a.length
+                    );
+
+
+                    // '' + pageTotal + ' ( ' + total + ' total)'
+                }
             });
 
 
@@ -4322,30 +5603,49 @@ Configure tooltips globally
             var data;
             data = Array();
 
-
+            console.log(data);
 
             $("#tbOrder tr").each(function (i, v) {
                 data[i] = Array();
                 $(this).children('td').each(function (ii, vv) {
 
-                    data[i][ii] = $(this).text();
+
+                    if (ii == 0) {
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    } else if (ii == 9) {
+
+                        data[i][ii] = $(this).eq(0).find('textarea').val();
+
+                    } else {
+
+                        data[i][ii] = $(this).text();
+
+                    }
+
 
 
                 });
             })
             var objects = [];
-            for (var i = 0, len = data.length; i < len; i++) {
+            for (var i = 1, len = data.length; i < len; i++) {
 
-                if (i != 0) {
+                if (i > 1) {
                     objects.push({
+                        sort: data[i][0],
                         num: data[i][1],
-                        SO: data[i][2]
+                        SO: data[i][2],
+                        comment: data[i][9]
                     });
                 }
 
             }
 
-            //console.log(objects);
+
+            console.log(objects);
+
+
             document.getElementById("loader").style.display = "block";
             $.ajax
                 ({
@@ -4382,6 +5682,732 @@ Configure tooltips globally
 }
 
 <!--PRICES-->
+@if (ViewBag.Title == "Distribuidora Limeña - Prices Request History")
+{
+    <script>
+        $(document).ready(function () {
+            // Setup - add a text input to each footer cell
+            //$('#data_tableEditor thead tr').clone(true).appendTo('#data_tableEditor thead');
+            //$('#data_tableEditor thead tr:eq(1) th').each(function (i) {
+            //    var title = $(this).text();
+            //    $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+
+            //    $('input', this).on('keyup change', function () {
+            //        if (table.column(i).search() !== this.value) {
+            //            table
+            //                .column(i)
+            //                .search(this.value)
+            //                .draw();
+            //        }
+            //    });
+            //});
+
+
+            var table = $('#data_tableEditor').DataTable({
+                //initComplete: function () {
+                //    this.api().columns().every(function () {
+                //        var column = this;
+                //        var select = $('<select><option value=""></option></select>')
+                //            .appendTo($(column.header()).empty())
+                //            .on('change', function () {
+                //                var val = $.fn.dataTable.util.escapeRegex(
+                //                    $(this).val()
+                //                );
+
+                //                column
+                //                    .search(val ? '^' + val + '$' : '', true, false)
+                //                    .draw();
+                //            });
+
+                //        column.data().unique().sort().each(function (d, j) {
+                //            select.append('<option value="' + d + '">' + d + '</option>')
+                //        });
+                //    });
+                //},
+                dom: 'lfrtiBp',
+                orderCellsTop: true,
+                buttons: [
+                    'copyHtml5',
+                    'excelHtml5',
+                    'csvHtml5',
+                    'pdfHtml5'
+                ]
+            });
+
+
+        });
+
+
+
+    </script>
+
+
+
+}
+
+<!--PRICES-->
+@if (ViewBag.Title == "Distribuidora Limeña - Credits authorize")
+{
+
+    <script type="text/javascript">
+        window.onload = function (e) {
+            // Get the modal
+
+
+
+
+            // Get the <span> element that closes the modal
+            var span = document.getElementsByClassName("close")[0];
+
+            // When the user clicks on <span> (x), close the modal
+            span.onclick = function () {
+                modal.style.display = "none";
+            }
+
+
+        }
+        var modal = document.getElementById("myModal");
+
+
+        
+
+        function showFullImage(id) {
+
+
+            // Get the image and insert it inside the modal - use its "alt" text as a caption
+            var img = document.getElementById(id);
+            var modalImg = document.getElementById("img01");
+            var captionText = document.getElementById("caption");
+            img.onclick = function () {
+                modal.style.display = "block";
+                modalImg.src = this.src;
+                captionText.innerHTML = this.alt;
+            }
+        }
+
+        function approveRequest(id) {
+
+            swal.fire({
+                title: 'Authorize Request',
+                text: "Are you sure you want to authorize this request?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    var url = '@Url.Action("AuthorizeRequestProduct", "Commercial", new { id = "AUREQ" })';
+                    url = url.replace('AUREQ', id);
+                    var newurl = url;
+                    window.location.href = newurl;
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+        }
+
+        function disapproveRequest(id) {
+
+            swal.fire({
+                title: 'Refuse/Reject Request',
+                text: "Are you sure you want to refuse/reject this request?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    var url = '@Url.Action("DisappoveRequestProduct", "Commercial", new { id = "AUREQ" })';
+                    url = url.replace('AUREQ', id);
+                    var newurl = url;
+                    window.location.href = newurl;
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+        }
+
+                function deleteRequest(id) {
+
+            swal.fire({
+                title: 'Delete Request',
+                text: "Are you sure you want to delete this request?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    var url = '@Url.Action("DeleteRequestProduct", "Commercial", new { id = "AUREQ" })';
+                    url = url.replace('AUREQ', id);
+                    var newurl = url;
+                    window.location.href = newurl;
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+        }
+
+    </script>
+}
+
+
+@if (ViewBag.Title == "Distribuidora Limeña - Credits Request")
+{
+    <script type="text/javascript">
+        (function ($) {
+            'use strict';
+            $('#addProductModal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);// Button that triggered the modal
+
+                var IDProd = button.data("id");// Extract info from data-* attributes
+                var Des = button.data("description");
+                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+                var modal = $(this);
+                //modal.find('.modal-title').text('Edit data: ' + recipient)
+                modal.find('.modal-body input[name="IDProd"]').val(IDProd);
+                $("#descriptionD").text(Des);
+                try {
+                    $.ajax
+                        ({
+                            url: '/Commercial/GetUOM',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                product: IDProd
+                            }),
+                            success: function (result) {
+                                $("#UOMlst").html("");
+                                $("#UOMlst").append($('<option></option>').val(0).html("Select an UoM"));
+                                $.each($.parseJSON(result), function (i, uomtype) {
+
+                                        $("#UOMlst").append
+                                            ($('<option></option>').val(uomtype.UOMEntry).html(uomtype.UOM));
+                                    
+                                });
+
+
+                            },
+                            error: function () {
+                                var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('UOMlst').appendChild(o);
+
+                            },
+                        });
+
+                } catch{
+
+                }
+
+
+            })
+        })(jQuery);
+
+
+        $(document.body).on("change", "#returnReason", function () {
+           
+            if (this.value == 99) {//ITEM INTERCHANGE
+          
+                $("#returnproductdiv").css("display", "block");
+            } else {
+                $("#returnproductdiv").css("display", "none");
+                $("#returnProduct").val('0').trigger("change");
+            }
+        });
+
+
+    var table = $('#data_tableEditor').DataTable();
+
+        $("#returnProduct").css("display", "none");
+    function filter(clicked_id) {
+        var table = $('#data_tableEditor').DataTable();
+
+        //table.columns(4).search("").draw();
+        table.columns(0).search("" + clicked_id + "", true, false, true).draw();
+        $("#mainsub > *").css('display', 'none')
+        var x = document.getElementById(clicked_id);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        brandfilter_clear();
+        subfilter_clear();
+
+        $("#mainbrands > *").css('display', 'none')
+
+        $('.subbtnsl').removeClass('btnsel');
+        $('.brandbtnsl').removeClass('btnsubsel');
+        //$("#subfilter").css('display', 'block')
+    }
+
+    function filter_clear() {
+        var table = $('#data_tableEditor').DataTable();
+        table.columns(0).search("").draw();
+        table.columns(1).search("").draw();
+        table.columns(2).search("").draw();
+        $("#mainsub > *").css('display', 'none')
+        $("#mainbrands > *").css('display', 'none')
+        $('.btnsl').removeClass('brandsbtnsl');
+        $('.subbtnsl').removeClass('btnsel');
+        $('.brandbtnsl').removeClass('btnsubsel');
+    }
+    function subfilter_clear() {
+        var table = $('#data_tableEditor').DataTable();
+
+        //table.columns(4).search("").draw();
+        //table.columns(3).search("").draw();
+        table.columns(1).search("").draw();
+        $('.subbtnsl').removeClass('btnsel');
+        //$("#mainsub > *").css('display', 'none')
+    }
+
+    function subfilter(clicked_id) {
+        var table = $('#data_tableEditor').DataTable();
+
+        //table.columns(4).search("").draw();
+        table.columns(1).search("" + clicked_id + "", true, false, true).draw();
+        $("#mainbrands > *").css('display', 'none')
+        var x = document.getElementById(clicked_id);
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+        $('.brandbtnsl').removeClass('btnsubsel');
+        brandfilter_clear();
+    }
+
+    function brandfilter(clicked_id) {
+        var table = $('#data_tableEditor').DataTable();
+
+        //table.columns(4).search("").draw();
+        table.columns(2).search("" + clicked_id + "", true, false, true).draw();
+        //$('.subbtnsl').removeClass('btnsubsel');
+        $('.brandbtnsl').removeClass('btnsubsel');
+    }
+
+    function brandfilter_clear() {
+        var table = $('#data_tableEditor').DataTable();
+
+        //table.columns(4).search("").draw();
+        //table.columns(3).search("").draw();
+        table.columns(2).search("").draw();
+        $('.brandbtnsl').removeClass('btnsubsel');
+        //$("#mainsub > *").css('display', 'none')
+    }
+
+    $(document).ready(function () {
+
+        $("#mainsub > *").css('display', 'none')
+        $("#mainbrands > *").css('display', 'none')
+
+
+        $('.btnsl').on('click', function () {
+            $('.btnsl').removeClass('brandsbtnsl');
+            $(this).addClass('brandsbtnsl');
+        });
+
+        $('.subbtnsl').on('click', function () {
+            $('.subbtnsl').removeClass('btnsel');
+            $(this).addClass('btnsel');
+        });
+
+
+        $('.brandbtnsl').on('click', function () {
+            $('.brandbtnsl').removeClass('btnsubsel');
+            $(this).addClass('btnsubsel');
+        });
+
+
+
+
+    });
+
+    function dataURItoBlob(dataURI) {
+        'use strict'
+        var byteString,
+            mimestring
+
+        if (dataURI.split(',')[0].indexOf('base64') !== -1) {
+            byteString = atob(dataURI.split(',')[1])
+        } else {
+            byteString = decodeURI(dataURI.split(',')[1])
+        }
+
+        mimestring = dataURI.split(',')[0].split(':')[1].split(';')[0]
+
+        var content = new Array();
+        for (var i = 0; i < byteString.length; i++) {
+            content[i] = byteString.charCodeAt(i)
+        }
+
+        return new Blob([new Uint8Array(content)], { type: mimestring });
+    }
+
+    function isPortrait(img) {
+        var w = img.naturalWidth || img.width,
+            h = img.naturalHeight || img.height;
+        return (h > w);
+    }
+
+    function getOrientation(file, callback) {
+        var reader = new FileReader();
+
+        reader.onload = function (event) {
+            var view = new DataView(event.target.result);
+
+            if (view.getUint16(0, false) != 0xFFD8) return callback(-2);
+
+            var length = view.byteLength,
+                offset = 2;
+
+            while (offset < length) {
+                var marker = view.getUint16(offset, false);
+                offset += 2;
+
+                if (marker == 0xFFE1) {
+                    if (view.getUint32(offset += 2, false) != 0x45786966) {
+                        return callback(-1);
+                    }
+                    var little = view.getUint16(offset += 6, false) == 0x4949;
+                    offset += view.getUint32(offset + 4, little);
+                    var tags = view.getUint16(offset, little);
+                    offset += 2;
+
+                    for (var i = 0; i < tags; i++)
+                        if (view.getUint16(offset + (i * 12), little) == 0x0112)
+                            return callback(view.getUint16(offset + (i * 12) + 8, little));
+                }
+                else if ((marker & 0xFF00) != 0xFF00) break;
+                else offset += view.getUint16(offset, false);
+            }
+            return callback(-1);
+        };
+
+        reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
+    };
+
+
+    function addproduct() {
+
+
+        var productId = $("#IDProd").val();
+        var productName = $("#descriptionD").text();
+        var $inputLoop = $("#units");
+        var Units = $inputLoop.val();
+        var returnReason = $("#returnReason").val();
+        var returnReasonName = $("#returnReason option:selected").text();
+        var idcustomer = $("#customerslst").val();
+        var customerName = $("#customerslst option:selected").text();
+        var comment = $("#messagetext").val();
+
+        //nuevo
+        var returnProduct = $("#returnProduct").val();
+        var returnProductName = $("#returnProduct option:selected").text();
+
+        var uomlst = $("#UOMlst").val();
+        var uomlstName = $("#UOMlst option:selected").text();
+
+
+
+
+        if (productId === null || Units == 0) { toastr.warning("Please, select a valid product", "Warning"); } else {
+
+            if (returnReason == 0) {
+                toastr.warning("Please, select a return reason", "Warning");
+            } else if (idcustomer == 0) {
+                toastr.warning("Please, select a customer", "Warning");
+            } else if (uomlst == 0) {
+                toastr.warning("Please, select an UOM", "Warning");
+            }
+
+            else {
+                document.getElementById("loader").style.display = "block";
+                //Agregamos producto
+                ///
+
+                // Checking whether FormData is available in browser
+                if (window.FormData !== undefined) {
+                    //$.each($('input[type="file"]'), function () {
+                    var ID = 45;
+
+                    document.getElementById("loader").style.display = "block";
+                    setTimeout(function () {
+                        document.getElementById("loader").style.display = "none";
+                    }, 2000);
+
+                    //COPIAMOS LA IMG A UN IMG INPUT
+                    var url = $("#45").val();
+                    var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
+                    if ($("#45").files && $("#45").files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
+                        var reader = new FileReader();
+
+                        reader.onload = function (e) {
+                            $('#img_' + ID).attr('src', e.target.result);
+                        }
+
+                        reader.readAsDataURL(input.files[0]);
+                    } else {
+
+                    }
+                    //???????
+
+
+
+
+                    $("#45").attr('data-changeflag', '0');
+                    //COMPRESIONAR IMAGEN
+                    var output_format = "jpg";
+
+
+                    //**************************
+
+                    var fileUpload = $("#" + ID).get(0);
+
+                    var flagff = 0;
+
+                    try {
+                        if (fileUpload.files[0].type == "image/png") {
+                            output_format = "png";
+                        }
+                    } catch{
+                        flagff = 1;
+                    }
+
+                    if (flagff == 1) {
+                        toastr.warning("No file selected or image format invalid.", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    } else {
+                        //console.log(fileUpload.files[0]);
+                        //console.log(fileUpload.files[0].type);
+
+                        var quality = parseInt(15);
+                        //*****
+                        var source_image = document.getElementById('img_' + ID);
+                        var result_image = document.getElementById('resultimg_' + ID);
+                        var file = fileUpload.files[0],
+                            reader = new FileReader();
+                        reader.onload = function (event) {
+                            var i = document.getElementById('img_' + ID);
+                            i.src = event.target.result;
+                            i.onload = function () {
+                                image_width = $(i).width(),
+                                    image_height = $(i).height();
+
+                                if (image_width > image_height) {
+                                    i.style.width = "320px";
+                                } else {
+                                    i.style.height = "300px";
+                                }
+
+
+
+
+                                result_image.src = jic.compress(source_image, quality, output_format).src;
+
+                                result_image.onload = function () {
+                                    var image_width = $(result_image).width(),
+                                        image_height = $(result_image).height();
+
+                                    if (image_width > image_height) {
+                                        result_image.style.width = "320px";
+                                    } else {
+                                        result_image.style.height = "300px";
+                                    }
+
+
+                                    // Create FormData object
+                                    var or = 0;
+                                    getOrientation(file, function (orientation) {
+
+                                        var dataurl = result_image.src;
+                                        var blob = dataURItoBlob(dataurl);
+
+
+
+
+                                        //var files = file;
+
+                                        var fileData = new FormData();
+
+              
+                                            //New image
+                                            var files2 = $("#90").get(0).files;
+                                            //Recorremos los elementos tipo file
+                                            for (var i = 0; i < files2.length; i++) {
+                                                fileData.append(files2[i].name, files2[i]);
+                                            }
+
+                                       
+
+
+                                        fileData.append("myFile", blob, "IMG.jpg");
+
+
+                                        // Adding one more key to FormData object
+                                        fileData.append('orientation', orientation);
+                                        //if true rotate to the right
+
+                                        //Mandamos informacion adicional
+                                        fileData.append('ItemCode', productId);
+                                        fileData.append('ItemName', productName);
+                                        //fileData.append('UoMCode', "EACH");
+                                        fileData.append('IDRequest_reason', returnReason);
+                                        fileData.append('Request_reason', returnReasonName);
+                                        fileData.append('Quantity', Units);
+                                        fileData.append('idcustomer', idcustomer);
+                                        fileData.append('customerName', customerName);
+                                        fileData.append('comment', comment);
+                                        fileData.append('returnProduct', returnProduct);
+                                        fileData.append('returnProductName', returnProductName);
+                                        fileData.append('UoMCode', uomlst);
+                                        fileData.append('uomlstName', uomlstName);
+
+
+
+
+
+
+                                        $.ajax({
+                                            url: '/Commercial/RequestCreditProduct',
+                                            type: "POST",
+                                            contentType: false, // Not to set any content header
+                                            processData: false, // Not to process data
+                                            //async: true,
+                                            timeout: 80000,
+                                            data: fileData,
+                                            success: function (result) {
+                                                //$("#modal_demoform_saving").modal('hide');
+                                                document.getElementById("loader").style.display = "none";
+                                                if (result == "File Uploaded Successfully!") {
+
+                                                    $('#addProductModal').modal('hide');
+                                                    $("#returnReason").val('0').trigger("change");
+                                                    $("#returnProduct").val('0').trigger("change");
+                                                    $("#UOMlst").val('0').trigger("change");
+                                                    $("#units").val('1');
+                                                    $("#messagetext").val('');
+                                                    var drEvent = $('#45').dropify();
+                                                    drEvent = drEvent.data('dropify');
+                                                    drEvent.resetPreview();
+                                                    drEvent.clearElement();
+                                                    document.getElementById("loader").style.display = "none";
+
+                                                    var drEvent2 = $('#90').dropify(); //Picture 2
+                                                    drEvent2 = drEvent2.data('dropify');
+                                                    drEvent2.resetPreview();
+                                                    drEvent2.clearElement();
+                                                    toastr.success("Credit request sent", "Success");
+                                                    //window.location.reload(true);
+                                                } else if (result == "No files selected.") {
+
+
+                                                    var drEvent = $('#45').dropify();
+                                                    drEvent = drEvent.data('dropify');
+                                                    drEvent.resetPreview();
+                                                    drEvent.clearElement();
+
+                                                    var drEvent2 = $('#90').dropify(); //Picture 2
+                                                    drEvent2 = drEvent2.data('dropify');
+                                                    drEvent2.resetPreview();
+                                                    drEvent2.clearElement();
+                                                    document.getElementById("loader").style.display = "none";
+                                                    toastr.warning("No file selected.", "Warning");
+                                                }
+
+                                                else {
+                                                    $('#addProductModal').modal('hide');
+                                                    $("#returnReason").val('0').trigger("change");
+                                                    $("#returnProduct").val('0').trigger("change");
+                                                    $("#UOMlst").val('0').trigger("change");
+                                                    $("#units").val('1');
+                                                    $("#messagetext").val('');
+                                                    var drEvent = $('#45').dropify();
+                                                    drEvent = drEvent.data('dropify');
+                                                    drEvent.resetPreview();
+                                                    drEvent.clearElement();
+
+                                                    var drEvent2 = $('#90').dropify(); //Picture 2
+                                                    drEvent2 = drEvent2.data('dropify');
+                                                    drEvent2.resetPreview();
+                                                    drEvent2.clearElement();
+                                                    document.getElementById("loader").style.display = "none";
+                                                }
+
+
+                                            },
+                                            error: function (err) {
+                                                $('#addProductModal').modal('hide');
+                                                $("#returnReason").val('0').trigger("change");
+                                                $("#returnProduct").val('0').trigger("change");
+                                                $("#UOMlst").val('0').trigger("change");
+                                                $("#units").val('1');
+                                                var drEvent = $('#45').dropify();
+                                                drEvent = drEvent.data('dropify');
+                                                drEvent.resetPreview();
+                                                drEvent.clearElement();
+
+                                                var drEvent2 = $('#90').dropify(); //Picture 2
+                                                drEvent2 = drEvent2.data('dropify');
+                                                drEvent2.resetPreview();
+                                                drEvent2.clearElement();
+
+                                                //$("#modal_demoform_saving").modal('hide');
+                                                //alert("An error is reported. Maximum request length exceeded");
+                                                document.getElementById("loader").style.display = "none";
+                                            }
+                                        });
+
+                                    });
+
+
+
+                                }
+                            }
+                        };
+                        reader.readAsDataURL(file);
+                    }
+
+
+                  
+
+
+
+
+
+
+                    //});
+
+
+                }
+
+
+                else {
+                    alert("FormData is not supported.");
+                }
+
+
+
+
+
+            }
+        }
+    };
+    </script>
+
+}
+
+
+<!--PRICES-->
 @if (ViewBag.Title == "Distribuidora Limeña - Prices Request")
 {
     <script type="text/javascript">
@@ -4400,19 +6426,26 @@ Configure tooltips globally
             } else {
                 x.style.display = "none";
             }
+            brandfilter_clear();
+            subfilter_clear();
 
-            $("#subfilter").css('display', 'block')
+            $("#mainbrands > *").css('display', 'none')
+
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#subfilter").css('display', 'block')
         }
 
         function filter_clear() {
             var table = $('#data_tableEditor').DataTable();
-
-            //table.columns(4).search("").draw();
             table.columns(0).search("").draw();
             table.columns(1).search("").draw();
+            table.columns(2).search("").draw();
             $("#mainsub > *").css('display', 'none')
-            $('.btnsl').removeClass('btnsel');
-            $('.subbtnsl').removeClass('btnsubsel');
+            $("#mainbrands > *").css('display', 'none')
+            $('.btnsl').removeClass('brandsbtnsl');
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
         }
         function subfilter_clear() {
             var table = $('#data_tableEditor').DataTable();
@@ -4420,7 +6453,7 @@ Configure tooltips globally
             //table.columns(4).search("").draw();
             //table.columns(3).search("").draw();
             table.columns(1).search("").draw();
-            $('.subbtnsl').removeClass('btnsubsel');
+            $('.subbtnsl').removeClass('btnsel');
             //$("#mainsub > *").css('display', 'none')
         }
 
@@ -4429,32 +6462,103 @@ Configure tooltips globally
 
             //table.columns(4).search("").draw();
             table.columns(1).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainbrands > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            $('.brandbtnsl').removeClass('btnsubsel');
+            brandfilter_clear();
+        }
+
+        function brandfilter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(2).search("" + clicked_id + "", true, false, true).draw();
+            //$('.subbtnsl').removeClass('btnsubsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+        function brandfilter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(2).search("").draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
         }
 
         $(document).ready(function () {
-           
+
             $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
 
 
             $('.btnsl').on('click', function () {
-                $('.btnsl').removeClass('btnsel');
-                $(this).addClass('btnsel');
+                $('.btnsl').removeClass('brandsbtnsl');
+                $(this).addClass('brandsbtnsl');
             });
 
             $('.subbtnsl').on('click', function () {
-                $('.subbtnsl').removeClass('btnsubsel');
+                $('.subbtnsl').removeClass('btnsel');
+                $(this).addClass('btnsel');
+            });
+
+
+            $('.brandbtnsl').on('click', function () {
+                $('.brandbtnsl').removeClass('btnsubsel');
                 $(this).addClass('btnsubsel');
             });
+
+
+
 
         });
     </script>
     <script>
         $(document).ready(function () {
+
+            $('.uompricemin').on('change', function () {
+                var minpricedef = parseFloat($(this).closest('tr').find('.PriceminDef').text());
+                var minpricenew = parseFloat(minpricedef * this.value);
+
+                $(this).closest('tr').find('.PriceminChange').text(minpricenew.toFixed(4))
+            });
             var table = $('#data_tableEditor').DataTable();
 
 
+                var json = JSON.parse('@Html.Raw(ViewBag.pedidos)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
         });
 
+            $("#docnum").select2({
+            multiple: false,
+            placeholder: "Select...",
+            data: data,
+                templateResult: function (data) {
+                    if (data.status == 1) {
+                        return $('<span style="color:green">' + data.text + '<span>');
+                    } else if (data.status == 0) {
+                        return $('<span>' + data.text + '<span>');
+                    } else if (data.status == 2) {
+                        return $('<span style="color:red">' + data.text + '<span>');
+                    }
+
+                }
+            });
+
+
+ 
+
+        });
 
 
 
@@ -4505,7 +6609,7 @@ Configure tooltips globally
 
 @if (ViewBag.Title == "Distribuidora Limeña - Home Customers")
 {
-
+    <script src="~/Content/appcontent/assets/vendor/js-init/bootstrap-number-input.js"></script>
     <script type="text/javascript">
 
         $(function () {
@@ -4521,8 +6625,54 @@ Configure tooltips globally
     window.onload = function (e) {
 
         var flag = 0;
+        $("#cantidadBonificar").bootstrapNumber();
+        $('#tablaordenesbon').DataTable({
+            "fixedHeader": {
+                header: true,
+            },
+            "footerCallback": function (row, data, start, end, display) {
+                var api = this.api(), data;
 
+                // Remove the formatting to get integer data for summation
+                var intVal = function (i) {
+                    return typeof i === 'string' ?
+                        i.replace(/[\$,]/g, '') * 1 :
+                        typeof i === 'number' ?
+                            i : 0;
+                };
 
+                // Total over all pages
+                total = api
+                    .column(8)
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                // Total over this page
+                pageTotal = api
+                    .column(8, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+
+                pageTotal2 = api
+                    .column(9, { page: 'current' })
+                    .data()
+                    .reduce(function (a, b) {
+                        return intVal(a) + intVal(b);
+                    }, 0);
+                // Update footer
+                $(api.column(8).footer()).html(
+                   pageTotal
+                );
+                $(api.column(9).footer()).html(
+                   pageTotal2
+                );
+// '' + pageTotal + ' ( ' + total + ' total)'
+            }
+        });
 
                 //DATETIMEPICKER
  var t1 = "@ViewBag.filtrofechastart";
@@ -4586,24 +6736,114 @@ Configure tooltips globally
 
         $('button.btnAutorizar').on('click', function () {
             var id = $(this).attr('id');
+            var producto = $(this).attr('data-codprod');
+            var product = $(this).attr('data-product');
             var cantidad = $(this).attr('data-qty');
+            var price = $(this).attr('data-price');
+            var tipoBon = $(this).attr('data-tipoBon');
+            var uom = $(this).attr('data-uom');
 
 
             $('#tbbonificaciones').modal('show');
             $("#idAut").val(id);
-            $("#CantAut").val(cantidad);
+
+            $('#productBon').val(product);
+            //UOM
+            $('#tipoUOM').find('option').remove();
+
+
+            $('#idproductoBon').val(producto);
+            $("#tipobonificacion").val(tipoBon);
+            $("#tipobonificacion").trigger("change");
+
+            $('#cantidadBonificar').val(cantidad);
+            $('#pricebon').val(price);
+
+
+            //if (uom != "EACH") {
+                $.ajax
+                    ({
+                        url: '/Commercial/GetUOM',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            product: producto
+                        }),
+                        success: function (result) {
+                            $.each($.parseJSON(result), function (i, uomtype) {
+                                if (uomtype.UOM == uom) {//si esta seleccionado
+                                    $("#tipoUOM").append
+                                        ($('<option selected></option>').val(uomtype.UOM).html(uomtype.UOM));
+
+
+                                } else {
+                                    $("#tipoUOM").append
+                                        ($('<option></option>').val(uomtype.UOM).html(uomtype.UOM));
+                                }
+                            });
+
+
+                        },
+                        error: function () {
+                            var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('tipoUOM').appendChild(o);
+
+                        },
+                    });
+
+            //} else {
+            //    var ou = new Option(uom, uom); ou.innerHTML = uom; document.getElementById('tipoUOM').appendChild(ou);
+            //}
+
+
+           // var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('tipoUOM').appendChild(o);
         });
+        $("#tipobonificacion").on('change', function () {
+                var value = $(this).val();
+
+                if (value == 1) {
+                    $('#typeUnits').show();
+                    $('#typeCurrency').hide();
+                    $('#cantidadBonificar').val(0);
+                    $('#pricebon').val(0);
+                } else if (value == 2) {
+                    $('#typeUnits').show();
+                    $('#typeCurrency').show();
+                    $('#cantidadBonificar').val(0);
+                    $('#pricebon').val(0);
+                } else if (value == 0) {
+                    $('#typeUnits').hide();
+                    $('#typeCurrency').hide();
+                    $('#cantidadBonificar').val(0);
+                    $('#pricebon').val(0);
+                }
+
+
+
+
+            });
 
 
         $('#btnAutorizar').on('click', function () {
             document.getElementById("loader").style.display = "block";
             var id = $("#idAut").val();
-            var cantidad = $("#CantAut").val();
+
+            var unidades2 = parseInt($('#cantidadBonificar').val());
+            var tipobonificacion = $("#tipobonificacion").val();
+            var precio = $('#pricebon').val();
+            var userID = "@ViewBag.userID";
+            var userName = "@ViewBag.userName";
+            var uombon = $("#tipoUOM").val();
+            var now = new Date();
+            var producto = $('#idproductoBon').val();
+
+
             $.ajax
                 ({
                     url: '/Commercial/ApproveBonification',
                     type: 'POST',
-                    data: { 'bonification': id, 'cantidad': cantidad },
+                    data: {
+                        'bonification': id, 'tipobonificacion': tipobonificacion,'producto':producto,'precio': precio,'unidades': unidades2,'date': now.toLocaleString("en-US", { hour12: true }),'userID': userID,'userName': userName,'uom': uombon },
                     success: function (result) {
 
                         if (result == "SUCCESS") {
@@ -4689,21 +6929,395 @@ Configure tooltips globally
 
 @if (ViewBag.Title == "Distribuidora Limeña - Prices Request (Pedidos)")
 {
-    <script src="~/Content/appcontent/assets/vendor/inputnumber/bootstrap-input-spinner.js"></script>
+    ///<script src="~/Content/appcontent/assets/vendor/inputnumber/bootstrap-input-spinner.js"></script>
+    <script src="~/Content/appcontent/assets/vendor/js-init/bootstrap-number-input.js"></script>
+    <script type="text/javascript">
+        function volverPriceRequest() {
+                        swal.fire({
+                title: 'Exit Order',
+                text: "Do you want to close this order?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, close this order',
+                cancelButtonText: 'No, just go back to main menu'
+            }).then(function (result) {
+                if (result.value) {
+
+                    var docnumi='@ViewBag.docnum';
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/Prices_requestCerrarOrden',
+                                type: 'POST',
+                                data: { 'docnum': docnumi },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+
+                                    var url = '@Url.Action("Prices_request", "Commercial", null)';
+                                        window.location.href = url;
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+                           var url2 = '@Url.Action("Prices_request", "Commercial", null)';
+                                        window.location.href = url2;
+                }
+
+            });
+        }
+
+
+        function filter(clicked_id) {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            table2.columns(0).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            brandfilter_clear();
+            subfilter_clear();
+
+            $("#mainbrands > *").css('display', 'none')
+
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#subfilter").css('display', 'block')
+        }
+
+        function filter_clear() {
+            var table2 = $('#data_tableEditor2').DataTable();
+            table2.columns(0).search("").draw();
+            table2.columns(1).search("").draw();
+            table2.columns(2).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+            $('.btnsl').removeClass('brandsbtnsl');
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table2.columns(1).search("").draw();
+            $('.subbtnsl').removeClass('btnsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            table2.columns(1).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainbrands > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            $('.brandbtnsl').removeClass('btnsubsel');
+            brandfilter_clear();
+        }
+
+        function brandfilter(clicked_id) {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            table2.columns(2).search("" + clicked_id + "", true, false, true).draw();
+            //$('.subbtnsl').removeClass('btnsubsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+        function brandfilter_clear() {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table2.columns(2).search("").draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        $(document).ready(function () {
+
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+
+
+            $('.btnsl').on('click', function () {
+                $('.btnsl').removeClass('brandsbtnsl');
+                $(this).addClass('brandsbtnsl');
+            });
+
+            $('.subbtnsl').on('click', function () {
+                $('.subbtnsl').removeClass('btnsel');
+                $(this).addClass('btnsel');
+            });
+
+
+            $('.brandbtnsl').on('click', function () {
+                $('.brandbtnsl').removeClass('btnsubsel');
+                $(this).addClass('btnsubsel');
+            });
+            var table2 = $('#data_tableEditor2').DataTable({
+                "pageLength": 5
+            });
+
+
+            //$("#docnum").select2();
+        });
+    </script>
+
     <script>
         var amountpriceglobal = parseFloat(0);
+        var waseditonfocus = 0;
+        var actualline;
+                var bolsaGeneral = parseFloat(@ViewBag.bolsa);
+                    $(function () {
+
+
+                $('input.filternumbers').on('focus', function () {
+                    amountpriceglobal = parseFloat($(this).val());
+                    var wasediteditem = $(this).closest('tr').find('.wasedited').text();
+                    actualline = $(this).closest('tr').find('.linenum').text();
+
+                    if (wasediteditem == 1) {
+                        waseditonfocus = 1;
+                    } else { waseditonfocus = 0; }
+                });
+
+
+
+                $('input.filternumbers').on('blur', function () {
+                    var objects = [];
+                    var bolsa = parseFloat($('#bolsaValoractual').val()); //parseFloat("ViewBag.bolsa");
+                    $.each($('input.filternumbers[type = "text"]'), function () {
+
+                        //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
+                        var priceEach = parseFloat($(this).closest('tr').find('.price').text());
+                        var priceEachMin = parseFloat($(this).closest('tr').find('.minprice').text());
+                        var actuallineEach = $(this).closest('tr').find('.linenum').text();
+                        var qtyRow = $(this).closest('tr').find('.qtyRow').text();
+                        var newprice = parseFloat($(this).val());
+
+                        //console.log(priceEach);
+                        //console.log(newprice);
+                        //Evaluando si fue editado
+                        var wasedited = $(this).closest('tr').find('.wasedited').text();
+                        //console.log(wasedited);
+                        if (wasedited == 1) {//fue editado
+                            //console.log("es editado");
+                            if (waseditonfocus == 0) {
+
+                            } else if (waseditonfocus == 1 && actualline == actuallineEach) {
+                                waseditonfocus = 0;
+
+                                if (priceEach > amountpriceglobal) {
+                                    bolsaGeneral = bolsaGeneral + (priceEach - amountpriceglobal);
+                                }
+
+                                $(this).closest('tr').find('.wasedited').text("0");
+
+                                if (newprice > priceEach || newprice < priceEachMin) {
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: 0,
+                                        text: ""
+                                    });
+
+                                } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: parseFloat((priceEach - newprice) * qtyRow),
+                                        text: ""
+                                    });
+
+                                }
+                            }
+
+                        } else {
+
+                            if (newprice > priceEach || newprice < priceEachMin) {
+                                objects.push({
+                                    id: $(this).attr('id'),
+                                    value: 0,
+                                    text: ""
+                                });
+
+                            } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: parseFloat((priceEach - newprice) * qtyRow),
+                                        text: ""
+                                    });
+
+                            }
+
+
+
+                        }
+
+
+
+                    });
+                    //console.log(objects);
+                    //Configuramos el precio
+
+                    var total = 0, row;
+
+                    $.each(objects, function (i, row) {
+
+                            total = parseFloat(total) + parseFloat(row.value);
+
+
+                    });
+
+
+                    //console.log("total: " + total);
+                    //console.log("hola, soy: " + this.id);
+                    var nuevoprecio = parseFloat($(this).val());
+                    //console.log(nuevoprecio);
+
+                    //console.log(bolsa);
+                    var price = parseFloat($(this).closest('tr').find('.price').text());
+                    var minprice = $(this).closest('tr').find('.minprice').text();
+
+                    var descuento = parseFloat(nuevoprecio - minprice);
+
+                    //var descuentoAnterior = parseFloat(amountpriceglobal - minprice);
+                    //console.log(price);
+                    console.log(total);
+                    var flag = 0
+
+                    if (nuevoprecio > 0) {
+                        if (bolsaGeneral < total) {
+                            flag = 1;
+                            toastr.warning("No tienes suficientes fondos en la bolsa", "Warning");
+                            $(this).val('0');
+
+                            $(this).removeClass('border-success');
+                            $(this).addClass('border-warning');
+
+
+                        } else {
+                            flag = 0;
+                        }
+                        if (nuevoprecio < minprice) {
+                            flag = 1;
+                            toastr.warning("Nuevo precio no puede ser menor al precio minimo", "Warning");
+                            $(this).val('0');
+
+                            $(this).removeClass('border-success');
+                            $(this).addClass('border-warning');
+
+
+
+                        } else {
+                            flag = 0;
+                        }
+
+                        if (nuevoprecio < minprice || bolsaGeneral < total) {
+                            flag = 1; //total = parseFloat(total - descuento);
+                        } else { flag = 0; }
+
+
+                        if (flag == 0) { //Ejecutamos el codigo
+
+                                $(this).removeClass('border-warning');
+                                $(this).addClass('border-success');
+
+
+                        }
+
+                        //Se evalua si el precio a colocar no excede los precios de venta
+                        var precioalto = parseFloat((price * 0.25) + price);
+
+                        if (nuevoprecio > precioalto) {
+                            flag = 1;
+                            toastr.warning("Esta excediendo el limite del nuevo precio a colocar, por favor valide antes de continuar", "Warning");
+                            //$(this).val('0');
+
+                            $(this).removeClass('border-success');
+                            $(this).addClass('border-warning');
+                        } else { flag = 0; }
+
+
+                    } else {
+                        $(this).removeClass('border-warning');
+                        $(this).removeClass('border-success');
+                        $(this).val(0);
+
+
+
+                    }
+
+
+                    var bolsaantes = parseFloat($('#bolsaValoractual').val());
+
+
+                    var bolsafinal = parseFloat(bolsaGeneral - total);
+
+                    if (bolsafinal == null) { bolsafinal = 0; }
+                    if (isNaN(bolsafinal)) { bolsafinal = bolsaGeneral; }
+
+                    if (bolsafinal < 0) {
+                        $('#bolsaValoractual').val(parseFloat(bolsaantes).toFixed(2));
+                    } else {
+                        $('#bolsaValoractual').val(parseFloat(bolsafinal).toFixed(2));
+                    }
+                    //console.log(bolsaGeneral);
+
+                })
+
+            });
+
+
         $(document).ready(function () {
             var table = $('#data_tableEditor').DataTable({
                 paging: false,
                 sort: false,
+                searching:true
 
             });
-            $('#totalso').html(Number(table.column(5).data().sum()).toFixed(4));
+
+
+
+            $('#totalso').html(Number(table.column(9).data().sum()).toFixed(4));
+
 
             var table2 = $('#tbBonificaciones').DataTable();
+            $('#totalsoQty').html(Number(table2.column(3).data().sum()).toFixed(2));
+            $('#totalsoPrice').html(Number(table2.column(4).data().sum()).toFixed(2));
             var table3 = $('#tbDeudas').DataTable();
 
-                   var json = JSON.parse('@Html.Raw(ViewBag.lstproducts)')
+                   @*var json = JSON.parse('Html.Raw(ViewBag.lstproducts)')
 
         var data = $.map(json, function (obj) {
             obj.id = obj.id; // replace pk with your identifier
@@ -4716,9 +7330,9 @@ Configure tooltips globally
             placeholder: "Select...",
             data: data
 
-        });
+        });*@
 
-            $("#cantidadBonificar").InputSpinner();
+           $("#cantidadBonificar").bootstrapNumber();
 
             $(function () {
                 $('input.filternumbers').on('input', function () {
@@ -4729,92 +7343,12 @@ Configure tooltips globally
                         .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
                 });
 
-                $('input.filternumbers').on('focus', function () {
-                    amountpriceglobal = parseFloat($(this).val());
-                });
-
-
-                $('input.filternumbers').on('blur', function () {
-                    //console.log("hola, soy: " + this.id);
-                    var nuevoprecio = parseFloat($(this).val());
-                    //console.log(nuevoprecio);
-                    var bolsa = parseFloat($('#bolsaValoractual').val()); //parseFloat("ViewBag.bolsa");
-                    //console.log(bolsa);
-                    var price = parseFloat($(this).closest('tr').find('.price').text());
-                    var minprice = $(this).closest('tr').find('.minprice').text();
-
-                    var descuento = parseFloat(nuevoprecio - minprice);
-
-                    var descuentoAnterior = parseFloat(amountpriceglobal - minprice);
-                    //console.log(price);
-                    //console.log(minprice);
-                    var flag = 0
-
-                    if (nuevoprecio > 0) {
-                        if (bolsa < nuevoprecio) {
-                            flag = 1;
-                            toastr.warning("No tienes suficientes fondos en la bolsa", "Warning");
-                            $(this).val('0');
-                            $(this).removeClass('border-success');
-                            $(this).addClass('border-warning');
-
-                            bolsa = parseFloat(bolsa + descuentoAnterior);
-                            $('#bolsaValoractual').val(parseFloat(bolsa).toFixed(2));
-                        } else {
-                            flag = 0;
-                        }
-                        if (nuevoprecio < minprice) {
-                            flag = 1;
-                            toastr.warning("Nuevo precio no puede ser menor al precio minimo", "Warning");
-                            $(this).val('0');
-                            $(this).removeClass('border-success');
-                            $(this).addClass('border-warning');
-
-
-                            bolsa = parseFloat(bolsa + descuentoAnterior);
-                            $('#bolsaValoractual').val(parseFloat(bolsa).toFixed(2));
-                        } else {
-                            flag = 0;
-                        }
-
-                        if (nuevoprecio < minprice || bolsa < nuevoprecio) { flag = 1; } else { flag = 0;}
-
-
-                        if (flag == 0) { //Ejecutamos el codigo
-                            if ($(this).hasClass('border-success')) { //No hacemos nada ya que se esta haciendo o un cambio o solo se introdujo a la cajita
-                                if (nuevoprecio == descuentoAnterior) {
-
-                                } else {
-
-                                    bolsa = parseFloat(bolsa + descuentoAnterior);
-
-                                    $('#bolsaValoractual').val(parseFloat(bolsa - nuevoprecio).toFixed(2));
-                                }
-                            } else {
-                                $(this).removeClass('border-warning');
-                                $(this).addClass('border-success');
-                                $('#bolsaValoractual').val(parseFloat(bolsa - descuento).toFixed(2));
-                            }
-
-
-
-                        }
-                    } else {
-                        $(this).removeClass('border-warning');
-                        $(this).removeClass('border-success');
-                        $(this).val(0);
-
-                        bolsa = parseFloat(bolsa + descuentoAnterior);
-                        $('#bolsaValoractual').val(parseFloat(bolsa).toFixed(2));
-
-                    }
-
-
-
-                })
 
             });
         });
+
+
+
 
         function saveAutorizaciones() {
 
@@ -4846,8 +7380,14 @@ Configure tooltips globally
                     $("#data_tableEditor tr").each(function (i, v) {
                             data[i] = Array();
                             $(this).children('td').each(function (ii, vv) {
-
-                                if (ii == 7) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data[i][ii] = true;
+                                    } else {
+                                        data[i][ii] = false;
+                                    }
+                                }
+                                else if (ii == 8) {
                                     data[i][ii] = $(this).eq(0).find('input').val();
                                 }  else {
                                     data[i][ii] = $(this).text();
@@ -4860,14 +7400,15 @@ Configure tooltips globally
 
                             if (i != 0) {
                                 objects.push({
-                                    lineNumber: data[i][0],
-                                    ItemCode: data[i][1],
-                                    Description: data[i][2],
-                                    uom: data[i][3],
-                                    Qty: data[i][4],
-                                    Price: data[i][5],
-                                    MinPrice: data[i][6],
-                                    NewPrice: data[i][7]
+                                    deleted: data[i][0],
+                                    lineNumber: data[i][1],
+                                    ItemCode: data[i][2],
+                                    Description: data[i][3],
+                                    uom: data[i][4],
+                                    Qty: data[i][5],
+                                    Price: data[i][6],
+                                    MinPrice: data[i][7],
+                                    NewPrice: data[i][8]
                                 });
                             }
 
@@ -4875,13 +7416,13 @@ Configure tooltips globally
                         var pedido = '@ViewBag.docnum';
                         var bolsa = $('#bolsaValoractual').val();
 
-                   // console.log(objects);
+                   //console.log(objects);
 
 
                     var objectsfinal = objects.filter(function (object) {
-                        return object.NewPrice >0;
+                        return (object.NewPrice >0 || object.deleted==true);
                     });
-                    console.log(objectsfinal);
+                    //console.log(objectsfinal);
 
                         document.getElementById("loader").style.display = "block";
                         $.ajax
@@ -4895,6 +7436,8 @@ Configure tooltips globally
                                         toastr.success("Data saved successfully.", "Success");
                                         document.getElementById("loader").style.display = "none";
                                         //window.location.reload(true);
+                                        $("#btnAsk").show();
+                                        $("#btnbackno").hide();
                                     } else {
                                         toastr.warning("Something went wrong.." + result, "Warning");
                                         document.getElementById("loader").style.display = "none";
@@ -4917,67 +7460,621 @@ Configure tooltips globally
 
         }
 
-        function nuevaBonificacion() {
-            setTimeout(function () { $('#nuevabonificacion').modal('show') }, 500);
-            $('#tbbonificaciones').modal('hide');
+
+        function saveAutorizacionesAfterOrderClosed() {
+
+            swal.fire({
+                title: 'Save changes',
+                text: "Are you sure you want to save this changes?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    //Guardamos
+                    var table = $('#data_tableEditor').DataTable();
+                        // var oTable = $('#htmlgrid').dataTable();
+                        //console.log(oTable.fnGetData());
+
+                        oSettings = table.settings();
+                        oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
+                        table.search('').columns().search('').draw();
+
+
+                        var data;
+                        data = Array();
+
+
+
+                    $("#data_tableEditor tr").each(function (i, v) {
+                            data[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data[i][ii] = true;
+                                    } else {
+                                        data[i][ii] = false;
+                                    }
+                                }
+                                else if (ii == 8) {
+                                    data[i][ii] = $(this).eq(0).find('input').val();
+                                }  else {
+                                    data[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+                        var objects = [];
+                        for (var i = 0, len = data.length; i < len; i++) {
+
+                            if (i != 0) {
+                                objects.push({
+                                    deleted: data[i][0],
+                                    lineNumber: data[i][1],
+                                    ItemCode: data[i][2],
+                                    Description: data[i][3],
+                                    uom: data[i][4],
+                                    Qty: data[i][5],
+                                    Price: data[i][6],
+                                    MinPrice: data[i][7],
+                                    NewPrice: data[i][8]
+                                });
+                            }
+
+                        }
+                        var pedido = '@ViewBag.docnum';
+                        var bolsa = $('#bolsaValoractual').val();
+
+                   //console.log(objects);
+
+
+                    var objectsfinal = objects.filter(function (object) {
+                        return object.deleted==true;
+                    });
+                    //console.log(objectsfinal);
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/Save_SODetailsAfterOrderClosed',
+                                type: 'POST',
+                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+                                        //$("#btnAsk").show();
+                                        //$("#btnbackno").hide();
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+
         }
 
-        function guardarBonificacion() {
-            var pedido = "@ViewBag.docnum";
-            var producto = $('#lstproducts').val();
-            var nombreProducto = $("#lstproducts option:selected").text();
-            var unidades = $('#cantidadBonificar').val();
-            var userID = "@ViewBag.userID";
-            var userName = "@ViewBag.userName";
-            var now = new Date();
+
+        function delProduct(id) {
+            var idlineN = "";
+            idlineN = id.substring(4);
+
+            var idcheckbox = "deleted_" + idlineN;
 
 
-            document.getElementById("loader").style.display = "block";
-            $.ajax
-                ({
-                    url: '/Commercial/Save_bonification',
-                    type: 'POST',
-                    datatype: 'application/json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({
-                        pedido: pedido,
-                        producto: producto,
-                        unidades: unidades,
-                        date: now.toLocaleString("en-US", { hour12: true }),
-                        userID: userID,
-                        userName: userName
-                    }),
-                    success: function (result) {
 
-                        if (result == "SUCCESS") {
-                            toastr.success("Data saved successfully.", "Success");
-                            document.getElementById("loader").style.display = "none";
 
-                            var t = $('#tbBonificaciones').DataTable();
+                swal.fire({
+                    title: 'Delete product',
+                    text: "Are you sure you want to delete this product? This may affect the bonification list.",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        document.getElementById(idcheckbox).checked = true;
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').prop('disabled', 'disabled');
+                   
+                        //escondemos boton
+                        document.getElementById("btn_" + idlineN).style.display = "none";
+                        try {
+                            document.getElementById("btnr_" + idlineN).style.display = "block";
+                        } catch{
 
-                            t.row.add([
-                                nombreProducto,
-                                unidades,
-                                '<span class="badge text-warning">Waiting for approval</span>'
-                            ]).draw(false);
+                        }
+                       
 
-                            setTimeout(function () { $('#tbbonificaciones').modal('show') }, 500);
-                            $('#nuevabonificacion').modal('hide');
+                        //label y boton bonificacion(colocamos un try-catch porque no siempre saldra disponible esta opcion)
+                        try {
+                            document.getElementById("labelbonif_" + idlineN).style.display = "block";
+                            document.getElementById("btnbonif_" + idlineN).style.display = "none";
+                        } catch{
+
+                        }
+
+                        ///
+                        amountpriceglobal = parseFloat($('#' + idcheckbox).closest('tr').find('.filternumbers').val());
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').val(0);
+                        var wasediteditem = $('#' + idcheckbox).closest('tr').find('.wasedited').text();
+                        actualline = $('#' + idcheckbox).closest('tr').find('.linenum').text();
+
+                        if (wasediteditem == 1) {
+                            waseditonfocus = 1;
+                        } else { waseditonfocus = 0; }
+
+                        var objects = [];
+                        var bolsa = parseFloat($('#bolsaValoractual').val()); //parseFloat("ViewBag.bolsa");
+                        $.each($('input.filternumbers[type = "text"]'), function () {
+
+                            //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
+                            var priceEach = parseFloat($(this).closest('tr').find('.price').text());
+                            var priceEachMin = parseFloat($(this).closest('tr').find('.minprice').text());
+                            var actuallineEach = $(this).closest('tr').find('.linenum').text();
+                            var qtyRow = $(this).closest('tr').find('.qtyRow').text();
+                            var newprice = parseFloat($(this).val());
+
+                            //console.log(priceEach);
+                            //console.log(newprice);
+                            //Evaluando si fue editado
+                            var wasedited = $(this).closest('tr').find('.wasedited').text();
+
+                            if (wasedited == 1) {//fue editado
+
+                                if (waseditonfocus == 0) {
+
+                                } else if (waseditonfocus == 1 && actualline == actuallineEach) {
+                                    waseditonfocus = 0;
+                                    //SOLO PARA ELIMINAR, PERO PROBAR EN PROCESO NORMAL
+                                    if (priceEach > amountpriceglobal) {
+                                        bolsaGeneral = bolsaGeneral + ((priceEach - amountpriceglobal) * qtyRow);
+                                    }
+
+                                    $(this).closest('tr').find('.wasedited').text("0");
+
+                                    if (newprice > priceEach || newprice < priceEachMin) {
+                                        objects.push({
+                                            id: $(this).attr('id'),
+                                            value: 0,
+                                            text: ""
+                                        });
+
+                                    } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                        objects.push({
+                                            id: $(this).attr('id'),
+                                            value: parseFloat((priceEach - newprice) * qtyRow),
+                                            text: ""
+                                        });
+
+                                    }
+                                }
+
+                            } else {
+                                if (newprice > priceEach || newprice < priceEachMin) {
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: 0,
+                                        text: ""
+                                    });
+
+                                } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: parseFloat((priceEach - newprice) * qtyRow),
+                                        text: ""
+                                    });
+
+                                }
+
+
+
+                            }
+
+
+
+                        });
+                        //console.log(objects);
+
+                        var total = 0, row;
+
+                        $.each(objects, function (i, row) {
+
+                            total = parseFloat(total) + parseFloat(row.value);
+
+
+                        });
+
+
+                        //console.log("total: " + total);
+                        //console.log("hola, soy: " + this.id);
+                        var nuevoprecio = 0;
+                        //console.log(nuevoprecio);
+
+                        //console.log(bolsa);
+                        var price = parseFloat($(this).closest('tr').find('.price').text());
+                        var minprice = $(this).closest('tr').find('.minprice').text();
+
+                        var descuento = parseFloat(nuevoprecio - minprice);
+
+                        //var descuentoAnterior = parseFloat(amountpriceglobal - minprice);
+                        //console.log(price);
+                        //console.log(minprice);
+                        var flag = 0
+
+                        if (nuevoprecio > 0) {
+                            if (bolsaGeneral < total) {
+                                flag = 1;
+                                toastr.warning("No tienes suficientes fondos en la bolsa", "Warning");
+                                $(this).val('0');
+
+                                $(this).removeClass('border-success');
+                                $(this).addClass('border-warning');
+
+
+                            } else {
+                                flag = 0;
+                            }
+                            if (nuevoprecio < minprice) {
+                                flag = 1;
+                                toastr.warning("Nuevo precio no puede ser menor al precio minimo", "Warning");
+                                $(this).val('0');
+
+                                $(this).removeClass('border-success');
+                                $(this).addClass('border-warning');
+
+
+
+                            } else {
+                                flag = 0;
+                            }
+
+                            if (nuevoprecio < minprice || bolsaGeneral < total) {
+                                flag = 1; //total = parseFloat(total - descuento);
+                            } else { flag = 0; }
+
+
+                            if (flag == 0) { //Ejecutamos el codigo
+
+                                $(this).removeClass('border-warning');
+                                $(this).addClass('border-success');
+
+
+                            }
+
+                            //Se evalua si el precio a colocar no excede los precios de venta
+                            var precioalto = parseFloat((price * 0.25) + price);
+
+                            if (nuevoprecio > precioalto) {
+                                flag = 1;
+                                toastr.warning("Esta excediendo el limite del nuevo precio a colocar, por favor valide antes de continuar", "Warning");
+                                //$(this).val('0');
+
+                                $(this).removeClass('border-success');
+                                $(this).addClass('border-warning');
+                            } else { flag = 0; }
 
 
                         } else {
-                            toastr.warning("Something went wrong.." + result, "Warning");
-                            document.getElementById("loader").style.display = "none";
+                            $(this).removeClass('border-warning');
+                            $(this).removeClass('border-success');
+                            $(this).val(0);
+
+
+
                         }
 
 
-                    },
-                    error: function () {
+                        var bolsaantes = parseFloat($('#bolsaValoractual').val());
 
-                        toastr.warning("Something went wrong..", "Warning");
-                        document.getElementById("loader").style.display = "none";
-                    },
+                        //console.log(bolsaantes);
+
+
+
+                        var bolsafinal = parseFloat(bolsaGeneral - total);
+
+                        if (bolsafinal == null) { bolsafinal = 0; }
+                        if (isNaN(bolsafinal)) { bolsafinal = bolsaGeneral; }
+
+                        if (bolsafinal < 0) {
+                            $('#bolsaValoractual').val(parseFloat(bolsaantes).toFixed(2));
+                        } else {
+                            $('#bolsaValoractual').val(parseFloat(bolsafinal).toFixed(2));
+                        }
+
+                        //console.log(bolsafinal);
+
+
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
                 });
+
+
+
+
+
+        }
+        function restoreProduct(id) {
+            var idlineN = "";
+            idlineN = id.substring(5);
+
+            var idcheckbox = "deleted_" + idlineN;
+
+                swal.fire({
+                    title: 'Restore product',
+                    text: "Are you sure you want to restore this product? This may affect the bonification list after save",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        document.getElementById(idcheckbox).checked = false;
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').prop('disabled', false);
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').val(0);
+
+                        //escondemos boton
+                        document.getElementById("btn_" + idlineN).style.display = "block";
+                        document.getElementById("btnr_" + idlineN).style.display = "none";
+
+                        //label y boton bonificacion(colocamos un try-catch porque no siempre saldra disponible esta opcion)
+                        try {
+                            document.getElementById("labelbonif_" + idlineN).style.display = "none";
+                            document.getElementById("btnbonif_" + idlineN).style.display = "block";
+                        } catch{
+
+                        }
+
+                        ///
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+
+
+
+
+        }
+
+
+
+
+        var cantidadActualBon = 0;
+
+        function nuevaBonificacion(idproduct, product, uom, lineNum, cantidadOrden, factorbonif, cantbonif) {
+
+            if (factorbonif == 0 || factorbonif == null || factorbonif == "") {
+                toastr.warning("Por favor solicite al Administrador del Catálogo que ingrese los Factores de Bonificación para este Producto", "Warning");
+            } else {
+                setTimeout(function () { $('#nuevabonificacion').modal('show') }, 500);
+                $('#tbbonificaciones').modal('hide');
+
+                $('#idproductoBon').val(idproduct);
+                $('#productBon').val(product);
+                $('#lineNumBon').val(lineNum);
+                //UOM
+                $('#tipoUOM').find('option').remove();
+                cantidadActualBon = cantidadOrden;
+                console.log(parseInt(cantidadOrden));
+
+                var maxCantidad = parseInt((cantidadOrden / factorbonif) * cantbonif);
+                console.log(maxCantidad);
+                $(function () {
+                    //$elem = $("#cantidadBonificar");
+                    //var destroyCrappyPlugin = function ($elem, eventNamespace) {
+                    //    var isInstantiated = !!$.data($elem.get(0));
+
+                    //    if (isInstantiated) {
+                    //        $.removeData($elem.get(0));
+                    //        $elem.off(eventNamespace);
+                    //        $elem.unbind('.' + eventNamespace);
+                    //    }
+                    //};
+
+                    //$('#cantidadBonificar').html($('#cantidadBonificar').html());
+
+
+                    //$('#cantidadBonificar').html($('#ri-').html());
+                    $("#cantidadBonificar").prop('max', parseInt(maxCantidad));
+                    $("#cantidadBonificar").bootstrapNumber();
+
+
+                });
+
+                //if (uom != "EACH") {
+                $.ajax
+                    ({
+                        url: '/Commercial/GetUOM',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            product: idproduct
+                        }),
+                        success: function (result) {
+                            $.each($.parseJSON(result), function (i, uomtype) {
+                                if (uomtype.UOM == uom) {//si esta seleccionado
+                                    $("#tipoUOM").append
+                                        ($('<option selected></option>').val(uomtype.UOM).html(uomtype.UOM));
+
+
+                                } else {
+                                    $("#tipoUOM").append
+                                        ($('<option></option>').val(uomtype.UOM).html(uomtype.UOM));
+                                }
+                            });
+
+
+                        },
+                        error: function () {
+                            var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('tipoUOM').appendChild(o);
+
+                        },
+                    });
+
+                //} else {
+                //    var ou = new Option(uom, uom); ou.innerHTML = uom; document.getElementById('tipoUOM').appendChild(ou);
+                //}
+
+
+
+                $("#tipobonificacion").val(0);
+                $("#tipobonificacion").trigger("change");
+
+            }
+
+
+
+
+
+
+        }
+        $("#tipobonificacion").on('change', function () {
+            var value = $(this).val();
+
+            if (value == 1) {
+                $('#typeUnits').show();
+                $('#typeCurrency').hide();
+                $('#cantidadBonificar').val(0);
+                $('#pricebon').val(0);
+            } else if (value == 2) {
+                $('#typeUnits').hide();
+                $('#typeCurrency').show();
+                $('#cantidadBonificar').val(0);
+                $('#pricebon').val(0);
+            }else if (value == 0) {
+                $('#typeUnits').hide();
+                $('#typeCurrency').hide();
+                $('#cantidadBonificar').val(0);
+                $('#pricebon').val(0);
+            }
+
+
+        });
+
+
+        function guardarBonificacion() {
+
+
+            $("#savebonbtn").attr("disabled", true);
+            var pedido = "@ViewBag.docnum";
+            var producto = $('#idproductoBon').val();
+            var lineNum = $("#lineNumBon").val();
+            var unidades = $('#cantidadBonificar').val();
+            var tipobonificacion = $("#tipobonificacion").val();
+            var precio = $('#pricebon').val();
+            var userID = "@ViewBag.userID";
+            var userName = "@ViewBag.userName";
+            var uombon = $("#tipoUOM").val();
+            var now = new Date();
+            var nombreProducto = $('#productBon').val();
+            var tipo = "";
+
+            var validando = 0;
+
+            if (tipobonificacion == 1) {
+                tipo = '<span class="badge text-success">QUANTITY</span>'
+
+                if (unidades < 1) {
+                    validando = 1;//No paso el filtro por lo tanto mandamos alerta
+                }
+            }
+            else if (tipobonificacion == 2)
+            {
+                if (precio < 1) {
+                    validando = 1;//No paso filtro de precio
+                }
+                tipo = '<span class="badge text-info">CURRENCY</span>'
+            }
+
+            if (validando == 1) {
+                toastr.warning("Something went wrong. You must to set a valid value.", "Warning");
+                $('#savebonbtn').attr("disabled", false);
+            } else {
+
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Commercial/Save_bonification',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            pedido: pedido,
+                            producto: producto,
+                            tipobonificacion: tipobonificacion,
+                            lineNum: lineNum,
+                            precio: precio,
+                            unidades: unidades,
+                            date: now.toLocaleString("en-US", { hour12: true }),
+                            userID: userID,
+                            userName: userName,
+                            uom: uombon
+                        }),
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                toastr.success("Data saved successfully.", "Success");
+                                document.getElementById("loader").style.display = "none";
+                                $('#savebonbtn').attr("disabled", false);
+
+                                var t = $('#tbBonificaciones').DataTable();
+
+                                t.row.add(["-",
+                                    nombreProducto, tipo,
+                                    unidades, precio, uombon,
+                                    '<span class="badge text-warning">WAITING FOR APPROVAL</span>', '<span class="badge text-warning">TO VIEW ACTIONS, PLEASE REFRESH THE PAGE</span>'
+                                ]).draw(false);
+
+                                setTimeout(function () { $('#tbbonificaciones').modal('show') }, 500);
+                                $('#nuevabonificacion').modal('hide');
+                                $("#btnAsk").show();
+                                $("#btnbackno").hide();
+
+
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+                                document.getElementById("loader").style.display = "none";
+                                $('#savebonbtn').attr("disabled", false);
+
+                            }
+
+
+                        },
+                        error: function () {
+                            $('#savebonbtn').attr("disabled", false);
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+            }
+
 
 
 
@@ -5084,8 +8181,8 @@ Configure tooltips globally
                 var id = $(this).closest('tr').find('.editIDUsuarios').text();
                 var factorn = $(this).closest('tr').find('.editFactorNUsuarios').text();
 
-                console.log(id);
-                console.log(factorn);
+                //console.log(id);
+                //console.log(factorn);
                 $.ajax
                     ({
                         url: '/Commercial/CambiarPorcentajePorUsuario',

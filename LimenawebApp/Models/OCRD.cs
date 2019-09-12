@@ -297,7 +297,7 @@ namespace LimenawebApp.Models
         public string CertBKeep { get; set; }
         public string WHShaamGrp { get; set; }
         public Nullable<int> IndustryC { get; set; }
-        public Nullable<int> DatevAcct { get; set; }
+        public string DatevAcct { get; set; }
         public string DatevFirst { get; set; }
         public string GTSRegNum { get; set; }
         public string GTSBankAct { get; set; }
@@ -311,7 +311,7 @@ namespace LimenawebApp.Models
         public Nullable<int> CpnNo { get; set; }
         public Nullable<short> NTSWebSite { get; set; }
         public string DflIBAN { get; set; }
-        public Nullable<short> Series { get; set; }
+        public Nullable<int> Series { get; set; }
         public Nullable<int> Number { get; set; }
         public Nullable<int> EDocExpFrm { get; set; }
         public string TaxIdIdent { get; set; }
@@ -380,5 +380,33 @@ namespace LimenawebApp.Models
         public short U_VisitFrequency { get; set; }
         public string U_Status { get; set; }
         public string U_StoreSize { get; set; }
+        public string EDocGenTyp { get; set; }
+        public string eStreet { get; set; }
+        public string eStreetNum { get; set; }
+        public Nullable<int> eBuildnNum { get; set; }
+        public string eZipCode { get; set; }
+        public string eCityTown { get; set; }
+        public string eCountry { get; set; }
+        public string eDistrict { get; set; }
+        public string RepFName { get; set; }
+        public string RepSName { get; set; }
+        public string RepCmpName { get; set; }
+        public string RepFisCode { get; set; }
+        public string RepAddID { get; set; }
+        public string PECAddr { get; set; }
+        public string IPACodePA { get; set; }
+        public string PriceMode { get; set; }
+        public string EffecPrice { get; set; }
+        public string TxExMxVdTp { get; set; }
+        public string MerchantID { get; set; }
+        public string UseBilAddr { get; set; }
+        public string NaturalPer { get; set; }
+        public string DPPStatus { get; set; }
+        public string EnAddID { get; set; }
+        public string EncryptIV { get; set; }
+        public string EnDflAccnt { get; set; }
+        public string EnDflIBAN { get; set; }
+        public Nullable<short> U_TimeWinStart { get; set; }
+        public Nullable<short> U_TimeWinEnd { get; set; }
     }
 }

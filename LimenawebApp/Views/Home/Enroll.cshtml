@@ -1,0 +1,244 @@
+﻿@using Recaptcha.Web.Mvc
+@{
+    ViewBag.Title = "Distribuidora Limeña - Líderes en productos latinos Enroll";
+}
+
+<div class="maincontent-services">
+    <div class="header">
+        <h1 class="h1-subpage-title white">Registrate como cliente</h1>
+    </div>
+</div>
+<div class="bootstrap-wrapper">
+    <div class="container">
+        <form id="myform">
+            <div class="row">
+
+                <div class="col-md-5">
+
+                    <h3>General</h3>
+                    <input type="text" class="w-input" maxlength="256" name="CardName" placeholder="Empresa (*)" id="CardName" required="">
+                    <input type="text" class="w-input" maxlength="256" name="Phone1" placeholder="Telefono (*)" id="Phone1" required="">
+                    <input type="email" class="w-input" maxlength="256" name="E_Mail" placeholder="Correo electrónico" id="E_Mail">
+                    <input type="text" class="w-input" maxlength="256" name="IntrntSite" placeholder="Sitio Web" id="IntrntSite">
+                    <input type="text" class="w-input" maxlength="256" name="TAXID" placeholder="UNIFIED FEDERAL TAX ID (*)" id="TAXID" required="" autocomplete="off">
+                    <input type="text" class="w-input" maxlength="256" name="TAXCERTNUM" placeholder="RESALES TAX CERTIFICATE NUMBER (*)" id="TAXCERTNUM" required="" autocomplete="off">
+
+                    <h3>Datos de Contacto</h3>
+                    <input type="text" class="w-input" maxlength="256" name="FirstName" placeholder="Nombre (*)" id="FirstName" required="">
+                    <input type="text" class="w-input" maxlength="256" name="LastName" placeholder="Apellido (*)" id="LastName" required="">
+                    <input type="text" class="w-input" maxlength="256" name="Position" placeholder="Cargo (*)" id="Position" required="">
+                    <input type="text" class="w-input" maxlength="256" name="Tel1" placeholder="Telefono (*)" id="Tel1" required="">
+                    <input type="email" class="w-input" maxlength="256" name="E_MailL" placeholder="Correo electrónico (*)" id="E_MailL" required="">
+
+                    <h3>Dirección</h3>
+                    <select name="countryId" style="margin-bottom:10px !important" class="select-box countries order-alpha include-US" id="countryId" required>
+                        <option value="">Seleccione País</option>
+                    </select>
+                    <select name="stateId" style="margin-bottom:10px !important" class="select-box states order-alpha" id="stateId" required>
+                        <option value="">Seleccione Estado</option>
+                    </select>
+                    <select name="cityId" style="margin-bottom:10px !important" class="select-box cities order-alpha" id="cityId" required>
+                        <option value="">Seleccione Ciudad</option>
+                    </select>
+
+                    <input type="text" class="w-input" maxlength="256" name="Street" placeholder="Calle (*)" id="Street" required="">
+                    <input type="text" class="w-input" maxlength="256" name="ZipCode" placeholder="ZIP CODE (*)" id="ZipCode" required="">
+
+                </div>
+                <div class="col-md-2"></div>
+
+                <div class="col-md-5">
+                    <h3>Características</h3>
+                    <h4>Servicios</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="checkbox" value="s1" id="s1" name="services">
+                                <label for="s1">GROCERY - DRY PRODUCT</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s2" id="s2" name="services">
+                                <label for="s2">DAIRY SECTION</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s3" id="s3" name="services">
+                                <label for="s3">FROZEN SECTION</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s4" id="s4" name="services">
+                                <label for="s4">PRODUCE</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s5" id="s5" name="services">
+                                <label for="s5">MEAT DEPARTAMENT</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s6" id="s6" name="services">
+                                <label for="s6">RESTAURANT</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="checkbox" value="s7" id="s7" name="services">
+                                <label for="s7">MONEY SERVICES</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s8" id="s8" name="services">
+                                <label for="s8">OTC (MEDICINAS)</label>
+                            </div>
+                            <div class="form-group">
+
+                                <input type="checkbox" value="s9" id="s9" name="services">
+                                <label for="s9">KITCHENWARE (UTENSILIOS DE COCINA)</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s10" id="s10" name="services">
+                                <label for="s10">ETHNIC SOURVENIRS</label>
+                            </div>
+                            <div class="form-group">
+
+                                <input type="checkbox" value="s11" id="s11" name="services">
+                                <label for="s11">CLOTHING</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s12" id="s12" name="services">
+                                <label for="s12">JEWELRY</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" value="s13" id="s13" name="services">
+                                <label for="s13">CELLPHONE STORE</label>
+                            </div>
+                        </div>
+                    </div>
+
+                 
+                    <h4>Etnias</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="checkbox" id="e1" value="e1" name="etnias">
+                                <label for="e1">EL SALVADOR</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e2" value="e2" name="etnias">
+                                <label for="e2">GUATEMALA</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e3" value="e3" name="etnias">
+                                <label for="e3">
+                                    COSTA RICA
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e4" value="e4" name="etnias">
+                                <label for="e4">MEXICO</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e5" value="e5" name="etnias">
+                                <label for="e5">COLOMBIA</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <input type="checkbox" id="e6" value="e6" name="etnias">
+                                <label for="e6">PERU</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e7" value="e7" name="etnias">
+                                <label for="e7">VENEZUELA</label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e8" value="e8" name="etnias">
+                                <label for="e8">
+                                    CUBA
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e9" value="e9" name="etnias">
+                                <label for="e9">
+                                    PUERTO RICO
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <input type="checkbox" id="e10" value="e10" name="etnias">
+                                <label for="e10">HONDURAS</label>
+                            </div>
+                        </div>
+       
+
+                    <h3>Imágenes adjutas</h3>
+                    <div class="col-12">
+                        <div>
+                            <label>TAX CERTIFICATE</label>
+                            <input type="file" class="fileTAX" id="TAXCERT" required>
+                        </div>
+                        <div>
+                            <label>RESALE TAX CERTIFICATE NUM</label>
+                            <input type="file" class="fileTAX" id="TAXRECERTNUM" required>
+                        </div>
+                    </div>
+
+                    <h3>Otros</h3>
+                    <input type="text" class="w-input" maxlength="256" name="HorarioOperacion" placeholder="Horario de operacion (*)" id="HorarioOperacion" required="">
+                    <select class="select-box" style="margin-bottom:10px !important" name="ReciboMercaderiaDia" id="ReciboMercaderiaDia" required>
+                        <option value="">Dia de recibo de mercaderia (*)</option>
+                        <option value="Domingo">Domingo</option>
+                        <option value="Lunes">Lunes</option>
+                        <option value="Martes">Martes</option>
+                        <option value="Miercoles">Miercoles</option>
+                        <option value="Jueves">Jueves</option>
+                        <option value="Viernes">Viernes</option>
+                        <option value="Sabado">Sabado</option>
+                    </select>
+                    <input type="text" class="w-input" maxlength="256" name="ReciboMercaderiaArea" placeholder="Area de recibo de mercaderia (*)" id="ReciboMercaderiaArea" required="">
+                    <div class="form-group">
+                        <input type="checkbox" id="MuelleDescarga">
+                        <label for="MuelleDescarga">MUELLE DE DESCARGA</label>
+                    </div>
+                    <select class="select-box" style="margin-bottom:10px !important" name="TamanoTienda" id="TamanoTienda" required>
+                        <option value="">Tamano de la tienda (*)</option>
+                        <option value="-3.000ft">- 3.000 ft</option>
+                        <option value="+3.000ft">+ 3.000 ft</option>
+                        <option value="+5.000ft">+ 5.000 ft</option>
+                        <option value="+10.000ft">+ 10.000 ft</option>
+                        <option value="+20.000ft">+ 20.000 ft</option>
+
+                    </select>
+
+                    @Html.Recaptcha(theme: Recaptcha.Web.RecaptchaTheme.Clean)
+
+                    <input type="submit" id="btnEnviar" value="Enviar" data-wait="Por favor espere..." class="formbutton w-button">
+             
+
+
+
+
+                </div>
+
+            </div>
+            </form>
+            @if (ViewBag.showmessage == 1)
+        {
+            <div class="w-form-done" style="display:inline-block !important">
+                <div>Thank you! Your submission has been received!</div>
+            </div>
+    }
+    else if (ViewBag.showmessage == 3)
+    {
+        <div class="w-form-fail" style="display:inline-block !important">
+            <div>Please complete the reCAPTCHA.</div>
+        </div>
+}
+else if (ViewBag.showmessage == 4)
+{
+    <div class="w-form-fail" style="display:inline-block !important">
+        <div>The reCAPTCHA is incorrect.</div>
+    </div>
+}
+else if (ViewBag.showmessage == 0)
+{
+
+}
+    </div>
+    </div>
+

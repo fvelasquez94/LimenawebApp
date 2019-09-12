@@ -31,10 +31,11 @@
                                   
                                             <th>CODIGO EN SAP</th>
                                             <th>DESCRIPCION</th>
+                                            <th>VENDOR</th>
                                             <th>FACTOR DE COMPRA</th>
-                                            <th>FACTOR DE COMPRA (QUIEBRE)</th>
-                                            <th>FACTOR UNIDAD DE COMPRA (QUIEBRE)</th>
-                                            <th>POLITICA DE COBERTURA</th>
+                                            <th hidden>FACTOR DE COMPRA (QUIEBRE)</th>
+                                            <th>FACTOR UNIDAD DE COMPRA</th>
+                                            <th hidden>POLITICA DE COBERTURA</th>
                                             <th>COSTO</th>
                                             <th style="width:300px">COMENTARIOS</th>
                                             <th></th>
@@ -50,10 +51,11 @@
                                                     @data.ProductCode
                                                 </td>
                                                 <td style="padding: .25rem;">@data.ProductName</td>
+                                                <td style="padding: .25rem;">@data.Vendor_Name</td>
                                                 <td class="editable editFactorN" style="padding: .25rem;">@data.FactorCompra</td>
-                                                <td class="editable editFactorQ" style="padding: .25rem;">@data.FactorCompra_quiebre</td>
+                                                <td hidden class=" editFactorQ" style="padding: .25rem;">@data.FactorCompra_quiebre</td>
                                                 <td class="editable editFactorUC" style="padding: .25rem;">@data.FactorUnidadCompra</td>
-                                                <td class="editable editPolitica">@data.Politica_cobertura</td>
+                                                <td hidden class=" editPolitica">@data.Politica_cobertura</td>
                                                 <td class="editable editCosto">@data.Costo</td>
                                                 <td  style="padding: .25rem;"><textarea style="width:300px" class="editComentarios">@data.Comentarios</textarea> </td>
                                                 <td style="padding: .25rem;"><a href="JavaScript:Void(0);" class="btn btn-sm btn-outline-success btn-sm form-pill savebtn" style="display:none;">Save</a> </td>

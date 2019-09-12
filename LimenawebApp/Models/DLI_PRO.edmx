@@ -9,15 +9,17 @@
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="U_Salario" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_Bono" Type="numeric" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="@DROUTE">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="U_PDay" Type="nvarchar" MaxLength="10" />
           <Property Name="U_WeekA" Type="nvarchar" MaxLength="10" />
           <Property Name="U_WeekB" Type="nvarchar" MaxLength="10" />
@@ -33,29 +35,31 @@
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="U_Salario" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_Bono" Type="numeric" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="@PICKERS">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="@TRUCKS">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="nvarchar" MaxLength="30" Nullable="false" />
-          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
             <PropertyRef Name="ItemCode" />
             <PropertyRef Name="PriceList" />
           </Key>
-          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="PriceList" Type="smallint" Nullable="false" />
           <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
           <Property Name="Currency" Type="nvarchar" MaxLength="3" />
@@ -70,6 +74,42 @@
           <Property Name="Ovrwrite1" Type="char" MaxLength="1" />
           <Property Name="Ovrwrite2" Type="char" MaxLength="1" />
           <Property Name="BasePLNum" Type="smallint" />
+          <Property Name="UomEntry" Type="int" />
+          <Property Name="PriceType" Type="char" MaxLength="1" />
+        </EntityType>
+        <EntityType Name="ITT1">
+          <Key>
+            <PropertyRef Name="Father" />
+            <PropertyRef Name="ChildNum" />
+          </Key>
+          <Property Name="Father" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="ChildNum" Type="int" Nullable="false" />
+          <Property Name="VisOrder" Type="int" Nullable="false" />
+          <Property Name="Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Warehouse" Type="nvarchar" MaxLength="8" />
+          <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Currency" Type="nvarchar" MaxLength="3" />
+          <Property Name="PriceList" Type="smallint" />
+          <Property Name="OrigPrice" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="OrigCurr" Type="nvarchar" MaxLength="3" />
+          <Property Name="IssueMthd" Type="char" MaxLength="1" />
+          <Property Name="Uom" Type="nvarchar" MaxLength="100" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="254" />
+          <Property Name="LogInstanc" Type="int" />
+          <Property Name="Object" Type="nvarchar" MaxLength="20" />
+          <Property Name="OcrCode" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode2" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode3" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode4" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode5" Type="nvarchar" MaxLength="8" />
+          <Property Name="PrncpInput" Type="char" MaxLength="1" />
+          <Property Name="Project" Type="nvarchar" MaxLength="20" />
+          <Property Name="Type" Type="int" />
+          <Property Name="WipActCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="AddQuantit" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="LineText" Type="ntext" />
+          <Property Name="StageId" Type="int" />
         </EntityType>
         <EntityType Name="OCRD">
           <Key>
@@ -358,7 +398,7 @@
           <Property Name="CertBKeep" Type="char" MaxLength="1" />
           <Property Name="WHShaamGrp" Type="char" MaxLength="1" />
           <Property Name="IndustryC" Type="int" />
-          <Property Name="DatevAcct" Type="int" />
+          <Property Name="DatevAcct" Type="nvarchar" MaxLength="9" />
           <Property Name="DatevFirst" Type="char" MaxLength="1" />
           <Property Name="GTSRegNum" Type="nvarchar" MaxLength="20" />
           <Property Name="GTSBankAct" Type="nvarchar" MaxLength="80" />
@@ -372,7 +412,7 @@
           <Property Name="CpnNo" Type="int" />
           <Property Name="NTSWebSite" Type="smallint" />
           <Property Name="DflIBAN" Type="nvarchar" MaxLength="50" />
-          <Property Name="Series" Type="smallint" />
+          <Property Name="Series" Type="int" />
           <Property Name="Number" Type="int" />
           <Property Name="EDocExpFrm" Type="int" />
           <Property Name="TaxIdIdent" Type="char" MaxLength="1" />
@@ -411,6 +451,32 @@
           <Property Name="EdrsToBP" Type="char" MaxLength="1" />
           <Property Name="CreateTS" Type="int" />
           <Property Name="UpdateTS" Type="int" />
+          <Property Name="EDocGenTyp" Type="char" MaxLength="1" />
+          <Property Name="eStreet" Type="nvarchar" MaxLength="38" />
+          <Property Name="eStreetNum" Type="nvarchar" MaxLength="4" />
+          <Property Name="eBuildnNum" Type="int" />
+          <Property Name="eZipCode" Type="nvarchar" MaxLength="10" />
+          <Property Name="eCityTown" Type="nvarchar" MaxLength="48" />
+          <Property Name="eCountry" Type="nvarchar" MaxLength="3" />
+          <Property Name="eDistrict" Type="nvarchar" MaxLength="3" />
+          <Property Name="RepFName" Type="nvarchar" MaxLength="20" />
+          <Property Name="RepSName" Type="nvarchar" MaxLength="36" />
+          <Property Name="RepCmpName" Type="nvarchar" MaxLength="36" />
+          <Property Name="RepFisCode" Type="nvarchar" MaxLength="16" />
+          <Property Name="RepAddID" Type="nvarchar" MaxLength="28" />
+          <Property Name="PECAddr" Type="nvarchar" MaxLength="254" />
+          <Property Name="IPACodePA" Type="nvarchar" MaxLength="32" />
+          <Property Name="PriceMode" Type="char" MaxLength="1" />
+          <Property Name="EffecPrice" Type="char" MaxLength="1" />
+          <Property Name="TxExMxVdTp" Type="char" MaxLength="1" />
+          <Property Name="MerchantID" Type="nvarchar" MaxLength="15" />
+          <Property Name="UseBilAddr" Type="char" MaxLength="1" />
+          <Property Name="NaturalPer" Type="char" MaxLength="1" />
+          <Property Name="DPPStatus" Type="char" MaxLength="1" />
+          <Property Name="EnAddID" Type="ntext" />
+          <Property Name="EncryptIV" Type="nvarchar" MaxLength="100" />
+          <Property Name="EnDflAccnt" Type="ntext" />
+          <Property Name="EnDflIBAN" Type="ntext" />
           <Property Name="U_STOPSP" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_STOPD" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_ROUTED" Type="nvarchar" MaxLength="30" />
@@ -441,6 +507,8 @@
           <Property Name="U_VisitFrequency" Type="smallint" Nullable="false" />
           <Property Name="U_Status" Type="nvarchar" MaxLength="25" />
           <Property Name="U_StoreSize" Type="nvarchar" MaxLength="25" />
+          <Property Name="U_TimeWinStart" Type="smallint" />
+          <Property Name="U_TimeWinEnd" Type="smallint" />
         </EntityType>
         <EntityType Name="OHEM">
           <Key>
@@ -569,6 +637,49 @@
           <Property Name="PRWebAccss" Type="char" MaxLength="1" />
           <Property Name="PrePRWeb" Type="char" MaxLength="1" />
           <Property Name="BPLink" Type="nvarchar" MaxLength="15" />
+          <Property Name="NaturalPer" Type="char" MaxLength="1" />
+          <Property Name="DPPStatus" Type="char" MaxLength="1" />
+          <Property Name="EnRligion" Type="ntext" />
+          <Property Name="EnRligionP" Type="ntext" />
+          <Property Name="EncryptIV" Type="nvarchar" MaxLength="100" />
+          <Property Name="EnGovID" Type="ntext" />
+          <Property Name="EnPassport" Type="ntext" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="CreateTS" Type="int" />
+          <Property Name="UpdateTS" Type="int" />
+          <Property Name="EnInsurNum" Type="ntext" />
+        </EntityType>
+        <EntityType Name="OITT">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TreeType" Type="char" MaxLength="1" />
+          <Property Name="PriceList" Type="smallint" />
+          <Property Name="Qauntity" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="Transfered" Type="char" MaxLength="1" />
+          <Property Name="DataSource" Type="char" MaxLength="1" />
+          <Property Name="UserSign" Type="smallint" />
+          <Property Name="SCNCounter" Type="smallint" />
+          <Property Name="DispCurr" Type="nvarchar" MaxLength="3" />
+          <Property Name="ToWH" Type="nvarchar" MaxLength="8" />
+          <Property Name="Object" Type="nvarchar" MaxLength="20" />
+          <Property Name="LogInstac" Type="int" />
+          <Property Name="UserSign2" Type="int" />
+          <Property Name="OcrCode" Type="nvarchar" MaxLength="8" />
+          <Property Name="HideComp" Type="char" MaxLength="1" />
+          <Property Name="OcrCode2" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode3" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode4" Type="nvarchar" MaxLength="8" />
+          <Property Name="OcrCode5" Type="nvarchar" MaxLength="8" />
+          <Property Name="UpdateTime" Type="int" />
+          <Property Name="Project" Type="nvarchar" MaxLength="20" />
+          <Property Name="PlAvgSize" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" />
+          <Property Name="CreateTS" Type="int" />
+          <Property Name="UpdateTS" Type="int" />
         </EntityType>
         <EntityType Name="OSLP">
           <Key>
@@ -644,16 +755,23 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
         <EntityType Name="BI_Dim_Products">
           <Key>
             
+            
+            <PropertyRef Name="CantBonif" />
+            <PropertyRef Name="FactorBonif" />
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="nvarchar" MaxLength="35" Nullable="false" />
-          <Property Name="Product" Type="nvarchar" MaxLength="123" />
+          <Property Name="id" Type="nvarchar" MaxLength="65" Nullable="false" />
+          <Property Name="Product" Type="nvarchar" MaxLength="153" />
+          <Property Name="item_name" Type="nvarchar" MaxLength="100" />
+          <Property Name="id_brand" Type="int" />
           <Property Name="Brand_Name" Type="nvarchar" MaxLength="30" />
           <Property Name="id_subcategory" Type="int" />
           <Property Name="subcategory_name" Type="nvarchar" MaxLength="20" />
           <Property Name="id_category" Type="nvarchar" MaxLength="4" />
           <Property Name="category_name" Type="varchar" MaxLength="15" />
+          <Property Name="id_Vendor" Type="nvarchar" MaxLength="15" />
           <Property Name="Vendor" Type="nvarchar" MaxLength="118" />
+          <Property Name="Vendor_Name" Type="nvarchar" MaxLength="100" />
           <Property Name="LeadTime" Type="numeric" Precision="19" Scale="6" />
           <Property Name="BuyUnitMsr" Type="nvarchar" MaxLength="100" />
           <Property Name="NumInBuy" Type="numeric" Precision="19" Scale="6" />
@@ -665,11 +783,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="CodeBars" Type="nvarchar" MaxLength="254" />
           <Property Name="DSD" Type="varchar" MaxLength="1" />
           <Property Name="SRP" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="id_Vendor" Type="nvarchar" MaxLength="15" />
-          <Property Name="id_brand" Type="int" />
           <Property Name="unitCost" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="MinPorcent" Type="int" />
-          <Property Name="MinPrice" Type="numeric" Precision="30" Scale="6" />
+          <Property Name="MinPorcent" Type="int" Nullable="false" />
+          <Property Name="MinPrice" Type="numeric" Precision="38" Scale="9" />
+          <Property Name="Bonificables" Type="varchar" MaxLength="1" />
+          <Property Name="MinPercIndiv" Type="varchar" MaxLength="1" />
+          <Property Name="CantBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
+          <Property Name="FactorBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
+          <Property Name="Credits" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -695,6 +816,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders' does not have a prima
         <EntityType Name="OpenSalesOrders">
           <Key>
             <PropertyRef Name="NumSO" />
+            <PropertyRef Name="BonifPendientes" />
           </Key>
           <Property Name="SODate" Type="datetime" />
           <Property Name="NumSO" Type="int" Nullable="false" />
@@ -702,7 +824,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders' does not have a prima
           <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
           <Property Name="CustomerName" Type="nvarchar" MaxLength="100" />
           <Property Name="Printed" Type="char" MaxLength="1" />
-          <Property Name="DeliveryRoute" Type="nvarchar" MaxLength="30" />
+          <Property Name="DeliveryRoute" Type="nvarchar" MaxLength="100" />
           <Property Name="TotalSO" Type="numeric" Precision="19" Scale="6" />
           <Property Name="TotalCost" Type="numeric" Precision="20" Scale="6" />
           <Property Name="GrossProfit" Type="numeric" Precision="19" Scale="6" />
@@ -713,6 +835,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders' does not have a prima
           <Property Name="SalesPerson" Type="nvarchar" MaxLength="155" />
           <Property Name="Classification" Type="nvarchar" MaxLength="10" />
           <Property Name="Remarks" Type="nvarchar" MaxLength="254" />
+          <Property Name="BonifPendientes" Type="varchar" MaxLength="1" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -723,6 +846,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have
             <PropertyRef Name="AREA" />
             <PropertyRef Name="SUBAREA" />
             <PropertyRef Name="UoMFilter" />
+            <PropertyRef Name="CambioPrecio" />
           </Key>
           <Property Name="LineNum" Type="int" Nullable="false" />
           <Property Name="U_BinLocation" Type="nvarchar" MaxLength="20" />
@@ -731,7 +855,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have
           <Property Name="UomEntry" Type="int" />
           <Property Name="InvQty" Type="numeric" Precision="19" Scale="6" />
           <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
           <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
           <Property Name="U_Storage" Type="nvarchar" MaxLength="20" />
           <Property Name="DocNum" Type="int" Nullable="false" />
@@ -741,6 +865,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have
           <Property Name="SUBAREA" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="UoMFilter" Type="varchar" MaxLength="4" Nullable="false" />
           <Property Name="PrintOrder" Type="int" />
+          <Property Name="CambioPrecio" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="TreeType" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_DetailsUOM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -817,21 +943,54 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Key>
             <PropertyRef Name="LineNum" />
             <PropertyRef Name="DocNum" />
+            <PropertyRef Name="OpenTotalSO" />
+            <PropertyRef Name="Blocked" />
           </Key>
           <Property Name="LineNum" Type="int" Nullable="false" />
           <Property Name="U_BinLocation" Type="nvarchar" MaxLength="20" />
           <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="UomCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="UomCode" Type="nvarchar" MaxLength="100" />
           <Property Name="UomEntry" Type="int" />
           <Property Name="InvQty" Type="numeric" Precision="19" Scale="6" />
           <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="ItemCode" Type="nvarchar" MaxLength="20" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
           <Property Name="ItemName" Type="nvarchar" MaxLength="100" />
           <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_Storage" Type="nvarchar" MaxLength="20" />
           <Property Name="DocNum" Type="int" Nullable="false" />
           <Property Name="DocDate" Type="datetime" />
           <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="SlpCode" Type="int" />
+          <Property Name="OpenTotalSO" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="Blocked" Type="int" Nullable="false" />
+          <Property Name="TreeType" Type="char" MaxLength="1" />
+          <Property Name="NoPepperi" Type="nvarchar" MaxLength="100" />
+          <Property Name="U_DeliveryR" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="view_VendorsData">
+          <Key>
+            <PropertyRef Name="CANAL" />
+          </Key>
+          <Property Name="ID_generico" Type="bigint" />
+          <Property Name="No_FACTURA" Type="int" />
+          <Property Name="FECHA_FACTURA" Type="datetime" />
+          <Property Name="MES_FACTURA" Type="smallint" />
+          <Property Name="ANO_FACTURA" Type="smallint" />
+          <Property Name="CODIGO_CLIENTE" Type="nvarchar" MaxLength="15" />
+          <Property Name="NOMBRE_CLIENTE" Type="nvarchar" MaxLength="100" />
+          <Property Name="PAIS" Type="nvarchar" MaxLength="3" />
+          <Property Name="STATE" Type="nvarchar" MaxLength="3" />
+          <Property Name="CODIGO_ARTICULO" Type="nvarchar" MaxLength="20" />
+          <Property Name="DESCRIPCION_ARTICULO" Type="nvarchar" MaxLength="100" />
+          <Property Name="FAMILIA" Type="nvarchar" MaxLength="20" />
+          <Property Name="CANAL" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="MARCA" Type="nvarchar" MaxLength="30" />
+          <Property Name="VENDEDOR" Type="nvarchar" MaxLength="155" />
+          <Property Name="CANTIDAD_EN_CAJAS" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="VALOR_DE_VENTA_EN_US" Type="numeric" Precision="38" Scale="10" />
+          <Property Name="COSTO_TOTAL_EN_US" Type="numeric" Precision="19" Scale="6" />
         </EntityType>
         <EntityContainer Name="DLI_PROModelStoreContainer">
           <EntitySet Name="@DRIVERS" EntityType="Self.@DRIVERS" Schema="dbo" store:Type="Tables" />
@@ -840,8 +999,10 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySet Name="@PICKERS" EntityType="Self.@PICKERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="@TRUCKS" EntityType="Self.@TRUCKS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ITM1" EntityType="Self.ITM1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ITT1" EntityType="Self.ITT1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OCRD" EntityType="Self.OCRD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OHEM" EntityType="Self.OHEM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OITT" EntityType="Self.OITT" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OSLP" EntityType="Self.OSLP" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UFD1" EntityType="Self.UFD1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="BI_Dim_Customer" EntityType="Self.BI_Dim_Customer" store:Type="Views" store:Schema="dbo">
@@ -876,12 +1037,16 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
             <DefiningQuery>SELECT 
     [BI_Dim_Products].[id] AS [id], 
     [BI_Dim_Products].[Product] AS [Product], 
+    [BI_Dim_Products].[item_name] AS [item_name], 
+    [BI_Dim_Products].[id_brand] AS [id_brand], 
     [BI_Dim_Products].[Brand_Name] AS [Brand_Name], 
     [BI_Dim_Products].[id_subcategory] AS [id_subcategory], 
     [BI_Dim_Products].[subcategory_name] AS [subcategory_name], 
     [BI_Dim_Products].[id_category] AS [id_category], 
     [BI_Dim_Products].[category_name] AS [category_name], 
+    [BI_Dim_Products].[id_Vendor] AS [id_Vendor], 
     [BI_Dim_Products].[Vendor] AS [Vendor], 
+    [BI_Dim_Products].[Vendor_Name] AS [Vendor_Name], 
     [BI_Dim_Products].[LeadTime] AS [LeadTime], 
     [BI_Dim_Products].[BuyUnitMsr] AS [BuyUnitMsr], 
     [BI_Dim_Products].[NumInBuy] AS [NumInBuy], 
@@ -893,11 +1058,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
     [BI_Dim_Products].[CodeBars] AS [CodeBars], 
     [BI_Dim_Products].[DSD] AS [DSD], 
     [BI_Dim_Products].[SRP] AS [SRP], 
-    [BI_Dim_Products].[id_Vendor] AS [id_Vendor], 
-    [BI_Dim_Products].[id_brand] AS [id_brand], 
     [BI_Dim_Products].[unitCost] AS [unitCost], 
     [BI_Dim_Products].[MinPorcent] AS [MinPorcent], 
-    [BI_Dim_Products].[MinPrice] AS [MinPrice]
+    [BI_Dim_Products].[MinPrice] AS [MinPrice], 
+    [BI_Dim_Products].[Bonificables] AS [Bonificables], 
+    [BI_Dim_Products].[MinPercIndiv] AS [MinPercIndiv], 
+    [BI_Dim_Products].[CantBonif] AS [CantBonif], 
+    [BI_Dim_Products].[FactorBonif] AS [FactorBonif], 
+    [BI_Dim_Products].[Credits] AS [Credits]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -933,7 +1101,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
     [OpenSalesOrders].[IDSalesPerson] AS [IDSalesPerson], 
     [OpenSalesOrders].[SalesPerson] AS [SalesPerson], 
     [OpenSalesOrders].[Classification] AS [Classification], 
-    [OpenSalesOrders].[Remarks] AS [Remarks]
+    [OpenSalesOrders].[Remarks] AS [Remarks], 
+    [OpenSalesOrders].[BonifPendientes] AS [BonifPendientes]
     FROM [dbo].[OpenSalesOrders] AS [OpenSalesOrders]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="OpenSalesOrders_Details" EntityType="Self.OpenSalesOrders_Details" store:Type="Views" store:Schema="dbo">
@@ -954,7 +1123,9 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
     [OpenSalesOrders_Details].[AREA] AS [AREA], 
     [OpenSalesOrders_Details].[SUBAREA] AS [SUBAREA], 
     [OpenSalesOrders_Details].[UoMFilter] AS [UoMFilter], 
-    [OpenSalesOrders_Details].[PrintOrder] AS [PrintOrder]
+    [OpenSalesOrders_Details].[PrintOrder] AS [PrintOrder], 
+    [OpenSalesOrders_Details].[CambioPrecio] AS [CambioPrecio], 
+    [OpenSalesOrders_Details].[TreeType] AS [TreeType]
     FROM [dbo].[OpenSalesOrders_Details] AS [OpenSalesOrders_Details]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="OpenSalesOrders_DetailsUOM" EntityType="Self.OpenSalesOrders_DetailsUOM" store:Type="Views" store:Schema="dbo">
@@ -1020,8 +1191,36 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
     [view_ordenesAbiertasDet].[U_Storage] AS [U_Storage], 
     [view_ordenesAbiertasDet].[DocNum] AS [DocNum], 
     [view_ordenesAbiertasDet].[DocDate] AS [DocDate], 
-    [view_ordenesAbiertasDet].[CardCode] AS [CardCode]
+    [view_ordenesAbiertasDet].[CardCode] AS [CardCode], 
+    [view_ordenesAbiertasDet].[SlpCode] AS [SlpCode], 
+    [view_ordenesAbiertasDet].[OpenTotalSO] AS [OpenTotalSO], 
+    [view_ordenesAbiertasDet].[Blocked] AS [Blocked], 
+    [view_ordenesAbiertasDet].[TreeType] AS [TreeType], 
+    [view_ordenesAbiertasDet].[NoPepperi] AS [NoPepperi], 
+    [view_ordenesAbiertasDet].[U_DeliveryR] AS [U_DeliveryR]
     FROM [dbo].[view_ordenesAbiertasDet] AS [view_ordenesAbiertasDet]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="view_VendorsData" EntityType="Self.view_VendorsData" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [view_VendorsData].[ID_generico] AS [ID_generico], 
+    [view_VendorsData].[No_FACTURA] AS [No_FACTURA], 
+    [view_VendorsData].[FECHA_FACTURA] AS [FECHA_FACTURA], 
+    [view_VendorsData].[MES_FACTURA] AS [MES_FACTURA], 
+    [view_VendorsData].[ANO_FACTURA] AS [ANO_FACTURA], 
+    [view_VendorsData].[CODIGO_CLIENTE] AS [CODIGO_CLIENTE], 
+    [view_VendorsData].[NOMBRE_CLIENTE] AS [NOMBRE_CLIENTE], 
+    [view_VendorsData].[PAIS] AS [PAIS], 
+    [view_VendorsData].[STATE] AS [STATE], 
+    [view_VendorsData].[CODIGO_ARTICULO] AS [CODIGO_ARTICULO], 
+    [view_VendorsData].[DESCRIPCION_ARTICULO] AS [DESCRIPCION_ARTICULO], 
+    [view_VendorsData].[FAMILIA] AS [FAMILIA], 
+    [view_VendorsData].[CANAL] AS [CANAL], 
+    [view_VendorsData].[MARCA] AS [MARCA], 
+    [view_VendorsData].[VENDEDOR] AS [VENDEDOR], 
+    [view_VendorsData].[CANTIDAD_EN_CAJAS] AS [CANTIDAD_EN_CAJAS], 
+    [view_VendorsData].[VALOR_DE_VENTA_EN_US] AS [VALOR_DE_VENTA_EN_US], 
+    [view_VendorsData].[COSTO_TOTAL_EN_US] AS [COSTO_TOTAL_EN_US]
+    FROM [dbo].[view_VendorsData] AS [view_VendorsData]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -1315,7 +1514,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="CertBKeep" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="WHShaamGrp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="IndustryC" Type="Int32" />
-          <Property Name="DatevAcct" Type="Int32" />
+          <Property Name="DatevAcct" Type="String" MaxLength="9" Unicode="true" FixedLength="false" />
           <Property Name="DatevFirst" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="GTSRegNum" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="GTSBankAct" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
@@ -1329,7 +1528,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="CpnNo" Type="Int32" />
           <Property Name="NTSWebSite" Type="Int16" />
           <Property Name="DflIBAN" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="Series" Type="Int16" />
+          <Property Name="Series" Type="Int32" />
           <Property Name="Number" Type="Int32" />
           <Property Name="EDocExpFrm" Type="Int32" />
           <Property Name="TaxIdIdent" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
@@ -1398,6 +1597,34 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="U_VisitFrequency" Type="Int16" Nullable="false" />
           <Property Name="U_Status" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
           <Property Name="U_StoreSize" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="EDocGenTyp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="eStreet" Type="String" MaxLength="38" FixedLength="false" Unicode="true" />
+          <Property Name="eStreetNum" Type="String" MaxLength="4" FixedLength="false" Unicode="true" />
+          <Property Name="eBuildnNum" Type="Int32" />
+          <Property Name="eZipCode" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="eCityTown" Type="String" MaxLength="48" FixedLength="false" Unicode="true" />
+          <Property Name="eCountry" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="eDistrict" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="RepFName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="RepSName" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="RepCmpName" Type="String" MaxLength="36" FixedLength="false" Unicode="true" />
+          <Property Name="RepFisCode" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="RepAddID" Type="String" MaxLength="28" FixedLength="false" Unicode="true" />
+          <Property Name="PECAddr" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="IPACodePA" Type="String" MaxLength="32" FixedLength="false" Unicode="true" />
+          <Property Name="PriceMode" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="EffecPrice" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="TxExMxVdTp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MerchantID" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="UseBilAddr" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NaturalPer" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DPPStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="EnAddID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EncryptIV" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EnDflAccnt" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EnDflIBAN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="U_TimeWinStart" Type="Int16" />
+          <Property Name="U_TimeWinEnd" Type="Int16" />
         </EntityType>
         <EntityContainer Name="DLI_PROEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="OCRD" EntityType="Self.OCRD" />
@@ -1421,6 +1648,9 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySet Name="Supervisor" EntityType="DLI_PROModel.Supervisor" />
           <EntitySet Name="view_cuentascobrarCliente" EntityType="DLI_PROModel.view_cuentascobrarCliente" />
           <EntitySet Name="view_ordenesAbiertasDet" EntityType="DLI_PROModel.view_ordenesAbiertasDet" />
+          <EntitySet Name="view_VendorsData" EntityType="DLI_PROModel.view_VendorsData" />
+          <EntitySet Name="ITT1" EntityType="DLI_PROModel.ITT1" />
+          <EntitySet Name="OITT" EntityType="DLI_PROModel.OITT" />
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
@@ -1470,9 +1700,11 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
         <EntityType Name="BI_Dim_Products">
           <Key>
             <PropertyRef Name="id" />
+            <PropertyRef Name="CantBonif" />
+            <PropertyRef Name="FactorBonif" />
           </Key>
-          <Property Name="id" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Product" Type="String" MaxLength="123" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="String" MaxLength="65" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Product" Type="String" MaxLength="153" FixedLength="false" Unicode="true" />
           <Property Name="Brand_Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="id_subcategory" Type="Int32" />
           <Property Name="subcategory_name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
@@ -1493,15 +1725,22 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="id_Vendor" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="id_brand" Type="Int32" />
           <Property Name="unitCost" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="MinPorcent" Type="Int32" />
-          <Property Name="MinPrice" Type="Decimal" Precision="30" Scale="6" />
+          <Property Name="MinPorcent" Type="Int32" Nullable="false" />
+          <Property Name="MinPrice" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="item_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Vendor_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Bonificables" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MinPercIndiv" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="CantBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
+          <Property Name="FactorBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
+          <Property Name="Credits" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
             <PropertyRef Name="ItemCode" />
             <PropertyRef Name="PriceList" />
           </Key>
-          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PriceList" Type="Int16" Nullable="false" />
           <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Currency" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
@@ -1516,6 +1755,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="Ovrwrite1" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="Ovrwrite2" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="BasePLNum" Type="Int16" />
+          <Property Name="UomEntry" Type="Int32" />
+          <Property Name="PriceType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="Dsd_Products">
           <Key>
@@ -1551,6 +1792,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
         <EntityType Name="OpenSalesOrders">
           <Key>
             <PropertyRef Name="NumSO" />
+            <PropertyRef Name="BonifPendientes" />
           </Key>
           <Property Name="SODate" Type="DateTime" Precision="3" />
           <Property Name="NumSO" Type="Int32" Nullable="false" />
@@ -1558,7 +1800,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="CustomerName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Printed" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="DeliveryRoute" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="TotalSO" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="TotalCost" Type="Decimal" Precision="20" Scale="6" />
           <Property Name="GrossProfit" Type="Decimal" Precision="19" Scale="6" />
@@ -1569,13 +1811,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="Classification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="Remarks" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
           <Property Name="IDSalesPerson" Type="Int32" />
+          <Property Name="BonifPendientes" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="C_DROUTE">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="U_PDay" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="U_WeekA" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="U_WeekB" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
@@ -1591,22 +1834,26 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_Salario" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_Bono" Type="Decimal" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="C_TRUCKS">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="C_DRIVERS">
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_Salario" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_Bono" Type="Decimal" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="OpenSalesOrders_Details">
           <Key>
@@ -1615,6 +1862,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
             <PropertyRef Name="AREA" />
             <PropertyRef Name="SUBAREA" />
             <PropertyRef Name="UoMFilter" />
+            <PropertyRef Name="CambioPrecio" />
           </Key>
           <Property Name="LineNum" Type="Int32" Nullable="false" />
           <Property Name="U_BinLocation" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
@@ -1623,7 +1871,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="UomEntry" Type="Int32" />
           <Property Name="InvQty" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="NumPerMsr" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="ItemCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="U_Storage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="DocNum" Type="Int32" Nullable="false" />
@@ -1633,6 +1881,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="SUBAREA" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="UoMFilter" Type="String" Nullable="false" MaxLength="4" FixedLength="false" Unicode="false" />
           <Property Name="PrintOrder" Type="Int32" />
+          <Property Name="CambioPrecio" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TreeType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="OpenSalesOrders_DetailsUOM">
           <Key>
@@ -1648,8 +1898,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Key>
             <PropertyRef Name="Code" />
           </Key>
-          <Property Name="Code" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OHEM">
           <Key>
@@ -1778,6 +2028,17 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="PRWebAccss" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="PrePRWeb" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="BPLink" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="NaturalPer" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DPPStatus" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="EnRligion" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EnRligionP" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EncryptIV" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="EnGovID" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EnPassport" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="CreateTS" Type="Int32" />
+          <Property Name="UpdateTS" Type="Int32" />
+          <Property Name="EnInsurNum" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OSLP">
           <Key>
@@ -1837,21 +2098,118 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Key>
             <PropertyRef Name="LineNum" />
             <PropertyRef Name="DocNum" />
+            <PropertyRef Name="OpenTotalSO" />
+            <PropertyRef Name="Blocked" />
           </Key>
           <Property Name="LineNum" Type="Int32" Nullable="false" />
           <Property Name="U_BinLocation" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="UomCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="UomCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="UomEntry" Type="Int32" />
           <Property Name="InvQty" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="NumPerMsr" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="ItemCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="ItemName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="U_Storage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="DocNum" Type="Int32" Nullable="false" />
           <Property Name="DocDate" Type="DateTime" Precision="3" />
           <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="SlpCode" Type="Int32" />
+          <Property Name="OpenTotalSO" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="Blocked" Type="Int32" Nullable="false" />
+          <Property Name="TreeType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NoPepperi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_DeliveryR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="view_VendorsData">
+          <Key>
+            <PropertyRef Name="CANAL" />
+          </Key>
+          <Property Name="ID_generico" Type="Int64" />
+          <Property Name="No_FACTURA" Type="Int32" />
+          <Property Name="FECHA_FACTURA" Type="DateTime" Precision="3" />
+          <Property Name="MES_FACTURA" Type="Int16" />
+          <Property Name="ANO_FACTURA" Type="Int16" />
+          <Property Name="CODIGO_CLIENTE" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="NOMBRE_CLIENTE" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="PAIS" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="STATE" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="CODIGO_ARTICULO" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DESCRIPCION_ARTICULO" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="FAMILIA" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="CANAL" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="MARCA" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="VENDEDOR" Type="String" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="CANTIDAD_EN_CAJAS" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="VALOR_DE_VENTA_EN_US" Type="Decimal" Precision="38" Scale="10" />
+          <Property Name="COSTO_TOTAL_EN_US" Type="Decimal" Precision="19" Scale="6" />
+        </EntityType>
+        <EntityType Name="ITT1">
+          <Key>
+            <PropertyRef Name="Father" />
+            <PropertyRef Name="ChildNum" />
+          </Key>
+          <Property Name="Father" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChildNum" Type="Int32" Nullable="false" />
+          <Property Name="VisOrder" Type="Int32" Nullable="false" />
+          <Property Name="Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Warehouse" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
           <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Currency" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="PriceList" Type="Int16" />
+          <Property Name="OrigPrice" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="OrigCurr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="IssueMthd" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Uom" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Comment" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="LogInstanc" Type="Int32" />
+          <Property Name="Object" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode2" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode3" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode4" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode5" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="PrncpInput" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Project" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Int32" />
+          <Property Name="WipActCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="AddQuantit" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="LineText" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="StageId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="OITT">
+          <Key>
+            <PropertyRef Name="Code" />
+          </Key>
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TreeType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="PriceList" Type="Int16" />
+          <Property Name="Qauntity" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="Transfered" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DataSource" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="UserSign" Type="Int16" />
+          <Property Name="SCNCounter" Type="Int16" />
+          <Property Name="DispCurr" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="ToWH" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Object" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="LogInstac" Type="Int32" />
+          <Property Name="UserSign2" Type="Int32" />
+          <Property Name="OcrCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="HideComp" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="OcrCode2" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode3" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode4" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="OcrCode5" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="UpdateTime" Type="Int32" />
+          <Property Name="Project" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PlAvgSize" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTS" Type="Int32" />
+          <Property Name="UpdateTS" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1862,6 +2220,34 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="OCRD">
             <EntityTypeMapping TypeName="DLI_PROModel.OCRD">
               <MappingFragment StoreEntitySet="OCRD">
+                <ScalarProperty Name="U_TimeWinEnd" ColumnName="U_TimeWinEnd" />
+                <ScalarProperty Name="U_TimeWinStart" ColumnName="U_TimeWinStart" />
+                <ScalarProperty Name="EnDflIBAN" ColumnName="EnDflIBAN" />
+                <ScalarProperty Name="EnDflAccnt" ColumnName="EnDflAccnt" />
+                <ScalarProperty Name="EncryptIV" ColumnName="EncryptIV" />
+                <ScalarProperty Name="EnAddID" ColumnName="EnAddID" />
+                <ScalarProperty Name="DPPStatus" ColumnName="DPPStatus" />
+                <ScalarProperty Name="NaturalPer" ColumnName="NaturalPer" />
+                <ScalarProperty Name="UseBilAddr" ColumnName="UseBilAddr" />
+                <ScalarProperty Name="MerchantID" ColumnName="MerchantID" />
+                <ScalarProperty Name="TxExMxVdTp" ColumnName="TxExMxVdTp" />
+                <ScalarProperty Name="EffecPrice" ColumnName="EffecPrice" />
+                <ScalarProperty Name="PriceMode" ColumnName="PriceMode" />
+                <ScalarProperty Name="IPACodePA" ColumnName="IPACodePA" />
+                <ScalarProperty Name="PECAddr" ColumnName="PECAddr" />
+                <ScalarProperty Name="RepAddID" ColumnName="RepAddID" />
+                <ScalarProperty Name="RepFisCode" ColumnName="RepFisCode" />
+                <ScalarProperty Name="RepCmpName" ColumnName="RepCmpName" />
+                <ScalarProperty Name="RepSName" ColumnName="RepSName" />
+                <ScalarProperty Name="RepFName" ColumnName="RepFName" />
+                <ScalarProperty Name="eDistrict" ColumnName="eDistrict" />
+                <ScalarProperty Name="eCountry" ColumnName="eCountry" />
+                <ScalarProperty Name="eCityTown" ColumnName="eCityTown" />
+                <ScalarProperty Name="eZipCode" ColumnName="eZipCode" />
+                <ScalarProperty Name="eBuildnNum" ColumnName="eBuildnNum" />
+                <ScalarProperty Name="eStreetNum" ColumnName="eStreetNum" />
+                <ScalarProperty Name="eStreet" ColumnName="eStreet" />
+                <ScalarProperty Name="EDocGenTyp" ColumnName="EDocGenTyp" />
                 <ScalarProperty Name="CardCode" ColumnName="CardCode" />
                 <ScalarProperty Name="CardName" ColumnName="CardName" />
                 <ScalarProperty Name="CardType" ColumnName="CardType" />
@@ -2276,6 +2662,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="Credits" ColumnName="Credits" />
+                <ScalarProperty Name="FactorBonif" ColumnName="FactorBonif" />
+                <ScalarProperty Name="CantBonif" ColumnName="CantBonif" />
+                <ScalarProperty Name="MinPercIndiv" ColumnName="MinPercIndiv" />
+                <ScalarProperty Name="Bonificables" ColumnName="Bonificables" />
+                <ScalarProperty Name="Vendor_Name" ColumnName="Vendor_Name" />
+                <ScalarProperty Name="item_name" ColumnName="item_name" />
                 <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
                 <ScalarProperty Name="MinPorcent" ColumnName="MinPorcent" />
                 <ScalarProperty Name="unitCost" ColumnName="unitCost" />
@@ -2306,6 +2699,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="ITM1">
             <EntityTypeMapping TypeName="DLI_PROModel.ITM1">
               <MappingFragment StoreEntitySet="ITM1">
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="UomEntry" ColumnName="UomEntry" />
                 <ScalarProperty Name="BasePLNum" ColumnName="BasePLNum" />
                 <ScalarProperty Name="Ovrwrite2" ColumnName="Ovrwrite2" />
                 <ScalarProperty Name="Ovrwrite1" ColumnName="Ovrwrite1" />
@@ -2360,6 +2755,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="OpenSalesOrders">
             <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders">
               <MappingFragment StoreEntitySet="OpenSalesOrders">
+                <ScalarProperty Name="BonifPendientes" ColumnName="BonifPendientes" />
                 <ScalarProperty Name="IDSalesPerson" ColumnName="IDSalesPerson" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Classification" ColumnName="Classification" />
@@ -2401,6 +2797,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="C_HELPERS">
             <EntityTypeMapping TypeName="DLI_PROModel.C_HELPERS">
               <MappingFragment StoreEntitySet="@HELPERS">
+                <ScalarProperty Name="U_Bono" ColumnName="U_Bono" />
+                <ScalarProperty Name="U_Salario" ColumnName="U_Salario" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
               </MappingFragment>
@@ -2417,6 +2815,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="C_DRIVERS">
             <EntityTypeMapping TypeName="DLI_PROModel.C_DRIVERS">
               <MappingFragment StoreEntitySet="@DRIVERS">
+                <ScalarProperty Name="U_Bono" ColumnName="U_Bono" />
+                <ScalarProperty Name="U_Salario" ColumnName="U_Salario" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
               </MappingFragment>
@@ -2425,6 +2825,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="OpenSalesOrders_Details">
             <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders_Details">
               <MappingFragment StoreEntitySet="OpenSalesOrders_Details">
+                <ScalarProperty Name="TreeType" ColumnName="TreeType" />
+                <ScalarProperty Name="CambioPrecio" ColumnName="CambioPrecio" />
                 <ScalarProperty Name="PrintOrder" ColumnName="PrintOrder" />
                 <ScalarProperty Name="UoMFilter" ColumnName="UoMFilter" />
                 <ScalarProperty Name="SUBAREA" ColumnName="SUBAREA" />
@@ -2466,6 +2868,17 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="OHEM">
             <EntityTypeMapping TypeName="DLI_PROModel.OHEM">
               <MappingFragment StoreEntitySet="OHEM">
+                <ScalarProperty Name="EnInsurNum" ColumnName="EnInsurNum" />
+                <ScalarProperty Name="UpdateTS" ColumnName="UpdateTS" />
+                <ScalarProperty Name="CreateTS" ColumnName="CreateTS" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="EnPassport" ColumnName="EnPassport" />
+                <ScalarProperty Name="EnGovID" ColumnName="EnGovID" />
+                <ScalarProperty Name="EncryptIV" ColumnName="EncryptIV" />
+                <ScalarProperty Name="EnRligionP" ColumnName="EnRligionP" />
+                <ScalarProperty Name="EnRligion" ColumnName="EnRligion" />
+                <ScalarProperty Name="DPPStatus" ColumnName="DPPStatus" />
+                <ScalarProperty Name="NaturalPer" ColumnName="NaturalPer" />
                 <ScalarProperty Name="BPLink" ColumnName="BPLink" />
                 <ScalarProperty Name="PrePRWeb" ColumnName="PrePRWeb" />
                 <ScalarProperty Name="PRWebAccss" ColumnName="PRWebAccss" />
@@ -2649,11 +3062,17 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <EntitySetMapping Name="view_ordenesAbiertasDet">
             <EntityTypeMapping TypeName="DLI_PROModel.view_ordenesAbiertasDet">
               <MappingFragment StoreEntitySet="view_ordenesAbiertasDet">
-                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="U_DeliveryR" ColumnName="U_DeliveryR" />
+                <ScalarProperty Name="NoPepperi" ColumnName="NoPepperi" />
+                <ScalarProperty Name="TreeType" ColumnName="TreeType" />
+                <ScalarProperty Name="Blocked" ColumnName="Blocked" />
+                <ScalarProperty Name="OpenTotalSO" ColumnName="OpenTotalSO" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
                 <ScalarProperty Name="CardCode" ColumnName="CardCode" />
                 <ScalarProperty Name="DocDate" ColumnName="DocDate" />
                 <ScalarProperty Name="DocNum" ColumnName="DocNum" />
                 <ScalarProperty Name="U_Storage" ColumnName="U_Storage" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
@@ -2666,7 +3085,98 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-        </EntityContainerMapping>
+          <EntitySetMapping Name="view_VendorsData">
+            <EntityTypeMapping TypeName="DLI_PROModel.view_VendorsData">
+              <MappingFragment StoreEntitySet="view_VendorsData">
+                <ScalarProperty Name="COSTO_TOTAL_EN_US" ColumnName="COSTO_TOTAL_EN_US" />
+                <ScalarProperty Name="VALOR_DE_VENTA_EN_US" ColumnName="VALOR_DE_VENTA_EN_US" />
+                <ScalarProperty Name="CANTIDAD_EN_CAJAS" ColumnName="CANTIDAD_EN_CAJAS" />
+                <ScalarProperty Name="VENDEDOR" ColumnName="VENDEDOR" />
+                <ScalarProperty Name="MARCA" ColumnName="MARCA" />
+                <ScalarProperty Name="CANAL" ColumnName="CANAL" />
+                <ScalarProperty Name="FAMILIA" ColumnName="FAMILIA" />
+                <ScalarProperty Name="DESCRIPCION_ARTICULO" ColumnName="DESCRIPCION_ARTICULO" />
+                <ScalarProperty Name="CODIGO_ARTICULO" ColumnName="CODIGO_ARTICULO" />
+                <ScalarProperty Name="STATE" ColumnName="STATE" />
+                <ScalarProperty Name="PAIS" ColumnName="PAIS" />
+                <ScalarProperty Name="NOMBRE_CLIENTE" ColumnName="NOMBRE_CLIENTE" />
+                <ScalarProperty Name="CODIGO_CLIENTE" ColumnName="CODIGO_CLIENTE" />
+                <ScalarProperty Name="ANO_FACTURA" ColumnName="ANO_FACTURA" />
+                <ScalarProperty Name="MES_FACTURA" ColumnName="MES_FACTURA" />
+                <ScalarProperty Name="FECHA_FACTURA" ColumnName="FECHA_FACTURA" />
+                <ScalarProperty Name="No_FACTURA" ColumnName="No_FACTURA" />
+                <ScalarProperty Name="ID_generico" ColumnName="ID_generico" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ITT1">
+            <EntityTypeMapping TypeName="DLI_PROModel.ITT1">
+              <MappingFragment StoreEntitySet="ITT1">
+                <ScalarProperty Name="StageId" ColumnName="StageId" />
+                <ScalarProperty Name="LineText" ColumnName="LineText" />
+                <ScalarProperty Name="AddQuantit" ColumnName="AddQuantit" />
+                <ScalarProperty Name="WipActCode" ColumnName="WipActCode" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Project" ColumnName="Project" />
+                <ScalarProperty Name="PrncpInput" ColumnName="PrncpInput" />
+                <ScalarProperty Name="OcrCode5" ColumnName="OcrCode5" />
+                <ScalarProperty Name="OcrCode4" ColumnName="OcrCode4" />
+                <ScalarProperty Name="OcrCode3" ColumnName="OcrCode3" />
+                <ScalarProperty Name="OcrCode2" ColumnName="OcrCode2" />
+                <ScalarProperty Name="OcrCode" ColumnName="OcrCode" />
+                <ScalarProperty Name="Object" ColumnName="Object" />
+                <ScalarProperty Name="LogInstanc" ColumnName="LogInstanc" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="Uom" ColumnName="Uom" />
+                <ScalarProperty Name="IssueMthd" ColumnName="IssueMthd" />
+                <ScalarProperty Name="OrigCurr" ColumnName="OrigCurr" />
+                <ScalarProperty Name="OrigPrice" ColumnName="OrigPrice" />
+                <ScalarProperty Name="PriceList" ColumnName="PriceList" />
+                <ScalarProperty Name="Currency" ColumnName="Currency" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="VisOrder" ColumnName="VisOrder" />
+                <ScalarProperty Name="ChildNum" ColumnName="ChildNum" />
+                <ScalarProperty Name="Father" ColumnName="Father" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OITT">
+            <EntityTypeMapping TypeName="DLI_PROModel.OITT">
+              <MappingFragment StoreEntitySet="OITT">
+                <ScalarProperty Name="UpdateTS" ColumnName="UpdateTS" />
+                <ScalarProperty Name="CreateTS" ColumnName="CreateTS" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="PlAvgSize" ColumnName="PlAvgSize" />
+                <ScalarProperty Name="Project" ColumnName="Project" />
+                <ScalarProperty Name="UpdateTime" ColumnName="UpdateTime" />
+                <ScalarProperty Name="OcrCode5" ColumnName="OcrCode5" />
+                <ScalarProperty Name="OcrCode4" ColumnName="OcrCode4" />
+                <ScalarProperty Name="OcrCode3" ColumnName="OcrCode3" />
+                <ScalarProperty Name="OcrCode2" ColumnName="OcrCode2" />
+                <ScalarProperty Name="HideComp" ColumnName="HideComp" />
+                <ScalarProperty Name="OcrCode" ColumnName="OcrCode" />
+                <ScalarProperty Name="UserSign2" ColumnName="UserSign2" />
+                <ScalarProperty Name="LogInstac" ColumnName="LogInstac" />
+                <ScalarProperty Name="Object" ColumnName="Object" />
+                <ScalarProperty Name="ToWH" ColumnName="ToWH" />
+                <ScalarProperty Name="DispCurr" ColumnName="DispCurr" />
+                <ScalarProperty Name="SCNCounter" ColumnName="SCNCounter" />
+                <ScalarProperty Name="UserSign" ColumnName="UserSign" />
+                <ScalarProperty Name="DataSource" ColumnName="DataSource" />
+                <ScalarProperty Name="Transfered" ColumnName="Transfered" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="Qauntity" ColumnName="Qauntity" />
+                <ScalarProperty Name="PriceList" ColumnName="PriceList" />
+                <ScalarProperty Name="TreeType" ColumnName="TreeType" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
   </edmx:Runtime>

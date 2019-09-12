@@ -154,6 +154,36 @@
           <Property Name="Active" Type="bit" Nullable="false" />
           <Property Name="ID_user" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Tb_CreditsRequest">
+          <Key>
+            <PropertyRef Name="ID_creditRequest" />
+          </Key>
+          <Property Name="ID_creditRequest" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ItemName" Type="varchar(max)" Nullable="false" />
+          <Property Name="UoMCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IDRequest_reason" Type="int" Nullable="false" />
+          <Property Name="Request_reason" Type="varchar(max)" Nullable="false" />
+          <Property Name="Quantity" Type="int" Nullable="false" />
+          <Property Name="URL_image" Type="varchar(max)" Nullable="false" />
+          <Property Name="Validated" Type="bit" Nullable="false" />
+          <Property Name="DocNumSAP" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="dateCreate" Type="datetime" Nullable="false" />
+          <Property Name="dateValidate" Type="datetime" Nullable="false" />
+          <Property Name="userValidate" Type="int" Nullable="false" />
+          <Property Name="userValidateName" Type="varchar(max)" Nullable="false" />
+          <Property Name="userCreate" Type="int" Nullable="false" />
+          <Property Name="userCreateName" Type="varchar(max)" Nullable="false" />
+          <Property Name="CardCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="CardName" Type="varchar(max)" Nullable="false" />
+          <Property Name="estado" Type="int" Nullable="false" />
+          <Property Name="comments" Type="varchar(max)" />
+          <Property Name="LineNum" Type="int" />
+          <Property Name="UoMEntry" Type="varchar" MaxLength="50" />
+          <Property Name="URL_image2" Type="varchar(max)" />
+          <Property Name="ItemCodeReturn" Type="varchar" MaxLength="100" />
+          <Property Name="ItemNameReturn" Type="varchar" MaxLength="500" />
+        </EntityType>
         <EntityType Name="Tb_InventoryDetailsTRDSD">
           <Key>
             <PropertyRef Name="ID_Details" />
@@ -175,6 +205,39 @@
           <Property Name="User_name" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="ID_Company" Type="int" Nullable="false" />
           <Property Name="docNum_SAP" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_NewCustomers">
+          <Key>
+            <PropertyRef Name="ID_customer" />
+          </Key>
+          <Property Name="ID_customer" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CardName" Type="varchar(max)" Nullable="false" />
+          <Property Name="Phone1" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="E_Mail" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="IntrntSite" Type="varchar(max)" Nullable="false" />
+          <Property Name="TAXID" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="TAXCERTNUM" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="FirstName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Position" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Tel1" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="E_MailL" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Street" Type="varchar" MaxLength="450" Nullable="false" />
+          <Property Name="City" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="State" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="ZipCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Country" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="StoreServices" Type="varchar(max)" Nullable="false" />
+          <Property Name="Etnias" Type="varchar(max)" Nullable="false" />
+          <Property Name="url_imageTAXCERT" Type="varchar(max)" Nullable="false" />
+          <Property Name="url_imageTAXCERNUM" Type="varchar(max)" Nullable="false" />
+          <Property Name="OperationTime" Type="varchar" MaxLength="350" Nullable="false" />
+          <Property Name="ReciboMercaderia_dia" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="ReciboMercaderia_area" Type="varchar(max)" Nullable="false" />
+          <Property Name="Muelle_descarga" Type="bit" Nullable="false" />
+          <Property Name="Store_size" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Validated" Type="bit" Nullable="false" />
+          <Property Name="OnSharepoint" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_OrdersDetailsDSD">
           <Key>
@@ -211,6 +274,7 @@
           <Property Name="docNum_SAP" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Comment" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="Sign" Type="text" Nullable="false" />
+          <Property Name="canceled" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_Planning">
           <Key>
@@ -232,6 +296,9 @@
           <Property Name="query3" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Invoiced" Type="bit" Nullable="false" />
+          <Property Name="DateCheckIn" Type="datetime" />
+          <Property Name="DateCheckOut" Type="datetime" />
+          <Property Name="ID_userValidate" Type="int" />
         </EntityType>
         <EntityType Name="Tb_Planning_extra">
           <Key>
@@ -251,6 +318,7 @@
           <Property Name="IsRoute" Type="bit" Nullable="false" />
           <Property Name="Doc_key" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Printed" Type="bit" Nullable="false" />
+          <Property Name="Module" Type="varchar" MaxLength="150" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO">
           <Key>
@@ -269,7 +337,7 @@
           <Property Name="query1" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="query2" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="query3" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="query4" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="query4" Type="varchar(max)" Nullable="false" />
           <Property Name="query5" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="ID_Route" Type="int" Nullable="false" />
           <Property Name="DocEntry" Type="varchar" MaxLength="50" Nullable="false" />
@@ -277,6 +345,9 @@
           <Property Name="Volume" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Printed" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Remarks" Type="text" Nullable="false" />
+          <Property Name="DateCheckIn" Type="datetime" />
+          <Property Name="DateCheckOut" Type="datetime" />
+          <Property Name="ID_userValidate" Type="int" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO_details">
           <Key>
@@ -304,6 +375,14 @@
           <Property Name="SUBAREA" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="UomFilter" Type="varchar" MaxLength="15" Nullable="false" />
           <Property Name="PrintOrder" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="DateCheckIn" Type="datetime" />
+          <Property Name="DateCheckOut" Type="datetime" />
+          <Property Name="ID_userValidate" Type="int" />
+          <Property Name="ID_ValidationDetails" Type="int" />
+          <Property Name="ValidationDetails" Type="varchar" MaxLength="350" />
+          <Property Name="type" Type="varchar" MaxLength="10" />
+          <Property Name="parent" Type="varchar" MaxLength="50" />
+          <Property Name="childrendefqty" Type="int" />
         </EntityType>
         <EntityType Name="Tb_PreOrdersDetailsDSD">
           <Key>
@@ -434,8 +513,10 @@
           <EntitySet Name="Sys_Roles" EntityType="Self.Sys_Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Users" EntityType="Self.Sys_Users" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Alerts" EntityType="Self.Tb_Alerts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_CreditsRequest" EntityType="Self.Tb_CreditsRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_InventoryDetailsTRDSD" EntityType="Self.Tb_InventoryDetailsTRDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_InventoryTRDSD" EntityType="Self.Tb_InventoryTRDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_NewCustomers" EntityType="Self.Tb_NewCustomers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_OrdersDetailsDSD" EntityType="Self.Tb_OrdersDetailsDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_OrdersDSD" EntityType="Self.Tb_OrdersDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Planning" EntityType="Self.Tb_Planning" Schema="dbo" store:Type="Tables" />
@@ -654,6 +735,8 @@
           </AssociationSet>
           <EntitySet Name="Tb_Planning_extra" EntityType="dbLimenaModel.Tb_Planning_extra" />
           <EntitySet Name="Tb_planning_print" EntityType="dbLimenaModel.Tb_planning_print" />
+          <EntitySet Name="Tb_NewCustomers" EntityType="dbLimenaModel.Tb_NewCustomers" />
+          <EntitySet Name="Tb_CreditsRequest" EntityType="dbLimenaModel.Tb_CreditsRequest" />
         </EntityContainer>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -721,6 +804,7 @@
           <Property Name="docNum_SAP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Comment" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="Sign" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="canceled" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Tb_PreOrdersDetailsDSD">
           <Key>
@@ -801,6 +885,9 @@
           <NavigationProperty Name="Tb_PlanningSO" Relationship="dbLimenaModel.FK_Tb_PlanningSO_Tb_Planning" FromRole="Tb_Planning" ToRole="Tb_PlanningSO" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Invoiced" Type="Boolean" Nullable="false" />
+          <Property Name="DateCheckIn" Type="DateTime" Precision="3" />
+          <Property Name="DateCheckOut" Type="DateTime" Precision="3" />
+          <Property Name="ID_userValidate" Type="Int32" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO">
           <Key>
@@ -822,12 +909,15 @@
           <Property Name="ID_Route" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Tb_Planning" Relationship="dbLimenaModel.FK_Tb_PlanningSO_Tb_Planning" FromRole="Tb_PlanningSO" ToRole="Tb_Planning" />
           <Property Name="DocEntry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="query4" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="query4" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="query5" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Weight" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Volume" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Printed" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Remarks" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DateCheckIn" Type="DateTime" Precision="3" />
+          <Property Name="DateCheckOut" Type="DateTime" Precision="3" />
+          <Property Name="ID_userValidate" Type="Int32" />
         </EntityType>
         <Association Name="FK_Tb_PlanningSO_Tb_Planning">
           <End Type="dbLimenaModel.Tb_Planning" Role="Tb_Planning" Multiplicity="1" />
@@ -867,6 +957,14 @@
           <Property Name="SUBAREA" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="UomFilter" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="PrintOrder" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="DateCheckIn" Type="DateTime" Precision="3" />
+          <Property Name="DateCheckOut" Type="DateTime" Precision="3" />
+          <Property Name="ID_userValidate" Type="Int32" />
+          <Property Name="ID_ValidationDetails" Type="Int32" />
+          <Property Name="ValidationDetails" Type="String" MaxLength="350" FixedLength="false" Unicode="false" />
+          <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="parent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="childrendefqty" Type="Int32" />
         </EntityType>
         <EntityType Name="Purchase_data">
           <Key>
@@ -970,6 +1068,70 @@
           <Property Name="IsRoute" Type="Boolean" Nullable="false" />
           <Property Name="Doc_key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Printed" Type="Boolean" Nullable="false" />
+          <Property Name="Module" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_NewCustomers">
+          <Key>
+            <PropertyRef Name="ID_customer" />
+          </Key>
+          <Property Name="ID_customer" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CardName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Phone1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="E_Mail" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="IntrntSite" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TAXID" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="TAXCERTNUM" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="FirstName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Position" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Tel1" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="E_MailL" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Street" Type="String" Nullable="false" MaxLength="450" FixedLength="false" Unicode="false" />
+          <Property Name="City" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="State" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ZipCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Country" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="StoreServices" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Etnias" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="url_imageTAXCERT" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="url_imageTAXCERNUM" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="OperationTime" Type="String" Nullable="false" MaxLength="350" FixedLength="false" Unicode="false" />
+          <Property Name="ReciboMercaderia_dia" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="ReciboMercaderia_area" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Muelle_descarga" Type="Boolean" Nullable="false" />
+          <Property Name="Store_size" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Validated" Type="Boolean" Nullable="false" />
+          <Property Name="OnSharepoint" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Tb_CreditsRequest">
+          <Key>
+            <PropertyRef Name="ID_creditRequest" />
+          </Key>
+          <Property Name="ID_creditRequest" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UoMCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Request_reason" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Quantity" Type="Int32" Nullable="false" />
+          <Property Name="URL_image" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Validated" Type="Boolean" Nullable="false" />
+          <Property Name="DocNumSAP" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IDRequest_reason" Type="Int32" Nullable="false" />
+          <Property Name="dateCreate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="dateValidate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="userValidate" Type="Int32" Nullable="false" />
+          <Property Name="userValidateName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="userCreate" Type="Int32" Nullable="false" />
+          <Property Name="userCreateName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CardCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CardName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="estado" Type="Int32" Nullable="false" />
+          <Property Name="comments" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="LineNum" Type="Int32" />
+          <Property Name="UoMEntry" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="URL_image2" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ItemCodeReturn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ItemNameReturn" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1096,6 +1258,7 @@
           <EntitySetMapping Name="Tb_OrdersDSD">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_OrdersDSD">
               <MappingFragment StoreEntitySet="Tb_OrdersDSD">
+                <ScalarProperty Name="canceled" ColumnName="canceled" />
                 <ScalarProperty Name="Sign" ColumnName="Sign" />
                 <ScalarProperty Name="Comment" ColumnName="Comment" />
                 <ScalarProperty Name="docNum_SAP" ColumnName="docNum_SAP" />
@@ -1178,6 +1341,9 @@
           <EntitySetMapping Name="Tb_Planning">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_Planning">
               <MappingFragment StoreEntitySet="Tb_Planning">
+                <ScalarProperty Name="ID_userValidate" ColumnName="ID_userValidate" />
+                <ScalarProperty Name="DateCheckOut" ColumnName="DateCheckOut" />
+                <ScalarProperty Name="DateCheckIn" ColumnName="DateCheckIn" />
                 <ScalarProperty Name="Invoiced" ColumnName="Invoiced" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="query3" ColumnName="query3" />
@@ -1200,6 +1366,9 @@
           <EntitySetMapping Name="Tb_PlanningSO">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_PlanningSO">
               <MappingFragment StoreEntitySet="Tb_PlanningSO">
+                <ScalarProperty Name="ID_userValidate" ColumnName="ID_userValidate" />
+                <ScalarProperty Name="DateCheckOut" ColumnName="DateCheckOut" />
+                <ScalarProperty Name="DateCheckIn" ColumnName="DateCheckIn" />
                 <ScalarProperty Name="Remarks" ColumnName="Remarks" />
                 <ScalarProperty Name="Printed" ColumnName="Printed" />
                 <ScalarProperty Name="Volume" ColumnName="Volume" />
@@ -1227,6 +1396,14 @@
           <EntitySetMapping Name="Tb_PlanningSO_details">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_PlanningSO_details">
               <MappingFragment StoreEntitySet="Tb_PlanningSO_details">
+                <ScalarProperty Name="childrendefqty" ColumnName="childrendefqty" />
+                <ScalarProperty Name="parent" ColumnName="parent" />
+                <ScalarProperty Name="type" ColumnName="type" />
+                <ScalarProperty Name="ValidationDetails" ColumnName="ValidationDetails" />
+                <ScalarProperty Name="ID_ValidationDetails" ColumnName="ID_ValidationDetails" />
+                <ScalarProperty Name="ID_userValidate" ColumnName="ID_userValidate" />
+                <ScalarProperty Name="DateCheckOut" ColumnName="DateCheckOut" />
+                <ScalarProperty Name="DateCheckIn" ColumnName="DateCheckIn" />
                 <ScalarProperty Name="PrintOrder" ColumnName="PrintOrder" />
                 <ScalarProperty Name="UomFilter" ColumnName="UomFilter" />
                 <ScalarProperty Name="SUBAREA" ColumnName="SUBAREA" />
@@ -1338,10 +1515,76 @@
           <EntitySetMapping Name="Tb_planning_print">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_planning_print">
               <MappingFragment StoreEntitySet="Tb_planning_print">
+                <ScalarProperty Name="Module" ColumnName="Module" />
                 <ScalarProperty Name="Printed" ColumnName="Printed" />
                 <ScalarProperty Name="Doc_key" ColumnName="Doc_key" />
                 <ScalarProperty Name="IsRoute" ColumnName="IsRoute" />
                 <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_NewCustomers">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_NewCustomers">
+              <MappingFragment StoreEntitySet="Tb_NewCustomers">
+                <ScalarProperty Name="OnSharepoint" ColumnName="OnSharepoint" />
+                <ScalarProperty Name="Validated" ColumnName="Validated" />
+                <ScalarProperty Name="Store_size" ColumnName="Store_size" />
+                <ScalarProperty Name="Muelle_descarga" ColumnName="Muelle_descarga" />
+                <ScalarProperty Name="ReciboMercaderia_area" ColumnName="ReciboMercaderia_area" />
+                <ScalarProperty Name="ReciboMercaderia_dia" ColumnName="ReciboMercaderia_dia" />
+                <ScalarProperty Name="OperationTime" ColumnName="OperationTime" />
+                <ScalarProperty Name="url_imageTAXCERNUM" ColumnName="url_imageTAXCERNUM" />
+                <ScalarProperty Name="url_imageTAXCERT" ColumnName="url_imageTAXCERT" />
+                <ScalarProperty Name="Etnias" ColumnName="Etnias" />
+                <ScalarProperty Name="StoreServices" ColumnName="StoreServices" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
+                <ScalarProperty Name="State" ColumnName="State" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="Street" ColumnName="Street" />
+                <ScalarProperty Name="E_MailL" ColumnName="E_MailL" />
+                <ScalarProperty Name="Tel1" ColumnName="Tel1" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="TAXCERTNUM" ColumnName="TAXCERTNUM" />
+                <ScalarProperty Name="TAXID" ColumnName="TAXID" />
+                <ScalarProperty Name="IntrntSite" ColumnName="IntrntSite" />
+                <ScalarProperty Name="E_Mail" ColumnName="E_Mail" />
+                <ScalarProperty Name="Phone1" ColumnName="Phone1" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="ID_customer" ColumnName="ID_customer" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_CreditsRequest">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_CreditsRequest">
+              <MappingFragment StoreEntitySet="Tb_CreditsRequest">
+                <ScalarProperty Name="ItemNameReturn" ColumnName="ItemNameReturn" />
+                <ScalarProperty Name="ItemCodeReturn" ColumnName="ItemCodeReturn" />
+                <ScalarProperty Name="URL_image2" ColumnName="URL_image2" />
+                <ScalarProperty Name="UoMEntry" ColumnName="UoMEntry" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="estado" ColumnName="estado" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="userCreateName" ColumnName="userCreateName" />
+                <ScalarProperty Name="userCreate" ColumnName="userCreate" />
+                <ScalarProperty Name="userValidateName" ColumnName="userValidateName" />
+                <ScalarProperty Name="userValidate" ColumnName="userValidate" />
+                <ScalarProperty Name="dateValidate" ColumnName="dateValidate" />
+                <ScalarProperty Name="dateCreate" ColumnName="dateCreate" />
+                <ScalarProperty Name="IDRequest_reason" ColumnName="IDRequest_reason" />
+                <ScalarProperty Name="DocNumSAP" ColumnName="DocNumSAP" />
+                <ScalarProperty Name="Validated" ColumnName="Validated" />
+                <ScalarProperty Name="URL_image" ColumnName="URL_image" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Request_reason" ColumnName="Request_reason" />
+                <ScalarProperty Name="UoMCode" ColumnName="UoMCode" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="ID_creditRequest" ColumnName="ID_creditRequest" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

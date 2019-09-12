@@ -127,7 +127,12 @@
                     });
                    
                     chtml += '</select ></td > ';
-                    chtml += '    <td><input style="padding:0;width: 60px;" class="form-control numord" type="number" min="1" value="' + selSO.Quantity + '" /></td>';
+                    if (selSO.query2 == "3") {
+                        chtml += '    <td><input readonly style="padding:0;width: 60px;" class="form-control numord" type="number" min="1" value="' + selSO.Quantity + '" /></td>';
+                    } else {
+                        chtml += '    <td><input min="1" type="number"  style="padding:0;width: 60px;" class="form-control numord" value="' + selSO.Quantity + '" /></td>';
+                    }
+        
                     //chtml += '    <td><input style="padding:0;" class="form-control units" type="number" min="-9999" value="' + selSO.Quantity + '" /></td>'; con botones
                     chtml += "    <td>" + selSO.ItemCode + "</td>";
                     chtml += "    <td>" + selSO.ItemName + "</td>";

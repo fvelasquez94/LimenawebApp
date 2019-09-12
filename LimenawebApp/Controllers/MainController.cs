@@ -87,9 +87,18 @@ namespace LimenawebApp.Controllers
                 ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
 
+                IEnumerable<Tb_Bonificaciones> bonifications;
 
-                var bonifications = (from a in internadli.Tb_Bonificaciones where(a.ID_Vendor==activeuser.IDSAP && a.FechaIngreso >=filtrostartdate && a.FechaIngreso <=filtroenddate) select a);
-
+                if (r.Contains("AdminBonif"))
+                {
+                    bonifications = (from a in internadli.Tb_Bonificaciones where (a.FechaIngreso >= filtrostartdate && a.FechaIngreso <= filtroenddate && a.OrderClosed==true && a.deleted==false)  select a);
+                }
+                else {
+                    bonifications = (from a in internadli.Tb_Bonificaciones where (a.ID_Vendor == activeuser.IDSAP && a.FechaIngreso >= filtrostartdate && a.FechaIngreso <= filtroenddate && a.OrderClosed == true && a.deleted == false) select a);
+                }
+       
+                ViewBag.userID = activeuser.ID_User;
+                ViewBag.userName = activeuser.Name + " " + activeuser.Lastname;
 
                 return View(bonifications);
 

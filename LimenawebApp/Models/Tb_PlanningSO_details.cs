@@ -36,5 +36,13 @@ namespace LimenawebApp.Models
         public string SUBAREA { get; set; }
         public string UomFilter { get; set; }
         public string PrintOrder { get; set; }
+        public Nullable<System.DateTime> DateCheckIn { get; set; }
+        public Nullable<System.DateTime> DateCheckOut { get; set; }
+        public Nullable<int> ID_userValidate { get; set; }
+        public Nullable<int> ID_ValidationDetails { get; set; }
+        public string ValidationDetails { get; set; }
+        public string type { get; set; }
+        public string parent { get; set; }
+        public Nullable<int> childrendefqty { get; set; }
     }
 }

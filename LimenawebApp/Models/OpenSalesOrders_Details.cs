@@ -31,5 +31,7 @@ namespace LimenawebApp.Models
         public string SUBAREA { get; set; }
         public string UoMFilter { get; set; }
         public Nullable<int> PrintOrder { get; set; }
+        public string CambioPrecio { get; set; }
+        public string TreeType { get; set; }
     }
 }

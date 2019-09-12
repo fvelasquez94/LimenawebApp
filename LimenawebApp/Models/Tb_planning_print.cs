@@ -18,5 +18,6 @@ namespace LimenawebApp.Models
         public bool IsRoute { get; set; }
         public string Doc_key { get; set; }
         public bool Printed { get; set; }
+        public string Module { get; set; }
     }
 }

@@ -14,7 +14,7 @@ warning 6002: The table/view 'MatrizCompras.dbo.Matriz_Formato' does not have a 
             
             
           </Key>
-          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ProdNombre" Type="nvarchar" MaxLength="100" />
           <Property Name="UnidadMedidaLetras" Type="nvarchar" MaxLength="100" />
           <Property Name="Marca" Type="nvarchar" MaxLength="30" Nullable="false" />
@@ -57,27 +57,27 @@ warning 6002: The table/view 'MatrizCompras.dbo.Matriz_Formato' does not have a 
           <Property Name="ID_catalog" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ProductCode" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ProductName" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="id_Vendor" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Vendor_Name" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="FactorCompra" Type="float" />
           <Property Name="FactorCompra_quiebre" Type="float" />
           <Property Name="Politica_cobertura" Type="float" />
           <Property Name="Comentarios" Type="varchar" MaxLength="850" />
-          <Property Name="Prop01" Type="varchar" MaxLength="250" Nullable="false" />
-          <Property Name="Prop02" Type="varchar" MaxLength="250" Nullable="false" />
-          <Property Name="Prop03" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Prop01" Type="varchar" MaxLength="250" />
+          <Property Name="Prop02" Type="varchar" MaxLength="250" />
+          <Property Name="Prop03" Type="varchar" MaxLength="250" />
           <Property Name="FactorUnidadCompra" Type="float" />
           <Property Name="Costo" Type="float" />
         </EntityType>
-        <!--Errors Found During Generation:
-warning 6002: The table/view 'MatrizCompras.dbo.Transito_Final' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Transito_Final">
           <Key>
-            <PropertyRef Name="NumTransito" />
             <PropertyRef Name="ProdCodigo" />
+            <PropertyRef Name="NumTransito" />
           </Key>
           <Property Name="ProdCodigo" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="NumTransito" Type="int" Nullable="false" />
           <Property Name="DocDate" Type="date" />
-          <Property Name="DiaSemana" Type="nvarchar" MaxLength="30" />
+          <Property Name="DiaSemana" Type="nvarchar" MaxLength="20" />
           <Property Name="DifSemanas" Type="float" />
           <Property Name="NumFactura" Type="int" />
           <Property Name="CantCajas" Type="int" />
@@ -127,7 +127,7 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
             <PropertyRef Name="ProdCodigo" />
           </Key>
           <Property Name="num" Type="int" Nullable="false" />
-          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ProdCodigo" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="ProdNombre" Type="nvarchar" MaxLength="100" />
           <Property Name="FactorCompra" Type="float" Nullable="false" />
           <Property Name="FactorCompra_quiebre" Type="float" Nullable="false" />
@@ -179,6 +179,7 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
         </EntityType>
         <EntityContainer Name="MatrizComprasModelStoreContainer">
           <EntitySet Name="Purchase_catalog" EntityType="Self.Purchase_catalog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Transito_Final" EntityType="Self.Transito_Final" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Matriz_Formato" EntityType="Self.Matriz_Formato" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Matriz_Formato].[ProdCodigo] AS [ProdCodigo], 
@@ -217,19 +218,6 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
     [Matriz_Formato].[DeliveryDate] AS [DeliveryDate], 
     [Matriz_Formato].[DocumentDate] AS [DocumentDate]
     FROM [dbo].[Matriz_Formato] AS [Matriz_Formato]</DefiningQuery>
-          </EntitySet>
-          <EntitySet Name="Transito_Final" EntityType="Self.Transito_Final" store:Type="Tables" store:Schema="dbo">
-            <DefiningQuery>SELECT 
-    [Transito_Final].[ProdCodigo] AS [ProdCodigo], 
-    [Transito_Final].[NumTransito] AS [NumTransito], 
-    [Transito_Final].[DocDate] AS [DocDate], 
-    [Transito_Final].[DiaSemana] AS [DiaSemana], 
-    [Transito_Final].[DifSemanas] AS [DifSemanas], 
-    [Transito_Final].[NumFactura] AS [NumFactura], 
-    [Transito_Final].[CantCajas] AS [CantCajas], 
-    [Transito_Final].[FormulaDia] AS [FormulaDia], 
-    [Transito_Final].[CoberturaSemanal] AS [CoberturaSemanal]
-    FROM [dbo].[Transito_Final] AS [Transito_Final]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="view_MatrizMadre" EntityType="Self.view_MatrizMadre" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -294,7 +282,7 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <Key>
             <PropertyRef Name="ProdCodigo" />
           </Key>
-          <Property Name="ProdCodigo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProdCodigo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProdNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="UnidadMedidaLetras" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Marca" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
@@ -330,26 +318,11 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <Property Name="DeliveryDate" Type="DateTime" Precision="3" />
           <Property Name="DocumentDate" Type="DateTime" Precision="3" />
         </EntityType>
-        <EntityType Name="Transito_Final">
-          <Key>
-            <PropertyRef Name="NumTransito" />
-            <PropertyRef Name="ProdCodigo" />
-          </Key>
-          <Property Name="ProdCodigo" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NumTransito" Type="Int32" Nullable="false" />
-          <Property Name="DocDate" Type="DateTime" Precision="0" />
-          <Property Name="DiaSemana" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="DifSemanas" Type="Double" />
-          <Property Name="NumFactura" Type="Int32" />
-          <Property Name="CantCajas" Type="Int32" />
-          <Property Name="FormulaDia" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
-          <Property Name="CoberturaSemanal" Type="Double" />
-        </EntityType>
         <EntityContainer Name="MatrizComprasEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Matriz_Formato" EntityType="Self.Matriz_Formato" />
-          <EntitySet Name="Transito_Final" EntityType="Self.Transito_Final" />
           <EntitySet Name="Purchase_catalog" EntityType="MatrizComprasModel.Purchase_catalog" />
           <EntitySet Name="view_MatrizMadre" EntityType="MatrizComprasModel.view_MatrizMadre" />
+          <EntitySet Name="Transito_Final" EntityType="MatrizComprasModel.Transito_Final" />
         </EntityContainer>
         <EntityType Name="Purchase_catalog">
           <Key>
@@ -362,18 +335,20 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <Property Name="FactorCompra_quiebre" Type="Double" />
           <Property Name="Politica_cobertura" Type="Double" />
           <Property Name="Comentarios" Type="String" MaxLength="850" FixedLength="false" Unicode="false" />
-          <Property Name="Prop01" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="Prop02" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="Prop03" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Prop01" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Prop02" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Prop03" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
           <Property Name="FactorUnidadCompra" Type="Double" />
           <Property Name="Costo" Type="Double" />
+          <Property Name="id_Vendor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Vendor_Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="view_MatrizMadre">
           <Key>
             <PropertyRef Name="ProdCodigo" />
           </Key>
           <Property Name="num" Type="Int32" Nullable="false" />
-          <Property Name="ProdCodigo" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ProdCodigo" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="ProdNombre" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="FactorCompra" Type="Double" Nullable="false" />
           <Property Name="FactorCompra_quiebre" Type="Double" Nullable="false" />
@@ -423,6 +398,21 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <Property Name="transito" Type="Int32" />
           <Property Name="U_PalletCount" Type="Double" Nullable="false" />
         </EntityType>
+        <EntityType Name="Transito_Final">
+          <Key>
+            <PropertyRef Name="ProdCodigo" />
+            <PropertyRef Name="NumTransito" />
+          </Key>
+          <Property Name="ProdCodigo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NumTransito" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="0" />
+          <Property Name="DiaSemana" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DifSemanas" Type="Double" />
+          <Property Name="NumFactura" Type="Int32" />
+          <Property Name="CantCajas" Type="Int32" />
+          <Property Name="FormulaDia" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="CoberturaSemanal" Type="Double" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -470,24 +460,11 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Transito_Final">
-            <EntityTypeMapping TypeName="MatrizComprasModel.Transito_Final">
-              <MappingFragment StoreEntitySet="Transito_Final">
-                <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
-                <ScalarProperty Name="NumTransito" ColumnName="NumTransito" />
-                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
-                <ScalarProperty Name="DiaSemana" ColumnName="DiaSemana" />
-                <ScalarProperty Name="DifSemanas" ColumnName="DifSemanas" />
-                <ScalarProperty Name="NumFactura" ColumnName="NumFactura" />
-                <ScalarProperty Name="CantCajas" ColumnName="CantCajas" />
-                <ScalarProperty Name="FormulaDia" ColumnName="FormulaDia" />
-                <ScalarProperty Name="CoberturaSemanal" ColumnName="CoberturaSemanal" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Purchase_catalog">
             <EntityTypeMapping TypeName="MatrizComprasModel.Purchase_catalog">
               <MappingFragment StoreEntitySet="Purchase_catalog">
+                <ScalarProperty Name="Vendor_Name" ColumnName="Vendor_Name" />
+                <ScalarProperty Name="id_Vendor" ColumnName="id_Vendor" />
                 <ScalarProperty Name="Costo" ColumnName="Costo" />
                 <ScalarProperty Name="FactorUnidadCompra" ColumnName="FactorUnidadCompra" />
                 <ScalarProperty Name="Prop03" ColumnName="Prop03" />
@@ -556,6 +533,21 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
                 <ScalarProperty Name="ProdNombre" ColumnName="ProdNombre" />
                 <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
                 <ScalarProperty Name="num" ColumnName="num" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Transito_Final">
+            <EntityTypeMapping TypeName="MatrizComprasModel.Transito_Final">
+              <MappingFragment StoreEntitySet="Transito_Final">
+                <ScalarProperty Name="CoberturaSemanal" ColumnName="CoberturaSemanal" />
+                <ScalarProperty Name="FormulaDia" ColumnName="FormulaDia" />
+                <ScalarProperty Name="CantCajas" ColumnName="CantCajas" />
+                <ScalarProperty Name="NumFactura" ColumnName="NumFactura" />
+                <ScalarProperty Name="DifSemanas" ColumnName="DifSemanas" />
+                <ScalarProperty Name="DiaSemana" ColumnName="DiaSemana" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="NumTransito" ColumnName="NumTransito" />
+                <ScalarProperty Name="ProdCodigo" ColumnName="ProdCodigo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

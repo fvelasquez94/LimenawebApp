@@ -1,9 +1,11 @@
-﻿using LimenawebApp.Models;
+﻿using CrystalDecisions.CrystalReports.Engine;
+using LimenawebApp.Models;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Transactions;
 using System.Web;
@@ -34,8 +36,10 @@ namespace LimenawebApp.Controllers
         }
         public class orderSO
         {
+            public int sort { get; set; }
             public int num { get; set; }
             public string SO { get; set; }
+            public string comment { get; set; }
         }
         public ActionResult Planning_order(int id)
         {
@@ -65,6 +69,9 @@ namespace LimenawebApp.Controllers
                 var orders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id) select a).OrderBy(a => a.query3).ToList();
                 ViewBag.orders = orders;
                 //FIN HEADER
+
+                ViewBag.id_route = id;
+
                 return View();
 
             }
@@ -113,7 +120,7 @@ namespace LimenawebApp.Controllers
                 //FILTROS**************
 
                 filtrostartdate = sunday;
-                    filtroenddate = saturday;
+                filtroenddate = saturday;
                 //FIN FILTROS*******************
 
                 ///////////////////////////////
@@ -139,22 +146,22 @@ namespace LimenawebApp.Controllers
                     try {
                         var extra = (from a in dblim.Tb_Planning_extra where (a.ID_Route == item.ID_Route) select a);
                         if (extra.Count() > 0) {
-                            rt.extra = extra.Sum(x=>x.Value).ToString();
+                            rt.extra = extra.Sum(x => x.Value).ToString();
                         }
                         else
                         {
                             rt.extra = "0.00";
 
                         }
-                       
+
                     }
-                    catch{
+                    catch {
                         rt.extra = "0.00";
                     }
-                    
 
-                   
-                    
+
+
+
 
                     if (item.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
 
@@ -168,7 +175,7 @@ namespace LimenawebApp.Controllers
                         catch {
                             rt.amount = "0.0";
                         }
-                       
+
                         rt.customerscount = sum.Select(c => c.Customer_name).Distinct().Count().ToString();
                         rt.orderscount = sum.Count().ToString();
                     }
@@ -185,18 +192,18 @@ namespace LimenawebApp.Controllers
                 string result = javaScriptSerializer.Serialize(rutas.ToArray());
                 ViewBag.calroutes = result;
                 ///
- 
+
                 //SELECTS
-          
+
                 var drivers = dlipro.C_DRIVERS.ToList();
                 //Convertimos la lista a array
                 ArrayList myArrListDrivers = new ArrayList();
                 myArrListDrivers.AddRange((from p in drivers
-                                    select new
-                                    {
-                                        id = p.Code,
-                                        text = p.Name.ToUpper().Replace("'", ""),
-                                    }).ToList());
+                                           select new
+                                           {
+                                               id = p.Code,
+                                               text = p.Name.ToUpper().Replace("'", ""),
+                                           }).ToList());
 
                 ViewBag.drivers = JsonConvert.SerializeObject(myArrListDrivers);
                 //LISTADO DE Routes Leader
@@ -204,11 +211,11 @@ namespace LimenawebApp.Controllers
                 //Convertimos la lista a array
                 ArrayList myArrListrouteleader = new ArrayList();
                 myArrListrouteleader.AddRange((from p in routeleader
-                                           select new
-                                           {
-                                               id = p.Code,
-                                               text = p.Name.ToUpper().Replace("'", ""),
-                                           }).ToList());
+                                               select new
+                                               {
+                                                   id = p.Code,
+                                                   text = p.Name.ToUpper().Replace("'", ""),
+                                               }).ToList());
 
                 ViewBag.routeleaders = JsonConvert.SerializeObject(myArrListrouteleader);
                 //LISTADO DE Trucks
@@ -216,11 +223,11 @@ namespace LimenawebApp.Controllers
                 //Convertimos la lista a array
                 ArrayList myArrListtruck = new ArrayList();
                 myArrListtruck.AddRange((from p in trucks
-                                           select new
-                                           {
-                                               id = p.Code,
-                                               text = p.Name.ToUpper().Replace("'", ""),
-                                           }).ToList());
+                                         select new
+                                         {
+                                             id = p.Code,
+                                             text = p.Name.ToUpper().Replace("'", ""),
+                                         }).ToList());
 
                 ViewBag.trucks = JsonConvert.SerializeObject(myArrListtruck);
                 //LISTADO DE Rutas
@@ -228,11 +235,11 @@ namespace LimenawebApp.Controllers
                 //Convertimos la lista a array
                 ArrayList myArrListmainroutes = new ArrayList();
                 myArrListmainroutes.AddRange((from p in mainroutes
-                                         select new
-                                         {
-                                             id = p.Code,
-                                             text = p.Name
-                                         }).ToList());
+                                              select new
+                                              {
+                                                  id = p.Code,
+                                                  text = p.Name
+                                              }).ToList());
 
                 ViewBag.mainroutes = JsonConvert.SerializeObject(myArrListmainroutes);
 
@@ -262,7 +269,107 @@ namespace LimenawebApp.Controllers
             public decimal? OpenAmount { get; set; }
             public string Remarks { get; set; }
             public string Printed { get; set; }
-     
+
+        }
+        public class MyObj_formtemplate {
+            public string NumSO { get; set; }
+        }
+
+        public ActionResult Print_OpenSalesOrders(List<MyObj_formtemplate> objects)
+        {
+            try {
+
+                List<string> list = new List<string>();
+                foreach (var item in objects)
+                {
+                    var idact = item.NumSO.Substring(4);
+                    list.Add(idact);
+                }
+                List<Tb_planning_print> lsttosave = new List<Tb_planning_print>();
+                foreach (var save in list) {
+                    Tb_planning_print print = new Tb_planning_print();
+
+                    print.IsRoute = false;
+                    print.Printed = false;
+                    print.Doc_key = save;
+                    print.Module = "OpenSalesOrders";
+                    lsttosave.Add(print);                  
+
+                }
+                dblim.BulkInsert(lsttosave);
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+
+            }
+        }
+        public ActionResult OpenSalesOrders(string fstartd, string fendd)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Operation";
+                ViewData["Page"] = "Invoices";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "drop3";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+                //FIN HEADER
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+
+                //filtros de fecha //SEMANAL
+                //var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                //var saturday = sunday.AddDays(6).AddHours(23);
+                //filtros de fecha //MENSUAL
+                //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                //var saturday = sunday.AddMonths(1).AddDays(-1);
+                //filtros de fecha (DIARIO)
+                //var sunday = DateTime.Today;
+                //var saturday = sunday.AddDays(1);
+                //filtros de fecha (ANUAL)
+                int year = DateTime.Now.Year;
+                var sunday = new DateTime(year, 1, 1);
+                var saturday = new DateTime(year, 12, 31);
+                //FILTROS**************
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+                //if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = DateTime.ParseExact(fstartd, "MM/dd/yyyy", CultureInfo.InvariantCulture); }
+                //if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = DateTime.ParseExact(fendd, "MM/dd/yyyy", CultureInfo.InvariantCulture).AddHours(23).AddMinutes(59); }
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                //FIN FILTROS*******************
+
+
+                IEnumerable<OpenSalesOrders> SalesOrder;
+                //SalesOrder = (from b in dlipro.OpenSalesOrders select b).Take(10);
+                SalesOrder = (from b in dlipro.OpenSalesOrders where (b.SODate >= filtrostartdate && b.SODate <= filtroenddate) select b);
+
+                return View(SalesOrder);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
         }
         public ActionResult QualityControl_planning(string fstartd, string fendd)
         {
@@ -328,9 +435,9 @@ namespace LimenawebApp.Controllers
                     var count = SalesOrder.Where(c=> c.ID_Route == rutait.ID_Route).Select(c => c).Count();
                     var allvalidated = (from f in SalesOrder where (f.isfinished == true && f.ID_Route == rutait.ID_Route) select f).Count();
                     //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
-                    decimal finishedorCanceled = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated==true && !e.query1.Contains("DEL") && e.Quantity > 0) select e).Count();
+                    decimal finishedorCanceled = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated==true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I")) select e).Count();
  
-                    totalRutas = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0) select e).Count();             
+                    totalRutas = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I")) select e).Count();             
 
                     if (totalRutas != 0)
                     {
@@ -393,7 +500,7 @@ namespace LimenawebApp.Controllers
                 print.IsRoute = true;
                 print.Printed = false;
                 print.Doc_key = id.ToString();
-
+                print.Module = "QualityControl";
                 dblim.Tb_planning_print.Add(print);
                 dblim.SaveChanges();
                 return Json("success", JsonRequestBehavior.AllowGet);
@@ -415,6 +522,7 @@ namespace LimenawebApp.Controllers
                 print.IsRoute = false;
                 print.Printed = false;
                 print.Doc_key = docentry;
+                print.Module = "QualityControl";
 
                 dblim.Tb_planning_print.Add(print);
                 dblim.SaveChanges();
@@ -463,7 +571,7 @@ namespace LimenawebApp.Controllers
                 var Arry = lstSalesOrders.Select(a => a.ID_salesorder).ToArray();
 
                 List<Tb_PlanningSO_details> lstDetails = new List<Tb_PlanningSO_details>();
-                lstDetails = (from b in dblim.Tb_PlanningSO_details where(Arry.Contains(b.ID_salesorder) &&  b.Quantity>0) select b).ToList();
+                lstDetails = (from b in dblim.Tb_PlanningSO_details where(Arry.Contains(b.ID_salesorder) &&  b.Quantity>0 && !b.type.Contains("I")) select b).ToList();
 
 
                 //ESTADISTICA DE SALES ORDERS POR ESTADO DE DETALLES
@@ -844,10 +952,16 @@ namespace LimenawebApp.Controllers
                 var ID = Convert.ToInt32(id_route);
 
                 var route = dblim.Tb_PlanningSO.Where(a=> a.ID_Route==ID).Select(a=>a).ToList();
-
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
                 foreach (var item in route) {
                     item.isfinished = true;
+                    if (activeuser != null) {
+                       
+                        item.ID_userValidate = activeuser.ID_User;
+                    }
+                    item.DateCheckOut = DateTime.UtcNow;
                     dblim.Entry(item).State = EntityState.Modified;
+
                 }
                
                 dblim.BulkSaveChanges();
@@ -1003,7 +1117,7 @@ namespace LimenawebApp.Controllers
             if (id_storage == "COOLER" || id_storage == "FREEZER")
             {
                 rt = (from a in dblim.Tb_PlanningSO_details
-                      where (a.ID_salesorder == idr && a.Quantity > 0 && (a.ID_storagetype == "COOLER" || a.ID_storagetype == "FREEZER"))
+                      where (a.ID_salesorder == idr && a.Quantity > 0 && (a.ID_storagetype == "COOLER" || a.ID_storagetype == "FREEZER") && !a.type.Contains("I"))
                       select new detailsSO
                       {
                           ID_detail = a.ID_detail,
@@ -1020,11 +1134,11 @@ namespace LimenawebApp.Controllers
                           Storage_type = a.Storage_type,
                           ID_salesorder = a.ID_salesorder,
                           query1 = a.query1
-                      }).ToList();
+                      }).OrderBy(a=>a.ID_detail).ToList();
             }
             else {
                 rt = (from a in dblim.Tb_PlanningSO_details
-                      where (a.ID_salesorder == idr && a.Quantity > 0 && a.ID_storagetype == id_storage)
+                      where (a.ID_salesorder == idr && a.Quantity > 0 && a.ID_storagetype == id_storage && !a.type.Contains("I"))
                       select new detailsSO
                       {
                           ID_detail = a.ID_detail,
@@ -1041,7 +1155,7 @@ namespace LimenawebApp.Controllers
                           Storage_type = a.Storage_type,
                           ID_salesorder = a.ID_salesorder,
                           query1 = a.query1
-                      }).ToList();
+                      }).OrderBy(a => a.ID_detail).ToList();
             }
 
 
@@ -1056,6 +1170,48 @@ namespace LimenawebApp.Controllers
          
             var result = new { result = result2 };
             return Json(result, JsonRequestBehavior.AllowGet);
+
+        }
+
+
+        public ActionResult Routes_Report()
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Routes Report";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "operrep_submenu";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+                //FIN HEADER
+                //Evaluamos si es supervisor o usuario normal para mostrar recursos o si es ambos o si es super admin
+
+
+
+
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
 
         }
 
@@ -1131,6 +1287,10 @@ namespace LimenawebApp.Controllers
                 newPlanning.query3 = 0;
                 newPlanning.Invoiced = false;
                 newPlanning.Date = departure.Date;
+                newPlanning.DateCheckIn = DateTime.UtcNow;
+                newPlanning.DateCheckOut = DateTime.UtcNow;
+                newPlanning.ID_userValidate = 0;
+
 
                 dblim.Tb_Planning.Add(newPlanning);
                 dblim.SaveChanges();
@@ -1153,7 +1313,7 @@ namespace LimenawebApp.Controllers
                 if(salesOrders.Count > 0)
                 {
                     //ORDER BY AREA, SUBAREA, UoMFilter, PrintOrder, U_BinLocation, T1.ItemCode 
-                    var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (avaSO.Contains(c.DocNum)) select c).OrderBy(c=>c.AREA).ThenBy(c=>c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
+                    var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (avaSO.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c=>c.AREA).ThenBy(c=>c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
                     try {
                         var count = 0;
                         foreach (var saleOrder in salesOrders)
@@ -1176,7 +1336,8 @@ namespace LimenawebApp.Controllers
                                     newSO.isfinished = false;
                                     newSO.query1 = "";
                                     newSO.query2 = saleOrder.DeliveryRoute;
-                                    newSO.query3 = count;
+                                    newSO.query3 = 0;
+                                    //newSO.query3 = count;
                                     newSO.query4 = "";
                                     newSO.query5 = "";
                                     newSO.Weight = "";
@@ -1184,6 +1345,11 @@ namespace LimenawebApp.Controllers
                                     newSO.Printed = saleOrder.Printed;
                                     newSO.ID_Route = newPlanning.ID_Route;
                                     newSO.DocEntry = "";
+                                    newSO.DateCheckIn = DateTime.UtcNow;
+                                    newSO.DateCheckOut = DateTime.UtcNow;
+                                    newSO.ID_userValidate = 0;
+                                    
+
                                     if (saleOrder.Remarks == null) { newSO.Remarks = ""; } else { newSO.Remarks = saleOrder.Remarks; }
 
                                     dblim.Tb_PlanningSO.Add(newSO);
@@ -1220,11 +1386,74 @@ namespace LimenawebApp.Controllers
                                             if (dt.U_Storage == null) { newDtl.Storage_type = ""; } else { newDtl.Storage_type = dt.U_Storage; }
                                             newDtl.ID_salesorder = newSO.ID_salesorder;
                                             newDtl.query1 = "";
-                                            newDtl.query2 = "";
+                                            newDtl.query2 = dt.CambioPrecio.ToString();
                                             newDtl.ID_picker = "";
                                             newDtl.Picker_name = "";
-
+                                            newDtl.DateCheckIn = DateTime.UtcNow;
+                                            newDtl.DateCheckOut = DateTime.UtcNow;
+                                            newDtl.ID_userValidate = 0;
+                                            newDtl.ID_ValidationDetails = 0;
+                                            newDtl.ValidationDetails = "";
+                                            newDtl.type = dt.TreeType;
+                                            newDtl.parent = "";
+                                            newDtl.childrendefqty = 0;
                                             lsttosave.Add(newDtl);
+
+
+                                            //Si tiene hijos o es propiedad S, agregamos
+                                            if (dt.TreeType == "S") {
+                                                int countLineNum = dt.LineNum + 1;
+                                                var kit_childs = (from d in dlipro.ITT1 where (d.Father == dt.ItemCode) select d).OrderBy(d => d.ChildNum).ToList();
+
+                                                if (kit_childs.Count > 0) {
+                                                    foreach (var hijo in kit_childs) {
+                                                        var childinfo = (from ad in dlipro.BI_Dim_Products where (ad.id == hijo.Code) select ad).FirstOrDefault();
+                                                        var itemnamechild = "";
+                                                        if (childinfo != null) {
+                                                            itemnamechild = childinfo.item_name;
+                                                        }
+                                                        Tb_PlanningSO_details newDtlHijo = new Tb_PlanningSO_details();
+                                                        newDtlHijo.Line_num = countLineNum;
+                                                        if (dt.U_BinLocation == null) { newDtlHijo.Bin_loc = ""; } else { newDtlHijo.Bin_loc = dt.U_BinLocation; }
+
+                                                        Convert.ToInt32(hijo.Quantity);
+
+                                                        if (dt.UomEntry == null) { newDtlHijo.UomEntry = ""; } else { newDtlHijo.UomEntry = dt.UomEntry.ToString(); }
+                                                        if (dt.UomCode == null) { newDtlHijo.UomCode = ""; } else { newDtlHijo.UomCode = dt.UomCode; }
+
+                                                        newDtlHijo.NumPerMsr = 0;
+                                                        newDtlHijo.ItemCode = hijo.Code;
+                                                        newDtlHijo.AREA = dt.AREA.ToString();
+                                                        newDtlHijo.SUBAREA = dt.SUBAREA.ToString();
+                                                        newDtlHijo.UomFilter = dt.UoMFilter.ToString();
+                                                        newDtlHijo.PrintOrder = dt.PrintOrder.ToString();
+                                                        newDtlHijo.ItemName = itemnamechild;
+                                                        newDtlHijo.StockWhs01 = "";
+                                                        newDtlHijo.isvalidated = false;
+                                                        if (dt.U_Storage == null) { newDtlHijo.ID_storagetype = ""; } else { newDtlHijo.ID_storagetype = dt.U_Storage; }
+                                                        if (dt.U_Storage == null) { newDtlHijo.Storage_type = ""; } else { newDtlHijo.Storage_type = dt.U_Storage; }
+                                                        newDtlHijo.ID_salesorder = newSO.ID_salesorder;
+                                                        newDtlHijo.query1 = "";
+                                                        newDtlHijo.query2 = "";
+                                                        newDtlHijo.ID_picker = "";
+                                                        newDtlHijo.Picker_name = "";
+                                                        newDtlHijo.DateCheckIn = DateTime.UtcNow;
+                                                        newDtlHijo.DateCheckOut = DateTime.UtcNow;
+                                                        newDtlHijo.ID_userValidate = 0;
+                                                        newDtlHijo.ID_ValidationDetails = 0;
+                                                        newDtlHijo.ValidationDetails = "";
+                                                        newDtlHijo.type = "I";
+                                                        newDtlHijo.parent = dt.ItemCode;
+                                                        newDtlHijo.childrendefqty = Convert.ToInt32(hijo.Quantity);
+                                                        lsttosave.Add(newDtlHijo);
+                                                        countLineNum++;
+                                                    }
+
+
+                                                }
+                                            }
+
+
                                         }
 
                                         dblim.BulkInsert(lsttosave);
@@ -1402,7 +1631,7 @@ namespace LimenawebApp.Controllers
                         var dtSO = (from c in dlipro.OpenSalesOrders where (myCollection.Contains(c.NumSO)) select c).ToList();
 
 
-                        var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (myCollection.Contains(c.DocNum)) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
+                        var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (myCollection.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
                         foreach (string value in salesOrders)
                         {
                             var idso = Convert.ToInt32(value);
@@ -1436,6 +1665,10 @@ namespace LimenawebApp.Controllers
                                 newSO.Printed = saleOrder.Printed;
                                 newSO.ID_Route = planning.ID_Route;
                                 newSO.DocEntry = "";
+                                newSO.DateCheckIn = DateTime.UtcNow;
+                                newSO.DateCheckOut = DateTime.UtcNow;
+                                newSO.ID_userValidate = 0;
+            
                                 if (saleOrder.Remarks == null) { newSO.Remarks = ""; } else { newSO.Remarks = saleOrder.Remarks; }
                                 dblim.Tb_PlanningSO.Add(newSO);
                                 dblim.SaveChanges();
@@ -1470,11 +1703,76 @@ namespace LimenawebApp.Controllers
                                         if (dt.U_Storage == null) { newDtl.Storage_type = ""; } else { newDtl.Storage_type = dt.U_Storage; }
                                         newDtl.ID_salesorder = newSO.ID_salesorder;
                                         newDtl.query1 = "";
-                                        newDtl.query2 = "";
+                                        newDtl.query2 = dt.CambioPrecio.ToString();
                                         newDtl.ID_picker = "";
                                         newDtl.Picker_name = "";
+                                        newDtl.DateCheckIn = DateTime.UtcNow;
+                                        newDtl.DateCheckOut = DateTime.UtcNow;
+                                        newDtl.ID_userValidate = 0;
+                                        newDtl.ID_ValidationDetails = 0;
+                                        newDtl.ValidationDetails = "";
+                                        newDtl.type = dt.TreeType;
+                                        newDtl.parent = "";
+                                        newDtl.childrendefqty = 0;
                                         lsttosave.Add(newDtl);
                                         //dblim.Tb_PlanningSO_details.Add(newDtl);
+
+                                        //Si tiene hijos o es propiedad S, agregamos
+                                        if (dt.TreeType == "S")
+                                        {
+                                            int countLineNum = dt.LineNum + 1;
+                                            var kit_childs = (from d in dlipro.ITT1 where (d.Father == dt.ItemCode) select d).OrderBy(d => d.ChildNum).ToList();
+
+                                            if (kit_childs.Count > 0)
+                                            {
+                                                foreach (var hijo in kit_childs)
+                                                {
+                                                    var childinfo = (from ad in dlipro.BI_Dim_Products where (ad.id == hijo.Code) select ad).FirstOrDefault();
+                                                    var itemnamechild = "";
+                                                    if (childinfo != null)
+                                                    {
+                                                        itemnamechild = childinfo.item_name;
+                                                    }
+                                                    Tb_PlanningSO_details newDtlHijo = new Tb_PlanningSO_details();
+                                                    newDtlHijo.Line_num = countLineNum;
+                                                    if (dt.U_BinLocation == null) { newDtlHijo.Bin_loc = ""; } else { newDtlHijo.Bin_loc = dt.U_BinLocation; }
+
+                                                    newDtlHijo.Quantity = Convert.ToInt32(hijo.Quantity);
+
+                                                    if (dt.UomEntry == null) { newDtlHijo.UomEntry = ""; } else { newDtlHijo.UomEntry = dt.UomEntry.ToString(); }
+                                                    if (dt.UomCode == null) { newDtlHijo.UomCode = ""; } else { newDtlHijo.UomCode = dt.UomCode; }
+
+                                                    newDtlHijo.NumPerMsr = 0;
+                                                    newDtlHijo.ItemCode = hijo.Code;
+                                                    newDtlHijo.AREA = dt.AREA.ToString();
+                                                    newDtlHijo.SUBAREA = dt.SUBAREA.ToString();
+                                                    newDtlHijo.UomFilter = dt.UoMFilter.ToString();
+                                                    newDtlHijo.PrintOrder = dt.PrintOrder.ToString();
+                                                    newDtlHijo.ItemName = itemnamechild;
+                                                    newDtlHijo.StockWhs01 = "";
+                                                    newDtlHijo.isvalidated = false;
+                                                    if (dt.U_Storage == null) { newDtlHijo.ID_storagetype = ""; } else { newDtlHijo.ID_storagetype = dt.U_Storage; }
+                                                    if (dt.U_Storage == null) { newDtlHijo.Storage_type = ""; } else { newDtlHijo.Storage_type = dt.U_Storage; }
+                                                    newDtlHijo.ID_salesorder = newSO.ID_salesorder;
+                                                    newDtlHijo.query1 = "";
+                                                    newDtlHijo.query2 = "";
+                                                    newDtlHijo.ID_picker = "";
+                                                    newDtlHijo.Picker_name = "";
+                                                    newDtlHijo.DateCheckIn = DateTime.UtcNow;
+                                                    newDtlHijo.DateCheckOut = DateTime.UtcNow;
+                                                    newDtlHijo.ID_userValidate = 0;
+                                                    newDtlHijo.ID_ValidationDetails = 0;
+                                                    newDtlHijo.ValidationDetails = "";
+                                                    newDtlHijo.type = "I";
+                                                    newDtlHijo.parent = dt.ItemCode;
+                                                    newDtlHijo.childrendefqty = Convert.ToInt32(hijo.Quantity);
+                                                    lsttosave.Add(newDtlHijo);
+                                                    countLineNum++;
+                                                }
+
+
+                                            }
+                                        }
 
                                     }
 
@@ -1568,9 +1866,12 @@ namespace LimenawebApp.Controllers
            
                             foreach (var item in objects) //Ordenamos en base al orden que trae la cadena
                             {
+                            if (item.comment == null) { item.comment = ""; }
+                          
                                 //var idsoin = Convert.ToInt32(item);
                                 var saUp = (from a in dblim.Tb_PlanningSO where (a.ID_salesorder == item.num) select a).FirstOrDefault();
-                                saUp.query3 = count;
+                                saUp.query3 = item.sort;
+                            saUp.query4 = item.comment;
                                 dblim.Entry(saUp).State = EntityState.Modified;
                                 count++;
 
@@ -1670,16 +1971,84 @@ namespace LimenawebApp.Controllers
 
                     List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
 
-                    var allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf) select a);
-
-                    foreach (var items in objects)
+                    var allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I")) select a);
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                foreach (var items in objects)
                     {
                         Tb_PlanningSO_details newDet = (from a in allDet where (a.Line_num == items.lineNumber && a.ItemCode == items.ItemCode) select a).FirstOrDefault();
-                        newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                    if (newDet.query2.Contains("3"))
+                    {//Es una bonificacion
+                        //var productonormal = dblim.Tb_PlanningSO_details.Where(a => a.ID_salesorder==idf && a.ItemCode == newDet.ItemCode && !a.query2.Contains("3")).FirstOrDefault();
+                        //if (productonormal != null) {
+                            //newDet.isvalidated = newDet.isvalidated;
+                            //newDet.query1 = productonormal.query1;
+                            newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                            if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                            if (items.deleted == "DEL") {
+                            newDet.query1 = "DEL";
+                            //Se agrego linea de comando para eliminar bonificaciones u otro tipo de producto
+                            dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1}", idf, items.ItemCode);
+                        } else { newDet.query1 = ""; }
+
+
+
+                            var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                            if (lstava != null)
+                            {
+                                newDet.UomCode = lstava.UomCode;
+                                newDet.UomEntry = lstava.UomEntry.ToString();
+                                newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                            }
+
+                            newDet.ID_picker = idPicker;
+                            newDet.Picker_name = pickername;
+
+
+                            if (activeuser != null)
+                            {
+                                newDet.ID_userValidate = activeuser.ID_User;
+                            }
+                            newDet.DateCheckOut = DateTime.UtcNow;
+
+                            lsttosave.Add(newDet);
+                        //}
+                 
+
+                    }
+                    else {
                         //newDet.ID_UOM = items.uom;
                         //newDet.UOM = items.uom;
                         if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
-                        if (items.deleted == "DEL") { newDet.query1 = "DEL"; } else { newDet.query1 = ""; }
+                        if (items.deleted == "DEL") {
+                            newDet.query1 = "DEL";
+                            //Se agrego linea de comano para eliminar bonificaciones u otro tipo de producto
+                            dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                        }
+                        else { newDet.query1 = ""; }
+
+                        //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
+                        if (!newDet.query2.Contains("0"))
+                        {
+                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            {
+                                newDet.query1 = "DEL";
+                                dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                                if (newDet.type == "S")
+                                {
+                                    dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and parent={1}", idf, items.ItemCode);
+                                }
+
+                            }
+                        }
+
+
+
+                        newDet.Quantity = Convert.ToInt32(items.quantity);
+
                         var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
                         if (lstava != null)
                         {
@@ -1687,14 +2056,51 @@ namespace LimenawebApp.Controllers
                             newDet.UomEntry = lstava.UomEntry.ToString();
                             newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
                         }
-                        lsttosave.Add(newDet);
+                      
                         newDet.ID_picker = idPicker;
                         newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        //Evaluamos si es kit para actualizar sus hijos
+                        if (newDet.type == "S")
+                        {
+                            //llamamos los hijos
+                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I") select b).ToList();
+                            if (hijos.Count > 0)
+                            {
+                                foreach (var item in hijos)
+                                {
+                                    item.query1 = newDet.query1;
+                                    item.isvalidated = newDet.isvalidated;
+                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.ID_picker = newDet.ID_picker;
+                                    item.Picker_name = newDet.Picker_name;
+                                    item.ID_userValidate = newDet.ID_userValidate;
+                                    item.DateCheckOut = newDet.DateCheckOut;
+                                }
+
+                                dblim.BulkUpdate(hijos);
+
+                            }
+                        }
+
+                        lsttosave.Add(newDet);
                     }
 
-                    dblim.BulkUpdate(lsttosave);
 
-                    ttresult = "SUCCESS";
+
+
+                }
+
+                    dblim.BulkUpdate(lsttosave);
+               
+                ttresult = "SUCCESS";
                     return Json(ttresult, JsonRequestBehavior.AllowGet);
                 
             }
@@ -1707,6 +2113,36 @@ namespace LimenawebApp.Controllers
             
             
      
+        }
+        public ActionResult Print_Roadmap(int? id)
+        {
+            var header = (from b in dblim.Tb_Planning where (b.ID_Route == id) select b).FirstOrDefault();
+
+            //var details = dblim.Tb_PlanningSO.Where(g => g.ID_Route==id).GroupBy(x => x.Customer_name).Select(g => g.FirstOrDefault()).OrderBy(c=>c.query3);
+            var details = dblim.Tb_PlanningSO.Where(g => g.ID_Route==id).OrderBy(c=>c.query3).ToList();
+            details = details.GroupBy(x => x.Customer_name).Select(g => g.FirstOrDefault()).OrderBy(c => c.query3).ToList();
+            ReportDocument rd = new ReportDocument();
+            rd.Load(Path.Combine(Server.MapPath("~/Reports"), "rptRoadmap.rpt"));
+            rd.SetDataSource(details);
+
+            rd.SetParameterValue("Route", header.Route_name.ToUpper());
+            rd.SetParameterValue("Driver", header.Driver_name);
+            rd.SetParameterValue("Route_leader", header.Routeleader_name);
+            rd.SetParameterValue("Truck", header.Truck_name);
+            rd.SetParameterValue("Date", header.Date.ToLongDateString().ToUpper());
+            //rd.SetParameterValue("idorder", header.ID_OrderDSD);
+            //rd.SetParameterValue("comment", header.Comment);
+
+
+            var filePathOriginal = Server.MapPath("/Reports/pdf");
+            Response.Buffer = false;
+            Response.ClearContent();
+            Response.ClearHeaders();
+            //PARA VISUALIZAR
+            Response.AppendHeader("Content-Disposition", "inline; filename=" + "RoadMap.pdf; ");
+            Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+            stream.Seek(0, SeekOrigin.Begin);
+            return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
         }
 
     }
