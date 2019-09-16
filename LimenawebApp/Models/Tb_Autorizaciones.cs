@@ -36,5 +36,6 @@ namespace LimenawebApp.Models
         public string CodCustomer { get; set; }
         public string Customer { get; set; }
         public bool Deleted { get; set; }
+        public int closedOrderTimes { get; set; }
     }
 }

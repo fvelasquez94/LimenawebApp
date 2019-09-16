@@ -660,7 +660,7 @@ namespace LimenawebApp.Controllers
             public decimal NewPrice { get; set; }
         }
         [HttpPost]
-        public ActionResult Save_SODetails(List<MyObjObj> objects, int pedido, decimal bolsa)
+        public ActionResult Save_SODetails(List<MyObjObj> objects, int pedido, decimal bolsa, int timesClosed)
         {
             string ttresult = "";
             try
@@ -717,7 +717,8 @@ namespace LimenawebApp.Controllers
                             newDet.CodCustomer = so_details.CardCode;
                             newDet.Customer = nombrec;
                             newDet.DocPepperi = so_details.NoPepperi;
-                            
+                            //ver cuantas veces se cerro la orden
+                            newDet.closedOrderTimes = timesClosed;
 
                             if (items.deleted == true)
                             {
@@ -798,7 +799,7 @@ namespace LimenawebApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult Save_SODetailsAfterOrderClosed(List<MyObjObj> objects, int pedido, decimal bolsa)
+        public ActionResult Save_SODetailsAfterOrderClosed(List<MyObjObj> objects, int pedido, decimal bolsa,int timesClosed)
         {
             string ttresult = "";
             try
@@ -842,7 +843,8 @@ namespace LimenawebApp.Controllers
                             newDet.Cantidad = items.Qty;
                             newDet.PrecioPedido = items.Price;
                             newDet.PrecioMin = items.MinPrice;
-
+                             //ver cuantas veces se cerro la orden
+                            newDet.closedOrderTimes = timesClosed;
                             newDet.Estado = 1;
                             newDet.FechaIngreso = DateTime.UtcNow;
                             newDet.FechaValidacion = DateTime.UtcNow;
@@ -1008,7 +1010,7 @@ namespace LimenawebApp.Controllers
 
 
         }
-        public ActionResult Save_bonification(string pedido, string producto, int? unidades,decimal precio, DateTime date, string userID, string userName, int tipobonificacion, string lineNum, string uom)
+        public ActionResult Save_bonification(string pedido, string producto, int? unidades,decimal precio, DateTime date, string userID, string userName, int tipobonificacion, string lineNum, string uom, int timesClosed)
         {
 
             try
@@ -1046,7 +1048,9 @@ namespace LimenawebApp.Controllers
                 newBonificacion.FechaValidacion = date;
                 newBonificacion.ID_Vendor = productinfo.id_Vendor;
                 newBonificacion.Vendor = productinfo.Vendor;
-                //--
+                //--Verificar cuantas veces se cerro la orden
+                newBonificacion.closedOrderTimes = timesClosed;
+                //
                 newBonificacion.CodUOMAnt = uom;
                 newBonificacion.UOMAnt = lstava.ToString();
                 newBonificacion.CantidadFinal = Convert.ToDecimal(unidades);
@@ -1276,7 +1280,56 @@ namespace LimenawebApp.Controllers
 
         }
 
-        public ActionResult Prices_requestCerrarOrden(string docnum)
+        public ActionResult OpenClosedOrder(string docnum)
+        {
+
+            var result = "";
+            var docint = Convert.ToInt32(docnum);
+            try
+            {
+                var bonif = (from a in internadli.Tb_Bonificaciones where (a.CodPedido == docnum) select a);
+                var not = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docint) select b).Count();
+
+                var pedido = (from a in dlipro.OpenSalesOrders where (a.NumSO == docint) select a).FirstOrDefault();
+
+
+                var bonifcount = bonif.Count();
+
+                int flag = 0;
+                if (bonifcount > 0)
+                {
+                    flag = 1;
+                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=0 where CodPedido={0} and Estado=1", docnum);
+
+                }
+                if (not > 0)
+                {
+                    flag = 1;
+                    internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=0 where DocNum={0}", docint);
+                }
+
+                if (flag == 1)
+                {
+
+                }
+
+
+                result = "SUCCESS";
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+
+            }
+            catch (Exception ex)
+            {
+                result = "ERROR: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+
+
+        }
+
+        public ActionResult Prices_requestCerrarOrden(string docnum, int timesClosed)
         {
             
             var result = "";
@@ -1292,7 +1345,7 @@ namespace LimenawebApp.Controllers
 
                 int flag = 0;
                 if (bonifcount > 0) { flag = 1;
-                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=1 where CodPedido={0}", docnum);
+                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=1, closedOrderTimes={0} where CodPedido={1}", (timesClosed+1), docnum);
 
                     //Verificamos si hay bonificaciones eliminadas
 
@@ -1363,7 +1416,7 @@ namespace LimenawebApp.Controllers
 
                 }
                 if (not > 0) { flag = 1;
-                    internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1 where DocNum={0}", docint);
+                    internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1, closedOrderTimes={0} where DocNum={1}", (timesClosed + 1), docint);
                 }
 
                 if (flag == 1) {
@@ -1380,9 +1433,11 @@ namespace LimenawebApp.Controllers
             {
                 result = "ERROR: " + ex.Message;
                 return Json(result, JsonRequestBehavior.AllowGet);
-    }
 
-}
+            }
+
+
+        }
 
 public ActionResult Prices_requestpdo(int docnum)
         {
@@ -1464,7 +1519,22 @@ public ActionResult Prices_requestpdo(int docnum)
                 //ViewBag.lstproducts = JsonConvert.SerializeObject(myArrList);
                 ViewBag.docnum = docnum;
 
-                var detailsBonifications = finaldetails.Where(c => c.Bonificable == "Y");
+
+
+                //SABER SI ES ADMIN
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor"))
+                {
+                    isAdmin = 1;
+                   
+                }
+                else
+                {
+                    isAdmin = 0;
+                }
+                ViewBag.isAdmin = isAdmin;
+
+                    var detailsBonifications = finaldetails.Where(c => c.Bonificable == "Y");
 
                 var lstCategories = (from f in detailsBonifications select f.category_name).Distinct().OrderBy(c => c).ToList();
                 ViewBag.lstCategories = lstCategories;
@@ -1523,17 +1593,19 @@ public ActionResult Prices_requestpdo(int docnum)
                     ViewBag.mostrarOrdenEditar = 1;
 
                     var bonif2 = bonificaciones.Where(c => c.OrderClosed == true).Count();
+                    var bonifGeneral = bonificaciones.Count();
 
-                    if (bonif2 > 0) {
-                        var bonCont = bonificaciones.Where(c => c.OrderClosed == true).Select(c => c.CantidadPedido).FirstOrDefault();
+                    if (bonifGeneral > 0) {
+                        var bonCont = bonificaciones.Select(c => c.closedOrderTimes).FirstOrDefault();
                         contadorOrderClosed = bonCont;
                     }
                 
                     
                     var not2 = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum && b.OrderClosed == true) select b).Count();
-                    if (not2 > 0) {
-                        var notCont = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum && b.OrderClosed == true) select b.Cantidad).FirstOrDefault();
-                        //contadorOrderClosed = notCont;
+                    var notGeneral = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum) select b).Count();
+                    if (notGeneral > 0) {
+                        var notCont = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum) select b.closedOrderTimes).FirstOrDefault();
+                        contadorOrderClosed = notCont;
                     }
 
                     //NO MOSTRAMOS BOTONES PARA EDITAR NI PARA SALIR CON CERRAR ORDEN 
@@ -1549,8 +1621,9 @@ public ActionResult Prices_requestpdo(int docnum)
                     ViewBag.mostrarOrdenEditar = 2;
                 }
 
+                ViewBag.contadorClosed = contadorOrderClosed;
 
-               
+
                 return View(finaldetails);
             }
             else

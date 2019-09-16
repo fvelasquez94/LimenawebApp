@@ -46,11 +46,16 @@
                                                 <span class="input-group-text" style="font-size:14px;">Customer</span>
                                             </div>
                                             <input type="text" style="font-size:14px;width:130px;" value="@ViewBag.cliente" readonly class="form-control">
-
+                                            @if (ViewBag.isAdmin == 1 && ViewBag.mostrarOrdenEditar == 0)
+    {
+                                        <button  onclick="openClosedOrder()"  class="btn btn-warning">Open Order</button>
+}
                                         </div>
+
+
                                     </div>
-
-
+     
+                                   
                                 </div>
                                 <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
                                     <li class="nav-item">
@@ -71,7 +76,7 @@
 
                                         <div class="row col-md-12">
                                             <div class="col-md-6">
-
+                                                
 
 
                                                 <div class="input-group">
@@ -102,48 +107,48 @@
                                                                         </thead>
                                                                         <tbody>
                                                                             @foreach (var item in ViewBag.deuda)
-                                                                            {
-                                                    <tr>
-                                                        <td>@item.DocNum</td>
-                                                        <td>@Convert.ToDateTime(item.DocDate).ToShortDateString()</td>
-                                                        <td>
-                                                            @if (item.Antiguedad == 1)
-                                                            {
-                                    <label>COD</label>
-                                                            }
-                                                            else if (item.Antiguedad == 2)
-                                                            {
-                            <label>CURRENT</label>
-                                                            }
-                                                            else if (item.Antiguedad == 3)
-                                                            {
-                            <label>1 - 7 DAYS</label>
-                                                            }
-                                                            else if (item.Antiguedad == 4)
-                                                            {
-                            <label>8 - 14 DAYS</label>
-                                                            }
-                                                            else if (item.Antiguedad == 5)
-                                                            {
-                            <label>15- 21 DAYS</label>
-                                                            }
-                                                            else if (item.Antiguedad == 6)
-                                                            {
-                            <label>22 - 28 DAYS</label>
-                                                            }
-                                                            else if (item.Antiguedad == 7)
-                                                            {
-                            <label>> 28 DAYS</label>
-                                                            }
-                                                            else if (item.Antiguedad == 8)
-                                                            {
-                            <label>COD</label>
-                                                            }
+                                {
+                                            <tr>
+                                                <td>@item.DocNum</td>
+                                                <td>@Convert.ToDateTime(item.DocDate).ToShortDateString()</td>
+                                                <td>
+                                                    @if (item.Antiguedad == 1)
+        {
+                                            <label>COD</label>
+}
+else if (item.Antiguedad == 2)
+{
+                                            <label>CURRENT</label>
+}
+else if (item.Antiguedad == 3)
+{
+                                            <label>1 - 7 DAYS</label>
+}
+else if (item.Antiguedad == 4)
+{
+                                            <label>8 - 14 DAYS</label>
+}
+else if (item.Antiguedad == 5)
+{
+                                            <label>15- 21 DAYS</label>
+}
+else if (item.Antiguedad == 6)
+{
+                                            <label>22 - 28 DAYS</label>
+}
+else if (item.Antiguedad == 7)
+{
+                                            <label>> 28 DAYS</label>
+}
+else if (item.Antiguedad == 8)
+{
+                                            <label>COD</label>
+}
 
-                                                        </td>
-                                                        <td style="text-align:right;">@Math.Round(item.Saldo, 4)</td>
-                                                    </tr>
-                                                                            }
+                                                </td>
+                                                <td style="text-align:right;">@Math.Round(item.Saldo, 4)</td>
+                                            </tr>
+}
                                                                         </tbody>
                                                                     </table>
                                                                 </div>

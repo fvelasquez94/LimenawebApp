@@ -49,5 +49,6 @@ namespace LimenawebApp.Models
         public string DocPepperi { get; set; }
         public string RutaDef { get; set; }
         public bool deleted { get; set; }
+        public int closedOrderTimes { get; set; }
     }
 }

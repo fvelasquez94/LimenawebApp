@@ -5914,7 +5914,7 @@ Configure tooltips globally
 
         $(document.body).on("change", "#returnReason", function () {
            
-            if (this.value == 99) {//ITEM INTERCHANGE
+            if (this.value == 114) {//ITEM INTERCHANGE
           
                 $("#returnproductdiv").css("display", "block");
             } else {
@@ -6946,13 +6946,13 @@ Configure tooltips globally
                 if (result.value) {
 
                     var docnumi='@ViewBag.docnum';
-
+                    var closedTimes = @ViewBag.contadorClosed;
                         document.getElementById("loader").style.display = "block";
                         $.ajax
                             ({
                                 url: '/Commercial/Prices_requestCerrarOrden',
                                 type: 'POST',
-                                data: { 'docnum': docnumi },
+                                data: { 'docnum': docnumi, 'timesClosed': closedTimes },
                                 success: function (result) {
 
                                     if (result == "SUCCESS") {
@@ -6984,6 +6984,54 @@ Configure tooltips globally
             });
         }
 
+        function openClosedOrder() {
+                        swal.fire({
+                title: 'Open closed Order',
+                text: "Do you want to open again this order?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, open again this order',
+                cancelButtonText: 'Cancel'
+            }).then(function (result) {
+                if (result.value) {
+
+                    var docnumi='@ViewBag.docnum';
+                
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/OpenClosedOrder',
+                                type: 'POST',
+                                data: { 'docnum': docnumi },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        window.location.reload(true);
+                                        
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+                        
+                }
+
+            });
+        }
 
         function filter(clicked_id) {
             var table2 = $('#data_tableEditor2').DataTable();
@@ -7363,6 +7411,8 @@ Configure tooltips globally
             }).then(function (result) {
                 if (result.value) {
                     //Guardamos
+                     var closedTimes = @ViewBag.contadorClosed;
+
                     var table = $('#data_tableEditor').DataTable();
                         // var oTable = $('#htmlgrid').dataTable();
                         //console.log(oTable.fnGetData());
@@ -7429,7 +7479,7 @@ Configure tooltips globally
                             ({
                                 url: '/Commercial/Save_SODetails',
                                 type: 'POST',
-                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa },
+                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa, 'timesClosed': closedTimes },
                                 success: function (result) {
 
                                     if (result == "SUCCESS") {
@@ -7474,6 +7524,8 @@ Configure tooltips globally
             }).then(function (result) {
                 if (result.value) {
                     //Guardamos
+                    var closedTimes = @ViewBag.contadorClosed;
+
                     var table = $('#data_tableEditor').DataTable();
                         // var oTable = $('#htmlgrid').dataTable();
                         //console.log(oTable.fnGetData());
@@ -7540,7 +7592,7 @@ Configure tooltips globally
                             ({
                                 url: '/Commercial/Save_SODetailsAfterOrderClosed',
                                 type: 'POST',
-                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa },
+                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa, 'timesClosed': closedTimes},
                                 success: function (result) {
 
                                     if (result == "SUCCESS") {
@@ -7994,7 +8046,7 @@ Configure tooltips globally
             var now = new Date();
             var nombreProducto = $('#productBon').val();
             var tipo = "";
-
+            var closedTimes = @ViewBag.contadorClosed;
             var validando = 0;
 
             if (tipobonificacion == 1) {
@@ -8034,7 +8086,8 @@ Configure tooltips globally
                             date: now.toLocaleString("en-US", { hour12: true }),
                             userID: userID,
                             userName: userName,
-                            uom: uombon
+                            uom: uombon,
+                            timesClosed: closedTimes
                         }),
                         success: function (result) {
 

@@ -31,6 +31,7 @@
           <Property Name="CodCustomer" Type="varchar" MaxLength="50" />
           <Property Name="Customer" Type="varchar" MaxLength="500" />
           <Property Name="Deleted" Type="bit" />
+          <Property Name="closedOrderTimes" Type="int" />
         </EntityType>
         <EntityType Name="Tb_Bonificaciones">
           <Key>
@@ -71,6 +72,7 @@
           <Property Name="DocPepperi" Type="varchar" MaxLength="50" />
           <Property Name="RutaDef" Type="varchar(max)" />
           <Property Name="deleted" Type="bit" />
+          <Property Name="closedOrderTimes" Type="int" />
         </EntityType>
         <EntityType Name="Tb_ConfigBolsa">
           <Key>
@@ -170,6 +172,7 @@
           <Property Name="CodCustomer" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Customer" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="Deleted" Type="Boolean" />
+          <Property Name="closedOrderTimes" Type="Int32" />
         </EntityType>
         <EntityType Name="Tb_Bonificaciones">
           <Key>
@@ -210,6 +213,7 @@
           <Property Name="DocPepperi" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="RutaDef" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="deleted" Type="Boolean" />
+          <Property Name="closedOrderTimes" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -250,6 +254,7 @@
           <EntitySetMapping Name="Tb_Autorizaciones">
             <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Autorizaciones">
               <MappingFragment StoreEntitySet="Tb_Autorizaciones">
+                <ScalarProperty Name="closedOrderTimes" ColumnName="closedOrderTimes" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
                 <ScalarProperty Name="Customer" ColumnName="Customer" />
                 <ScalarProperty Name="CodCustomer" ColumnName="CodCustomer" />
@@ -278,6 +283,7 @@
           <EntitySetMapping Name="Tb_Bonificaciones">
             <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Bonificaciones">
               <MappingFragment StoreEntitySet="Tb_Bonificaciones">
+                <ScalarProperty Name="closedOrderTimes" ColumnName="closedOrderTimes" />
                 <ScalarProperty Name="deleted" ColumnName="deleted" />
                 <ScalarProperty Name="RutaDef" ColumnName="RutaDef" />
                 <ScalarProperty Name="DocPepperi" ColumnName="DocPepperi" />
