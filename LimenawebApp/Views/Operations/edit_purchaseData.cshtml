@@ -46,14 +46,15 @@
                                     <thead>
                                         <tr>
 
-                                            <th>#</th><!--GENERADO POR DATATABLE-->
+                                            <th>#</th><!--GENERADO POR DATATABLE  0-->
                                             <!--MATRIZ COMPRA-->
                                             <th>CODIGO SAP</th> <!--PROD CODIGO-->
                                             <th>ITEM DESCRIPCION</th> <!--PROD NOMBRE-->
                                             <!--FIN MATRIZ COMPRA-->
                                             <!--MICRO CATALOGO-->
                                             <th style="background-color:darkseagreen">FACTOR DE COMPRA REGULAR</th>
-                                            <th style="background-color:darkseagreen;display:none;">FACTOR DE COMPRA QUIEBRE</th>
+                                            <th style="background-color:darkseagreen">FACTOR UNIDAD DE COMPRA</th>
+                                            <th style="background-color:darkseagreen; display:none">FACTOR DE COMPRA QUIEBRE</th>
                                             <th style="background-color:darkseagreen;display:none;">POLITICA DE COBERTURA</th>
                                             <!--FIN MICRO CATALOGO-->
                                             <!--MATRIZ COMPRA-->
@@ -62,7 +63,7 @@
                                             <th hidden>SUB CATEGORIA</th>
                                             <th hidden>CATEGORIA</th>
 
-                                            <th >PROVEEDOR</th>
+                                            <th>PROVEEDOR</th>
                                             <!--FIN FILTROS-->
                                             <th>UoM GROUP</th> <!--UNIDAD MEDIDA LETRAS-->
                                             <th>INVENTARIO (EACH)</th> <!--INVENTARIOEACH-->
@@ -72,44 +73,50 @@
                                             <th>MAX 5 PERIODOS</th> <!--MAXIMO-->
                                             <th>MIN 5 PERIODOS</th> <!--MINIMO-->
                                             <th>PRONOSTICO PERIODO ACTUAL</th> <!--PRONOSTICOPERIODOACTUAL-->
-                                            <th>AVG 5 PERIODOS POSTERIORES AA</th> <!--PROMEDIO_AA-->
+                                            <th>B5</th> <!--NEW-->
+                                            <th>B4</th> <!--NEW-->
+                                            <th>B3</th> <!--NEW-->
+                                            <th>B2</th> <!--NEW-->
+                                            <th>B1</th> <!--NEW-->
+                                            <th>AVG 5 PERIODOS POSTERIORES AA</th> <!--PROMEDIO_AA   24-->
                                             <th>PERIODO ANTERIOR</th> <!--VENTA B1-->
                                             <th>VARIACION</th>
                                             <th>TENDENCIA PERIODO ACTUAL</th> <!--TENDENCIAPERIODOACTUAL-->
                                             <th>PRONOSTICO PERIODO SIGUIENTE 1</th> <!--PRONOSTICOSIGUIENTE1-->
                                             <th>PRONOSTICO PERIODO SIGUIENTE 2</th><!--PRONOSTICOSIGUIENTE2-->
-                                            <th>PRONOSTICO PERIODO SIGUIENTE 3</th><!--PRONOSTICOSIGUIENTE3-->
+                                            <th>PRONOSTICO PERIODO SIGUIENTE 3</th><!--PRONOSTICOSIGUIENTE3 30-->
                                             <th>PRONOSTICO PERIODO SIGUIENTE 4</th><!--PRONOSTICOSIGUIENTE4-->
                                             <th>COBERTURA ACTUAL</th><!--COBERTURA ACTUAL-->
                                             <th>COBERTURA PROYECTADA</th><!--COBERTURAPROYECTADA-->
-
-                                            <th>OTB</th>
+                                            <th>INVENTARIO PROYECTADO</th><!--COBERTURAPROYECTADA NUME-->
+                                            <th>PRONOSTICO SEMANAL LEAD TIME</th><!--COBERTURAPROYECTADA DENO-->
+                                            <th>OTB</th> <!--36-->
                                             <th>COBERTURA DE OTB</th> <!--COBERTURA OTB-->
-                                            <th style="background-color:lightblue">ORDEN A COLOCAR</th>
+                                            <th style="background-color:lightblue">ORDEN A COLOCAR</th> <!--38-->
                                             <th>DELIVERY DATE</th>
                                             <th>DOCUMENT DATE</th>
 
                                             <th>TIER</th> <!--U_TI-->
                                             <th>HEIGHT</th> <!--U_HI-->
                                             <th>CASES PER PALLET</th> <!--U_PALLETCOUNT-->
-                                            <th>PALLETS DE ORDEN</th>
-                                            <th>INVENTARIO AL INGRESO DE PO</th> <!--COBERTURAPROYECTADANUME-->
+                                            <th>PALLETS DE ORDEN</th> <!--44-->
+                                            <th>INVENTARIO AL INGRESO DE PO</th> <!--COBERTURAPROYECTADANUME(SOLO SE OCUPA PARA CALCULO PERO EL RESULTADO SE LLAMA INVENTARIO INGRESO PO)-->
                                             <th>COBERTURA AL INGRESO DE PO</th>
-                                            <!--MICROCATALOGO-->
+                                            <!--MICROCATALOGO  47-->
                                             <th style="background-color:darkseagreen">COSTO</th>
                                             <!--FIN MICROCATALOGO-->
                                             <th style="background-color:lightblue">DESCUENTO / ALLOWANCE (%)</th>
                                             <th style="background-color:lightblue">DESCUENTO / ALLOWANCE ($)</th>
-                                            <th>COSTO CON DESCUENTO</th>
+                                            <th>COSTO CON DESCUENTO</th> <!--50-->
                                             <th>MONTO PO</th>
-                                            <!--MICROCATALOGO : ESTE TIENE QUE CAMBIAR EN AMBOS, ES DECIR, SI CAMBIA EN LA MATRIZ, CAMBIA EN EL MICROCATALOGO-->
+                                            <!--MICROCATALOGO : ESTE TIENE QUE CAMBIAR EN AMBOS, ES DECIR, SI CAMBIA EN LA MATRIZ, CAMBIA EN EL MICROCATALOGO   52-->
                                             <th style="background-color:darkseagreen">COMENTARIOS</th>
                                             <!--FIN MICROCATALOGO-->
                                             <!--COLUMNAS PARA FORMULAS(NO VISIBLES PERO SE DEBEN ALMACENAR-->
-                                            <th hidden>Prop 1</th> <!--COBERTURAPROYECTADADENO-->
+                                            <!-- <th hidden>Prop 1</th>COBERTURAPROYECTADADENO-->
                                             <th hidden>Prop 2</th> <!--VENTAF1-->
                                             <th hidden>Prop 3</th> <!--LEADTIME-->
-                                            <th hidden>Prop 4</th> <!--NUME ORIGINAL-->
+                                            <!--<th hidden>Prop 4</th>NUME ORIGINAL-->
                                         </tr>
                                     </thead>
                                     <tfoot>

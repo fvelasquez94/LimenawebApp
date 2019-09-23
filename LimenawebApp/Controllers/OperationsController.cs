@@ -125,6 +125,7 @@ namespace LimenawebApp.Controllers
             public string ProdNombre { get; set; } //fin Matriz compra
 
             public Nullable<double> FactorCompra { get; set; } //MICRO CATALOGO
+            public Nullable<double> FactorUnidadCompra { get; set; } //MICRO CATALOGO
             public Nullable<double> FactorCompra_quiebre { get; set; } //MICRO CATALOGO
             public Nullable<double> Politica_cobertura { get; set; } //FIN MICRO CATALOGO
 
@@ -162,6 +163,7 @@ namespace LimenawebApp.Controllers
             public Nullable<decimal> U_PalletCount { get; set; } //CASES PER PALLET
             public Nullable<double> PalletsdeOrden { get; set; } 
             public Nullable<double> CoberturaProyectadaNume { get; set; }
+            public Nullable<double> InventarioIngresoPO { get; set; }
             public Nullable<double> CoberturaIngresoPO { get; set; }
             public Nullable<double> Costo { get; set; }
             public Nullable<decimal> DescuentoAp { get; set; } //DESCUENTO /ALLOWANCE (%)
@@ -175,6 +177,12 @@ namespace LimenawebApp.Controllers
             public Nullable<double> Cobertura_OTB { get; set; }
             public int LeadTime { get; set; }
             public Nullable<int> transito { get; set; }
+
+            public Nullable<double>  B1 { get; set; }
+            public Nullable<double>  B2 { get; set; }
+            public Nullable<double> B3 { get; set; }
+            public Nullable<double> B4 { get; set; }
+            public Nullable<double> B5 { get; set; }
 
         }
         public ActionResult edit_purchaseData(int id)
@@ -218,6 +226,14 @@ namespace LimenawebApp.Controllers
                                               Category = b.Category,
                                               ProvCodigo = "0",
                                               ProvNombre = b.ProvNombre,
+                                              //nuevo
+                                              FactorUnidadCompra = b.FactorUnidadCompra,
+                                              B1=b.B1,
+                                              B2=b.B2,
+                                              B3=b.B3,
+                                              B4=b.B4,
+                                              B5=b.B5,
+               InventarioIngresoPO=b.InventarioIngresoPO,
 
                                               UnidadMedidaLetras = b.UnidadMedidaLetras,
                                               InventarioCajas = b.InventarioCajas,
@@ -725,6 +741,14 @@ namespace LimenawebApp.Controllers
                     newDet.ProdCodigo = items.ProdCodigo;
                     newDet.ProdNombre = items.ProdNombre;
                     newDet.FactorCompra = items.FactorCompra;
+                    //nuevo 09/17/2019
+                    newDet.FactorUnidadCompra = items.FactorUnidadCompra;
+                    newDet.B1 = items.B1;
+                    newDet.B2 = items.B2;
+                    newDet.B3 = items.B3;
+                    newDet.B4 = items.B4;
+                    newDet.B5 = items.B5;
+
                     newDet.FactorCompra_quiebre = items.FactorCompra_quiebre;
                     newDet.Politica_cobertura = items.Politica_cobertura;
                     newDet.Marca = items.Marca;
@@ -760,6 +784,7 @@ namespace LimenawebApp.Controllers
                     if (items.PalletsdeOrden == null) { newDet.PalletsdeOrden = 0; } else { newDet.PalletsdeOrden = items.PalletsdeOrden; }
                     newDet.CoberturaProyectadaNume = items.CoberturaProyectadaNume;
                     newDet.CoberturaIngresoPO = items.CoberturaIngresoPO;
+                    newDet.InventarioIngresoPO = items.InventarioIngresoPO;
                     newDet.Costo = items.Costo;
                     if (items.DescuentoAn == null) { newDet.Descuento_allowanced = 0; } else { newDet.Descuento_allowanced = items.DescuentoAn; }
                     if (items.DescuentoAp == null) { newDet.Descuento_allowancep = 0; } else { newDet.Descuento_allowancep = items.DescuentoAp; }
@@ -852,6 +877,16 @@ namespace LimenawebApp.Controllers
                     newDet.Promedio_AA = items.Promedio_AA;
                     newDet.VentaB1 = items.VentaB1;
                     newDet.Variacion = items.Variacion;
+
+                    //nuevo 09/17/2019
+                    newDet.FactorUnidadCompra = items.FactorUnidadCompra;
+                    newDet.B1 = items.B1;
+                    newDet.B2 = items.B2;
+                    newDet.B3 = items.B3;
+                    newDet.B4 = items.B4;
+                    newDet.B5 = items.B5;
+                    newDet.InventarioIngresoPO = items.InventarioIngresoPO;
+
                     newDet.TendenciaPeriodoActual = items.TendenciaPeriodoActual;
                     newDet.PronosticoSiguiente1 = items.PronosticoSiguiente1;
                     newDet.PronosticoSiguiente2 = items.PronosticoSiguiente2;
@@ -939,10 +974,10 @@ namespace LimenawebApp.Controllers
         {
             DataSet ds = new DataSet();
             DataTable dtEmp = new DataTable("Matriz");
-            var details = (from a in dblim.Purchase_data_details where (a.ID_purchaseData == id) select new {No= a.num, CodigoenSAP = a.ProdCodigo, ItemDescripcion = a.ProdNombre, FactorCompraRegular =a.FactorCompra, FactorCompraQuiebre=a.FactorCompra_quiebre, PoliticadeCobertura = a.Politica_cobertura,
-            UoMGroup = a.UnidadMedidaLetras, InventarioEACH = a.InventarioEach, InventarioenCases = a.InventarioCajas, Avg5Periodos=a.Promedio, Desviacion=a.Desviacion, Maximo =a.Maximo, Minimo =a.Minimo, PronosticoPeriodoActual=a.PronosticoPeriodoActual,Avg5PeriodosPosterioresAA =a.Promedio_AA,
+            var details = (from a in dblim.Purchase_data_details where (a.ID_purchaseData == id) select new {No= a.num, CodigoenSAP = a.ProdCodigo, ItemDescripcion = a.ProdNombre, FactorCompraRegular =a.FactorCompra, FactorUnidadCompra = a.FactorUnidadCompra, FactorCompraQuiebre=a.FactorCompra_quiebre, PoliticadeCobertura = a.Politica_cobertura,
+            UoMGroup = a.UnidadMedidaLetras, InventarioEACH = a.InventarioEach, InventarioenCases = a.InventarioCajas,B5=a.B5,B4=a.B4,B3=a.B3,B2=a.B2, B1=a.B1, Avg5Periodos=a.Promedio, Desviacion=a.Desviacion, Maximo =a.Maximo, Minimo =a.Minimo, PronosticoPeriodoActual=a.PronosticoPeriodoActual,Avg5PeriodosPosterioresAA =a.Promedio_AA,
             PeriodoAnterior=a.VentaB1, Variacion=a.Variacion, TendenciaPeriodoActual = a.TendenciaPeriodoActual, PronosticoPeriodoSiguiente1 =a.PronosticoSiguiente1, PronosticoPeriodoSiguiente2=a.PronosticoSiguiente2, PronosticoPeriodoSiguiente3=a.PronosticoSiguiente3, PronosticoPeriodoSiguiente4=a.PronosticoSiguiente4,
-            CoberturaActual=a.CoberturaActual, CoberturaProyectada=a.CoberturaProyectada, OTB=a.OTB, CoberturadeOTB=a.Cobertura_OTB, OrdenaColocar=a.Pedido, DeliveryDate=a.DeliveryDate, DocumentDate=a.DocumentDate, TIER=a.U_TI, HEIGHT=a.U_HI, CasesPerPallet=a.U_PalletCount, PalletsdeOrden=a.PalletsdeOrden, InventarioalIngresodePO =a.CoberturaProyectadaNume,
+            CoberturaActual=a.CoberturaActual, CoberturaProyectada=a.CoberturaProyectada, InventarioProyectado=a.CoberturaProyectadaNume, LEADTIME=a.CoberturaProyectadaDeno, OTB=a.OTB, CoberturadeOTB=a.Cobertura_OTB, OrdenaColocar=a.Pedido, DeliveryDate=a.DeliveryDate, DocumentDate=a.DocumentDate, TIER=a.U_TI, HEIGHT=a.U_HI, CasesPerPallet=a.U_PalletCount, PalletsdeOrden=a.PalletsdeOrden, InventarioalIngresodePO =a.InventarioIngresoPO,
             CoberturaalIngresodePO=a.CoberturaIngresoPO, Costo=a.Costo,DescuentoAllowanceP =a.Descuento_allowancep, DescuentoAllowanceN=a.Descuento_allowanced, CostoconDescuento = a.CostoconDescuento, MontoPO =a.MontoPO, Comentarios=a.Comentarios}).ToList();
             dtEmp = ToDataTable(details);
 

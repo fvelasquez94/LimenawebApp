@@ -49,5 +49,10 @@ namespace LimenawebApp.Models
         public string EstadoUbicacion { get; set; }
         public Nullable<System.DateTime> DeliveryDate { get; set; }
         public Nullable<System.DateTime> DocumentDate { get; set; }
+        public Nullable<double> B5 { get; set; }
+        public Nullable<double> B4 { get; set; }
+        public Nullable<double> B3 { get; set; }
+        public Nullable<double> B2 { get; set; }
+        public Nullable<double> B1 { get; set; }
     }
 }

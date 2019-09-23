@@ -719,7 +719,7 @@ namespace LimenawebApp.Controllers
                             newDet.DocPepperi = so_details.NoPepperi;
                             //ver cuantas veces se cerro la orden
                             newDet.closedOrderTimes = timesClosed;
-
+                            newDet.DeletedSAP = 0;
                             if (items.deleted == true)
                             {
                                 newDet.Deleted = true;
@@ -845,6 +845,7 @@ namespace LimenawebApp.Controllers
                             newDet.PrecioMin = items.MinPrice;
                              //ver cuantas veces se cerro la orden
                             newDet.closedOrderTimes = timesClosed;
+                            newDet.DeletedSAP = 0;
                             newDet.Estado = 1;
                             newDet.FechaIngreso = DateTime.UtcNow;
                             newDet.FechaValidacion = DateTime.UtcNow;
@@ -865,20 +866,20 @@ namespace LimenawebApp.Controllers
 
                                 //Se suprime esta funcion ya que NO HAY FORMA DE EVALUAR EL NUMERO DE LINEA DE LA BONIFICACION
 
-                                ////Buscamos si existen bonificaciones
-                                //var existeProducto = (from a in internadli.Tb_Bonificaciones where (a.CodProducto == items.ItemCode && a.CodPedido == pedidostring) select a).ToList();
+                                //Buscamos si existen bonificaciones
+                                var existeProducto = (from a in internadli.Tb_Bonificaciones where (a.CodProducto == items.ItemCode && a.CodPedido == pedidostring) select a).ToList();
 
-                                //if (existeProducto.Count > 0)
-                                //{
-                                //    foreach (var item in existeProducto)
-                                //    {
-                                //        Tb_Bonificaciones bonificationUpdate = item;
-                                //        bonificationUpdate.deleted = true;
-                                //        bonificationUpdate.DocNum = "";
-                                //        internadli.Entry(bonificationUpdate).State = EntityState.Modified;
-                                //    }
-                                //    internadli.SaveChanges();
-                                //}
+                                if (existeProducto.Count > 0)
+                                {
+                                    foreach (var item in existeProducto)
+                                    {
+                                        Tb_Bonificaciones bonificationUpdate = item;
+                                        bonificationUpdate.deleted = true;
+                                        //bonificationUpdate.DocNum = "";
+                                        internadli.Entry(bonificationUpdate).State = EntityState.Modified;
+                                    }
+                                    internadli.SaveChanges();
+                                }
 
                                 //
                             }
@@ -1067,6 +1068,9 @@ namespace LimenawebApp.Controllers
                 newBonificacion.CantidadPedido = Convert.ToInt32(productinfoPedido.Quantity);
                 newBonificacion.DocPepperi =pepperi;
                 newBonificacion.RutaDef = routedf;
+
+                newBonificacion.DeletedSAP = 0;
+
                 internadli.Tb_Bonificaciones.Add(newBonificacion);
                 internadli.SaveChanges();
 
@@ -1299,7 +1303,7 @@ namespace LimenawebApp.Controllers
                 if (bonifcount > 0)
                 {
                     flag = 1;
-                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=0 where CodPedido={0} and Estado=1", docnum);
+                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=0 where CodPedido={0}", docnum);
 
                 }
                 if (not > 0)
@@ -5643,7 +5647,7 @@ public ActionResult Prices_requestpdo(int docnum)
             public string DeliveryRoute { get; set; }
         }
 
-        public ActionResult Credits_authorize()
+        public ActionResult Credits_authorize(string fstartd, string fendd)
         {
             Sys_Users activeuser = Session["activeUser"] as Sys_Users;
             if (activeuser != null)
@@ -5664,6 +5668,24 @@ public ActionResult Prices_requestpdo(int docnum)
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
+
+
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                //filtros de fecha (DIARIO)
+                //var sunday = DateTime.Today;
+                //var saturday = sunday.AddHours(23);
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+
                 //FIN HEADER
 
                 List<Tb_CreditsRequestWithRoute> lstCredits = new List<Tb_CreditsRequestWithRoute>();
@@ -5675,7 +5697,7 @@ public ActionResult Prices_requestpdo(int docnum)
                 if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor") || activeuser.Roles.Contains("Credits Authorizer"))
                 {
                     isAdmin = 1;
-                    lstCredits = (from a in dblim.Tb_CreditsRequest select new Tb_CreditsRequestWithRoute { ID_creditRequest = a.ID_creditRequest, ItemCode = a.ItemCode, ItemName = a.ItemName, UoMCode = a.UoMCode, Request_reason = a.Request_reason, Quantity = a.Quantity, URL_image = a.URL_image, Validated = a.Validated, DocNumSAP = a.DocNumSAP, IDRequest_reason = a.IDRequest_reason, dateCreate = a.dateCreate, dateValidate = a.dateValidate,
+                    lstCredits = (from a in dblim.Tb_CreditsRequest where(a.dateCreate >= filtrostartdate && a.dateCreate <= filtroenddate) select new Tb_CreditsRequestWithRoute { ID_creditRequest = a.ID_creditRequest, ItemCode = a.ItemCode, ItemName = a.ItemName, UoMCode = a.UoMCode, Request_reason = a.Request_reason, Quantity = a.Quantity, URL_image = a.URL_image, Validated = a.Validated, DocNumSAP = a.DocNumSAP, IDRequest_reason = a.IDRequest_reason, dateCreate = a.dateCreate, dateValidate = a.dateValidate,
                         userValidate = a.userValidate, userValidateName = a.userValidateName, userCreate = a.userCreate, userCreateName = a.userCreateName, CardCode = a.CardCode, CardName = a.CardName, estado = a.estado,
                         Route = "", comments = a.comments, LineNum=a.LineNum
                     }).ToList();
@@ -5690,7 +5712,7 @@ public ActionResult Prices_requestpdo(int docnum)
                 else
                 {
                     isAdmin = 0;
-                    lstCredits= (from a in dblim.Tb_CreditsRequest where(a.userCreate==activeuser.ID_User)
+                    lstCredits= (from a in dblim.Tb_CreditsRequest where(a.userCreate==activeuser.ID_User && a.dateCreate >= filtrostartdate && a.dateCreate <= filtroenddate)
                                  select new Tb_CreditsRequestWithRoute
                                  {
                                      ID_creditRequest = a.ID_creditRequest,

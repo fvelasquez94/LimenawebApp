@@ -101,26 +101,32 @@ else if (item.TipoIngreso == 2)
                                                 <td>@Convert.ToDateTime(item.FechaIngreso).ToShortDateString()</td>
                                                 <td>
                                                     @if (item.Estado == 1)
-    {
+                                                    {
                                                 <button class="btn btn-sm btn-outline-info btnAutorizar" data-codprod="@item.CodProducto" data-tipoBon="@item.TipoIngreso" data-uom="@item.CodUOM" data-product="@item.Producto" data-qty="@item.CantidadFinal" data-price="@item.CurrencyFinal" id="@item.ID_bonificacion">Approve</button>
                                                 <button class="btn btn-sm btn-outline-danger btnDeny" id="@item.ID_bonificacion">Deny</button>
-}
-else if (item.Estado == 2 || item.Estado == 3)
-{
-                                                <span class="badge text-success">APPROVED</span>
-}
-else if (item.Estado == 4)
-{
-                                                <span class="badge text-danger">DENIED</span>
-}
-else if (item.Estado == 5)
-{
-                                                <span class="badge text-danger">OUT OF TIME</span>
-}
-else if (item.Estado == 6)
-{
-                                                <span class="badge badge-danger">IN ROUTE</span>
-}
+                                                    }
+                                                    else if (item.Estado == 2)
+                                                    {
+                                                <span class="badge text-info">APPROVED</span>
+                                                    }
+                                                    else if (item.Estado == 3) {
+                                                <span class="badge text-success">ON SAP</span>
+                                                    }
+                                                    else if (item.Estado == 4)
+                                                    {
+                                                    <span class="badge text-danger">CANCELED</span>
+                                                    }
+                                                    else if (item.Estado == 5)
+                                                    {
+                                                    <span class="badge text-danger">REFUSED</span>
+                                                    }
+                                                    else if (item.Estado == 6)
+                                                    {
+                                                    <span class="badge badge-warning">BILLED WITHOUT CHANGES</span>
+                                                    } else if (item.Estado == 7)
+                                                    {
+                                                    <span class="badge badge-warning">IN ROUTE</span>
+                                                    }
                                                 </td>
                                             </tr>
                                             }

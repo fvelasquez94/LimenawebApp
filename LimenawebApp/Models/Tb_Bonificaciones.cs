@@ -50,5 +50,6 @@ namespace LimenawebApp.Models
         public string RutaDef { get; set; }
         public bool deleted { get; set; }
         public int closedOrderTimes { get; set; }
+        public int DeletedSAP { get; set; }
     }
 }

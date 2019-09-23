@@ -48,25 +48,47 @@
                                     <tbody>
                                         @foreach (var user in Model)
                                         {
-                                        <tr>
-                                            <td>@user.CardName</td>
-                                            <td>@user.TAXID</td>
-                                            <td>@user.TAXCERTNUM</td>
-                                            <td>@user.FirstName @user.LastName</td>
-                                            <td>@user.Tel1</td>
-                                            <td>@user.E_MailL</td>
-                                            <td>@user.Country</td>
-                                            <td>@user.State</td>
-                                            <td><img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXID_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERT)" alt="@user.CardName" /></td>
-                                            <td><img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXCERT_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERNUM)" alt="@user.CardName" /></td>
-                                            <td>
+                                            <tr>
+                                                <td>@user.CardName</td>
+                                                <td>@user.TAXID</td>
+                                                <td>@user.TAXCERTNUM</td>
+                                                <td>@user.FirstName @user.LastName</td>
+                                                <td>@user.Tel1</td>
+                                                <td>@user.E_MailL</td>
+                                                <td>@user.Country</td>
+                                                <td>@user.State</td>
+                                                <td>
+                                                    @if (user.url_imageTAXCERT == "" || user.url_imageTAXCERT == null)
+                                                    {
 
-                                                <a href="@Url.Action("SendToSharepoint", "Management", new { id=user.ID_customer})" class="btn btn-dark btn-sm form-pill text-light" title="Approve"><i class="fa fa-check"></i></a>
-                                                <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                    }
+                                                    else {
+                                                    <img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXID_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERT)" />
+                                                    }
+                                                    
+                                                </td>
+                                                <td>
+                                                
+                                                                                                    
+                                                    @if (user.url_imageTAXCERNUM == "" || user.url_imageTAXCERNUM == null)
+                                                    {
+
+                                                    }
+                                                    else {
+<img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXCERT_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERNUM)" />
+                                                    }
+                                                </td>
+                                                <td>
+                                                    @if (user.OnSharepoint == false)
+                                                    {
+                                                        <a href="@Url.Action("SendToSharepoint", "Management", new { id=user.ID_customer})" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
+                                                        <a href="#" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+                                                    }
 
 
-                                            </td>
-                                        </tr>
+
+                                                </td>
+                                            </tr>
 
                                         }
 
@@ -79,4 +101,11 @@
             </div>
         </div>
     </div>
+</div>
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <img class="modal-content" id="img01">
+    <div id="caption"></div>
+    <span class="close">&times;</span>
 </div>

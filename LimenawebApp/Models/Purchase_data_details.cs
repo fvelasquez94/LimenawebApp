@@ -64,6 +64,13 @@ namespace LimenawebApp.Models
         public Nullable<double> CostoconDescuento { get; set; }
         public Nullable<double> MontoPO { get; set; }
         public Nullable<double> Cobertura_OTB { get; set; }
+        public Nullable<double> FactorUnidadCompra { get; set; }
+        public Nullable<double> B1 { get; set; }
+        public Nullable<double> B2 { get; set; }
+        public Nullable<double> B3 { get; set; }
+        public Nullable<double> B4 { get; set; }
+        public Nullable<double> B5 { get; set; }
+        public Nullable<double> InventarioIngresoPO { get; set; }
     
         public virtual Purchase_data Purchase_data { get; set; }
     }

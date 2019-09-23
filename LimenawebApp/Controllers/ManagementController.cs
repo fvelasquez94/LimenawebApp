@@ -85,7 +85,7 @@ namespace LimenawebApp.Controllers
                         Web oWebsite = ClienteCTX.Web;
                         ListCollection CollList = oWebsite.Lists;
 
-                        List oList = CollList.GetByTitle("Customer_Web");
+                        List oList = CollList.GetByTitle("A_Customer_Web");
                         ClienteCTX.Load(oList);
                         ClienteCTX.ExecuteQuery();
 
@@ -139,20 +139,21 @@ namespace LimenawebApp.Controllers
                         //Recibo Mercaderia Area
                         oListItem["tzqf"] = user.ReciboMercaderia_area;
                         //Muelle descarga //Tipo Boolean Evaluamos que cadena enviar
-                        if (user.Muelle_descarga == true)
-                        {
-                            oListItem["_x007a_xh4"] = "YES";
-                        }
-                        else {
-                            oListItem["_x007a_xh4"] = "NO";
-                        }
-                      
+                        //if (user.Muelle_descarga == true)
+                        //{
+
+                        oListItem["MuelleDeCarga"] = user.Muelle_descarga;
+                        //}
+                        //else {
+                        //    oListItem["MuelleDeCarga"] = "NO";
+                        //}
+
                         //Store Size
                         oListItem["rzmy"] = user.Store_size;
                         //Validated
-                        oListItem["yufn"] = "YES";
+                        oListItem["Validated1"] = true;
                         //OnSharepoint
-                        oListItem["li8o"] = "YES";
+                        oListItem["NewColumn3"] = true;
                         ////Modificado
                         //oListItem["Modified"] = DateTime.UtcNow;
                         ////Creado
@@ -171,17 +172,21 @@ namespace LimenawebApp.Controllers
                         dblim.Entry(user).State = EntityState.Modified;
                         dblim.SaveChanges();
 
-                    }
-                    catch(Exception ex) {
 
+                        TempData["exito"] = "User uploaded to Sharepoint successfully.";
+
+                    }
+                    catch (Exception ex) {
+                        TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
                     }
 
                 }
 
                 return RedirectToAction("New_customers", "Management", null);
             }
-            catch
+            catch (Exception ex2)
             {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex2.Message;
                 return RedirectToAction("New_customers", "Management", null);
             }
 

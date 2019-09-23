@@ -1970,6 +1970,7 @@ namespace LimenawebApp.Controllers
                 var idf = Convert.ToInt32(id);
 
                     List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
+                    List<Tb_PlanningSO_details> lsttodelete = new List<Tb_PlanningSO_details>();
 
                     var allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I")) select a);
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
@@ -1989,7 +1990,12 @@ namespace LimenawebApp.Controllers
                             if (items.deleted == "DEL") {
                             newDet.query1 = "DEL";
                             //Se agrego linea de comando para eliminar bonificaciones u otro tipo de producto
-                            dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1}", idf, items.ItemCode);
+
+                                //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1}", idf, items.ItemCode);
+                           
+
+
+
                         } else { newDet.query1 = ""; }
 
 
@@ -2035,7 +2041,7 @@ namespace LimenawebApp.Controllers
                             if (Convert.ToInt32(items.quantity) < newDet.Quantity)
                             {
                                 newDet.query1 = "DEL";
-                                dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+                                //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
 
                                 if (newDet.type == "S")
                                 {
@@ -2092,14 +2098,30 @@ namespace LimenawebApp.Controllers
 
                         lsttosave.Add(newDet);
                     }
-
+                    //Evaluamos si el producto se eliminio para actualizar todo despues
+                    if (items.deleted == "DEL") {
+                        lsttodelete.Add(newDet);
+                    }
 
 
 
                 }
 
                     dblim.BulkUpdate(lsttosave);
-               
+
+                //Eliminamos por producto
+                try
+                {
+                    foreach (var itemdel in lsttodelete)
+                    {
+                        dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, itemdel.ItemCode);
+                    }
+                }
+                catch {
+
+                }
+
+
                 ttresult = "SUCCESS";
                     return Json(ttresult, JsonRequestBehavior.AllowGet);
                 
@@ -2121,6 +2143,12 @@ namespace LimenawebApp.Controllers
             //var details = dblim.Tb_PlanningSO.Where(g => g.ID_Route==id).GroupBy(x => x.Customer_name).Select(g => g.FirstOrDefault()).OrderBy(c=>c.query3);
             var details = dblim.Tb_PlanningSO.Where(g => g.ID_Route==id).OrderBy(c=>c.query3).ToList();
             details = details.GroupBy(x => x.Customer_name).Select(g => g.FirstOrDefault()).OrderBy(c => c.query3).ToList();
+
+            foreach (var item in details) { //Agregamos el payment method
+
+            }
+
+
             ReportDocument rd = new ReportDocument();
             rd.Load(Path.Combine(Server.MapPath("~/Reports"), "rptRoadmap.rpt"));
             rd.SetDataSource(details);

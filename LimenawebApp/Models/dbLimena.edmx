@@ -74,6 +74,13 @@
           <Property Name="Cobertura_OTB" Type="float" />
           <Property Name="LeadTime" Type="int" Nullable="false" />
           <Property Name="ID_purchaseData" Type="int" Nullable="false" />
+          <Property Name="FactorUnidadCompra" Type="float" />
+          <Property Name="B1" Type="float" />
+          <Property Name="B2" Type="float" />
+          <Property Name="B3" Type="float" />
+          <Property Name="B4" Type="float" />
+          <Property Name="B5" Type="float" />
+          <Property Name="InventarioIngresoPO" Type="float" />
         </EntityType>
         <EntityType Name="Sys_Companies">
           <Key>
@@ -1037,6 +1044,13 @@
           <Property Name="CostoconDescuento" Type="Double" />
           <Property Name="MontoPO" Type="Double" />
           <Property Name="Cobertura_OTB" Type="Double" />
+          <Property Name="FactorUnidadCompra" Type="Double" />
+          <Property Name="B1" Type="Double" />
+          <Property Name="B2" Type="Double" />
+          <Property Name="B3" Type="Double" />
+          <Property Name="B4" Type="Double" />
+          <Property Name="B5" Type="Double" />
+          <Property Name="InventarioIngresoPO" Type="Double" />
         </EntityType>
         <Association Name="FK_Purchase_data_details_Purchase_data">
           <End Type="dbLimenaModel.Purchase_data" Role="Purchase_data" Multiplicity="1" />
@@ -1448,6 +1462,13 @@
           <EntitySetMapping Name="Purchase_data_details">
             <EntityTypeMapping TypeName="dbLimenaModel.Purchase_data_details">
               <MappingFragment StoreEntitySet="Purchase_data_details">
+                <ScalarProperty Name="InventarioIngresoPO" ColumnName="InventarioIngresoPO" />
+                <ScalarProperty Name="B5" ColumnName="B5" />
+                <ScalarProperty Name="B4" ColumnName="B4" />
+                <ScalarProperty Name="B3" ColumnName="B3" />
+                <ScalarProperty Name="B2" ColumnName="B2" />
+                <ScalarProperty Name="B1" ColumnName="B1" />
+                <ScalarProperty Name="FactorUnidadCompra" ColumnName="FactorUnidadCompra" />
                 <ScalarProperty Name="Cobertura_OTB" ColumnName="Cobertura_OTB" />
                 <ScalarProperty Name="MontoPO" ColumnName="MontoPO" />
                 <ScalarProperty Name="CostoconDescuento" ColumnName="CostoconDescuento" />

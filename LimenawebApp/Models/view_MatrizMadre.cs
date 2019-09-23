@@ -64,5 +64,11 @@ namespace LimenawebApp.Models
         public Nullable<int> LeadTime { get; set; }
         public Nullable<int> transito { get; set; }
         public double U_PalletCount { get; set; }
+        public double FactorUnidadCompra { get; set; }
+        public double B1 { get; set; }
+        public double B2 { get; set; }
+        public double B3 { get; set; }
+        public double B4 { get; set; }
+        public double B5 { get; set; }
     }
 }

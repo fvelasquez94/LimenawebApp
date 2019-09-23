@@ -198,11 +198,11 @@ else if (item.Antiguedad == 8)
                                         <div class="col-md-2 float-right">
                                             @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
                 {
-                            <button onclick="saveAutorizaciones()" class="btn btn-success">Save</button>
+                            <button onclick="saveAutorizaciones()" id="btnSaveAut1" class="btn btn-success">Save</button>
 }
 else if (ViewBag.mostrarOrdenEditar == 0)
 {
-                            <button onclick="saveAutorizacionesAfterOrderClosed()" class="btn btn-success">Save</button>                
+                            <button onclick="saveAutorizacionesAfterOrderClosed()" id="btnSaveAutAfClo1" class="btn btn-success">Save</button>                
 }
                                         </div>
 
@@ -354,11 +354,11 @@ else
                                                             <th style="text-align:right">
                                                                 @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
     {
-                                                            <button onclick="saveAutorizaciones()" class="btn btn-success">Save</button>
+                                                            <button onclick="saveAutorizaciones()" id="btnSaveAut2" class="btn btn-success">Save</button>
 }
 else if (ViewBag.mostrarOrdenEditar == 0)
 {
-                                                            <button onclick="saveAutorizacionesAfterOrderClosed()" class="btn btn-success">Save</button>
+                                                            <button onclick="saveAutorizacionesAfterOrderClosed()" id="btnSaveAutAfClo2" class="btn btn-success">Save</button>
 }
 
 
@@ -526,33 +526,48 @@ else if (bon.TipoIngreso == 2)
                                                     @if (bon.deleted == true)
     {
                                                 <span class="badge text-danger">PRODUCT DELETED FROM SALES ORDER</span>
-}
-else
-{
-if (bon.Estado == 1)
-{
-                                                <span class="badge text-warning">WAITING FOR APPROVAL</span>
+                                                    }
+                                                    else
+                                                    {
 
+                                                        if (bon.Estado == 1)
+                                                        {
+                                                <span class="badge text-warning">WAITING FOR APPROVAL</span>
 }
-else if (bon.Estado == 2 || bon.Estado == 3)
+else if (bon.Estado == 2)
 {
-                                                <span class="badge text-success">APPROVED</span>
+                                                <span class="badge text-info">APPROVED</span>
+}
+else if (bon.Estado == 3)
+{
+                                                <span class="badge text-success">ON SAP</span>
 }
 else if (bon.Estado == 4)
 {
-                                                <span class="badge text-danger">DENIED</span>
+                                                <span class="badge text-danger">CANCELED</span>
 }
 else if (bon.Estado == 5)
 {
-                                                <span class="badge text-danger">OUT OF TIME</span>
+                                                <span class="badge text-danger">REFUSED</span>
 }
 else if (bon.Estado == 6)
 {
-                                                <span class="badge badge-danger">IN ROUTE</span>
+                                                <span class="badge badge-warning">BILLED WITHOUT CHANGES</span>
+}
+else if (bon.Estado == 7)
+{
+                                                <span class="badge badge-warning">IN ROUTE</span>
 }
 }
                                                 </td>
-                                                <td><a href="@Url.Action("DelBonification","Commercial", new { id=bon.ID_bonificacion})" class="btn btn-sm btn-outline-danger">DELETE</a></td>
+                                                <td>
+                                                    @if(bon.Estado == 2 || bon.Estado == 3 || bon.Estado == 6)
+                                                    {
+
+                                                    }
+                                                    else {
+                                                          <a href="@Url.Action("DelBonification","Commercial", new { id=bon.ID_bonificacion})" class="btn btn-sm btn-outline-danger">DELETE</a>
+                                                    }</td>
                                             </tr>
             }
                                                                 </tbody>
