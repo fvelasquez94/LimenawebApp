@@ -38,5 +38,6 @@ namespace LimenawebApp.Models
         public Nullable<int> Frequency { get; set; }
         public string Type { get; set; }
         public string ZipCode { get; set; }
+        public string PymntGroup { get; set; }
     }
 }

@@ -199,8 +199,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=3.22.7.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.3.22.7\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.3.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.3\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -402,6 +402,9 @@
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OSLP.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\PlanningUoMInfo.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Purchase_catalog.cs">

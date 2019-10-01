@@ -69,6 +69,7 @@ namespace LimenawebApp.Controllers
                 var user = (from a in dblim.Tb_NewCustomers where (a.ID_customer == id) select a).FirstOrDefault();
                 if (user != null) {
                     user.Validated = true;
+
                     dblim.Entry(user).State = EntityState.Modified;
                     dblim.SaveChanges();
                     try //Enviamos a lista de Sharepoint
@@ -125,9 +126,16 @@ namespace LimenawebApp.Controllers
                         //Country
                         oListItem["x2nn"] = user.Country;
                         //StoreServices
-                        oListItem["ilow"] = user.StoreServices;
+                        //Se utiilizara para enviar imagenes
+
+                        var imgName1 = user.url_imageTAXCERT.Substring(30);
+                        var imgName2 = user.url_imageTAXCERNUM.Substring(30);
+
+
+                        oListItem["ilow"] = imgName1;
                         //Etnias
-                        oListItem["_x0066_dt3"] = user.Etnias;
+                        //Se utilizara para enviar imagenes
+                        oListItem["_x0066_dt3"] = imgName2;
                         //URL Image TAX ID
                         oListItem["hzfz"] = user.url_imageTAXCERT;
                         //URL IMAGE TAX CERT NUM
@@ -163,12 +171,41 @@ namespace LimenawebApp.Controllers
                         ////Editor
                         //oListItem["Editor"] = "Limena";
 
+
+                        //Servicios
+                        List<string> servicesIDs = user.StoreServices.Split(',').ToList();
+                        if (servicesIDs.Contains("s1")) { oListItem["_x0033_7_GROCERY_DRY_PRODUCT"] = true; } else { oListItem["_x0033_7_GROCERY_DRY_PRODUCT"] = false; }
+                        if (servicesIDs.Contains("s2")) { oListItem["_x0033_8_DAIRY_x0020_SECTION"] = true; } else { oListItem["_x0033_8_DAIRY_x0020_SECTION"] = false; }
+                        if (servicesIDs.Contains("s3")) { oListItem["_x0033_9_FROZEN_SECTION"] = true; } else { oListItem["_x0033_9_FROZEN_SECTION"] = false; }
+                        if (servicesIDs.Contains("s4")) { oListItem["_x0034_0_PRODUCE"] = true; } else { oListItem["_x0034_0_PRODUCE"] = false; }
+                        if (servicesIDs.Contains("s5")) { oListItem["_x0034_1_MEAT_DEPARTAMENT"] = true; } else { oListItem["_x0034_1_MEAT_DEPARTAMENT"] = false; }
+                        if (servicesIDs.Contains("s6")) { oListItem["_x0034_2_RESTAURANT"] = true; } else { oListItem["_x0034_2_RESTAURANT"] = false; }
+                        if (servicesIDs.Contains("s7")) { oListItem["_x0034_3_MONEY_SERVICES"] = true; } else { oListItem["_x0034_3_MONEY_SERVICES"] = false; }
+                        if (servicesIDs.Contains("s8")) { oListItem["_x0034_4_OTC"] = true; } else { oListItem["_x0034_4_OTC"] = false; }
+                        if (servicesIDs.Contains("s9")) { oListItem["_x0034_5_KITCHENWARE"] = true; } else { oListItem["_x0034_5_KITCHENWARE"] = false; }
+                        if (servicesIDs.Contains("s10")) { oListItem["_x0034_6_ETHNIC_SOURVENIRS"] = true; } else { oListItem["_x0034_6_ETHNIC_SOURVENIRS"] = false; }
+                        if (servicesIDs.Contains("s11")) { oListItem["_x0034_7_CLOTHING"] = true; } else { oListItem["_x0034_7_CLOTHING"] = false; }
+                        if (servicesIDs.Contains("s12")) { oListItem["_x0034_8_JEWELRY"] = true; } else { oListItem["_x0034_8_JEWELRY"] = false; }
+                        if (servicesIDs.Contains("s13")) { oListItem["_x0034_9_CELLPHONE_STORE"] = true; } else { oListItem["_x0034_9_CELLPHONE_STORE"] = false; }
+                        //Etnias
+                        List<string> etniasIDs = user.Etnias.Split(',').ToList();
+                        if (etniasIDs.Contains("e1")) { oListItem["_x0035_5_ELSALVADOR"] = true; } else { oListItem["_x0035_5_ELSALVADOR"] = false; }
+                        if (etniasIDs.Contains("e2")) { oListItem["_x0035_6_GUATEMALA"] = true; } else { oListItem["_x0035_6_GUATEMALA"] = false; }
+                        if (etniasIDs.Contains("e3")) { oListItem["_x0035_7_COSTARICA"] = true; } else { oListItem["_x0035_7_COSTARICA"] = false; }
+                        if (etniasIDs.Contains("e4")) { oListItem["_x0035_8_MEXICO"] = true; } else { oListItem["_x0035_8_MEXICO"] = false; }
+                        if (etniasIDs.Contains("e5")) { oListItem["_x0035_9_COLOMBIA"] = true; } else { oListItem["_x0035_9_COLOMBIA"] = false; }
+                        if (etniasIDs.Contains("e6")) { oListItem["_x0036_0_PERU"] = true; } else { oListItem["_x0036_0_PERU"] = false; }
+                        if (etniasIDs.Contains("e7")) { oListItem["_x0036_1_VENEZUELA"] = true; } else { oListItem["_x0036_1_VENEZUELA"] = false; }
+                        if (etniasIDs.Contains("e8")) { oListItem["_x0036_2_CUBA"] = true; } else { oListItem["_x0036_2_CUBA"] = false; }
+                        if (etniasIDs.Contains("e9")) { oListItem["_x0036_3_PUERTORICO"] = true; } else { oListItem["_x0036_3_PUERTORICO"] = false; }
+                        if (etniasIDs.Contains("e10")) { oListItem["_x0036_4_HONDURAS"] = true; } else { oListItem["_x0036_4_HONDURAS"] = false; }
+
+
                         oListItem.Update();
 
                         ClienteCTX.ExecuteQuery();
 
                         user.OnSharepoint = true;
-
                         dblim.Entry(user).State = EntityState.Modified;
                         dblim.SaveChanges();
 
@@ -192,6 +229,66 @@ namespace LimenawebApp.Controllers
 
 
         }
+
+        public ActionResult DeleteRequest(int id)
+        {
+            try
+            {
+
+                Tb_NewCustomers newCustomer = dblim.Tb_NewCustomers.Find(id);
+                if (newCustomer != null)
+                {
+                    var urlimg1 = newCustomer.url_imageTAXCERNUM;
+                    var urlimg2 = newCustomer.url_imageTAXCERT;
+                    dblim.Tb_NewCustomers.Remove(newCustomer);
+                    dblim.SaveChanges();
+
+                    try
+                    {
+
+                        if (System.IO.File.Exists(Server.MapPath(urlimg1)))
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(Server.MapPath(urlimg1));
+                            }
+                            catch (System.IO.IOException e)
+                            {
+                                Console.WriteLine(e.Message);
+
+                            }
+                        }
+                        if (System.IO.File.Exists(Server.MapPath(urlimg2)))
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(Server.MapPath(urlimg2));
+                            }
+                            catch (System.IO.IOException e)
+                            {
+                                Console.WriteLine(e.Message);
+
+                            }
+                        }
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                TempData["exito"] = "User deleted successfully.";
+                return RedirectToAction("New_customers", "Management", null);
+            }
+            catch(Exception ex)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
+                return RedirectToAction("New_customers", "Management", null);
+            }
+
+
+
+        }
+
 
         public ActionResult New_customers()
         {

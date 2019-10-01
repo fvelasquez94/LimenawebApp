@@ -42,7 +42,7 @@
                     defaultDate: today,
                     navLinks: false, // can click day/week names to navigate views
                     editable: true,
-                    height: 1800,
+                    height: 2000,
                     disableResizing: true,
                     allDayText: 'Route:',
                     viewRender: function (view, element) {
@@ -196,6 +196,8 @@
                         element.find('.fc-title').append("" + event.customerscount);
                         element.find('.fc-title').append("<br/>Total Extra: ");
                         element.find('.fc-title').append("" + formatter.format(event.extra));
+                        element.find('.fc-title').append("<br/>Total Cases: ");
+                        element.find('.fc-title').append("" + formatterNoCurrency.format(event.AVGEach));
 
                         /*For List view*/
 
@@ -218,7 +220,14 @@
                         element.find('.fc-list-item-title').append("" + event.customerscount);
                         element.find('.fc-list-item-title').append("<br/>Total Extra: ");
                         element.find('.fc-list-item-title').append("" + formatter.format(event.extra));
-                        
+                        element.find('.fc-list-item-title').append("<br/>Total Cases: ");
+                        element.find('.fc-list-item-title').append("" + formatterNoCurrency.format(event.AVGEach));
+
+                
+                        //element.prop('title', "HOLA PERRAS");
+                       
+
+
                     },
                     eventAfterRender: function (event, element, view) {
                         //element.css("background", "#fff");
@@ -237,7 +246,65 @@
                         //}
 
                     },
+                    eventMouseover: function (calEvent, jsEvent) {
+                        var tooltip = '<div class="tooltipevent" style="width:200px;height:300px;font-size:10px;position:absolute;z-index:10001;">'+
+                        '<div class="col-xl-12 col-md-12">' +
+                            '<div class="card card-shadow mb-4">' +
+                                '<div class="card-header border-0">' +
+                                    '<div class="custom-title-wrap bar-primary">' +
+                            '<div class="custom-title" style="font-size:9px;">Total Each: ' + calEvent.AVGEach + '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                                '<div class="card-body">' +
+                                    '<ul class="list-unstyled base-timeline">' +
+                                        '<li class="time-dot-primary">' +
+                                            '<div class="base-timeline-info">'+
+                                            'Each: ' + calEvent.totalEach +
+                                    '</div>'+
+                                        '</li>' +
 
+                            '<li class="time-dot-primary">' +
+                            '<div class="base-timeline-info">' +
+                                        'Case: ' + calEvent.totalCase +
+                        '</div>' +
+                            '</li>' +
+
+                            '<li class="time-dot-primary">' +
+                            '<div class="base-timeline-info">' +
+                            'Pack: ' + calEvent.totalPack + '' +
+                        '</div>' +
+                            '</li>' +
+
+                            '<li class="time-dot-primary">' +
+                            '<div class="base-timeline-info">' +
+                            'LBS: ' + calEvent.totalLbs + '' +
+                        '</div>' +
+                            '</li>' +
+                        '</ul>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>' +
+                            '</div>';
+
+
+
+
+                        var $tooltip = $(tooltip).appendTo('body');
+
+                        $(this).mouseover(function (e) {
+                            $(this).css('z-index', 10000);
+                            $tooltip.fadeIn('500');
+                            $tooltip.fadeTo('10', 1.9);
+                        }).mousemove(function (e) {
+                            $tooltip.css('top', e.pageY + 10);
+                            $tooltip.css('left', e.pageX + 20);
+                        });
+                    },
+
+                    eventMouseout: function (calEvent, jsEvent) {
+                        $(this).css('z-index', 8);
+                        $('.tooltipevent').remove();
+                    },
                     eventClick: function (calEvent, jsEvent, view) {
 
                         //Llamamos con AJAX
@@ -520,6 +587,15 @@
                                     //
 
 
+
+                                    //UOM INFO
+                                    $("#Each").html("Each: " + result.result8);
+                                    $("#Case").html("Case: " + result.result9);
+                                    $("#Pack").html("Pack: " + result.result10);
+                                    $("#LBS").html("LBS: " + result.result11);
+                                    $("#totalEach").html("Total Cases: " + formatterNoCurrency.format(result.result12));
+
+
                                     $('#modal_SO').modal('show');
                                     flagbtn = 0;
                                 },
@@ -621,7 +697,11 @@
         // the default value for minimumFractionDigits depends on the currency
         // and is usually already 2
     });
-
+    var formatterNoCurrency = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        // the default value for minimumFractionDigits depends on the currency
+        // and is usually already 2
+    });
     function saveSalesOrders() {
         var column1RelArray = [];
         $('ul#sortable2 li').each(function () {

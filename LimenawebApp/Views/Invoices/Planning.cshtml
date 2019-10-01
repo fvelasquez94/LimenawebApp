@@ -17,15 +17,11 @@
                             <div class="custom-title-wrap bar-warning">
                                 <div class="custom-title">Scheduled Routes</div>
                                 <div class=" widget-action-link">
-                                    <div class="dropdown">
-                                        <a href="#" class="btn btn-transparent text-secondary dropdown-hover p-0" data-toggle="dropdown">
-                                            <i class="fa fa-cogs"></i>Settings
+                                    <div class="">
+                                        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-outline-success">
+                                            <i class="fa fa-truck"></i> New Route
                                         </a>
-                                        <div class="dropdown-menu dropdown-menu-right vl-dropdown">
-
-                                            <a class="dropdown-item" data-toggle="modal" data-target="#createModal" href="#">New Route</a>
-                       
-                                        </div>
+                              
                                     </div>
                                 </div>
                             </div>
@@ -471,6 +467,20 @@
                                 <ul id="sortable2" class="connectedSortable" style="height: 590px; overflow-y: auto; overflow-x:hidden"></ul>
                                 <button type="button" id="newExtra" class="btn btn-info mr-auto btn-sm">ADD EXTRA EXPENSES</button>
                                 <a href="#" id="Sortbtn" class="btn btn-success mr-auto btn-sm">SORT</a>
+
+                                <div class="float-right" style="border-left:dashed; border-width:1px; margin-left:20px;margin-right:20px;">
+                                    <div  style="margin-left:10px;">
+                                        <small id="Each">Each: </small><br />
+                                        <small id="Case">Case: </small><br />
+                                        <small id="Pack">Pack: </small><br />
+                                        <small id="LBS">LBS: </small><br />
+                                        <small id="totalEach">Total Cases: </small>
+                                    </div>
+                            
+
+
+                                </div>
+
                                 <div class="float-right">
                                     <small id="totalAmountSO">Total Amount: </small><br />
                                     <small id="totalSO">Total Sales Orders: </small><br />

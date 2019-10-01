@@ -733,10 +733,10 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Customer' does not have a prima
           <Property Name="Supervisor" Type="nvarchar" MaxLength="101" />
           <Property Name="AreaSupervisor" Type="varchar" MaxLength="10" />
           <Property Name="ZonaSupervisor" Type="varchar" MaxLength="12" />
-          <Property Name="SalesRoute" Type="nvarchar" MaxLength="30" />
-          <Property Name="DeliveryRoute" Type="nvarchar" MaxLength="30" />
-          <Property Name="SalesZone" Type="nvarchar" MaxLength="30" />
-          <Property Name="DeliveryZone" Type="nvarchar" MaxLength="30" />
+          <Property Name="SalesRoute" Type="nvarchar" MaxLength="100" />
+          <Property Name="DeliveryRoute" Type="nvarchar" MaxLength="100" />
+          <Property Name="SalesZone" Type="nvarchar" MaxLength="100" />
+          <Property Name="DeliveryZone" Type="nvarchar" MaxLength="100" />
           <Property Name="ZipCode" Type="nvarchar" MaxLength="20" />
           <Property Name="State" Type="nvarchar" MaxLength="3" />
           <Property Name="City" Type="nvarchar" MaxLength="100" />
@@ -749,6 +749,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Customer' does not have a prima
           <Property Name="U_VisitFrequency" Type="smallint" />
           <Property Name="Frequency" Type="int" />
           <Property Name="Type" Type="varchar" MaxLength="3" Nullable="false" />
+          <Property Name="PymntGroup" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -879,6 +880,25 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_DetailsUOM' does not h
           <Property Name="UomEntry" Type="int" Nullable="false" />
           <Property Name="UomCode" Type="nvarchar" MaxLength="20" />
           <Property Name="Units" Type="numeric" Precision="19" Scale="6" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.PlanningUoMInfo' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="PlanningUoMInfo">
+          <Key>
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="ID" Type="bigint" />
+          <Property Name="DocNum" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dscription" Type="nvarchar" MaxLength="100" />
+          <Property Name="Quantity" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="unitMsr" Type="nvarchar" MaxLength="100" />
+          <Property Name="InvQty" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="NumInBuy" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalCases" Type="numeric" Precision="38" Scale="19" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.SalesRep' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1030,7 +1050,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Customer].[VisitDayWB] AS [VisitDayWB], 
     [BI_Dim_Customer].[U_VisitFrequency] AS [U_VisitFrequency], 
     [BI_Dim_Customer].[Frequency] AS [Frequency], 
-    [BI_Dim_Customer].[Type] AS [Type]
+    [BI_Dim_Customer].[Type] AS [Type], 
+    [BI_Dim_Customer].[PymntGroup] AS [PymntGroup]
     FROM [dbo].[BI_Dim_Customer] AS [BI_Dim_Customer]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="BI_Dim_Products" EntityType="Self.BI_Dim_Products" store:Type="Views" store:Schema="dbo">
@@ -1135,6 +1156,22 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [OpenSalesOrders_DetailsUOM].[UomCode] AS [UomCode], 
     [OpenSalesOrders_DetailsUOM].[Units] AS [Units]
     FROM [dbo].[OpenSalesOrders_DetailsUOM] AS [OpenSalesOrders_DetailsUOM]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="PlanningUoMInfo" EntityType="Self.PlanningUoMInfo" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [PlanningUoMInfo].[ID] AS [ID], 
+    [PlanningUoMInfo].[DocNum] AS [DocNum], 
+    [PlanningUoMInfo].[DocDate] AS [DocDate], 
+    [PlanningUoMInfo].[CardCode] AS [CardCode], 
+    [PlanningUoMInfo].[CardName] AS [CardName], 
+    [PlanningUoMInfo].[ItemCode] AS [ItemCode], 
+    [PlanningUoMInfo].[Dscription] AS [Dscription], 
+    [PlanningUoMInfo].[Quantity] AS [Quantity], 
+    [PlanningUoMInfo].[unitMsr] AS [unitMsr], 
+    [PlanningUoMInfo].[InvQty] AS [InvQty], 
+    [PlanningUoMInfo].[NumInBuy] AS [NumInBuy], 
+    [PlanningUoMInfo].[TotalCases] AS [TotalCases]
+    FROM [dbo].[PlanningUoMInfo] AS [PlanningUoMInfo]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="SalesRep" EntityType="Self.SalesRep" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1651,6 +1688,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySet Name="view_VendorsData" EntityType="DLI_PROModel.view_VendorsData" />
           <EntitySet Name="ITT1" EntityType="DLI_PROModel.ITT1" />
           <EntitySet Name="OITT" EntityType="DLI_PROModel.OITT" />
+          <EntitySet Name="PlanningUoMInfo" EntityType="DLI_PROModel.PlanningUoMInfo" />
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
@@ -1666,10 +1704,10 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="Supervisor" Type="String" MaxLength="101" FixedLength="false" Unicode="true" />
           <Property Name="AreaSupervisor" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="ZonaSupervisor" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
-          <Property Name="SalesRoute" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryRoute" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="SalesZone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
-          <Property Name="DeliveryZone" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="SalesRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SalesZone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryZone" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="State" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
           <Property Name="City" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Classification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
@@ -1683,6 +1721,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="Frequency" Type="Int32" />
           <Property Name="Type" Type="String" Nullable="false" MaxLength="3" FixedLength="false" Unicode="false" />
           <Property Name="ZipCode" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="PymntGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="UFD1">
           <Key>
@@ -2211,6 +2250,23 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="CreateTS" Type="Int32" />
           <Property Name="UpdateTS" Type="Int32" />
         </EntityType>
+        <EntityType Name="PlanningUoMInfo">
+          <Key>
+            <PropertyRef Name="DocNum" />
+          </Key>
+          <Property Name="ID" Type="Int64" />
+          <Property Name="DocNum" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Dscription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="unitMsr" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InvQty" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="NumInBuy" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalCases" Type="Decimal" Precision="38" Scale="19" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2620,6 +2676,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Customer">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Customer">
               <MappingFragment StoreEntitySet="BI_Dim_Customer">
+                <ScalarProperty Name="PymntGroup" ColumnName="PymntGroup" />
                 <ScalarProperty Name="ZipCode" ColumnName="ZipCode" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Frequency" ColumnName="Frequency" />
@@ -3173,6 +3230,24 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
                 <ScalarProperty Name="PriceList" ColumnName="PriceList" />
                 <ScalarProperty Name="TreeType" ColumnName="TreeType" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PlanningUoMInfo">
+            <EntityTypeMapping TypeName="DLI_PROModel.PlanningUoMInfo">
+              <MappingFragment StoreEntitySet="PlanningUoMInfo">
+                <ScalarProperty Name="TotalCases" ColumnName="TotalCases" />
+                <ScalarProperty Name="NumInBuy" ColumnName="NumInBuy" />
+                <ScalarProperty Name="InvQty" ColumnName="InvQty" />
+                <ScalarProperty Name="unitMsr" ColumnName="unitMsr" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

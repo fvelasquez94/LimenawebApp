@@ -33,6 +33,11 @@ namespace LimenawebApp.Controllers
             public string customerscount { get; set; }
             public string isfinished { get; set; }
             public string extra { get; set; }
+            public string totalEach { get; set; }
+            public string totalCase { get; set; }
+            public string totalPack { get; set; }
+            public string totalLbs { get; set; }
+            public string AVGEach { get; set; }
         }
         public class orderSO
         {
@@ -127,6 +132,12 @@ namespace LimenawebApp.Controllers
                 List<Tb_Planning> rutaslst = new List<Tb_Planning>();
                 rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate) select a).ToList();
 
+                var rtids = rutaslst.Select(c => c.ID_Route).ToArray();
+                //Cargamos todos los datos maestros a utilizar
+                var solist = (from j in dblim.Tb_PlanningSO where (rtids.Contains(j.ID_Route)) select new { IDinterno = j.ID_salesorder, SAPDOC = j.SAP_docnum, IDRoute=j.ID_Route, amount=j.Amount, customerName=j.Customer_name }).ToList();
+                var solMaestro = solist.Select(c => c.IDinterno).ToArray();
+                var detallesMaestroSo = (from f in dblim.Tb_PlanningSO_details where (solMaestro.Contains(f.ID_salesorder)) select f).ToList();
+
                 List<Routes_calendar> rutas = new List<Routes_calendar>();
 
                 foreach (var item in rutaslst)
@@ -160,23 +171,88 @@ namespace LimenawebApp.Controllers
                     }
 
 
+                    //INFO UOM
+                    var listafinalSO = solist.Where(c => c.IDRoute == item.ID_Route).ToList();
+                    var sol = listafinalSO.Select(c => c.IDinterno).ToArray();
+                    //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+                    var detallesSo = (from f in detallesMaestroSo where (sol.Contains(f.ID_salesorder)) select f).ToList();
+
+                    var totalCantEach = 0;
+                    var totalCantCases = 0;
+                    var totalCantPack = 0;
+                    var totalCantLbs = 0;
+                    decimal promedioEachxCases = 0;
+                    //Para calcular el promedio lo hacemos diviendo
+                    try
+                    {
+                        if (detallesSo.Count() > 0)
+                        {
+                            totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
+                            totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
+                            totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
+                            totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
+
+                            foreach (var soitem in listafinalSO)
+                            {
+                                //devolvemos ID externo
+                                var docnum = Convert.ToInt32(soitem.SAPDOC);
+
+                                //Devolvemos todos los detalles(itemcode) de esa SO
+                                var itemscode = detallesSo.Where(c => c.ID_salesorder == soitem.IDinterno).Select(c => c.ItemCode).ToArray();
+
+                                //Buscamos en la vista creada 9/24/2019
+                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum).Sum(c => c.TotalCases);
+
+                                if (sumatotal > 0 && sumatotal != null)
+                                {
+                                    promedioEachxCases += Convert.ToDecimal(sumatotal);
+                                }
+
+                            }
+                        }
+                        else
+                        {
+                            totalCantEach = 0;
+                            totalCantCases = 0;
+                            totalCantPack = 0;
+                            totalCantLbs = 0;
+                            promedioEachxCases = 0;
+
+                        }
+                    }
+                    catch
+                    {
+                        totalCantEach = 0;
+                        totalCantCases = 0;
+                        totalCantPack = 0;
+                        totalCantLbs = 0;
+                        promedioEachxCases = 0;
+                    }
+                    ///
+
+                    rt.totalEach = totalCantEach.ToString();
+                    rt.totalCase = totalCantCases.ToString();
+                    rt.totalPack = totalCantPack.ToString();
+                    rt.totalLbs = totalCantLbs.ToString();
+                    rt.AVGEach = promedioEachxCases.ToString();
+
 
 
 
                     if (item.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
 
-                    var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == item.ID_Route) select e);
+                    var sum = (from e in solist where (e.IDRoute == item.ID_Route) select e);
                     if (sum != null)
                     {
                         try
                         {
-                            rt.amount = sum.Select(c => c.Amount).Sum().ToString();
+                            rt.amount = sum.Select(c => c.amount).Sum().ToString();
                         }
                         catch {
                             rt.amount = "0.0";
                         }
 
-                        rt.customerscount = sum.Select(c => c.Customer_name).Distinct().Count().ToString();
+                        rt.customerscount = sum.Select(c => c.customerName).Distinct().Count().ToString();
                         rt.orderscount = sum.Count().ToString();
                     }
                     else
@@ -856,7 +932,20 @@ namespace LimenawebApp.Controllers
 
                 List<Routes_calendar> rutaslst = new List<Routes_calendar>();
 
-                foreach (var item in lstRoutes)
+
+
+                var rtids = lstRoutes.Select(c => c.ID_Route).ToArray();
+                //Cargamos todos los datos maestros a utilizar
+                var solist = (from j in dblim.Tb_PlanningSO where (rtids.Contains(j.ID_Route)) select new { IDinterno = j.ID_salesorder, SAPDOC = j.SAP_docnum, IDRoute = j.ID_Route, amount = j.Amount, customerName = j.Customer_name }).ToList();
+                var solMaestro = solist.Select(c => c.IDinterno).ToArray();
+                var detallesMaestroSo = (from f in dblim.Tb_PlanningSO_details where (solMaestro.Contains(f.ID_salesorder)) select f).ToList();
+
+                List<Routes_calendar> rutas = new List<Routes_calendar>();
+
+
+
+
+                    foreach (var item in lstRoutes)
                 {
                     Routes_calendar rt = new Routes_calendar();
 
@@ -870,12 +959,100 @@ namespace LimenawebApp.Controllers
                     rt.truck = item.Truck_name;
                     rt.departure = item.Departure.ToShortTimeString();
                     if (item.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
-                    
-                    var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == item.ID_Route) select e);
+
+
+
+                    try
+                    {
+                        var extra = (from a in dblim.Tb_Planning_extra where (a.ID_Route == item.ID_Route) select a);
+                        if (extra.Count() > 0)
+                        {
+                            rt.extra = extra.Sum(x => x.Value).ToString();
+                        }
+                        else
+                        {
+                            rt.extra = "0.00";
+
+                        }
+
+                    }
+                    catch
+                    {
+                        rt.extra = "0.00";
+                    }
+
+
+                    //INFO UOM
+                    var listafinalSO = solist.Where(c => c.IDRoute == item.ID_Route).ToList();
+                    var sol = listafinalSO.Select(c => c.IDinterno).ToArray();
+                    //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+                    var detallesSo = (from f in detallesMaestroSo where (sol.Contains(f.ID_salesorder)) select f).ToList();
+
+                    var totalCantEach = 0;
+                    var totalCantCases = 0;
+                    var totalCantPack = 0;
+                    var totalCantLbs = 0;
+                    decimal promedioEachxCases = 0;
+                    //Para calcular el promedio lo hacemos diviendo
+                    try
+                    {
+                        if (detallesSo.Count() > 0)
+                        {
+                            totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
+                            totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
+                            totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
+                            totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
+
+                            foreach (var soitem in listafinalSO)
+                            {
+                                //devolvemos ID externo
+                                var docnum = Convert.ToInt32(soitem.SAPDOC);
+
+                                //Devolvemos todos los detalles(itemcode) de esa SO
+                                var itemscode = detallesSo.Where(c => c.ID_salesorder == soitem.IDinterno).Select(c => c.ItemCode).ToArray();
+
+                                //Buscamos en la vista creada 9/24/2019
+                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum).Sum(c => c.TotalCases);
+
+                                if (sumatotal > 0 && sumatotal != null) {
+                                    promedioEachxCases += Convert.ToDecimal(sumatotal);
+                                }
+                                
+
+                            }
+                        }
+                        else
+                        {
+                            totalCantEach = 0;
+                            totalCantCases = 0;
+                            totalCantPack = 0;
+                            totalCantLbs = 0;
+                            promedioEachxCases = 0;
+
+                        }
+                    }
+                    catch
+                    {
+                        totalCantEach = 0;
+                        totalCantCases = 0;
+                        totalCantPack = 0;
+                        totalCantLbs = 0;
+                        promedioEachxCases = 0;
+                    }
+                    ///
+
+                    rt.totalEach = totalCantEach.ToString();
+                    rt.totalCase = totalCantCases.ToString();
+                    rt.totalPack = totalCantPack.ToString();
+                    rt.totalLbs = totalCantLbs.ToString();
+                    rt.AVGEach = Math.Round(promedioEachxCases, 2, MidpointRounding.ToEven).ToString();
+
+
+                    var sum = (from e in solist where (e.IDRoute == item.ID_Route) select e);
                     if (sum != null && sum.Count() >0)
                     {
-                        rt.amount = sum.Select(c => c.Amount).Sum().ToString();
-                        rt.customerscount = sum.Select(c => c.Customer_name).Distinct().Count().ToString();
+                        rt.amount = sum.Select(c => c.amount).Sum().ToString();
+                        rt.customerscount = sum.Select(c => c.customerName).Distinct().Count().ToString();
                         rt.orderscount = sum.Count().ToString();
                     }
                     else {
@@ -988,9 +1165,66 @@ namespace LimenawebApp.Controllers
 
 
             var rt = (from a in dblim.Tb_Planning where (a.ID_Route == idr) select new { id=a.ID_Route, isfinished=a.isfinished}).ToList();
+            //Solo IDSO interno
+            var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr) select j.ID_salesorder).ToList();
+
+       
+
+            //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (solist.Contains(f.ID_salesorder)) select f).ToList();
+
+            var totalCantEach = 0;
+            var totalCantCases = 0;
+            var totalCantPack = 0;
+            var totalCantLbs = 0;
+            decimal promedioEachxCases = 0;
+            //Para calcular el promedio lo hacemos diviendo
+            try
+            {
+                if (detallesSo.Count() > 0)
+                {
+                    totalCantEach = detallesSo.Where(c=>c.UomCode.Contains("EACH")).Count();
+                    totalCantCases = detallesSo.Where(c=>c.UomCode.Contains("CASE")).Count();
+                    totalCantPack = detallesSo.Where(c=>c.UomCode.Contains("PACK")).Count();
+                    totalCantLbs = detallesSo.Where(c=>c.UomCode.Contains("LBS")).Count();
+
+                    foreach (var item in solist) {
+                        //devolvemos ID externo
+                        var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder==item).Select(c => c.SAP_docnum).FirstOrDefault());
+
+                        //Devolvemos todos los detalles(itemcode) de esa SO
+                        var itemscode = detallesSo.Where(c=>c.ID_salesorder==item).Select(c => c.ItemCode).ToArray();
+
+                        //Buscamos en la vista creada 9/24/2019
+                        var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum).Sum(c => c.TotalCases);
+
+                        promedioEachxCases += Math.Round(Convert.ToDecimal(sumatotal),2, MidpointRounding.ToEven);                      
+
+                    }
+                }
+                else
+                {
+                    totalCantEach = 0;
+                    totalCantCases = 0;
+                    totalCantPack = 0;
+                    totalCantLbs = 0;
+                    promedioEachxCases = 0;
+
+                }
+            }
+            catch
+            {
+                totalCantEach = 0;
+                totalCantCases = 0;
+                totalCantPack = 0;
+                totalCantLbs = 0;
+                promedioEachxCases = 0;
+            }
+
+
 
             //salesOrders = (from obj in dbcmk.VisitsM where (obj.ID_route == idr) select obj).ToList();
-            var lst = (from obj in tbplanningSO where (obj.ID_Route == idr) select new { id = obj.ID_salesorder, NumSO=obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name , DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight= obj.Weight, Volume = obj.Volume, Printed= obj.Printed, Remarks = obj.Remarks, Order=obj.query3 }).OrderBy(c=>c.Order).ToArray();
+            var lst = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr) select new { id = obj.ID_salesorder, NumSO=obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name , DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight= obj.Weight, Volume = obj.Volume, Printed= obj.Printed, Remarks = obj.Remarks, Order=obj.query3 }).OrderBy(c=>c.Order).ToArray();
             var lstArray = (from obj in lst select  obj.NumSO).ToArray();
             var totalextra = "";
             try
@@ -1032,7 +1266,13 @@ namespace LimenawebApp.Controllers
                 string result6 = javaScriptSerializer.Serialize(lstCustomers);
                 string result7 = javaScriptSerializer.Serialize(rt);
                 decimal result8 = Convert.ToDecimal(totalextra);
-                var result = new { result = result2, result2 = result3, result3 = result4, result4 = result5, result5 = result6, result6 = result7, result7=result8 };
+
+
+
+                //RESULT 8-12 para UOM INFO
+
+                var result = new { result = result2, result2 = result3, result3 = result4, result4 = result5, result5 = result6, result6 = result7, result7=result8, result8= totalCantEach.ToString(), result9= totalCantCases,
+                result10=totalCantPack, result11=totalCantLbs, result12=promedioEachxCases};
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
             else {
@@ -1076,7 +1316,12 @@ namespace LimenawebApp.Controllers
                 string result6 = javaScriptSerializer.Serialize(lstCustomers);
                 string result7 = javaScriptSerializer.Serialize(rt);
                 decimal result8 = Convert.ToDecimal(totalextra);
-                var result = new { result = result2, result2 = result3, result3 = result4, result4 = result5, result5 = result6, result6 = result7, result7=result8 };
+                var result = new { result = result2, result2 = result3, result3 = result4, result4 = result5, result5 = result6, result6 = result7, result7=result8,result8 = totalCantEach.ToString(),
+                    result9 = totalCantCases,
+                    result10 = totalCantPack,
+                    result11 = totalCantLbs,
+                    result12 = promedioEachxCases
+                };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
 
@@ -2145,9 +2390,53 @@ namespace LimenawebApp.Controllers
             details = details.GroupBy(x => x.Customer_name).Select(g => g.FirstOrDefault()).OrderBy(c => c.query3).ToList();
 
             foreach (var item in details) { //Agregamos el payment method
-
+                var customer = (from a in dlipro.BI_Dim_Customer where (a.id_Customer == item.ID_customer) select a).FirstOrDefault();
+                if (customer != null) {
+                    item.query5 = customer.PymntGroup;
+                }
             }
 
+
+            //INFO UOM
+            var listafinalSO = details.ToList();
+            var sol = listafinalSO.Select(c => c.ID_salesorder).ToArray();
+            //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (sol.Contains(f.ID_salesorder)) select f).ToList();
+
+            var totalCantEach = 0;
+            var totalCantCases = 0;
+            var totalCantPack = 0;
+            var totalCantLbs = 0;
+  
+            //Para calcular el promedio lo hacemos diviendo
+            try
+            {
+                if (detallesSo.Count() > 0)
+                {
+                    totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
+                    totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
+                    totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
+                    totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
+
+                }
+                else
+                {
+                    totalCantEach = 0;
+                    totalCantCases = 0;
+                    totalCantPack = 0;
+                    totalCantLbs = 0;
+
+
+                }
+            }
+            catch
+            {
+                totalCantEach = 0;
+                totalCantCases = 0;
+                totalCantPack = 0;
+                totalCantLbs = 0;
+
+            }
 
             ReportDocument rd = new ReportDocument();
             rd.Load(Path.Combine(Server.MapPath("~/Reports"), "rptRoadmap.rpt"));
@@ -2158,6 +2447,14 @@ namespace LimenawebApp.Controllers
             rd.SetParameterValue("Route_leader", header.Routeleader_name);
             rd.SetParameterValue("Truck", header.Truck_name);
             rd.SetParameterValue("Date", header.Date.ToLongDateString().ToUpper());
+
+
+            rd.SetParameterValue("totalEach", totalCantEach.ToString());
+            rd.SetParameterValue("totalCase", totalCantCases.ToString());
+            rd.SetParameterValue("totalPack", totalCantPack.ToString());
+            rd.SetParameterValue("totalLBS", totalCantLbs.ToString());
+
+
             //rd.SetParameterValue("idorder", header.ID_OrderDSD);
             //rd.SetParameterValue("comment", header.Comment);
 

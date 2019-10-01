@@ -29,6 +29,7 @@
         <EntityTypeShape EntityType="DLI_PROModel.view_VendorsData" Width="1.5" PointX="5.375" PointY="14.75" />
         <EntityTypeShape EntityType="DLI_PROModel.ITT1" Width="1.5" PointX="7.375" PointY="14.75" />
         <EntityTypeShape EntityType="DLI_PROModel.OITT" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.PlanningUoMInfo" Width="1.5" PointX="15.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

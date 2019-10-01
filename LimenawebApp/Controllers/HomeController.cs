@@ -18,6 +18,7 @@ namespace LimenawebApp.Controllers
     public class HomeController : Controller
     {
         private dbLimenaEntities dblim = new dbLimenaEntities();
+        private DLI_PROEntities dlipro = new DLI_PROEntities();
         /// <summary>
         /// 
         /// </summary>
@@ -105,6 +106,8 @@ namespace LimenawebApp.Controllers
         public ActionResult Enroll(int token = 0)
         {
 
+            var tipotamana = dlipro.UFD1.Where(c => c.TableID.Contains("OCRD") && c.FieldID == 50 && !c.Descr.Contains("Not Assigned")).ToList();
+            ViewBag.tamanostienda = tipotamana;
             ViewBag.showmessage = token;
             return View();
         }
@@ -318,20 +321,20 @@ namespace LimenawebApp.Controllers
         public ActionResult UploadInformationNewCustomer(string CardName,string Phone1,string E_Mail,string IntrntSite,string TAXID,string TAXCERTNUM,string FirstName,string LastName,string Position,string Tel1,string E_MailL,string countryId,string stateId,string cityId,string Street,string ZipCode,string servicesSelected,string etniasselected,string HorarioOperacion,string ReciboMercaderiaDia,string ReciboMercaderiaArea,Boolean MuelleDescarga,string TamanoTienda)
         {
 
-            RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
-            if (string.IsNullOrEmpty(recaptchaHelper.Response))
-            {
-                return Json("Please complete the reCAPTCHA");
+            //RecaptchaVerificationHelper recaptchaHelper = this.GetRecaptchaVerificationHelper();
+            //if (string.IsNullOrEmpty(recaptchaHelper.Response))
+            //{
+            //    return Json("Please complete the reCAPTCHA");
                
-            }
-            else
-            {
-                RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
-                if (recaptchaResult != RecaptchaVerificationResult.Success)
-                {
-                    return Json("The reCAPTCHA is incorrect");
-                }
-            }
+            //}
+            //else
+            //{
+            //    RecaptchaVerificationResult recaptchaResult = recaptchaHelper.VerifyRecaptchaResponse();
+            //    if (recaptchaResult != RecaptchaVerificationResult.Success)
+            //    {
+            //        return Json("The reCAPTCHA is incorrect");
+            //    }
+            //}
 
             // Checking no of files injected in Request object  
             if (Request.Files.Count > 1)
@@ -340,27 +343,27 @@ namespace LimenawebApp.Controllers
                 {
                     //Creamos modelo
                     Tb_NewCustomers newCustomer = new Tb_NewCustomers();
-                    newCustomer.CardName = CardName;
+                    newCustomer.CardName = CardName.ToUpper();
                     newCustomer.Phone1 = Phone1;
-                    newCustomer.E_Mail = E_Mail;
-                    newCustomer.IntrntSite = IntrntSite;
-                    newCustomer.TAXID = TAXID;
-                    newCustomer.TAXCERTNUM = TAXCERTNUM;
-                    newCustomer.FirstName = FirstName;
-                    newCustomer.LastName = LastName;
-                    newCustomer.Position = Position;
+                    newCustomer.E_Mail = E_Mail.ToUpper();
+                    newCustomer.IntrntSite = IntrntSite.ToUpper();
+                    newCustomer.TAXID = TAXID.ToUpper();
+                    newCustomer.TAXCERTNUM = TAXCERTNUM.ToUpper();
+                    newCustomer.FirstName = FirstName.ToUpper();
+                    newCustomer.LastName = LastName.ToUpper();
+                    newCustomer.Position = Position.ToUpper();
                     newCustomer.Tel1 = Tel1;
-                    newCustomer.E_MailL = E_MailL;
-                    newCustomer.Street = Street;
-                    newCustomer.City = cityId;
-                    newCustomer.State = stateId;
-                    newCustomer.ZipCode = ZipCode;
-                    newCustomer.Country = countryId;
+                    newCustomer.E_MailL = E_MailL.ToUpper();
+                    newCustomer.Street = Street.ToUpper();
+                    newCustomer.City = cityId.ToUpper();
+                    newCustomer.State = stateId.ToUpper();
+                    newCustomer.ZipCode = ZipCode.ToUpper();
+                    newCustomer.Country = countryId.ToUpper();
                     newCustomer.StoreServices = servicesSelected;
                     newCustomer.Etnias = etniasselected;
                     newCustomer.OperationTime = HorarioOperacion;
-                    newCustomer.ReciboMercaderia_dia = ReciboMercaderiaDia;
-                    newCustomer.ReciboMercaderia_area = ReciboMercaderiaArea;
+                    newCustomer.ReciboMercaderia_dia = ReciboMercaderiaDia.ToUpper();
+                    newCustomer.ReciboMercaderia_area = ReciboMercaderiaArea.ToUpper();
                     newCustomer.Muelle_descarga = MuelleDescarga;
                     newCustomer.Store_size = TamanoTienda;
                     newCustomer.Validated = false;
@@ -394,12 +397,12 @@ namespace LimenawebApp.Controllers
                         var path = "";
                         if (i == 0)
                         {
-                            path = Path.Combine(Server.MapPath("~/Content/images/enroll"), "enr_TAXID01" + "_" + CardName.Substring(0,5) + "_" + time.Minute + time.Second + ".jpg");
-                            newCustomer.url_imageTAXCERT = "~/Content/images/enroll/" + "enr_TAXID01" + "_"  + CardName.Substring(0, 5) + "_" + time.Minute + time.Second + ".jpg";
+                            path = Path.Combine(Server.MapPath("~/SharedContent/images/enroll"), TAXID + "_1" + ".jpg");
+                            newCustomer.url_imageTAXCERT = "~/SharedContent/images/enroll/" + TAXID + "_1" + ".jpg";
                         }
                         else {
-                            path = Path.Combine(Server.MapPath("~/Content/images/enroll"), "enr_TAXNUMCERT02" + "_"  + CardName.Substring(0, 5) + "_" + time.Minute + time.Second + ".jpg");
-                            newCustomer.url_imageTAXCERNUM= "~/Content/images/enroll/" + "enr_TAXNUMCERT02" + "_" + CardName.Substring(0, 5) + "_" + time.Minute + time.Second + ".jpg";
+                            path = Path.Combine(Server.MapPath("~/SharedContent/images/enroll"), TAXCERTNUM + "_2" + ".jpg");
+                            newCustomer.url_imageTAXCERNUM= "~/SharedContent/images/enroll/" + TAXCERTNUM + "_2" + ".jpg";
                         }
                             
                         bitmapImg.Save(path, ImageFormat.Jpeg);
