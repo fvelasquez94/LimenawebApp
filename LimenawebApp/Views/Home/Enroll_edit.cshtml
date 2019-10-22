@@ -1,0 +1,293 @@
+﻿@model LimenawebApp.Models.Tb_NewCustomers
+@using Recaptcha.Web.Mvc
+@{
+    ViewBag.Title = "Distribuidora Limeña - Líderes en productos latinos Enroll Edit";
+}
+
+<div class="maincontent-services">
+    <div class="header">
+        <h1 class="h1-subpage-title white">Edita tus datos</h1>
+    </div>
+</div>
+<div class="bootstrap-wrapper">
+    <div class="container">
+        <form id="myform">
+            <div class="row">
+
+                <div class="col-md-5">
+
+                    <h3>General</h3>
+                    <input type="text" class="w-input" maxlength="256" name="CardName" placeholder="Empresa (*)" id="CardName" value="@Model.CardName" required="">
+                    <input type="text" class="w-input" maxlength="256" name="Phone1" placeholder="Telefono (*)" id="Phone1" value="@Model.Phone1" required="">
+                    <input type="email" class="w-input" maxlength="256" name="E_Mail" placeholder="Correo electrónico (*)" value="@Model.E_Mail" id="E_Mail" required>
+                    <input type="text" class="w-input" maxlength="256" name="IntrntSite" placeholder="Sitio Web" value="@Model.IntrntSite" id="IntrntSite">
+                    <input type="text" class="w-input" maxlength="256" name="TAXID" placeholder="UNIFIED FEDERAL TAX ID (*)" id="TAXID" value="@Model.TAXID"  required="" autocomplete="off">
+                    <input type="text" class="w-input" maxlength="256" name="TAXCERTNUM" placeholder="RESALES TAX CERTIFICATE NUMBER" value="@Model.TAXCERTNUM" id="TAXCERTNUM" autocomplete="off">
+
+                    <h3>Datos de Contacto</h3>
+                    <input type="text" class="w-input" maxlength="256" name="FirstName" placeholder="Nombre (*)" value="@Model.FirstName" id="FirstName" required="">
+                    <input type="text" class="w-input" maxlength="256" name="LastName" placeholder="Apellido (*)" id="LastName" value="@Model.LastName" required="">
+                    <input type="text" class="w-input" maxlength="256" name="Position" placeholder="Cargo (*)" id="Position" value="@Model.Position" required="">
+                    <input type="text" class="w-input" maxlength="256" name="Tel1" placeholder="Telefono (*)" id="Tel1" value="@Model.Tel1" required="">
+                    <input type="email" class="w-input" maxlength="256" name="E_MailL" placeholder="Correo electrónico (*)" id="E_MailL" value="@Model.E_MailL" required="">
+
+                    <h3>Dirección</h3>
+                    <select name="countryId" style="margin-bottom:10px !important" class="select-box" id="countryId" required>
+                        <option value="">Seleccione País</option>
+                        <option value="USA" selected>United States</option>
+                    </select>
+
+                    <input type="text" class="w-input" maxlength="256" name="ZipCode" value="@Model.ZipCode" placeholder="ZIP CODE (*)" id="ZipCode" required="">
+                    <input name="cityId" class="w-input" id="cityId" placeholder="Ciudad (*)" value="@Model.City" required readonly>
+                    <input name="stateId" class="w-input" id="stateId" placeholder="Estado (*)" value="@Model.State" required readonly>
+
+
+                    @*<select name="stateId" style="margin-bottom:10px !important" class="select-box states order-alpha" id="stateId" required>
+            <option value="">Seleccione Estado</option>
+        </select>
+        <select name="cityId" style="margin-bottom:10px !important" class="select-box cities order-alpha" id="cityId" required>
+            <option value="">Seleccione Ciudad</option>
+        </select>*@
+
+                    <input type="text" class="w-input" maxlength="256" value="@Model.Street" name="Street" placeholder="Calle (*)" id="Street" required="">
+
+
+                </div>
+                <div class="col-md-2"></div>
+
+                <div class="col-md-5">
+
+                    <h3>Otros</h3>
+                    <div >
+                        <label>Horario de Operacion</label>
+                        <input type="text" class="w-input" value="@Model.OperationTime" name="HorarioOperacion" id="HorarioOperacion" required="">
+                    </div>
+
+                    <select class="select-box" style="margin-bottom:10px !important" name="ReciboMercaderiaDia" id="ReciboMercaderiaDia" required multiple>
+                        @if (Model.ReciboMercaderia_dia.Contains("SUNDAY")) {<option value="Sunday" selected>Sunday</option> } else { <option value="Sunday">Sunday</option>}
+                        @if (Model.ReciboMercaderia_dia.Contains("MONDAY")) {<option value="Monday" selected>Monday</option> } else { <option value="Monday">Monday</option>}
+                        @if (Model.ReciboMercaderia_dia.Contains("TUESDAY")) {<option value="Tuesday" selected>Tuesday</option> } else { <option value="Tuesday">Tuesday</option>}
+                        @if (Model.ReciboMercaderia_dia.Contains("WEDNESDAY")) {<option value="Wednesday" selected>Wednesday</option> } else { <option value="Wednesday">Wednesday</option>}
+                        @if (Model.ReciboMercaderia_dia.Contains("THURSDAY")) {<option value="Thursday" selected>Thursday</option> } else { <option value="Thursday">Thursday</option>}
+                        @if (Model.ReciboMercaderia_dia.Contains("FRIDAY")) {<option value="Friday" selected>Friday</option> } else { <option value="Friday">Friday</option>}
+                        @if (Model.ReciboMercaderia_dia.Contains("SATURDAY")) {<option value="Saturday" selected>Saturday</option> } else { <option value="Saturday">Saturday</option>}
+                    </select>
+                    <br /><br />
+                    <input type="text" class="w-input" maxlength="256" value="@Model.ReciboMercaderia_area" name="ReciboMercaderiaArea" placeholder="Area de recibo de mercaderia (*)" id="ReciboMercaderiaArea" required="">
+                    <div class="form-group">
+                        @if (Model.Muelle_descarga == true)
+                        {
+                            <input type="checkbox" id="MuelleDescarga" checked>
+                        }
+                        else {
+                        <input type="checkbox" id="MuelleDescarga">
+                        }
+                        <label for="MuelleDescarga">MUELLE DE DESCARGA</label>
+                    </div>
+                    <select class="select-box" style="margin-bottom:10px !important" name="TamanoTienda" id="TamanoTienda" required>
+                        <option value="">Tamano de la tienda (*)</option>
+                        @foreach (var item in ViewBag.tamanostienda)
+                        {
+                            if (Model.Store_size.Contains(item.Descr)) {  <option value="@item.Descr" selected>@item.Descr</option>} else { <option value="@item.Descr">@item.Descr</option> }
+               
+
+}
+
+                        @*<option value="-3.000ft">- 3.000 ft</option>
+            <option value="+3.000ft">+ 3.000 ft</option>
+            <option value="+5.000ft">+ 5.000 ft</option>
+            <option value="+10.000ft">+ 10.000 ft</option>
+            <option value="+20.000ft">+ 20.000 ft</option>*@
+
+                    </select>
+
+
+
+                    <h3>Características</h3>
+                    <h4>Servicios</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s1")) {<input type="checkbox" value="s1" id="s1" name="services" checked> } else { <input type="checkbox" value="s1" id="s1" name="services">}
+                                <label for="s1">GROCERY - DRY PRODUCT</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s2")) {<input type="checkbox" value="s2" id="s2" name="services" checked> } else {<input type="checkbox" value="s2" id="s2" name="services"> }
+                                <label for="s2">DAIRY SECTION</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s3")) { <input type="checkbox" value="s3" id="s3" name="services" checked>} else { <input type="checkbox" value="s3" id="s3" name="services">}
+
+                                <label for="s3">FROZEN SECTION</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s4")) { <input type="checkbox" value="s4" id="s4" name="services" checked>} else { <input type="checkbox" value="s4" id="s4" name="services">}
+
+                                <label for="s4">PRODUCE</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s5")) { <input type="checkbox" value="s5" id="s5" name="services" checked>} else { <input type="checkbox" value="s5" id="s5" name="services">}
+
+                                <label for="s5">MEAT DEPARTAMENT</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s6")) {<input type="checkbox" value="s6" id="s6" name="services" checked> } else { <input type="checkbox" value="s6" id="s6" name="services">}
+
+                                <label for="s6">RESTAURANT</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s7")) {<input type="checkbox" value="s7" id="s7" name="services" checked> } else { <input type="checkbox" value="s7" id="s7" name="services">}
+
+                                <label for="s7">MONEY SERVICES</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s8")) { <input type="checkbox" value="s8" id="s8" name="services" checked>} else { <input type="checkbox" value="s8" id="s8" name="services">}
+
+                                <label for="s8">OTC (MEDICINAS)</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s9")) {   <input type="checkbox" value="s9" id="s9" name="services" checked>} else {   <input type="checkbox" value="s9" id="s9" name="services">}
+
+                                <label for="s9">KITCHENWARE (UTENSILIOS DE COCINA)</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s10")) { <input type="checkbox" value="s10" id="s10" name="services" checked> } else {  <input type="checkbox" value="s10" id="s10" name="services">}
+
+                                <label for="s10">ETHNIC SOURVENIRS</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s11")) { <input type="checkbox" value="s11" id="s11" name="services" checked>} else { <input type="checkbox" value="s11" id="s11" name="services">}
+
+                                <label for="s11">CLOTHING</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s12")) { <input type="checkbox" value="s12" id="s12" name="services" checked>} else { <input type="checkbox" value="s12" id="s12" name="services">}
+
+                                <label for="s12">JEWELRY</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.StoreServices.Contains("s13")) { <input type="checkbox" value="s13" id="s13" name="services" checked>} else { <input type="checkbox" value="s13" id="s13" name="services">}
+
+                                <label for="s13">CELLPHONE STORE</label>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <h4>Etnias</h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e1")) { <input type="checkbox" id="e1" value="e1" name="etnias" checked>} else { <input type="checkbox" id="e1" value="e1" name="etnias">}
+
+                                <label for="e1">EL SALVADOR</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e2")) { <input type="checkbox" id="e2" value="e2" name="etnias" checked>} else { <input type="checkbox" id="e2" value="e2" name="etnias">}
+
+                                <label for="e2">GUATEMALA</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e3")) {<input type="checkbox" id="e3" value="e3" name="etnias" checked> } else { <input type="checkbox" id="e3" value="e3" name="etnias">}
+
+                                <label for="e3">
+                                    COSTA RICA
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e4")) {<input type="checkbox" id="e4" value="e4" name="etnias" checked> } else { <input type="checkbox" id="e4" value="e4" name="etnias">}
+
+                                <label for="e4">MEXICO</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e5")) { <input type="checkbox" id="e5" value="e5" name="etnias">} else { <input type="checkbox" id="e5" value="e5" name="etnias">}
+
+                                <label for="e5">COLOMBIA</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e6")) { <input type="checkbox" id="e6" value="e6" name="etnias" checked>} else { <input type="checkbox" id="e6" value="e6" name="etnias">}
+
+                                <label for="e6">PERU</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e7")) { <input type="checkbox" id="e7" value="e7" name="etnias" checked>} else { <input type="checkbox" id="e7" value="e7" name="etnias">}
+
+                                <label for="e7">VENEZUELA</label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e8")) { <input type="checkbox" id="e8" value="e8" name="etnias" checked> } else { <input type="checkbox" id="e8" value="e8" name="etnias">}
+
+                                <label for="e8">
+                                    CUBA
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e9")) {<input type="checkbox" id="e9" value="e9" name="etnias" checked> } else { <input type="checkbox" id="e9" value="e9" name="etnias">}
+
+                                <label for="e9">
+                                    PUERTO RICO
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                @if (Model.Etnias.Contains("e10")) { <input type="checkbox" id="e10" value="e10" name="etnias" checked>} else { <input type="checkbox" id="e10" value="e10" name="etnias">}
+
+                                <label for="e10">HONDURAS</label>
+                            </div>
+                        </div>
+
+
+                        <h3>Imágenes adjutas</h3>
+                        <div class="col-12">
+                            <div>
+                                <label>TAX CERTIFICATE</label>
+                                <input type="file" class="fileTAX" id="TAXCERT" required>
+                            </div>
+                            <div>
+                                <label>RESALE TAX CERTIFICATE NUM</label>
+                                <input type="file" class="fileTAX" id="TAXRECERTNUM">
+                            </div>
+                        </div>
+
+                        <br /><br />
+                        @Html.Recaptcha(theme: Recaptcha.Web.RecaptchaTheme.Clean)
+
+                        <input type="submit" id="btnEnviar" value="Enviar" data-wait="Por favor espere..." class="formbutton w-button">
+
+
+
+
+
+                    </div>
+
+                </div>
+            </div>
+            </form>
+            @if (ViewBag.showmessage == 1)
+        {
+            <div class="w-form-done" style="display:inline-block !important">
+                <div>Thank you! Your submission has been received!</div>
+            </div>
+    }
+    else if (ViewBag.showmessage == 3)
+    {
+        <div class="w-form-fail" style="display:inline-block !important">
+            <div>Please complete the reCAPTCHA.</div>
+        </div>
+}
+else if (ViewBag.showmessage == 4)
+{
+    <div class="w-form-fail" style="display:inline-block !important">
+        <div>The reCAPTCHA is incorrect.</div>
+    </div>
+}
+else if (ViewBag.showmessage == 0)
+{
+
+}
+    </div>
+    </div>
+

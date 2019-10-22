@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.Web.Script.Serialization;
 using Microsoft.SharePoint.Client;
 using System.Security;
+using System.Data.SqlClient;
 
 namespace LimenawebApp.Controllers
 {
@@ -69,7 +70,7 @@ namespace LimenawebApp.Controllers
                 var user = (from a in dblim.Tb_NewCustomers where (a.ID_customer == id) select a).FirstOrDefault();
                 if (user != null) {
                     user.Validated = true;
-
+                    user.status = 1;
                     dblim.Entry(user).State = EntityState.Modified;
                     dblim.SaveChanges();
                     try //Enviamos a lista de Sharepoint
@@ -127,9 +128,17 @@ namespace LimenawebApp.Controllers
                         oListItem["x2nn"] = user.Country;
                         //StoreServices
                         //Se utiilizara para enviar imagenes
-
+                        
                         var imgName1 = user.url_imageTAXCERT.Substring(30);
-                        var imgName2 = user.url_imageTAXCERNUM.Substring(30);
+                        var imgName2 = "";
+                        try
+                        {
+                            imgName2 = user.url_imageTAXCERNUM.Substring(30);
+                        }
+                        catch {
+                            imgName2 = "";
+                        }
+                        
 
 
                         oListItem["ilow"] = imgName1;
@@ -205,6 +214,13 @@ namespace LimenawebApp.Controllers
 
                         ClienteCTX.ExecuteQuery();
 
+                        int newID = oListItem.Id; //Here I reference the ID from the newly created list item
+                        var commercialid = newID + 22;
+                        var urltosharepoint = "https://limenainc.sharepoint.com/sites/DatosMaestrosFlujos/Lists/Customer_Commercial/DispForm.aspx?ID=" + commercialid;
+
+                        user.urlsharepoint = urltosharepoint;
+                        user.idsharepoint = newID;
+                        user.status = 2;
                         user.OnSharepoint = true;
                         dblim.Entry(user).State = EntityState.Modified;
                         dblim.SaveChanges();
@@ -229,6 +245,55 @@ namespace LimenawebApp.Controllers
 
 
         }
+        //0 - espera
+        //1 - validado
+        //2 - sharepoint
+        //3 - edit
+        //4 - rechazado
+        public ActionResult SendMessageEdit(int? id, string mensaje)
+        {
+            try
+            {
+
+
+
+                var user = (from a in dblim.Tb_NewCustomers where (a.ID_customer == id) select a).FirstOrDefault();
+
+
+                //Send the email
+                dynamic semail = new Email("email_notificationEnrollEdit");
+                semail.To = user.E_MailL.ToString();
+                semail.From = "donotreply@limenainc.net";
+                semail.user = user.FirstName + " " + user.LastName;
+                //semail.user = user.FirstName + " " + user.LastName;
+
+                semail.url = "https://limenainc.net/Home/Enroll_edit/?request=" + user.ID_customer;
+                semail.message = mensaje;
+                if (user.emailRep == "") { semail.ccrep = "donotreply@limenainc.net"; } else { semail.ccrep = user.emailRep; }
+                
+                semail.Send();
+
+                user.Validated = false;
+                    user.status = 3;
+                    dblim.Entry(user).State = EntityState.Modified;
+                    dblim.SaveChanges();
+               
+
+                        TempData["exito"] = "Message sent to customer successfully.";
+
+      
+
+                return RedirectToAction("New_customers", "Management", null);
+            }
+            catch (Exception ex2)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex2.Message;
+                return RedirectToAction("New_customers", "Management", null);
+            }
+
+
+        }
+
 
         public ActionResult DeleteRequest(int id)
         {
@@ -313,7 +378,22 @@ namespace LimenawebApp.Controllers
                 ViewBag.lstAlerts = lstAlerts;
                 //FIN HEADER
 
-                List<Tb_NewCustomers> lstCustomers = (from a in dblim.Tb_NewCustomers select a).ToList();
+                List<Tb_NewCustomers> lstCustomers = new List<Tb_NewCustomers>();
+                //SABER SI ES ADMIN
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin"))
+                {
+                    isAdmin = 1;
+                    lstCustomers = (from a in dblim.Tb_NewCustomers select a).ToList();
+                }
+                else
+                {
+                    isAdmin = 0;
+                    var strid = Convert.ToInt32(activeuser.IDSAP);
+                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.Supervisor==strid) select a).ToList();
+                }
+
+             
 
                 return View(lstCustomers);
 
@@ -619,10 +699,10 @@ namespace LimenawebApp.Controllers
                 }
 
 
-                ViewBag.ID_activity = new SelectList(dbcmk.ActivitiesM_types.Where(x=>x.ID_activity==1), "ID_activity", "description");
+                ViewBag.ID_activity = new SelectList(dbcmk.ActivitiesM_types.Where(x=>x.ID_activity==1 || x.ID_activity==6), "ID_activity", "description");
                 //Seleccionamos los tipos de recursos a utilizar en el caso de Merchandising
 
-                List<string> uids = new List<string>() { "1", "3", "5", "6", "8", "9", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25","28","29","30","31" };
+                List<string> uids = new List<string>() { "1", "3", "5", "6", "8", "9", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25","28","29","30","31","38" };
 
                 ViewBag.ID_formresourcetype = new SelectList(dbcmk.form_resource_type.Where(c => uids.Contains(c.ID_formresourcetype.ToString())).OrderBy(c => c.fdescription), "ID_formresourcetype", "fdescription");
 
@@ -884,6 +964,145 @@ namespace LimenawebApp.Controllers
                 return RedirectToAction("Login", "Home", new { access = false });
 
             }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateSurvey(string ID_form, string ID_Vendor, string ID_rep)
+        {
+            try
+            {
+                int IDForm = Convert.ToInt32(ID_form);
+
+                //CREAMOS LA ESTRUCTURA DE LA ACTIVIDAD
+                Tasks nuevaActividad = new Tasks();
+
+                nuevaActividad.ID_formM = Convert.ToInt32(ID_form);
+                nuevaActividad.ID_Store = "";
+                nuevaActividad.store = "";
+                nuevaActividad.ID_brands = "";
+                nuevaActividad.Brands = "";
+                nuevaActividad.ID_Customer = ID_Vendor;
+
+                var vendor = (from c in dlipro.OCRD where (c.CardCode == ID_Vendor) select c).FirstOrDefault();
+                if (vendor != null)
+                {
+                    nuevaActividad.Customer = vendor.CardName;
+                }
+
+
+                nuevaActividad.desnormalizado = false;
+                nuevaActividad.ID_Store = "";
+                nuevaActividad.store = "";
+                nuevaActividad.address = "";
+                nuevaActividad.city = "";
+                nuevaActividad.zipcode = "";
+
+                nuevaActividad.state = "";
+
+                nuevaActividad.geoLong = "";
+                nuevaActividad.geoLat = "";
+
+
+                //FIN
+                int idrepint = Convert.ToInt32(ID_rep);
+                nuevaActividad.ID_taskstatus = 3;
+                nuevaActividad.comments = "";
+                nuevaActividad.check_in = DateTime.Today.Date;
+                nuevaActividad.end_date = DateTime.Today.Date;
+                nuevaActividad.ID_empresa = 11;
+                nuevaActividad.ID_userCreate = 0;
+                nuevaActividad.visit_date = DateTime.Today.Date;
+                nuevaActividad.ID_formM = Convert.ToInt32(ID_form);
+                nuevaActividad.ID_userEnd = idrepint;
+                nuevaActividad.ID_ExternalUser = "";
+                nuevaActividad.extra_hours = 0;
+
+                //1 - Inventario
+                //2 - Survey
+                nuevaActividad.ID_taskType = 2;
+                nuevaActividad.TaskType = "Survey";
+                nuevaActividad.Task_description = "THANKS GIVING SURVEY";
+
+                var usuario = (from a in dblim.Sys_Users where (a.ID_User == idrepint) select a).FirstOrDefault();
+
+                nuevaActividad.UserName = usuario.Name + " " + usuario.Lastname;
+
+                //guardamos
+                dbcmk.Tasks.Add(nuevaActividad);
+                dbcmk.SaveChanges();
+
+                //LUEGO ASIGNAMOS LA PLANTILLA DE FORMULARIO A LA ACTIVIDAD
+                //Guardamos el detalle
+                var detalles_acopiar = (from a in dbcmk.FormsM_details where (a.ID_formM == IDForm && a.original == true) select a).AsNoTracking().ToList();
+                List<FormsM_detailsTasks> targetList = detalles_acopiar.Select(c=> new FormsM_detailsTasks {
+                    ID_details = c.ID_details,
+                    ID_formresourcetype =c.ID_formresourcetype,
+                    fsource = c.fsource,
+                    fdescription=c.fdescription,
+                    fvalue=c.fvalue,
+                    fvalueDecimal=c.fvalueDecimal,
+                    fvalueText=c.fvalueText,
+                    ID_formM=c.ID_formM,
+                    ID_visit= nuevaActividad.ID_task,
+                    original=false,
+                    obj_order=c.obj_order,
+                    obj_group=c.obj_group,
+                    idkey=c.idkey,
+                    parent=c.parent,
+                    query1=c.query1,
+                    query2=c.query2,
+                    ID_empresa=11
+
+
+            }).ToList();
+
+                
+                dbcmk.BulkInsert(targetList);
+
+                TempData["exito"] = "Survey created successfully.";
+
+
+                return RedirectToAction("SurveyForm", "Commercial", new { id= nuevaActividad.ID_task});
+            }
+            catch (Exception ex)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
+                return RedirectToAction("Surveys", "Commercial", null);
+            }
+
+
+
+
+        }
+
+        public ActionResult DeleteTask(int id)
+        {
+            try
+            {
+
+                //Eliminamos detalle
+                var deletelist = (from a in dbcmk.FormsM_detailsTasks where (a.ID_visit == id) select a).ToList();
+                dbcmk.BulkDelete(deletelist);
+
+                Tasks activity = dbcmk.Tasks.Find(id);
+                dbcmk.Tasks.Remove(activity);
+                dbcmk.SaveChanges();
+
+                
+
+
+                TempData["exito"] = "Survey deleted successfully.";
+                return RedirectToAction("Surveys", "Commercial", null);
+
+            }
+            catch (Exception ex)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
+                return RedirectToAction("Surveys", "Commercial", null);
+            }
+
+
         }
     }
 }

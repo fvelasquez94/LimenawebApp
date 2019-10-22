@@ -40,6 +40,7 @@
                                             <th>TAX ID</th>
                                             <th>TAX CERT NUM</th>
                                             <th>Actions</th>
+                                            <th>URL</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -80,17 +81,41 @@
                                                 </td>
                                                 <td>
                                                     @if (user.OnSharepoint == false)
-                                                    {
-                                                        <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
+    {
+        if (user.status == 0)
+        {
+                                                <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
+                                                <a href="javascript:void(0)" onclick="requestEdit(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Request Edit" onClick="this.disabled=true;"><i class="fa fa-edit"></i></a>
+                                                <a href="javascript:void(0)" onclick="deleteRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+}
+        if (user.status == 1)
+        {
+                                              <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
+                                                
+        }
+
+        if (user.status == 3)
+        {<label class="badge badge-warning">Waiting for customer</label>
                                                         <a href="javascript:void(0)" onclick="deleteRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
-                                                    }
-                                                    else {
-                                                        <label class="badge badge-success">On Sharepoint</label>
-                                                    }
+
+        }
+}
+else
+{
+                                                <label class="badge badge-success">On Sharepoint</label>
+}
 
 
 
                                                 </td>
+                                                <td>
+                                                    @if (user.urlsharepoint == "")
+                                                    {
+                                                <label class="badge badge-light">...</label>
+                                                    }
+                                                    else {
+                                                <a href="@user.urlsharepoint" target="_blank"><label class="badge badge-light">Go to Sharepoint</label></a>
+                                                    }</td>
                                             </tr>
 
                                         }

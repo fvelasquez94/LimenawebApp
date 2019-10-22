@@ -6,6 +6,23 @@
 <script type="text/javascript">
     window.onload = function () {
         //PARA RADIO BUTTONS
+        $.each($('input[type="radio"]'), function () {
+
+            if ($(this).is(':checked')) {
+                if (this.value == "YES") {
+                    document.getElementsByClassName('divrangecontrol')[0].style.visibility = '';
+
+                } else if (this.value == "NO") {
+                    document.getElementsByClassName('divrangecontrol')[0].style.visibility = 'hidden';
+
+                }
+            }
+
+
+
+        });
+
+
         $('.parentdiv').on('change', '.rad', function () {
 
             var id = $(this).attr('id');
@@ -20,6 +37,36 @@
 
             }
         });
+
+        $('input[type="radio"]').on('click change', function (e) {
+ 
+            if (this.value == "YES") {
+                document.getElementsByClassName('divrangecontrol')[0].style.visibility = '';
+              
+            } else if (this.value == "NO") {
+                document.getElementsByClassName('divrangecontrol')[0].style.visibility = 'hidden';
+     
+            }
+        });
+
+
+        $(function () {
+            $('.timerangecontrol').daterangepicker({
+                timePicker: true,
+                autoApply: true,
+                timePicker24Hour: false,
+                timePickerIncrement: 1,
+                timePickerSeconds: false,
+                locale: {
+                    format: 'HH:mm'
+                }
+            }
+
+            ).on('show.daterangepicker', function (ev, picker) {
+                picker.container.find(".calendar-table").hide();
+            });
+        });
+
 
         $('.parentdiv').on('change', '.chk', function () {
 
@@ -44,6 +91,9 @@
 
 
     };
+
+
+
 
     function getCategories() {
         var customerId = $("#customer_list").val();
@@ -380,7 +430,15 @@
 
             });
 
+            $.each($('input.form-control[type = "text"]'), function () {
 
+                objects.push({
+                    id: $(this).attr('id'),
+                    value: $(this).val(),
+                    text: ""
+                });
+
+            });
 
 
             //var canvas = document.getElementById("sig-canvas");
@@ -400,7 +458,7 @@
             var now = new Date();
 
             $.ajax({
-                url: '/FormsActions/Save_activity',
+                url: '/FormsActions/Save_activitySurvey',
                 type: 'POST',
                 data: { 'id': idvisita, 'objects': objects, 'lat': '', 'lng': '', 'check_in': now.toLocaleString("en-US", { hour12: true }) },
                 cache: false,
@@ -493,7 +551,7 @@
         var now = new Date();
 
         $.ajax({
-            url: '/FormsActions/Save_activity',
+            url: '/FormsActions/Save_activitySurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects, 'lat': lat, 'lng': lng, 'check_in': now.toLocaleString("en-US", { hour12: true }) },
             cache: false,
@@ -573,7 +631,7 @@
         //});
         var now = new Date();
         $.ajax({
-            url: '/FormsActions/Save_activity',
+            url: '/FormsActions/Save_activitySurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects, 'lat': lat, 'lng': lng, 'check_in': now.toLocaleString("en-US", { hour12: true }) },
             cache: false,
@@ -665,129 +723,129 @@
             //    }
             //});
 
-            $.each($('input.form-control[type = "number"]'), function () {
-                if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
+            //$.each($('input.form-control[type = "number"]'), function () {
+            //    if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
 
-                    if ($(this).val() == "" || $(this).val() == null) {
-                        flag = false;
-                        $(this).addClass("border-danger");
-                    }
-                    else {
-                        $(this).removeClass("border-danger");
-                    }
+            //        if ($(this).val() == "" || $(this).val() == null) {
+            //            flag = false;
+            //            $(this).addClass("border-danger");
+            //        }
+            //        else {
+            //            $(this).removeClass("border-danger");
+            //        }
 
-                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
-                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
-                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-                    } else {
-                        //Evaluamos para validacion ya que chequearon al padre
-                        if ($(this).val() == "" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
-                        } else {
-                            $(this).removeClass("border-danger");
-                        }
-                    }
-                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
-                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
-                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-                    } else {
-                        //Evaluamos para validacion ya que chequearon al padre
-                        if ($(this).val() == "" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
-                        } else {
-                            $(this).removeClass("border-danger");
-                        }
-                    }
-                }
-            });
-
-
-
-
-
-            $.each($('textarea.form-control'), function () {
-                if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
-
-                    if ($(this).val() == "" || $(this).val() == null) {
-                        flag = false;
-                        $(this).addClass("border-danger");
-                    }
-                    else {
-                        $(this).removeClass("border-danger");
-                    }
-
-                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
-                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
-                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-                    } else {
-                        //Evaluamos para validacion ya que chequearon al padre
-                        if ($(this).val() == "" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
-                        } else {
-                            $(this).removeClass("border-danger");
-                        }
-                    }
-                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
-                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
-                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-                    } else {
-                        //Evaluamos para validacion ya que chequearon al padre
-                        if ($(this).val() == "" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
-                        } else {
-                            $(this).removeClass("border-danger");
-                        }
-                    }
-                }
+            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
+            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
+            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+            //        } else {
+            //            //Evaluamos para validacion ya que chequearon al padre
+            //            if ($(this).val() == "" || $(this).val() == null) {
+            //                flag = false;
+            //                $(this).addClass("border-danger");
+            //            } else {
+            //                $(this).removeClass("border-danger");
+            //            }
+            //        }
+            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
+            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
+            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+            //        } else {
+            //            //Evaluamos para validacion ya que chequearon al padre
+            //            if ($(this).val() == "" || $(this).val() == null) {
+            //                flag = false;
+            //                $(this).addClass("border-danger");
+            //            } else {
+            //                $(this).removeClass("border-danger");
+            //            }
+            //        }
+            //    }
+            //});
 
 
 
 
-            });
 
-            $.each($('select'), function () {
-                if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
+            //$.each($('textarea.form-control'), function () {
+            //    if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
 
-                    if ($(this).val() == "0" || $(this).val() == null) {
-                        flag = false;
-                        $(this).addClass("border-danger");
-                    }
-                    else {
-                        $(this).removeClass("border-danger");
-                    }
+            //        if ($(this).val() == "" || $(this).val() == null) {
+            //            flag = false;
+            //            $(this).addClass("border-danger");
+            //        }
+            //        else {
+            //            $(this).removeClass("border-danger");
+            //        }
 
-                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
-                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
-                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-                    } else {
-                        //Evaluamos para validacion ya que chequearon al padre
-                        if ($(this).val() == "0" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
-                        } else {
-                            $(this).removeClass("border-danger");
-                        }
-                    }
-                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
-                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
-                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-                    } else {
-                        //Evaluamos para validacion ya que chequearon al padre
-                        if ($(this).val() == "0" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
-                        } else {
-                            $(this).removeClass("border-danger");
-                        }
-                    }
-                }
+            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
+            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
+            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+            //        } else {
+            //            //Evaluamos para validacion ya que chequearon al padre
+            //            if ($(this).val() == "" || $(this).val() == null) {
+            //                flag = false;
+            //                $(this).addClass("border-danger");
+            //            } else {
+            //                $(this).removeClass("border-danger");
+            //            }
+            //        }
+            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
+            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
+            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+            //        } else {
+            //            //Evaluamos para validacion ya que chequearon al padre
+            //            if ($(this).val() == "" || $(this).val() == null) {
+            //                flag = false;
+            //                $(this).addClass("border-danger");
+            //            } else {
+            //                $(this).removeClass("border-danger");
+            //            }
+            //        }
+            //    }
 
 
-            });
+
+
+            //});
+
+            //$.each($('select'), function () {
+            //    if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
+
+            //        if ($(this).val() == "0" || $(this).val() == null) {
+            //            flag = false;
+            //            $(this).addClass("border-danger");
+            //        }
+            //        else {
+            //            $(this).removeClass("border-danger");
+            //        }
+
+            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
+            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
+            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+            //        } else {
+            //            //Evaluamos para validacion ya que chequearon al padre
+            //            if ($(this).val() == "0" || $(this).val() == null) {
+            //                flag = false;
+            //                $(this).addClass("border-danger");
+            //            } else {
+            //                $(this).removeClass("border-danger");
+            //            }
+            //        }
+            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
+            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
+            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+            //        } else {
+            //            //Evaluamos para validacion ya que chequearon al padre
+            //            if ($(this).val() == "0" || $(this).val() == null) {
+            //                flag = false;
+            //                $(this).addClass("border-danger");
+            //            } else {
+            //                $(this).removeClass("border-danger");
+            //            }
+            //        }
+            //    }
+
+
+            //});
 
             //var canvas = document.getElementById("sig-canvas");
             $.each($('canvas'), function () {
@@ -806,7 +864,7 @@
 
         var now = new Date();
         $.ajax({
-            url: '/FormsActions/Finish_activity',
+            url: '/FormsActions/Finish_activitySurvey',
             type: 'POST',
             data: { 'id': idvisita, 'lat': '', 'lng': '', 'check_out': now.toLocaleString("en-US", { hour12: true }) },
             complete: function () {
@@ -814,7 +872,7 @@
             },
             success: function (result) {
 
-                 var url = '@Url.Action("Marketing_Activities", "Commercial", new {visit= ViewBag.idvisitareal })';
+                 var url = '@Url.Action("Surveys", "Commercial", null)';
                 document.getElementById("loader").style.display = "none";
                     window.location.href = url;
 
@@ -934,39 +992,52 @@
         if (window.FormData !== undefined) {
             //$.each($('input[type="file"]'), function () {
             var ID = $(this).attr('id');
-
+       
             document.getElementById("loader").style.display = "block";
+            setTimeout(function () {
+                document.getElementById("loader").style.display = "none";
+            }, 2000);
 
             //COPIAMOS LA IMG A UN IMG INPUT
             var url = $(this).val();
             var ext = url.substring(url.lastIndexOf('.') + 1).toLowerCase();
             if ($(this).files && $(this).files[0] && (ext == "gif" || ext == "png" || ext == "jpeg" || ext == "jpg")) {
                 var reader = new FileReader();
+
                 reader.onload = function (e) {
                     $('#img_' + ID).attr('src', e.target.result);
                 }
+
                 reader.readAsDataURL(input.files[0]);
             } else {
+
             }
             //???????
 
+
+            
+
             $(this).attr('data-changeflag', '0');
+
             var idvisita = "";
             idvisita = document.getElementById('idvisita').value;
             //COMPRESIONAR IMAGEN
             var output_format = "jpg";
+
+
             //**************************
-
+          
             var fileUpload = $("#" + ID).get(0);
-
+          
             if (fileUpload.files[0].type == "image/png") {
                 output_format = "png";
             }
-            //console.log("yeah");
+
+            console.log("yeah");
             //console.log(fileUpload.files[0]);
             //console.log(fileUpload.files[0].type);
-
-            var quality = parseInt(30);
+       
+            var quality = parseInt(15);
             //*****
             var source_image = document.getElementById('img_' + ID);
             var result_image = document.getElementById('resultimg_' + ID);
@@ -978,61 +1049,56 @@
                 i.onload = function () {
                     image_width = $(i).width(),
                         image_height = $(i).height();
+
                     if (image_width > image_height) {
                         i.style.width = "320px";
                     } else {
                         i.style.height = "300px";
                     }
+
+
+
+
                     result_image.src = jic.compress(source_image, quality, output_format).src;
+
                     result_image.onload = function () {
                         var image_width = $(result_image).width(),
                             image_height = $(result_image).height();
+
                         if (image_width > image_height) {
                             result_image.style.width = "320px";
                         } else {
                             result_image.style.height = "300px";
                         }
+
+
                         // Create FormData object
                         var or = 0;
                         getOrientation(file, function (orientation) {
+
                             var dataurl = result_image.src;
                             var blob = dataURItoBlob(dataurl);
+
+
+
+
                             //var files = file;
+
                             var fileData = new FormData();
                             fileData.append("myFile", blob, "IMG.jpg");
                             // Looping over all files and add it to FormData object
                             //for (var i = 0; i < files.length; i++) {
                             //    fileData.append(files[i].name, files[i]);
                             //}
+
                             // Adding one more key to FormData object
                             fileData.append('id', ID);
                             fileData.append('idvisita', idvisita);
                             fileData.append('orientation', orientation);
                             //if true rotate to the right
 
-                            $('#maindivprogress_' + ID).show();
-
                             $.ajax({
-                                url: '/FormsActions/UploadFiles',
-                                xhr: function () {
-                                    var xhr = new window.XMLHttpRequest();
-                                    xhr.upload.addEventListener("progress", function (evt) {
-                                        if (evt.lengthComputable) {
-                                            var percentComplete = (evt.loaded / evt.total) * 100;
-                                            //Do something with upload progress here
-
-                                            $('#divprogress_' + ID).width(percentComplete + '%');
-                                            $('#divprogress_' + ID).html(percentComplete.toFixed(2) + "%");
-                                            //console.log(percentComplete);
-                                            //console.log((evt.loaded / evt.total) * 100);
-                                            //$('progress').attr({
-                                            //    value: e.loaded,
-                                            //    max: e.total,
-                                            //});
-                                        }
-                                    }, false);
-                                    return xhr;
-                                },
+                                url: '/FormsActions/UploadFilesSurvey',
                                 type: "POST",
                                 contentType: false, // Not to set any content header
                                 processData: false, // Not to process data
@@ -1040,36 +1106,44 @@
                                 timeout: 80000,
                                 data: fileData,
                                 success: function (result) {
-
-                                    if (result == "File Uploaded Successfully!") {
-
-                                    } else if (result == "Error occurred.") {
-                                        alert("Error uploading photo. Try again");
-                                        $('#divprogress_' + ID).width(0 + '%');
-                                        $('#divprogress_' + ID).html(0 + "%");
-                                    }
-
+                                    //$("#modal_demoform_saving").modal('hide');
                                     document.getElementById("loader").style.display = "none";
                                 },
                                 error: function (err) {
-                                    alert("Error uploading photo.");
-                                    $('#divprogress_' + ID).width(0 + '%');
-                                    $('#divprogress_' + ID).html(0 + "%");
-
+                                    //$("#modal_demoform_saving").modal('hide');
+                                    //alert("An error is reported. Maximum request length exceeded");
                                     document.getElementById("loader").style.display = "none";
                                 }
                             });
+
                         });
+
+
+
                     }
                 }
             };
+
             reader.readAsDataURL(file);
+
+
+
+
+
+
             //});
+
+
         }
+
+
         else {
             alert("FormData is not supported.");
         }
+
     });
+
+
 </script>
 <script>
     (function ($) {
@@ -1119,7 +1193,7 @@
 
         var now = new Date();
         $.ajax({
-            url: '/FormsActions/Finish_activity',
+            url: '/FormsActions/Finish_activitySurvey',
             type: 'POST',
             data: { 'id': idvisita, 'lat': lat, 'lng': lng, 'check_out': now.toLocaleString("en-US", { hour12: true }) },
             complete: function () {
@@ -1127,7 +1201,7 @@
             },
             success: function (result) {
 
-                 var url = '@Url.Action("Marketing_activities", "Commercial", new {id= ViewBag.idvisitareal })';
+                 var url = '@Url.Action("Surveys", "Commercial", null)';
                 document.getElementById("loader").style.display = "none";
                     window.location.href = url;
 
@@ -1153,7 +1227,7 @@
 
         var now = new Date();
         $.ajax({
-            url: '/FormsActions/Finish_activity',
+            url: '/FormsActions/Finish_activitySurvey',
             type: 'POST',
             data: { 'id': idvisita, 'lat': "", 'lng': "", 'check_out': now.toLocaleString("en-US", { hour12: true }) },
             complete: function () {
@@ -1161,7 +1235,7 @@
             },
             success: function (result) {
 
-                 var url = '@Url.Action("Marketing_activities", "Commercial", new {id= ViewBag.idvisitareal })';
+                 var url = '@Url.Action("Surveys", "Commercial", null )';
                 document.getElementById("loader").style.display = "none";
                     window.location.href = url;
 
@@ -1204,7 +1278,7 @@
         });
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1247,7 +1321,7 @@
         });
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1289,7 +1363,7 @@
         });
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1357,7 +1431,7 @@
         }
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1399,7 +1473,7 @@
         });
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1447,7 +1521,7 @@
         });
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1502,7 +1576,7 @@
 
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,
@@ -1615,7 +1689,7 @@
         
 
         $.ajax({
-            url: '/FormsActions/Save_activityByitem',
+            url: '/FormsActions/Save_activityByitemSurvey',
             type: 'POST',
             data: { 'id': idvisita, 'objects': objects },
             cache: false,

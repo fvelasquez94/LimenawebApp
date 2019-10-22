@@ -154,6 +154,7 @@
                         @*<a id="markact_submenu" class="dropdown-item" href="@Url.Action("Marketing_activities", "Commercial")">Marketing Activities</a>*@
                         @*<a id="markact_submenu" class="dropdown-item" href="#">Marketing Activities</a>*@
                         <a style="display:none" id="routes_submenu" class="dropdown-item" href="@Url.Action("Routes", "Commercial")">Marketing Activities</a>
+                        <a style="display:none" id="tasks_submenu" class="dropdown-item" href="@Url.Action("Surveys", "Commercial")">Surveys</a>
                         @*<a id="routes_submenu" class="dropdown-item" href="#">Routes</a>*@
                         <a style="display:none" id="drop1" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu">Reports</a>
                         <ul class="collapse" id="multi_menu" data-parent="#accordion">
@@ -242,9 +243,9 @@
                         Management
                     </a>
                     <div class="dropdown-menu" aria-labelledby="orderNav">
-                        <a id="users_submenu" class="dropdown-item" href="@Url.Action("Users", "Management")">Users</a>
-                        <a id="forms_submenu" class="dropdown-item" href="@Url.Action("FormsM", "Management")">Forms Builder</a>
-                        <a id="newcustomers_submenu" class="dropdown-item" href="@Url.Action("New_customers", "Management")">New Customers</a>
+                        <a id="users_submenu" class="dropdown-item" style="display:none" href="@Url.Action("Users", "Management")">Users</a>
+                        <a id="forms_submenu" class="dropdown-item" style="display:none" href="@Url.Action("FormsM", "Management")">Forms Builder</a>
+                        <a id="newcustomers_submenu" class="dropdown-item" style="display:none" href="@Url.Action("New_customers", "Management")">New Customers</a>
 
                     </div>
                 </li>

@@ -49,21 +49,89 @@
                                     </a>
                                 </div>
                             </div>
+                            <br /><br /><br />
+                            <div class="row" id="quickAccess_salesreps2" style="display:none;">
+                                <div class="col-md-3 item">
+                                    <a class="quickaccess" href="@Url.Action("Surveys", "Commercial")">
+                                        <img border="0" alt="Surveys" src="~/Content/appcontent/assets/img/completed-task.png" width="100" height="100" class="itemqa">
+                                        <span class="badge badge-info caption">Surveys</span>
+                                    </a>
+                                </div>
+                                <div class="col-md-3 item">
+
+                                </div>
+                                <div class="col-md-3 item">
+
+                                </div>
+                                <div class="col-md-3 item">
+
+                                </div>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
             <!--/sales statistical overview-->
-
             <!--/member performance & support ticket-->
-
             <!--/issue fixing & profile info-->
             <!--employee data table-->
             <!--/employee data table-->
             <!--notification & regional sales-->
-
             <!--/notification & regional sales-->
         </div>
     </div>
 </div>
 <!--/main content wrapper-->
+@if (ViewBag.issuperadmin == 0)
+{
+    <div id="myModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+
+                    <h4 class="modal-title">Surveys Status</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p>If you have not finished all your surveys, please try to complete them as soon as possible.</p>
+                    <div>
+                        <label>Your status:</label>
+                        <div class="form-group">
+                            <div>
+                                <div class="progress-title">
+                                    <span id="forms_p1" class="">Total Customers : @Convert.ToDecimal(ViewBag.prop01).ToString("n2")% @ViewBag.prop02</span>
+                                </div>
+                                <div class="progress" style="height: 2px;">
+                                    @if (Convert.ToDecimal(ViewBag.prop01) < 100)
+                                    {
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: @ViewBag.prop01%;" aria-valuemax="100"></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: @ViewBag.prop01%;" aria-valuemax="100"></div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+
+                        </div>
+                        <a href="@Url.Action("Surveys", "Commercial")" class="btn btn-primary">Take me to Surveys Page</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        var showpopup = 1;
+
+        window.onload = function () {
+            if (showpopup == 1) {
+                $("#myModal").modal('show');
+            }
+
+        };
+    </script>
+
+}

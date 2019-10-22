@@ -1,0 +1,387 @@
+﻿@model List<LimenawebApp.Models.SurveysTasks>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Survey";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Surveys List</div>
+                                @*<p><button onclick="sortTable()">Sort</button></p>*@
+                                <div>
+                                    <div class="progress-title">
+                                        <span id="forms_p1" class=""><a href="javascript:void(0);" onclick="showAll()">Total Customers</a> : @Convert.ToDecimal(ViewBag.prop01).ToString("n2")% @ViewBag.prop02</span>
+                                    </div>
+                                                                                        <div class="progress" style="height: 2px;">
+                                                        @if (Convert.ToDecimal(ViewBag.prop01) < 100)
+        {
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: @ViewBag.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: @ViewBag.prop01%;" aria-valuemax="100"></div>
+}
+                                                    </div>
+                                </div>
+
+                                   @if (ViewBag.isadmin == 1)
+{                           
+                                <div>
+                                    @foreach (var sup in ViewBag.supervisors) {
+                                    <div class="progress-title">
+                                        <span id="forms_p1" class=""><a href="javascript:void(0);" onclick="ShowSupervisor(@sup.idSAP)">@sup.Name @sup.Lastname</a> : @Convert.ToDecimal(sup.prop01).ToString("n2")% @sup.prop02</span>
+                                    </div>
+                                                                                        <div class="progress" style="height: 2px;">
+                                                        @if (Convert.ToDecimal(sup.prop01) < 100)
+        {
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: @sup.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: @sup.prop01%;" aria-valuemax="100"></div>
+}
+                                                    </div>
+                                    }
+
+                                </div>
+                                }
+                                <div class=" widget-action-link">
+
+                                    <button class="btn btn-success" data-toggle="modal" data-target="#createModal" data-action="create">Add Survey</button>
+
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor2" class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            @*<th scope="col">IDSUP</th>*@
+                                            <th scope="col">ID</th>
+                                            <th scope="col">SURVEY</th>
+                                            <th scope="col">CUSTOMER</th>
+                                           
+                                            <th scope="col">DATE</th>
+                                            <th scope="col">STATUS</th>
+                                            <th scope="col">ACTIONS</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody> 
+                                        @foreach (var so in ViewBag.repsSurveys)
+                                        {
+                                         
+                                            <tr class="treegrid-@so.ID_User rowtohide suprows rowsup-@so.idSAPsupervisor" style="background-color: rgba(0, 0, 0, .02);">
+                                                @*<td style="padding: .25rem;">so.idSAPsupervisor</td>*@
+                                                <td style="padding: .25rem;"> </td>
+                                                <td style="padding: .25rem;"></td>
+                                                <td style="padding: .25rem;">@so.Name @so.Lastname</td>
+                                              
+                                                <td style="padding: .25rem;"></td>
+                                           
+                                                <td style="padding: .25rem;">
+                                                    <div class="progress-title">
+                                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.prop01).ToString("n2")% @so.prop02</span>
+                                                    </div>
+                                                    <div class="progress" style="height: 2px;">
+                                                        @if (Convert.ToDecimal(so.prop01) < 100)
+        {
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: @so.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: @so.prop01%;" aria-valuemax="100"></div>
+}
+                                                    </div>
+                                                </td>
+                                                <td style="padding: .25rem;">
+                                         
+
+
+                                             
+                                                </td>
+                                            </tr>
+                                            foreach (var item in Model.OrderBy(c=>c.ID_taskstatus))
+                                            {
+                                                if (item.ID_userEnd == so.ID_User || item.ID_userEndSAP.ToString() == so.idSAP)
+                                                {
+                                                    <tr class="treegrid-parent-@so.ID_User rowtohide rowsup-@so.idSAPsupervisor">
+                                                        @*<td style="padding: .25rem;">so.idSAPsupervisor</td>*@                                               
+                                                        <td>
+                                                        @if (item.ID_task == 0) { } else { @item.ID_task}</td>
+                                                <td>
+                                                    <div class="flex">
+                                                
+                                                        <div class="item-except text-muted text-sm h-1x">
+                                                            @item.Task_description
+                                                        </div>
+
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @if (item.ID_task == 0) { @item.Customer } else { @item.ID_Customer <label>|</label> @item.Customer}
+                                                </td>
+                                            
+                                                <td>
+                                                    <div class="no-wrap">
+                                                        <div class="item-date text-muted text-sm d-none d-md-block">@if (item.ID_task == 0) { } else { <label>@Convert.ToDateTime(item.visit_date).ToShortDateString()</label> }
+                                                       </div>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    @if (item.ID_taskstatus == 1)
+                                                    {
+                                                        <span style="font-size:9px;" class="badge badge-danger text-uppercase">Canceled</span>
+                                                    }
+                                                    else if (item.ID_taskstatus == 2)
+                                                    {
+                                                        <span style="font-size:9px;" class="badge badge-success text-uppercase">In progress</span>
+                                                    }
+                                                    else if (item.ID_taskstatus == 3)
+                                                    {
+                                                        <span style="font-size:9px;" class="badge badge-warning text-uppercase">Not Finished</span>
+                                                    }
+                                                    else if (item.ID_taskstatus == 4)
+                                                    {
+                                                        <span style="font-size:9px;" class="badge badge-info text-uppercase">Finished</span>
+                                                    }
+                                                </td>
+                                                @if (ViewBag.isadmin == 1)
+
+                                                {
+                                                    <td>
+                                                        <a href="@Url.Action("SurveyForm", "Commercial", new { id = item.ID_task })" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>
+                                                        <a href="javascript:void(0)" onclick="deleteSurvey(@item.ID_task)" class="btn btn-outline-danger btn-sm form-pill" title="Delete"><i class="fa fa-close"></i></a>
+                                                    </td>
+                                                }
+                                                else {
+                                                    if (item.ID_taskstatus == 3 && item.ID_task!=0) {
+ <td>
+                                                        <a href="@Url.Action("SurveyForm", "Commercial", new { id = item.ID_task })" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>
+                                                        
+                                                    </td>
+                                                    }
+                                                   
+                                                }
+
+                                                    </tr>
+                                                }
+
+
+                                            }
+
+
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+@if (ViewBag.isadmin == 1)
+{
+    <!--CRESTE USER DATA STARTS-->
+    <div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                @using (Html.BeginForm("CreateSurvey", "Management", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-file-cloud"></i> Add New Survey</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12 grid-margin">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <p class="card-description">
+                                        <h4 class="card-title">Activity</h4>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <select id="ID_form" name="ID_form" class="form-control" style="width:100%">
+                                                    <option value="0">Select an activity</option>
+                                                    <optgroup label="Surveys">
+                                                        @foreach (var form in ViewBag.activeforms)
+                                                        {
+
+                                                            <option value="@form.ID_form">@form.name</option>
+
+                                                        }
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="card-description">
+                                        <h4 class="card-title">Representative</h4>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <select name="ID_rep" id="ID_rep" class="form-control" style="width:100%" onChange='getCustomers()'>
+                                                    <option id="0">Select a representative</option>
+                                                    <optgroup label="Sales Representatives">
+
+                                                        @foreach (var rep in ViewBag.representatives)
+                                                        {
+
+                                                            <option value="@rep.ID_User">@rep.Name @rep.Lastname</option>
+                                                        }
+                                                    </optgroup>
+
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="card-description">
+                                        <h4 class="card-title">Customer</h4>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <select name="ID_vendor" id="ID_vendor" class="form-control" style="width:100%"></select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Add</button>
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!--CREATE DEMO DATA ENDS-->
+}
+else
+{
+    <!--CRESTE USER DATA STARTS-->
+    <div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                @using (Html.BeginForm("CreateSurvey", "Management", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-file-cloud"></i> Add New Survey</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12 grid-margin">
+                            <div class="card">
+                                <div class="card-body">
+
+                                    <p class="card-description">
+                                        <h4 class="card-title">Activity</h4>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <select id="ID_form" name="ID_form" class="form-control" style="width:100%">
+                                                    <option value="0">Select an activity</option>
+                                                    <optgroup label="Surveys">
+                                                        @foreach (var form in ViewBag.activeforms)
+                                                        {
+
+                                                            <option value="@form.ID_form" selected>@form.name</option>
+
+                                                        }
+                                                    </optgroup>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="card-description">
+                                        <h4 class="card-title">Representative</h4>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <select name="ID_rep" id="ID_rep" class="form-control" style="width:100%">
+
+                                                    <option value="@ViewBag.iduser">@ViewBag.user</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="card-description">
+                                        <h4 class="card-title">Customer</h4>
+                                    </p>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group row">
+                                                <select name="ID_vendor" id="ID_vendor" class="form-control" style="width:100%">
+                                                    @foreach (var customer in ViewBag.customers)
+                                                    {
+                                                        if (customer.parent == "existe")
+                                                        {
+                                                            <option value="@customer.id" disabled>@customer.text</option>
+                                                        }
+                                                        else
+                                                        {
+                                                            <option value="@customer.id">@customer.text</option>
+                                                        }
+
+                                                    }
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-info">Add</button>
+                        <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!--CREATE DEMO DATA ENDS-->
+}

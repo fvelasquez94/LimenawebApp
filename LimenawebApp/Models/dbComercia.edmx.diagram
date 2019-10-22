@@ -17,6 +17,8 @@
         <AssociationConnector Association="dbComerciaModel.FK__VisitsM__ID_rout__18B6AB08" ManuallyRouted="false" />
         <AssociationConnector Association="dbComerciaModel.FK__RoutesM_R__ID_vi__03BB8E22" ManuallyRouted="false" />
         <EntityTypeShape EntityType="dbComerciaModel.Activities_RefImg" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="dbComerciaModel.FormsM_detailsTasks" Width="1.5" PointX="10.375" PointY="6.75" />
+        <EntityTypeShape EntityType="dbComerciaModel.Tasks" Width="1.5" PointX="3.375" PointY="11.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

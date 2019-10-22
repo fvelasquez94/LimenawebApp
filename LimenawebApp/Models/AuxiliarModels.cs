@@ -36,6 +36,13 @@ namespace LimenawebApp.Models
 
     }
 
+    public class ZipcodeStatesSupervisor
+    {
+        public int Supervisor { get; set; }
+        public string StateCode { get; set; }
+        public string State { get; set; }   
+    }
+
 
     public class Pedidos_precios
     {
@@ -134,5 +141,34 @@ namespace LimenawebApp.Models
         public string Route { get; set; }
         public string comments { get; set; }
         public int LineNum { get; set; }
+    }
+
+
+    //Clase para Surveys
+
+    public class SurveysTasks
+    {
+        public int ID_task { get; set; }
+        public string ID_Customer { get; set; }
+        public string Customer { get; set; }
+        public System.DateTime visit_date { get; set; }
+        public int? ID_userEnd { get; set; }
+        public int? ID_userEndSAP { get; set; }
+        public int ID_taskstatus { get; set; }
+        public int ID_taskType { get; set; }
+        public string TaskType { get; set; }
+        public string Task_description { get; set; }
+
+    }
+
+    public class RepsSurveys {
+        public int ID_User { get; set; }
+        public string Name { get; set; }
+        public string Lastname { get; set; }
+        public string prop01 { get; set; }
+        public string prop02 { get; set; }
+        public string idSAP { get; set; }
+        public string idSAPsupervisor{ get; set; }
+
     }
 }

@@ -377,6 +377,7 @@
                 });
             })
             var objects = [];
+            var flagalert = 0;
             for (var i = 0, len = data.length; i < len; i++) {
 
                 if (i != 0) {
@@ -389,37 +390,49 @@
                         ItemName: data[i][6],
                         deleted: data[i][7]
                     });
+
+                    if ((data[i][4] == "" || data[i][4] == "0") && data[i][7] != "DEL") {
+                        flagalert = 1;
+                    }
                 }
 
+                
+
             }
-            var idt = $("#selectSOd").val();
-            //console.log(idt + objects + idpicker + pickername);
-            //console.log(objects);
-            document.getElementById("loader").style.display = "block";
-            $.ajax
-                ({
-                    url: '/Invoices/Save_SODetails',
-                    type: 'POST',
-                    data: { 'id': idt, 'objects': objects, 'idPicker': idpicker, 'pickername': pickername},
-                    success: function (result) {
 
-                        if (result == "SUCCESS") {
-                            toastr.success("Data saved successfully.", "Success");
+            if (flagalert == 1) {
+                alert("Please check all products quantity.")
+            } else {
+                var idt = $("#selectSOd").val();
+                //console.log(idt + objects + idpicker + pickername);
+                //console.log(objects);
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Invoices/Save_SODetails',
+                        type: 'POST',
+                        data: { 'id': idt, 'objects': objects, 'idPicker': idpicker, 'pickername': pickername },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                toastr.success("Data saved successfully.", "Success");
+                                document.getElementById("loader").style.display = "none";
+                                window.location.reload(true);
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+                                document.getElementById("loader").style.display = "none";
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong..", "Warning");
                             document.getElementById("loader").style.display = "none";
-                            window.location.reload(true);
-                        } else {
-                            toastr.warning("Something went wrong.." + result, "Warning");
-                            document.getElementById("loader").style.display = "none";
-                        }
+                        },
+                    });
+            }
 
-
-                    },
-                    error: function () {
-
-                        toastr.warning("Something went wrong..", "Warning");
-                        document.getElementById("loader").style.display = "none";
-                    },
-                });
         }
 
        

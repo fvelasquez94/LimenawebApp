@@ -35,5 +35,7 @@ namespace LimenawebApp.Models
         public virtual DbSet<VisitsM> VisitsM { get; set; }
         public virtual DbSet<VisitsM_representatives> VisitsM_representatives { get; set; }
         public virtual DbSet<Activities_RefImg> Activities_RefImg { get; set; }
+        public virtual DbSet<FormsM_detailsTasks> FormsM_detailsTasks { get; set; }
+        public virtual DbSet<Tasks> Tasks { get; set; }
     }
 }

@@ -42,5 +42,12 @@ namespace LimenawebApp.Models
         public string Store_size { get; set; }
         public bool Validated { get; set; }
         public bool OnSharepoint { get; set; }
+        public int status { get; set; }
+        public int Supervisor { get; set; }
+        public string urlsharepoint { get; set; }
+        public int idsharepoint { get; set; }
+        public int idRep { get; set; }
+        public int idSAPRep { get; set; }
+        public string emailRep { get; set; }
     }
 }

@@ -65,8 +65,7 @@ namespace LimenawebApp.Controllers
         }
 
 
-
-        public JsonResult Finish_activity(string id, string lat, string lng, string check_out)
+                public JsonResult Finish_activity(string id, string lat, string lng, string check_out)
         {
             try
             {
@@ -104,6 +103,57 @@ namespace LimenawebApp.Controllers
 
                     activity.check_out = Convert.ToDateTime(check_out);
                     activity.isfinished = true;
+                    dbcmk.Entry(activity).State = EntityState.Modified;
+                    dbcmk.SaveChanges();
+                    
+
+                    return Json(new { Result = "Success" });
+                }
+                return Json(new { Result = "Warning" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "Warning" + ex.Message });
+            }
+        }
+        public JsonResult Finish_activitySurvey(string id, string lat, string lng, string check_out)
+        {
+            try
+            {
+                int IDU = Convert.ToInt32(Session["IDusuario"]);
+                if (id != null)
+                {
+                    int act = Convert.ToInt32(id);
+                    Tasks activity = dbcmk.Tasks.Find(act);
+
+                    //if (lat != null || lat != "")
+                    //{
+                    //    //Guardamos el log de la actividad
+                    //    ActivitiesM_log nuevoLog = new ActivitiesM_log();
+                    //    nuevoLog.latitude = lat;
+                    //    nuevoLog.longitude = lng;
+                    //    nuevoLog.ID_usuario = IDU;
+                    //    nuevoLog.ID_activity = Convert.ToInt32(id);
+                    //    nuevoLog.fecha_conexion = Convert.ToDateTime(check_out);
+                    //    nuevoLog.query1 = "";
+                    //    nuevoLog.query2 = "";
+                    //    nuevoLog.action = "FINISH ACTIVITY - " + activity.description;
+                    //    nuevoLog.ip = "";
+                    //    nuevoLog.hostname = "";
+                    //    nuevoLog.typeh = "";
+                    //    nuevoLog.continent_name = "";
+                    //    nuevoLog.country_code = "";
+                    //    nuevoLog.country_name = "";
+                    //    nuevoLog.region_code = "";
+                    //    nuevoLog.region_name = "";
+                    //    nuevoLog.city = "";
+
+                    //    dbcmk.ActivitiesM_log.Add(nuevoLog);
+                    //    dbcmk.SaveChanges();
+                    //}
+
+                    activity.end_date = Convert.ToDateTime(check_out);
+                    activity.ID_taskstatus = 4;
                     dbcmk.Entry(activity).State = EntityState.Modified;
                     dbcmk.SaveChanges();
                     
@@ -1448,6 +1498,154 @@ namespace LimenawebApp.Controllers
 
         }
 
+        public JsonResult Save_activitySurvey(string id, List<MyObj_formtemplate> objects, string lat, string lng, string check_in)
+        {
+            List<FormsM_detailsTasks> detailsForm = Session["detailsForm"] as List<FormsM_detailsTasks>;
+            try
+            {
+                int IDU = Convert.ToInt32(Session["IDusuario"]);
+                if (id != null)
+                {
+                    int act = Convert.ToInt32(id);
+                    //ActivitiesM activity = db.ActivitiesM.Find(act);
+                    //activity.check_out = Convert.ToDateTime(check_in);
+                    //db.Entry(activity).State = EntityState.Modified;             
+                    //db.SaveChanges();
+
+                    //if (lat != null || lat != "")
+                    //{
+                    //    //Guardamos el log de la actividad
+                    //    ActivitiesM_log nuevoLog = new ActivitiesM_log();
+                    //    nuevoLog.latitude = lat;
+                    //    nuevoLog.longitude = lng;
+                    //    nuevoLog.ID_usuario = IDU;
+                    //    nuevoLog.ID_activity = Convert.ToInt32(id);
+                    //    nuevoLog.fecha_conexion = Convert.ToDateTime(check_in);
+                    //    nuevoLog.query1 = "";
+                    //    nuevoLog.query2 = "";
+                    //    nuevoLog.action = "SAVE ACTIVITY - " + activity.description;
+                    //    nuevoLog.ip = "";
+                    //    nuevoLog.hostname = "";
+                    //    nuevoLog.typeh = "";
+                    //    nuevoLog.continent_name = "";
+                    //    nuevoLog.country_code = "";
+                    //    nuevoLog.country_name = "";
+                    //    nuevoLog.region_code = "";
+                    //    nuevoLog.region_name = "";
+                    //    nuevoLog.city = "";
+
+                    //    db.ActivitiesM_log.Add(nuevoLog);
+                    //    db.SaveChanges();
+                    //}
+
+
+                    //Guardamos el detalle del formlario
+                    if (objects != null)
+                    {
+                        foreach (var item in objects)
+                        {
+                            int IDItem = Convert.ToInt32(item.id);
+                            FormsM_detailsTasks detail = (from f in detailsForm where (f.ID_visit == act && f.idkey == IDItem) select f).FirstOrDefault();
+                            if (detail == null)
+                            {
+
+                            }
+                            else
+                            {
+                                //if (detail.ID_formresourcetype == 3 || detail.ID_formresourcetype == 4 || detail.ID_formresourcetype == 10)//Products, Samples,Gift
+                                //{
+                                //    if (item.value == "" || item.value == null) { item.value = "0"; }
+                                //    detail.fvalue = Convert.ToInt32(item.value);
+
+                                //    db.Entry(detail).State = EntityState.Modified;
+                                //    db.SaveChanges();
+
+                                //}
+                                //else 
+                                if (detail.ID_formresourcetype == 5) //Picture
+                                {
+                                    //
+                                    if (item.value == "100")
+                                    {
+                                        var path = detail.fsource;
+                                        //eliminamos la ruta
+                                        detail.fsource = "";
+
+                                        dbcmk.Entry(detail).State = EntityState.Modified;
+
+
+
+                                        if (System.IO.File.Exists(Server.MapPath(path)))
+                                        {
+                                            try
+                                            {
+                                                System.IO.File.Delete(Server.MapPath(path));
+                                            }
+                                            catch (System.IO.IOException e)
+                                            {
+                                                Console.WriteLine(e.Message);
+
+                                            }
+                                        }
+                                    }
+
+
+
+
+                                }
+                                else if (detail.ID_formresourcetype == 9) //Input text y Electronic Signature
+                                {
+
+                                    if (item.value == "" || item.value == null) { item.value = ""; }
+                                    if (detail.fsource != item.value)
+                                    {
+                                        detail.fsource = item.value;
+
+                                        dbcmk.Entry(detail).State = EntityState.Modified;
+
+                                    }
+
+                                }
+                                else if (detail.ID_formresourcetype == 38) //Input text y Electronic Signature
+                                {
+
+                                    if (item.value == "" || item.value == null) { item.value = ""; }
+                              
+                                        detail.fvalueText = item.value;
+
+                                        dbcmk.Entry(detail).State = EntityState.Modified;
+
+                                    
+
+                                }
+
+                                //}
+                                else
+                                {
+                                    //No hacemos nada porque no esta registrado
+                                }
+
+                            }
+
+
+                        }
+                        dbcmk.SaveChanges();
+
+                        Session["detailsForm"] = detailsForm;
+                    }
+
+                    return Json(new { Result = "Success" });
+                }
+                return Json(new { Result = "Warning" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "Warning" + ex.Message });
+            }
+
+        }
+
+
         public JsonResult Save_activityByitem(string id, List<MyObj_formtemplate> objects)
         {
             try
@@ -1665,6 +1863,256 @@ namespace LimenawebApp.Controllers
             }
 
         }
+
+
+        public JsonResult Save_activityByitemSurvey(string id, List<MyObj_formtemplate> objects)
+        {
+            try
+            {
+                List<FormsM_detailsTasks> detailsForm = Session["detailsForm"] as List<FormsM_detailsTasks>;
+                int act = Convert.ToInt32(id);
+                if (detailsForm != null)
+                {
+
+                }
+                else
+                {
+                    using (var dbs = new dbComerciaEntities())
+                    {
+
+                        detailsForm = dbs.FormsM_detailsTasks.Where(a => a.ID_visit == act).ToList();
+                    }
+
+                }
+                //int IDU = Convert.ToInt32(Session["IDusuario"]);
+                if (id != null)
+                {
+
+                    //Guardamos el detalle del formlario
+                    foreach (var item in objects)
+                    {
+                        int IDItem = Convert.ToInt32(item.id);
+                        var detail = (from f in detailsForm where (f.ID_visit == act && f.idkey == IDItem) select f).FirstOrDefault();
+                        if (detail == null)
+                        {
+
+                        }
+                        else
+                        {
+                            if (detail.ID_formresourcetype == 3 || detail.ID_formresourcetype == 4 || detail.ID_formresourcetype == 10)//Products, Samples,Gift
+                            {
+                                if (item.value == "" || item.value == null) { item.value = "0"; }
+
+                                if (detail.fvalue != Convert.ToInt32(item.value))
+                                {
+                                    detail.fvalue = Convert.ToInt32(item.value);
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+
+
+                                }
+
+
+
+                            }
+                            else if (detail.ID_formresourcetype == 5) //Picture
+                            {
+                                if (item.value == "100")
+                                {
+                                    var path = detail.fsource;
+                                    //eliminamos la ruta
+                                    detail.fsource = "";
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+
+
+                                    if (System.IO.File.Exists(Server.MapPath(path)))
+                                    {
+                                        try
+                                        {
+                                            System.IO.File.Delete(Server.MapPath(path));
+                                        }
+                                        catch (System.IO.IOException e)
+                                        {
+                                            Console.WriteLine(e.Message);
+
+                                        }
+                                    }
+                                }
+
+
+
+                            }
+                            else if (detail.ID_formresourcetype == 6 || detail.ID_formresourcetype == 9) //Input text y Electronic Signature
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = ""; }
+                                if (detail.fsource != item.value)
+                                {
+                                    detail.fsource = item.value;
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                }
+
+                            }
+                            else if (detail.ID_formresourcetype == 28) //BARCODE
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = ""; }
+                                if (detail.fsource != item.value)
+                                {
+                                    detail.fsource = item.value;
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                }
+
+                            }
+
+                            else if (detail.ID_formresourcetype == 18) //Input number
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = "0"; }
+                                if (detail.fvalueDecimal != Convert.ToDecimal(item.value))
+                                {
+                                    detail.fvalueDecimal = Convert.ToDecimal(item.value);
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                }
+
+                            }
+                            else if (detail.ID_formresourcetype == 21) // currency
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = "0"; }
+
+                                if (detail.fvalueDecimal != Convert.ToDecimal(item.value))
+                                {
+                                    detail.fvalueDecimal = Convert.ToDecimal(item.value);
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                }
+
+                            }
+                            else if (detail.ID_formresourcetype == 38) // Time Range
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = ""; }
+
+                               
+                                    detail.fvalueText = item.value;
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                
+
+                            }
+                            else if (detail.ID_formresourcetype == 22) // Date
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = ""; }
+
+                                try
+                                {
+                                    detail.fvalueText = Convert.ToDateTime(item.value).ToShortDateString();
+                                }
+                                catch
+                                {
+                                    detail.fvalueText = "";
+                                }
+
+
+                                dbcmk.Entry(detail).State = EntityState.Modified;
+                                dbcmk.SaveChanges();
+                                //db.Entry(detail).State = EntityState.Modified;
+                                //db.SaveChanges();
+                            }
+
+                            //Select, Customer, Brands,Product line, Brand Competitors 
+                            else if (detail.ID_formresourcetype == 17 || detail.ID_formresourcetype == 12 || detail.ID_formresourcetype == 13 || detail.ID_formresourcetype == 14 || detail.ID_formresourcetype == 15
+                                || detail.ID_formresourcetype == 30 || detail.ID_formresourcetype == 31)
+                            {
+                                if (detail.fvalueText != item.value)
+                                {
+                                    detail.fvalueText = item.value; //Lo guardamos como texto por si colocan ID tipo cadena
+                                    detail.fdescription = item.text;
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                }
+
+                            }
+
+                            else if (detail.ID_formresourcetype == 19 || detail.ID_formresourcetype == 16) //checkbox,radio
+                            {
+
+                                if (item.value == "" || item.value == null) { item.value = "false"; }
+                                int seleccionado = 0;
+                                if (item.value == "false")
+                                {
+                                    seleccionado = 0;
+                                }
+                                else if (item.value == "true")
+                                {
+                                    seleccionado = 1;
+                                }
+
+                                if (detail.fvalue != seleccionado)
+                                {
+                                    detail.fvalue = seleccionado; //Lo guardamos como entero
+
+                                    dbcmk.Entry(detail).State = EntityState.Modified;
+                                    dbcmk.SaveChanges();
+                                }
+
+
+                            }
+                            else
+                            {
+                                //No hacemos nada porque no esta registrado
+                            }
+
+                        }
+
+
+                    }
+                    Session["detailsForm"] = detailsForm;
+
+                    return Json(new { Result = "Success" });
+                }
+                //}
+                return Json(new { Result = "Warning" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { Result = "Warning" + ex.Message });
+            }
+
+        }
+
+        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        {
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+
+            var newImage = new Bitmap(newWidth, newHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+
+            return newImage;
+        }
+
+
         [HttpPost]
         public ActionResult UploadFiles(string id, string idvisita, string orientation)
         {
@@ -1824,7 +2272,7 @@ namespace LimenawebApp.Controllers
                             graphicImage.Clear(Color.White);
                             graphicImage.DrawImage(bitmapImg, new Point(0, 0));
                             graphicImage.DrawImage(bitmapComment, new Point(bitmapComment.Width, 0));
-                            graphicImage.DrawString((store + " | " + brand + " | " + date + " | " + activi), new Font("Arial", 21), new SolidBrush(Color.Black), 0, bitmapImg.Height + footerHeight / 6);
+                            graphicImage.DrawString((store + " | " + brand + " | " + date + " | " + activi), new Font("Arial", 19), new SolidBrush(Color.Black), 0, bitmapImg.Height + footerHeight / 6);
 
 
 
@@ -1835,7 +2283,19 @@ namespace LimenawebApp.Controllers
 
                             //if (tam < 600000)
                             //{
-                            bitmapNewImage.Save(path, ImageFormat.Jpeg);
+                            //bitmapNewImage.Save(path, ImageFormat.Jpeg);
+                            Image newimage;
+                            //Cambiar tamano no calidad
+                            if (orientation == "-1")
+                            {
+                                newimage = ScaleImage(bitmapNewImage, 768, 1360);
+                            }
+                            else
+                            {
+                                newimage = ScaleImage(bitmapNewImage, 1360, 768);
+                            }
+                            newimage.Save(path, ImageFormat.Jpeg);
+
 
                             bitmapImg.Dispose();
                             bitmapComment.Dispose();
@@ -1875,7 +2335,7 @@ namespace LimenawebApp.Controllers
                 }
                 catch (Exception ex)
                 {
-                    return Json("Error occurred. Error details: " + ex.Message);
+                    return Json("Error occurred.");
                 }
             }
             else

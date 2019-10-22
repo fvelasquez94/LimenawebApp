@@ -913,6 +913,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.SalesRep' does not have a primary key 
           <Property Name="CatCommission" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6013: The table/view 'DLI_PRO.dbo.SDK_State_and_Supervisor' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
+        <EntityType Name="SDK_State_and_Supervisor">
+          <Property Name="Supervisor" Type="int" />
+          <Property Name="StateCode" Type="nvarchar" MaxLength="3" />
+          <Property Name="State" Type="nvarchar" MaxLength="100" />
+        </EntityType>-->
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Supervisor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Supervisor">
           <Key>

@@ -199,8 +199,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.3.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.3\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.10.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.10\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -351,6 +351,9 @@
     <Compile Include="Models\FormsM_details.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\FormsM_detailsTasks.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\form_resource_type.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
@@ -445,6 +448,9 @@
     </Compile>
     <Compile Include="Models\Sys_Users.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tasks.cs">
+      <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_Alerts.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -586,6 +592,7 @@
     <Content Include="Content\appcontent\assets\img\badge\credit-card.png" />
     <Content Include="Content\appcontent\assets\img\badge\newspaper.png" />
     <Content Include="Content\appcontent\assets\img\badge\tags.png" />
+    <Content Include="Content\appcontent\assets\img\completed-task.png" />
     <Content Include="Content\appcontent\assets\js\countrystatecity.js" />
     <Content Include="Content\appcontent\assets\js\dropify.js" />
     <Content Include="Content\appcontent\assets\js\dropify.min.js" />
@@ -2376,6 +2383,14 @@
     <Content Include="Views\Commercial\Credits_request.cshtml" />
     <Content Include="Views\Commercial\Credits_authorize.cshtml" />
     <Content Include="Views\Invoices\Routes_Report.cshtml" />
+    <Content Include="Views\Commercial\Surveys.cshtml" />
+    <Content Include="Views\Shared\SurveysScripts.cshtml" />
+    <Content Include="Views\Commercial\SurveyForm.cshtml" />
+    <Content Include="Views\Emails\email_notificationEnrollNC.cshtml" />
+    <Content Include="Views\Emails\email_notificationEnrollSup.cshtml" />
+    <Content Include="Views\Home\Enroll_edit.cshtml" />
+    <Content Include="Views\Emails\email_notificationEnrollEdit.cshtml" />
+    <Content Include="Views\Emails\email_notificationEnrollEdit.Html.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

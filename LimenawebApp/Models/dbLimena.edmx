@@ -245,6 +245,13 @@
           <Property Name="Store_size" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="Validated" Type="bit" Nullable="false" />
           <Property Name="OnSharepoint" Type="bit" Nullable="false" />
+          <Property Name="status" Type="int" />
+          <Property Name="Supervisor" Type="int" />
+          <Property Name="urlsharepoint" Type="varchar(max)" />
+          <Property Name="idsharepoint" Type="int" />
+          <Property Name="idRep" Type="int" />
+          <Property Name="idSAPRep" Type="int" />
+          <Property Name="emailRep" Type="varchar" MaxLength="250" />
         </EntityType>
         <EntityType Name="Tb_OrdersDetailsDSD">
           <Key>
@@ -1116,6 +1123,13 @@
           <Property Name="Store_size" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
           <Property Name="Validated" Type="Boolean" Nullable="false" />
           <Property Name="OnSharepoint" Type="Boolean" Nullable="false" />
+          <Property Name="status" Type="Int32" />
+          <Property Name="Supervisor" Type="Int32" />
+          <Property Name="urlsharepoint" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="idsharepoint" Type="Int32" />
+          <Property Name="idRep" Type="Int32" />
+          <Property Name="idSAPRep" Type="Int32" />
+          <Property Name="emailRep" Type="String" MaxLength="250" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Tb_CreditsRequest">
           <Key>
@@ -1547,6 +1561,13 @@
           <EntitySetMapping Name="Tb_NewCustomers">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_NewCustomers">
               <MappingFragment StoreEntitySet="Tb_NewCustomers">
+                <ScalarProperty Name="emailRep" ColumnName="emailRep" />
+                <ScalarProperty Name="idSAPRep" ColumnName="idSAPRep" />
+                <ScalarProperty Name="idRep" ColumnName="idRep" />
+                <ScalarProperty Name="idsharepoint" ColumnName="idsharepoint" />
+                <ScalarProperty Name="urlsharepoint" ColumnName="urlsharepoint" />
+                <ScalarProperty Name="Supervisor" ColumnName="Supervisor" />
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="OnSharepoint" ColumnName="OnSharepoint" />
                 <ScalarProperty Name="Validated" ColumnName="Validated" />
                 <ScalarProperty Name="Store_size" ColumnName="Store_size" />

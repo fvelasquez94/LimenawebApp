@@ -216,14 +216,14 @@ namespace LimenawebApp.Controllers
                 if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor") || activeuser.Roles.Contains("Credits Authorizer"))
                 {
                     isAdmin = 1;
-                    var customers = (from b in dlipro.BI_Dim_Customer where (b.Customer.StartsWith("C") && b.Customer != null && b.Customer != "") select new { id = b.id_Customer, text = b.Customer }).OrderBy(a => a.text).ToArray();
+                    var customers = (from b in dlipro.BI_Dim_Customer where (b.Customer.StartsWith("C") && b.Customer != null && b.Customer != "") select new { id = b.id_Customer, text = b.Customer.Replace(",", "") }).OrderBy(a => a.text).ToArray();
                     ViewBag.customers = JsonConvert.SerializeObject(customers);
                 }
                 else
                 {
                     isAdmin = 0;
                     int? sapdli = Convert.ToInt32(activeuser.IDSAP);
-                    var customers = (from b in dlipro.BI_Dim_Customer where (b.Customer.StartsWith("C") && b.Customer != null && b.Customer != "" && b.id_SalesRep== sapdli) select new { id = b.id_Customer, text = b.Customer }).OrderBy(a => a.text).ToArray();
+                    var customers = (from b in dlipro.BI_Dim_Customer where (b.Customer.StartsWith("C") && b.Customer != null && b.Customer != "" && b.id_SalesRep== sapdli) select new { id = b.id_Customer, text = b.Customer.Replace(",", "") }).OrderBy(a => a.text).ToArray();
                     ViewBag.customers = JsonConvert.SerializeObject(customers);
                 }
 
@@ -3795,6 +3795,138 @@ public ActionResult Prices_requestpdo(int docnum)
 
         }
 
+        public ActionResult SurveyForm(int? id)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                var activity = (from v in dbcmk.Tasks where (v.ID_task == id) select v).FirstOrDefault();
+
+                FormsM formsM = dbcmk.FormsM.Find(activity.ID_formM);
+
+                //LISTADO DE CLIENTES
+                //VERIFICAMOS SI SELECCIONARON CLIENTE PREDEFINIDO
+
+                if (activity.Customer != "")
+                {
+                    var customers = (from b in dlipro.OCRD where (b.CardCode == activity.ID_Customer) select b).OrderBy(b => b.CardName).ToList();
+                    ViewBag.customers = customers.ToList();
+                }
+                else
+                {
+                    var customers = (from b in dlipro.OCRD where (b.CardType == "S" && b.CardName != null && b.CardName != "" && b.GroupCode == 102) select b).OrderBy(b => b.CardName).ToList();
+                    ViewBag.customers = customers.ToList();
+            
+
+                }
+
+                var FormsMDet = (from a in dbcmk.FormsM_detailsTasks where (a.ID_visit == activity.ID_task && a.original == false) select a).ToList();
+
+                //NUEVO
+                //ID VISIT SE UTILIZA COMO RELACION
+                List<MyObj_tablapadre> listapadresActivities = (from item in FormsMDet
+                                                                where (item.parent == 0)
+                                                                select
+                                                                   new MyObj_tablapadre
+                                                                   {
+                                                                       ID_details = item.ID_details,
+                                                                       id_resource = item.ID_formresourcetype,
+                                                                       fsource = item.fsource,
+                                                                       fdescription = item.fdescription,
+                                                                       fvalue = item.fvalue,
+                                                                       fvalueDecimal = item.fvalueDecimal,
+                                                                       fvalueText = item.fvalueText,
+                                                                       ID_formM = item.ID_formM,
+                                                                       ID_visit = item.ID_visit,
+                                                                       original = item.original,
+                                                                       obj_order = item.obj_order,
+                                                                       obj_group = item.obj_group,
+                                                                       idkey = item.idkey,
+                                                                       parent = item.parent,
+                                                                       query1 = item.query1,
+                                                                       query2 = item.query2,
+                                                                       ID_empresa = item.ID_empresa
+                                                                   }
+                                      ).OrderBy(a => a.obj_order).ToList();
+
+                List<tablahijospadre> listahijasActivities = (from item in FormsMDet
+                                                              select new tablahijospadre
+                                                              {
+                                                                  ID_details = item.ID_details,
+                                                                  id_resource = item.ID_formresourcetype,
+                                                                  fsource = item.fsource,
+                                                                  fdescription = item.fdescription,
+                                                                  fvalue = item.fvalue,
+                                                                  fvalueDecimal = item.fvalueDecimal,
+                                                                  fvalueText = item.fvalueText,
+                                                                  ID_formM = item.ID_formM,
+                                                                  ID_visit = item.ID_visit,
+                                                                  original = item.original,
+                                                                  obj_order = item.obj_order,
+                                                                  obj_group = item.obj_group,
+                                                                  idkey = item.idkey,
+                                                                  parent = item.parent,
+                                                                  query1 = item.query1,
+                                                                  query2 = item.query2,
+                                                                  ID_empresa = item.ID_empresa
+
+                                                              }).OrderBy(a => a.obj_order).ToList();
+
+
+                List<MyObj_tablapadre> categoriasListActivities = ObtenerCategoriarJerarquiaByID(listapadresActivities, listahijasActivities);
+
+                ///
+                var showbuttondynamic = (from item in FormsMDet
+                                         where (item.ID_visit == activity.ID_task && item.ID_formresourcetype == 11)
+                                         select item).Count();
+
+                if (showbuttondynamic > 0)
+                {
+                    ViewBag.dinamicos = 1;
+                    var existproducts = (from item in FormsMDet
+                                         where (item.ID_visit == activity.ID_task && item.ID_formresourcetype == 3)
+                                         select item).Count();
+                    if (existproducts > 0)
+                    {
+                        ViewBag.mostrarboton = 0; //Lo ocultamos
+                    }
+                    else
+                    {
+                        ViewBag.mostrarboton = 1; //Lo mostramos
+                    }
+
+                }
+                else
+                {
+                    ViewBag.mostrarboton = 0;
+                    ViewBag.dinamicos = 0;
+                }
+                //Deserealizamos  los datos
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                MyObj[] details = js.Deserialize<MyObj[]>(formsM.query2);
+
+                ViewBag.task = activity.ID_task;
+                ViewBag.idvisita = activity.ID_task;
+                ViewBag.details = categoriasListActivities;
+
+                ViewBag.detailssql = FormsMDet;
+
+                Session["detailsForm"] = FormsMDet;
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+            }
+
+
+        }
+
+
         public class MyObj_DSD
         {
             public string id { get; set; }
@@ -5229,6 +5361,371 @@ public ActionResult Prices_requestpdo(int docnum)
 
         }
 
+
+        public ActionResult Surveys(string fstartd, string fendd)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Surveys List";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "tasks_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                //SECCION DE FILTROS
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                //filtros de fecha (DIARIO)
+                //var sunday = DateTime.Today;
+                //var saturday = sunday.AddHours(23);
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representative")).OrderBy(c=>c.Name).ToList();
+                List<RepsSurveys> repsSurveys = new List<RepsSurveys>();
+                List<RepsSurveys> supervisors = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Supervisor")).Select(c=> new RepsSurveys {  idSAP=c.IDSAP, ID_User=c.ID_User, idSAPsupervisor="", Lastname=c.Lastname, Name=c.Name, prop01="", prop02=""}).ToList();
+                var surveys = new List<SurveysTasks>();
+                string[] usids;
+                string[] notinlist;
+                DateTime dtvalue = new DateTime(2019, 1, 1);
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor"))
+                {
+                    isAdmin = 1;
+               
+                    List<int> TagIds = new List<int>();
+
+                    if (activeuser.Roles.Contains("Sales Supervisor"))
+                    {
+                        TagIds = activeuser.prop02.Split(',').Select(int.Parse).ToList();
+
+                        repsSurveys = users.Where(d => TagIds.Contains(d.ID_User)).Select(d => new RepsSurveys { ID_User = d.ID_User, Lastname = d.Lastname, Name = d.Name, prop01 = "", prop02 = "", idSAP=d.IDSAP, idSAPsupervisor=d.prop01 }).ToList();
+                        usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+
+                        surveys = (from a in dbcmk.Tasks
+                                   where (TagIds.Contains(a.ID_userEnd))
+                                   select new SurveysTasks
+                                   {
+                                       ID_task = a.ID_task,
+                                       Customer = a.Customer,
+                                       ID_Customer = a.ID_Customer,
+                                       ID_taskstatus = a.ID_taskstatus,
+                                       ID_taskType = a.ID_taskType,
+                                       ID_userEnd = a.ID_userEnd,
+                                       ID_userEndSAP = 0,
+                                       TaskType = a.TaskType,
+                                       Task_description = a.Task_description,
+                                       visit_date = a.visit_date
+                                   }).ToList();
+                        notinlist = surveys.Select(d => d.ID_Customer).ToArray();
+
+                        var customers = (from d in dlipro.BI_Dim_Customer
+                                         where (usids.Contains(d.id_SalesRep.ToString()) && !notinlist.Contains(d.id_Customer))
+                                         select new SurveysTasks
+                                         {
+                                             ID_task = 0,
+                                             Customer = d.Customer,
+                                             ID_Customer = d.id_Customer,
+                                             ID_userEnd = 0,
+                                             ID_userEndSAP = d.id_SalesRep,
+                                             ID_taskstatus = 3,
+                                             ID_taskType = 1,
+                                             Task_description = "",
+                                             TaskType = "",
+                                             visit_date = dtvalue
+                                         }).ToList();
+
+                        surveys.AddRange(customers);
+                    }
+                    else {
+                        repsSurveys = users.Select(d => new RepsSurveys { ID_User = d.ID_User, Lastname = d.Lastname, Name = d.Name, prop01 = "", prop02 = "", idSAP = d.IDSAP, idSAPsupervisor = d.prop01 }).ToList();
+                        usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+
+                        surveys = (from a in dbcmk.Tasks   
+                                   select new SurveysTasks
+                                   {
+                                       ID_task = a.ID_task,
+                                       Customer = a.Customer,
+                                       ID_Customer = a.ID_Customer,
+                                       ID_taskstatus = a.ID_taskstatus,
+                                       ID_taskType = a.ID_taskType,
+                                       ID_userEnd = a.ID_userEnd,
+                                       ID_userEndSAP = 0,
+                                       TaskType = a.TaskType,
+                                       Task_description = a.Task_description,
+                                       visit_date = a.visit_date
+                                   }).ToList();
+                        notinlist = surveys.Select(d => d.ID_Customer).ToArray();
+
+                        var customers = (from d in dlipro.BI_Dim_Customer
+                                         where (usids.Contains(d.id_SalesRep.ToString()) && !notinlist.Contains(d.id_Customer))
+                                         select new SurveysTasks
+                                         {
+                                             ID_task = 0,
+                                             Customer = d.Customer,
+                                             ID_Customer = d.id_Customer,
+                                             ID_userEnd = 0,
+                                             ID_userEndSAP = d.id_SalesRep,
+                                             ID_taskstatus = 3,
+                                             ID_taskType = 1,
+                                             Task_description = "",
+                                             TaskType = "",
+                                             visit_date = dtvalue
+                                         }).ToList();
+
+                        surveys.AddRange(customers);
+                    }
+
+
+
+                
+                }
+                else
+                {
+
+                    repsSurveys = users.Where(a=>a.ID_User==activeuser.ID_User).Select(d => new RepsSurveys { ID_User = d.ID_User, Lastname = d.Lastname, Name = d.Name, prop01 = "", prop02 = "", idSAP = d.IDSAP, idSAPsupervisor = d.prop01 }).ToList();
+                    usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+                    surveys = (from a in dbcmk.Tasks
+                               where (a.ID_userEnd == activeuser.ID_User)
+                               select new SurveysTasks
+                               {
+                                   ID_task = a.ID_task,
+                                   Customer = a.Customer,
+                                   ID_Customer = a.ID_Customer,
+                                   ID_taskstatus = a.ID_taskstatus,
+                                   ID_taskType = a.ID_taskType,
+                                   ID_userEnd = a.ID_userEnd,
+                                   ID_userEndSAP = 0,
+                                   TaskType = a.TaskType,
+                                   Task_description = a.Task_description,
+                                   visit_date = a.visit_date
+                               }).ToList();
+                    notinlist = surveys.Select(d => d.ID_Customer).ToArray();
+
+
+                    int IDusuario = Convert.ToInt32(activeuser.IDSAP);
+
+                    var lstCustomer = (from b in dlipro.BI_Dim_Customer where (b.id_SalesRep == IDusuario) select new tablahijospadreAct { id = b.id_Customer, text = b.Customer, parent = "" }).OrderBy(b => b.text).ToList();
+
+                    foreach (var customer in lstCustomer)
+                    {
+                        var existe = surveys.Where(a => a.ID_Customer == customer.id).Count();
+                        if (existe > 0)
+                        {
+                            customer.parent = "existe";
+                        }
+                    }
+                    ViewBag.customers = lstCustomer;
+
+
+                    var customers = (from d in dlipro.BI_Dim_Customer
+                                     where (usids.Contains(d.id_SalesRep.ToString()) && !notinlist.Contains(d.id_Customer))
+                                     select new SurveysTasks
+                                     {
+                                         ID_task = 0,
+                                         Customer = d.Customer,
+                                         ID_Customer = d.id_Customer,
+                                         ID_userEnd = 0,
+                                         ID_userEndSAP = d.id_SalesRep,
+                                         ID_taskstatus = 3,
+                                         ID_taskType = 1,
+                                         Task_description = "",
+                                         TaskType = "",
+                                         visit_date = dtvalue
+                                     }).ToList();
+
+                    surveys.AddRange(customers);
+
+
+
+                    isAdmin = 0;
+
+                    ViewBag.iduser = activeuser.ID_User;
+                    ViewBag.user = activeuser.Name + " " + activeuser.Lastname;
+
+
+                }
+
+
+                //Calculos
+                //ESTADISTICA DE SALES ORDERS POR ESTADO DE DETALLES
+               
+                foreach (var user in repsSurveys)
+                {
+                    decimal totalclientes = surveys.Where(d=>d.ID_userEnd==user.ID_User).Count();
+                    decimal totalclientes2 = surveys.Where(d=>d.ID_userEndSAP.ToString()==user.idSAP).Count();
+
+                    totalclientes = (totalclientes + totalclientes2);
+                    //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                    decimal finishedorCanceled = (from e in surveys where (e.ID_userEnd == user.ID_User && e.ID_taskstatus==4) select e).Count();
+
+                    if (totalclientes != 0)
+                    {
+                        if (finishedorCanceled != 0)
+                        {
+
+                         user.prop01 = (((Convert.ToDecimal(finishedorCanceled) / totalclientes) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            user.prop01 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        user.prop02 = "(" + finishedorCanceled + " / " + totalclientes + ")";
+
+                    }
+                    else
+                    {
+                        user.prop01 = "0";
+                        user.prop02  = "(0/ 0)";
+                    }
+                }
+
+
+                //ESTADISTICAS POR SUPERVISOR
+                foreach (var sup in supervisors) {
+                    decimal totalfinalsup = 0;
+                    decimal totalfinishedorcanceledsup = 0;
+                    foreach (var user in repsSurveys.Where(c=>c.idSAPsupervisor==sup.idSAP))
+                    {
+                        decimal totalclientes = surveys.Where(d => d.ID_userEnd == user.ID_User).Count();
+                        decimal totalclientes2 = surveys.Where(d => d.ID_userEndSAP.ToString() == user.idSAP).Count();
+
+                        totalfinalsup += (totalclientes + totalclientes2);
+                        //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                        decimal finishedorCanceled = (from e in surveys where (e.ID_userEnd == user.ID_User && e.ID_taskstatus == 4) select e).Count();
+
+                        totalfinishedorcanceledsup += finishedorCanceled;
+                    }
+
+
+                    if (totalfinalsup != 0)
+                    {
+                        if (totalfinishedorcanceledsup != 0)
+                        {
+
+                            sup.prop01 = (((Convert.ToDecimal(totalfinishedorcanceledsup) / totalfinalsup) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            sup.prop01 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        sup.prop02 = "(" + totalfinishedorcanceledsup + " / " + totalfinalsup + ")";
+
+                    }
+                    else
+                    {
+                        sup.prop01 = "0";
+                        sup.prop02 = "(0/ 0)";
+                    }
+
+                }
+                ViewBag.supervisors = supervisors;
+                //Estadistica global
+                decimal totalcustom = surveys.Count();
+                var prop01 = "";
+                var prop02 = "";
+
+                    //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                    decimal finishedorCanceledcustom = (from e in surveys where (e.ID_taskstatus == 4) select e).Count();
+
+                    if (totalcustom != 0)
+                    {
+                        if (finishedorCanceledcustom != 0)
+                        {
+
+                            prop01 = (((Convert.ToDecimal(finishedorCanceledcustom) / totalcustom) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            prop01 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        prop02 = "(" + finishedorCanceledcustom + " / " + totalcustom + ")";
+
+                    }
+                    else
+                    {
+                        prop01 = "0";
+                        prop02 = "(0/ 0)";
+                    }
+
+
+
+                ViewBag.prop01 = prop01;
+                ViewBag.prop02 = prop02;
+
+
+                ViewBag.isadmin = isAdmin;
+                //ViewBag.lstSupervisors = supervisors;
+                List<FormsM> activeForms = new List<FormsM>();
+                activeForms = (from at in dbcmk.FormsM where (at.ID_activity == 6) select at).ToList();
+                ViewBag.activeForms = activeForms;
+                ViewBag.representatives = users;
+                ViewBag.repsSurveys = repsSurveys;
+
+                return View(surveys);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+        public ActionResult GetCustomer_reps(string ID_usuario)
+        {
+            try
+            {
+                int IDusuario = Convert.ToInt32(ID_usuario);
+
+                var user = dblim.Sys_Users.Where(a => a.ID_User == IDusuario).FirstOrDefault();
+
+                    var lstCustomer = (from b in dlipro.BI_Dim_Customer where (b.id_SalesRep.ToString()==user.IDSAP) select new { ID = b.id_Customer, Name = b.Customer }).OrderBy(b => b.Name).ToList();
+
+                    JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                    string result = javaScriptSerializer.Serialize(lstCustomer);
+                    return Json(result, JsonRequestBehavior.AllowGet);
+            
+
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult Print_Activity(int id)
         {
             var total_demos = (from a in dbcmk.ActivitiesM
@@ -5467,8 +5964,27 @@ public ActionResult Prices_requestpdo(int docnum)
             }
         }
 
+        public static Image ScaleImage(Image image, int maxWidth, int maxHeight)
+        {
+            var ratioX = (double)maxWidth / image.Width;
+            var ratioY = (double)maxHeight / image.Height;
+            var ratio = Math.Min(ratioX, ratioY);
+
+            var newWidth = (int)(image.Width * ratio);
+            var newHeight = (int)(image.Height * ratio);
+
+            var newImage = new Bitmap(newWidth, newHeight);
+
+            using (var graphics = Graphics.FromImage(newImage))
+                graphics.DrawImage(image, 0, 0, newWidth, newHeight);
+
+            return newImage;
+        }
+
+
+
         [HttpPost]
-        public ActionResult RequestCreditProduct(string orientation, string ItemCode, string ItemName, int IDRequest_reason, 
+        public ActionResult RequestCreditProduct( string ItemCode, string ItemName, int IDRequest_reason, 
             string Request_reason, int Quantity, string idcustomer, string customerName, string comment, string returnProduct, string returnProductName, string uomlstName, string UoMCode)
         {
 
@@ -5527,102 +6043,134 @@ public ActionResult Prices_requestpdo(int docnum)
                     }
                     newRequest.comments = comment;
 
-                    //  Get all files from Request object  
-                    HttpFileCollectionBase files = Request.Files;
-                    for (int i = 0; i < files.Count; i++)
+                    try
                     {
-                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
-                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
-
-                        HttpPostedFileBase file = files[i];
-                        string fname;
-
-                        // Checking for Internet Explorer  
-                        if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+                        //  Get all files from Request object  
+                        HttpFileCollectionBase files = Request.Files;
+                        for (int i = 0; i < files.Count; i++)
                         {
-                            string[] testfiles = file.FileName.Split(new char[] { '\\' });
-                            fname = testfiles[testfiles.Length - 1];
-                        }
-                        else
-                        {
-                            fname = file.FileName;
-                        }
+                            //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+                            //string filename = Path.GetFileName(Request.Files[i].FileName);  
 
+                            HttpPostedFileBase file = files[i];
+                            string fname;
 
-                        // Adding watermark to the image and saving it into the specified folder!!!!
-
-                        //Image image = Image.FromStream(file.InputStream, true, true);
-
-
-                        Image TargetImg = Image.FromStream(file.InputStream, true, true);
-
-                        if (i > 0)
-                        {
-
-                        }
-                        else {
-                        try
-                        {
-                            int or = Convert.ToInt32(orientation);
-
-                            switch (or)
+                            // Checking for Internet Explorer  
+                            if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
                             {
-                                case 1: // landscape, do nothing
-                                    break;
-
-                                case 8: // rotated 90 right
-                                        // de-rotate:
-                                    TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
-                                    break;
-
-                                case 3: // bottoms up
-                                    TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
-                                    break;
-
-                                case 6: // rotated 90 left
-                                    TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
-                                    break;
+                                string[] testfiles = file.FileName.Split(new char[] { '\\' });
+                                fname = testfiles[testfiles.Length - 1];
+                            }
+                            else
+                            {
+                                fname = file.FileName;
                             }
 
-                        }
-                        catch
-                        {
+
+                            // Adding watermark to the image and saving it into the specified folder!!!!
+
+                            //Image image = Image.FromStream(file.InputStream, true, true);
+
+
+                            Image TargetImg = Image.FromStream(file.InputStream, true, true);
+
+                            if (i > 0)
+                            {
+
+                            }
+                            else
+                            {
+                                //try
+                                //{
+                                //    int or = Convert.ToInt32(orientation);
+
+                                //    switch (or)
+                                //    {
+                                //        case 1: // landscape, do nothing
+                                //            break;
+
+                                //        case 8: // rotated 90 right
+                                //                // de-rotate:
+                                //            TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
+                                //            break;
+
+                                //        case 3: // bottoms up
+                                //            TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
+                                //            break;
+
+                                //        case 6: // rotated 90 left
+                                //            TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
+                                //            break;
+                                //    }
+
+                                //}
+                                //catch
+                                //{
+
+                                //}
+                            }
+
+
+                            DateTime time = DateTime.Now;
+
+                            Image imagenfinal = (Image)TargetImg.Clone();
+                            Bitmap bitmapImg = new Bitmap(imagenfinal);// Original Image
+                            var path = "";
+
+                            if (i > 0)
+                            {
+
+                                path = Path.Combine(Server.MapPath("~/Content/images/creditRequest"), "cr2_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg");
+                                newRequest.URL_image2 = "~/Content/images/creditRequest/" + "cr2_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg";
+                                Image newimage;
+                                //Cambiar tamano no calidad
+                                //if (orientation == "-1")
+                                //{
+                                   // newimage = ScaleImage(bitmapImg, 768, 1360);
+                                //}
+                                //else
+                                //{
+                                   newimage = ScaleImage(bitmapImg, 1360, 768);
+                                //}
+
+                                newimage.Save(path, ImageFormat.Jpeg);
+                                //bitmapImg.Save(path, ImageFormat.Jpeg);
+                                bitmapImg.Dispose();
+                                newimage.Dispose();
+                            }
+                            else
+                            {
+
+
+                                path = Path.Combine(Server.MapPath("~/Content/images/creditRequest"), "cr_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg");
+                                newRequest.URL_image = "~/Content/images/creditRequest/" + "cr_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg";
+
+                                Image newimage;
+                                //Cambiar tamano no calidad
+                                //if (orientation == "-1")
+                                //{
+                                //    newimage = ScaleImage(bitmapImg, 768, 1360);
+                                //}
+                                //else
+                                //{
+                                   newimage = ScaleImage(bitmapImg, 1360, 768);
+                                //}
+
+                                newimage.Save(path, ImageFormat.Jpeg);
+                                //bitmapImg.Save(path, ImageFormat.Jpeg);
+                                bitmapImg.Dispose();
+                                newimage.Dispose();
+                            }
+
+
+
 
                         }
-                        }
-
-
-                        DateTime time = DateTime.Now;
-
-                        Image imagenfinal = (Image)TargetImg.Clone();
-                        Bitmap bitmapImg = new Bitmap(imagenfinal);// Original Image
-                        var path = "";
-
-                        if (i > 0)
-                        {
-
-                            path = Path.Combine(Server.MapPath("~/Content/images/creditRequest"), "cr2_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg");
-                            newRequest.URL_image2 = "~/Content/images/creditRequest/" + "cr2_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg";
-
-
-                            bitmapImg.Save(path, ImageFormat.Jpeg);
-                            bitmapImg.Dispose();
-                        }
-                        else {
-
-
-                            path = Path.Combine(Server.MapPath("~/Content/images/creditRequest"), "cr_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg");
-                            newRequest.URL_image = "~/Content/images/creditRequest/" + "cr_" + "_" + ItemCode + "_" + time.Minute + time.Second + ".jpg";
-
-
-                            bitmapImg.Save(path, ImageFormat.Jpeg);
-                            bitmapImg.Dispose();
-                        }
-
-
-
+                    }
+                    catch {
 
                     }
+
 
                     dblim.Tb_CreditsRequest.Add(newRequest);
                     dblim.SaveChanges();

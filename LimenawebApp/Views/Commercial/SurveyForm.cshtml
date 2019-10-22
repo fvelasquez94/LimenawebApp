@@ -13,9 +13,9 @@
             if (objeto.id_resource == 95)
             {
 
-               
-                    <div style="background-color:ghostwhite"><h3 style="text-align:center;"><small class="text-muted">@objeto.fvalueText</small></h3></div>
-              
+                <div class="custom-title-wrap bar-info">
+                    <div class="custom-title"><h4 class="text-secondary" style="text-align:center;">@objeto.fvalueText</h4></div>
+                </div>
             }
             <!--PARA IMAGENES -->
             if (objeto.id_resource == 5)
@@ -25,24 +25,17 @@
                             <p class="control-label col-md-10">@objeto.fdescription</p>
                             <div class="col-md-12">
                                 @if (objeto.fsource != "")
-    {
-                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
-
-                            <div class="progress mb-4" id="@("maindivprogress_" + objeto.idkey)" style="display:none;">
-                                <div class="progress-bar bg-info" id="@("divprogress_" + objeto.idkey)" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                            </div>
-                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
-                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
-}
-else
-{
-                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
-                            <div class="progress mb-4" id="@("maindivprogress_" + objeto.idkey)" style="display:none;">
-                                <div class="progress-bar bg-info" id="@("divprogress_" + objeto.idkey)" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                            </div>
-                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
-                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
-}
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                                }
+                                else
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                }
                             </div>
                         </div>
                     </div><br />
@@ -233,7 +226,7 @@ else
             if (objeto.id_resource == 1)
             {
                 <div class="custom-title-wrap bar-turquoise">
-                    <div class="custom-title"><h2 style="text-align:center;"><small class="text-muted">@objeto.fsource</small></h2></div>
+                    <div class="custom-title"><h4 class="text-secondary" style="text-align:center;">@objeto.fsource</h4></div>
                 </div>
             }
 
@@ -353,7 +346,7 @@ else
                     <div class="row">
                         <div class="col-md-12 grid-margin">
                             <hr />
-                            <h4 style="text-align:center;"><small class="text-muted">@objeto.fsource</small></h4>
+                            <h6 style="text-align:center;">@objeto.fsource</h6>
                             <hr />
                         </div>
                     </div>
@@ -422,6 +415,7 @@ else
                         <label class="form-check-label">
                             @if (objeto.fvalue == 0)
                             {
+
                                 <input type="radio" class="form-check-input mgr mgr-success rad" name="@("radio_" + objeto.parent)" id="@objeto.idkey" value="@objeto.fsource" />
                             }
                             else
@@ -649,23 +643,17 @@ else
                     <p class="control-label col-md-10">@objeto.fdescription</p>
                     <div class="col-md-12">
                         @if (objeto.fsource != "")
-    {
-                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
-                    <div class="progress mb-4" id="@("maindivprogress_" + objeto.idkey)" style="display:none;">
-                        <div class="progress-bar bg-info" id="@("divprogress_" + objeto.idkey)" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                    </div>
-                    <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
-                    <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
-}
-else
-{
-                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
-                    <div class="progress mb-4" id="@("maindivprogress_" + objeto.idkey)" style="display:none;">
-                        <div class="progress-bar bg-info" id="@("divprogress_" + objeto.idkey)" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                    </div>
-                    <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
-                    <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
-}
+                        {
+                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
+                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                        }
+                        else
+                        {
+                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
+                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                        }
                     </div>
 
 
@@ -677,23 +665,17 @@ else
                             <p class="control-label col-md-10">@objeto.fdescription</p>
                             <div class="col-md-12">
                                 @if (objeto.fsource != "")
-    {
-                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
-                            <div class="progress mb-4" id="@("maindivprogress_" + objeto.idkey)" style="display:none;">
-                                <div class="progress-bar bg-info" id="@("divprogress_" + objeto.idkey)" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                            </div>
-                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
-                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
-}
-else
-{
-                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
-                            <div class="progress mb-4" id="@("maindivprogress_" + objeto.idkey)" style="display:none;">
-                                <div class="progress-bar bg-info" id="@("divprogress_" + objeto.idkey)" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                            </div>
-                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
-                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
-}
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                                }
+                                else
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                }
                             </div>
                         </div>
                     </div>
@@ -821,6 +803,38 @@ else
                 }
 
 
+            }            
+        <!--PARA TIME RANGE -->
+            if (objeto.id_resource == 38)
+            {
+                if (objeto.parent != 0)
+                {
+
+                    <div class="form-group divrangecontrol" style="border:none !important;visibility:hidden">
+                        <p class="control-label col-md-10 labeltimerange"> @objeto.fsource (*)</p>
+                        <div class="col-md-12">
+                         
+                            <input type="text" class="form-control timerangecontrol" id="@objeto.idkey" value="@objeto.fvalueText" name="@objeto.idkey" required="">
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="card divrangecontrol" style="border:none !important;visibility:hidden">
+                        <div class="">
+                            <div class="form-group">
+                                <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                                <div class="col-md-12">
+                                 
+                                    <input type="text" class="form-control timerangecontrol" id="@objeto.idkey" value="@objeto.fvalueText" name="@objeto.idkey" required="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
             }
             <!--PARA INPUT NUMBER (CURRENCY)-->
             if (objeto.id_resource == 21)
@@ -841,7 +855,7 @@ else
             <!--PARA CUSTOMERS -->
             if (objeto.id_resource == 12)
             {
-                <div class="card" style="border:none !important; display:none;">
+                <div class="card" style="border:none !important;">
                     <div class="">
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
@@ -1358,7 +1372,7 @@ imageObj.src = "@objeto.fsource";
                     <div class="form-group">
                         <div class="col-md-offset-2 col-md-10 text-right">
                             <div class="float-left">
-                                <button action="action" onclick="window.history.go(-1); return false;" class="btn btn-info">Back</button>
+                                
                             </div>
                         </div>
                     </div>
@@ -1437,7 +1451,7 @@ imageObj.src = "@objeto.fsource";
     </div><!-- /.modal -->
 </body>
 @Html.Partial("~/Views/Shared/Scripts_main.cshtml")
-@Html.Partial("~/Views/Shared/ActivityScripts.cshtml")
+@Html.Partial("~/Views/Shared/SurveysScripts.cshtml")
 
 
 
@@ -1468,7 +1482,7 @@ imageObj.src = "@objeto.fsource";
             });
 
             $.ajax({
-                url: '/FormsActions/Save_activityByitem',
+                url: '/FormsActions/Save_activityByitemSurvey',
                 type: 'POST',
                 data: { 'id': idvisita, 'objects': objects },
                 cache: false,

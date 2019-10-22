@@ -48,6 +48,14 @@
                 $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
 
 
+            } else if (descripciontp == "TimeRange") { //NUEVO
+                var divlo = "<div class='media'>";
+                divlo += "<i class='fa fa-clock-o icon-fa align-self-center mr-3'></i>";
+                divlo += "<div class='media-body'>";
+
+                $("ol#main_list").append("<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + label + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + descripciontp + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + label + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div></li>");
+
+
             } else if (descripciontp == "Customers") {
                 var divlo = "<div class='media'>";
                 divlo += "<i class='fa fa-user icon-fa align-self-center mr-3'></i>";
@@ -1155,7 +1163,15 @@
                     $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "Input_number" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
 
 
-                } else if (ID_tipo_recurso == "19") {
+                } else if (ID_tipo_recurso == "38") {
+                    var divlo = "<div class='media'>";
+                    divlo += "<i class='fa fa-clock-o icon-fa align-self-center mr-3'></i>";
+                    divlo += "<div class='media-body'>";
+
+                    $li = "<li class='dd-item' data-idkey='" + Idkey + "' data-id_resource='" + ID_tipo_recurso + "' data-fvalue='' data-fsource='" + element.fsource + "' data-fdescription=''><div class='dd-handle'>" + divlo + "<h6 class='mb-1'>" + "TimeRange" + "</h6><a onClick='prepareEdit(this)' id='" + "item" + Idkey + "' class='mb-0 text-dark'>" + element.fsource + "</a></div><span class='pull-right'><a id='delete' class='button-delete btn-icons btn-inverse-danger text-white loco'><i class='fa fa-times icon-fa text-dark'></i></a></span></div></div>" + esPadre + "</li>";
+
+
+                }else if (ID_tipo_recurso == "19") {
                     var divlo = "<div class='media'>";
                     divlo += "<i class='fa fa-check-circle icon-fa align-self-center mr-3'></i>";
                     divlo += "<div class='media-body'>";

@@ -201,7 +201,7 @@ namespace LimenawebApp.Controllers
                                 var itemscode = detallesSo.Where(c => c.ID_salesorder == soitem.IDinterno).Select(c => c.ItemCode).ToArray();
 
                                 //Buscamos en la vista creada 9/24/2019
-                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum).Sum(c => c.TotalCases);
+                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity >0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
 
                                 if (sumatotal > 0 && sumatotal != null)
                                 {
@@ -1012,7 +1012,7 @@ namespace LimenawebApp.Controllers
                                 var itemscode = detallesSo.Where(c => c.ID_salesorder == soitem.IDinterno).Select(c => c.ItemCode).ToArray();
 
                                 //Buscamos en la vista creada 9/24/2019
-                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum).Sum(c => c.TotalCases);
+                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity > 0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
 
                                 if (sumatotal > 0 && sumatotal != null) {
                                     promedioEachxCases += Convert.ToDecimal(sumatotal);
@@ -1196,7 +1196,7 @@ namespace LimenawebApp.Controllers
                         var itemscode = detallesSo.Where(c=>c.ID_salesorder==item).Select(c => c.ItemCode).ToArray();
 
                         //Buscamos en la vista creada 9/24/2019
-                        var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum).Sum(c => c.TotalCases);
+                        var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity > 0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
 
                         promedioEachxCases += Math.Round(Convert.ToDecimal(sumatotal),2, MidpointRounding.ToEven);                      
 
@@ -2296,10 +2296,25 @@ namespace LimenawebApp.Controllers
                             }
                         }
 
+                      
+                            if (items.quantity == "")
+                            {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                            else if (items.quantity == "0")
+                            {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                            else {
 
+                                newDet.Quantity = Convert.ToInt32(items.quantity);
 
-                        newDet.Quantity = Convert.ToInt32(items.quantity);
+                            }
+                       
 
+                        
                         var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
                         if (lstava != null)
                         {
