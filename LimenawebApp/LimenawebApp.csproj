@@ -15142,7 +15142,10 @@
     <Content Include="Views\Emails\email_notificationEnrollEdit.Html.cshtml" />
     <Content Include="Views\Main\Dashboard_Inventory.cshtml" />
     <Content Include="Views\Shared\main_Scripts.cshtml" />
-    <Content Include="Views\Inventory\Stock_Control.cshtml" />
+    <Content Include="Views\Inventory\Projects.cshtml" />
+    <Content Include="Views\Inventory\Binloc.cshtml" />
+    <Content Include="Views\Inventory\Binloc_master.cshtml" />
+    <Content Include="Views\Inventory\Binloc_tasks.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,4 +1,4 @@
-﻿
+﻿@model IQueryable<LimenawebApp.Models.BI_Dim_Products>
 @{
     Layout = null;
 }
@@ -29,7 +29,8 @@
     <link rel="stylesheet" href="~/Content/main/node_modules/owl.carousel/dist/assets/owl.carousel.min.css">
     <link rel="stylesheet" href="~/Content/main/assets/css/style.min.css">
     <!-- /load styles -->
-
+        <!-- Data table stylesheet -->
+    <link href="~/Content/main/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet">
 </head>
 <body>
 
@@ -48,36 +49,6 @@
 
             <!-- Header -->
             <header class="dt-header">
-
-                <!-- Topbar -->
-                <div class="dt-topbar" style="background-color:#f4f4f4 !important; color:#512DA8 !important">
-
-                    <!-- Custom Container -->
-                    <div class="dt-container">
-
-                        <!-- Topbar Inner -->
-                        <div class="dt-topbar__inner">
-                            <div class="d-flex align-items-center text-truncate mr-2">
-                                <i class="icon icon-megaphone icon-fw mr-3 icon-xl"></i>
-                                <span class="text-truncate" style="color:#512DA8 !important">A new version is going to release on 21st July. Stay tuned!</span>
-                            </div>
-
-                            @*<ul class="dt-list dt-list-xl dt-list-bordered text-uppercase">
-                                    <li class="dt-list__item">
-                                        <a href="javascript:void(0)" class="dt-list__link">Login</a>
-                                    </li>
-                                    <li class="dt-list__item">
-                                        <a href="javascript:void(0)" class="dt-list__link">Sign up</a>
-                                    </li>
-                                </ul>*@
-                        </div>
-                        <!-- /topbar inner -->
-
-                    </div>
-                    <!-- /custom container -->
-
-                </div>
-                <!-- /topbar -->
                 <!-- Header Top -->
                 <div class="dt-header__top">
 
@@ -112,7 +83,6 @@
                                 <!-- Header Menu -->
                                 <!-- /header menu -->
                                 <!-- Header Menu -->
-                               
                                 <!-- /header menu -->
                                 <!-- Header Menu -->
                                 <ul class="dt-nav">
@@ -669,7 +639,7 @@
                                 <!-- Sub-menu -->
                                 <ul class="sub-menu">
 
-                                    <li class="nav-item" id="stock_submenu" style="display:none">
+                                    <li class="nav-item " id="stock_submenu" style="display:none">
                                         <a href="@Url.Action("Projects", "Inventory")" class="nav-link">
                                             <i class="icon icon-question-circle icon-fw icon-xl"></i>
                                             <span class="nav-text">Projects</span>
@@ -1070,10 +1040,270 @@
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <h1 class="dt-page__title">Dashboard</h1>
+                                <ol class="breadcrumb" style="display:flow-root;">
+                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Binloc", "Inventory")">Back</a></li>
+                                    <li class="breadcrumb-item float-right">Details</li>
+                                    <li class="breadcrumb-item float-right">Projects </li>
+                                    <li class="breadcrumb-item float-right">Inventory</li>
+
+
+
+                                </ol>
                             </div>
                             <!-- /page header -->
+                            <div class="dt-entry__header">
 
+                                <!-- Entry Heading -->
+                                <div class="dt-entry__heading">
+                                    <h3 class="dt-entry__title">Bin Location: 01.A.01.A.01 | Control number: 2</h3>
+                                </div>
+                                <!-- /entry heading
+                                <a href="javascript:void(0)" class="btn btn-shadow btn-default compose-btn btn-rounded" data-toggle="modal" data-target="#composeModal">
+                                    <i class="icon icon-plus icon-fw mr-2"></i>New task
+                                </a> -->
+                            </div>
+                            <div class="row">
+
+                                <!-- Grid Item -->
+                                <div class="col-xl-12">
+
+                                    <!-- Card -->
+                                    <div class="card dt-card-carousel">
+
+                                        <!-- Card Body -->
+                                        <div class="card-body p-0">
+                                            <div class="row no-gutters h-100">
+
+
+                                                <div class="col-md-12 order-sm-1">
+                                                    <!-- Carousel -->
+                                                    <div class="owl-carousel owl-theme owl-loaded owl-drag">
+                                                        <!-- Card Body -->
+                                                        <!-- /card body -->
+                                                        <!-- Card Body -->
+                                                        <!-- /card body -->
+                                                        <!-- Card Body -->
+                                                        <!-- /card body -->
+                                                        <div class="owl-stage-outer">
+                                                            <div class="owl-stage" style="transform: translate3d(0px, 0px, 0px); transition: all 0s ease 0s; width: 1018px;">
+                                                                <div class="owl-item active" style="width: 339.203px;">
+                                                                    <div class="card-body">
+
+                                                                        <!-- Card Title-->
+                                                                        <span class="d-block f-16 text-light-gray mb-2">Step-1: Select a product</span>
+                                                                   
+                                                                        <!-- Card Title-->
+                                                                        <!-- Content Area -->
+                                                                        <div class="custom-post-title">
+                                                                            <div class=" mt-2">
+
+                                                                                @foreach (var itemc in ViewBag.lstCategories)
+                                                                                {
+                                                                                    <button id="btn_@itemc" type="button" style="margin-top: 10px;" class="btn btn-outline-primary form-pill btnsl" onclick="filter('@itemc')">@itemc</button>
+                                                                                }
+                                                                                <button type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="filter_clear()">Clear filters</button>
+
+                                                                            </div><hr />
+                                                                            <div id="mainsub">
+
+                                                                                @foreach (var itemc in ViewBag.lstCategories)
+                                                                                {
+                                                                                    <div class="mt-2" id="@itemc">
+                                                                                        @foreach (var itemsc in ViewBag.lstsubCategories)
+                                                                                        {
+                                                                                            if (itemsc.category == itemc)
+                                                                                            {
+                                                                                                <button id="subbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-outline-warning form-pill subbtnsl" onclick="subfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+                                                                                            }
+
+                                                                                        }
+                                                                                        @*<button id="subfilter" type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="subfilter_clear()">Clear Sub filters</button>*@
+                                                                                    </div>}
+
+                                                                            </div><hr />
+                                                                            <div id="mainbrands">
+
+                                                                                @foreach (var itemc in ViewBag.lstsubCategories)
+                                                                                {
+                                                                                    <div class="mt-2" id="@itemc.name">
+                                                                                        @foreach (var itemsc in ViewBag.lstBrands)
+                                                                                        {
+                                                                                            if (itemsc.category == itemc.name)
+                                                                                            {
+                                                                                                <button id="brandbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-light form-pill brandbtnsl" onclick="brandfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+                                                                                            }
+
+                                                                                        }
+
+                                                                                    </div>}
+
+                                                                            </div>
+                                                                        </div>
+                                                                    <br /><br />
+                                                                            <div class="table-responsive">
+                                                                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                                                                    <thead>
+                                                                                        <tr>
+                                                                                            <th>CATEGORY</th>
+                                                                                            <th>SUBCATEGORY</th>
+                                                                                            <th>BRAND</th>
+
+                                                                                            <th>PRODUCT</th>
+
+
+                                                                                            <th>ACTIONS</th>
+
+
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <tfoot>
+                                                                                    </tfoot>
+                                                                                    <tbody>
+                                                                                        @foreach (var product in Model)
+                                                                                        {
+                                                                                            <tr>
+                                                                                                <td>@product.category_name</td>
+                                                                                                <td>@product.subcategory_name.Replace("'", "")</td>
+                                                                                                <td>@product.Brand_Name.Replace("'", "")</td>
+
+                                                                                                <td>@product.Product</td>
+
+
+                                                                                                <td>
+                                                                                                    <button id="btntd_@product.id" type="button" data-ID="@product.id" data-description="@product.Product" class="btn btn-sm btn-primary owl-next btnproduct">Add</button>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        }
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        
+                                                                    </div>
+                                                                </div><div class="owl-item" style="width: 339.203px;">
+                                                                          <div class="card-body">
+
+                                                                              <!-- Card Title-->
+                                                                              <span class="d-block f-16 text-light-gray mb-2">Step-2: Add units control</span>
+
+                                                                              <h4 id="descriptionD" name="descriptionD"></h4>
+                                                                              <!-- Card Title-->
+                                                                              <!-- Content Area -->
+                                                                              <input id="IDProd" name="IDProd" hidden />
+
+
+
+                                                                              <hr />
+                                                                              <!-- Card Header -->
+                                                                              <div class="dt-card__header mb-5">
+
+                                                                                  <!-- Card Heading -->
+                                                                                  <div class="dt-card__heading">
+
+                                                                                  </div>
+                                                                                  <!-- /card heading -->
+                                                                                  <!-- Card Tools -->
+                                                                                  <div class="dt-card__tools">
+                                                                                      <button type="button" class="btn btn-success btn-xs">Add New</button>
+                                                                                  </div>
+                                                                                  <!-- /card tools -->
+
+                                                                              </div>
+                                                                              <!-- /card header -->
+                                                                              <!-- Card Body -->
+                                                                              <div class="dt-card__body p-0">
+                                                                                  <!-- Widget -->
+                                                                                  <div class="dt-widget dt-widget-hl-item dt-widget-hl-item-space dt-widget-mb-item dt-widget-hover-bg">
+
+                                                                                      <!-- Widget Item -->
+                                                                                      <div class="dt-widget__item">
+
+                                                                                          <!-- Widget Info -->
+                                                                                          <div class="dt-widget__info text-truncate">
+                                                                                              <div class="dt-widget__title f-16 font-weight-500 text-truncate">
+
+                                                                                                  <select name="UOMlst" id="UOMlst" style="width:100%" class="form-control">
+                                                                                                      <option value="0">Select UoM</option>
+                                                                                                  </select>
+                                                                                                  <br />
+                                                                                                  <input class="form-control" type="number" id="units" min="1" value="1" />
+
+
+                                                                                                  <br />
+
+
+                                                                                                  <!-- /content area -->
+
+                                                                                              </div>
+                                                                                          </div>
+                                                                                          <!-- /widget info -->
+                                                                                          <!-- Widget Extra -->
+                                                                                          <div class="dt-widget__extra text-right">
+                                                                                              <!-- Show Content -->
+                                                                                              <!-- /show content -->
+                                                                                              <!-- Hide Content -->
+                                                                                              <div class="hide-content">
+                                                                                                  <!-- Action Button Group -->
+                                                                                                  <div class="action-btn-group">
+
+                                                                                                      <button class="btn btn-default text-danger dt-fab-btn">
+                                                                                                          <i class="icon icon-trash icon-xl"></i>
+                                                                                                      </button>
+                                                                                                  </div>
+                                                                                                  <!-- /action button group -->
+                                                                                              </div>
+                                                                                              <!-- /hide content -->
+                                                                                          </div>
+                                                                                          <!-- /widget extra -->
+
+                                                                                      </div>
+                                                                                      <!-- /widgets item -->
+                                                                                      <br /><br />
+                                                                                      <textarea placeholder="Comments (optional)" id="messagetext" class="form-control" style="font-size:11px;"></textarea>
+                                                                                      <br /><br />
+                                                                                  </div>
+                                                                                 
+                                                                                  <!-- /widget -->
+                                                                              </div>
+                                                                              <!-- /card body -->
+                                                                              <button class="btn btn-outline-primary" onclick="changeproduct()">Change product</button>
+
+                                                                              <div class="float-right">
+                                                                                  <a href="@Url.Action("Binloc","Inventory")" class="btn btn-outline-primary">Save and Exit</a>
+                                                                                  <button class="btn btn-primary" onClick="window.location.reload();">Save and Next</button>
+                                                                                  <div class="mb-3">
+                                                                                      <a href="#" class="d-flex align-items-center">
+
+                                                                                          <span class="text-dark f-12">You can follow the process or exit to skip some bin locations</span>
+                                                                                      </a>
+                                                                                  </div>
+                                                                              </div>
+                                                                          </div>
+                                                                                  <!-- /card -->
+
+
+
+
+                                                                
+
+
+                                                                       
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                     
+                                                    </div>
+                                                    <!-- /carousel -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /card body -->
+
+                                    </div>
+                                    <!-- /card -->
+
+                                </div>
+                                <!-- /grid item -->
+                            </div>
 
                         </div>
                         <!-- /site content -->
@@ -1098,6 +1328,164 @@
     </div>
     <!-- /root -->
     @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+    <script>
+        var owl = $('.dt-card-carousel .owl-carousel');
 
+        function changeproduct() {
+            owl.trigger('prev.owl.carousel');
+        }
+            $(document).on("click", ".btnproduct", function () {
+                var button = $(this);// Button that triggered the modal
+                
+
+                var IDProd = button.data("id");// Extract info from data-* attributes
+                var Des = button.data("description");
+
+                $('input[name="IDProd"]').val(IDProd);
+                $("#descriptionD").text(Des);
+                try {
+                    $.ajax
+                        ({
+                            url: '/Commercial/GetUOM',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                product: IDProd
+                            }),
+                            success: function (result) {
+                                $("#UOMlst").html("");
+                                $("#UOMlst").append($('<option></option>').val(0).html("Select an UoM"));
+                                $.each($.parseJSON(result), function (i, uomtype) {
+
+                                    $("#UOMlst").append
+                                        ($('<option></option>').val(uomtype.UOMEntry).html(uomtype.UOM));
+
+                                });
+                                owl.trigger('next.owl.carousel');
+                                window.location = '#';
+
+                            },
+                            error: function () {
+                                var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('UOMlst').appendChild(o);
+
+                            },
+                        });
+
+                } catch{
+
+                }
+
+
+            });
+        var table = $('#data_tableEditor').DataTable();
+
+
+        $("#returnProduct").css("display", "none");
+        function filter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(0).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            brandfilter_clear();
+            subfilter_clear();
+
+            $("#mainbrands > *").css('display', 'none')
+
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#subfilter").css('display', 'block')
+        }
+
+        function filter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+            table.columns(0).search("").draw();
+            table.columns(1).search("").draw();
+            table.columns(2).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+            $('.btnsl').removeClass('brandsbtnsl');
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(1).search("").draw();
+            $('.subbtnsl').removeClass('btnsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(1).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainbrands > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            $('.brandbtnsl').removeClass('btnsubsel');
+            brandfilter_clear();
+        }
+
+        function brandfilter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(2).search("" + clicked_id + "", true, false, true).draw();
+            //$('.subbtnsl').removeClass('btnsubsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+        function brandfilter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(2).search("").draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        $(document).ready(function () {
+
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+
+
+            $('.btnsl').on('click', function () {
+                $('.btnsl').removeClass('brandsbtnsl');
+                $(this).addClass('brandsbtnsl');
+            });
+
+            $('.subbtnsl').on('click', function () {
+                $('.subbtnsl').removeClass('btnsel');
+                $(this).addClass('btnsel');
+            });
+
+
+            $('.brandbtnsl').on('click', function () {
+                $('.brandbtnsl').removeClass('btnsubsel');
+                $(this).addClass('btnsubsel');
+            });
+
+            $("#units").bootstrapNumber();
+
+
+        });
+    </script>
 </body>
 </html>

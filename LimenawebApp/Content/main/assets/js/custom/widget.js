@@ -2,7 +2,9 @@
     "use strict";
 
   var $carousel = $(".dt-card-carousel .owl-carousel").owlCarousel({
-        items: 1,
+      items: 1,
+      touchDrag: false,
+      mouseDrag: false,
         onChanged: function (property) {            
             var current = property.item.index;
             if (current == 0 || current > 0) {

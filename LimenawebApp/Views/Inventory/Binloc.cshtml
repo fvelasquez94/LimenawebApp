@@ -640,9 +640,9 @@
                                 <ul class="sub-menu">
 
                                     <li class="nav-item " id="stock_submenu" style="display:none">
-                                        <a href="@Url.Action("Stock_Control", "Inventory")" class="nav-link">
+                                        <a href="@Url.Action("Projects", "Inventory")" class="nav-link">
                                             <i class="icon icon-question-circle icon-fw icon-xl"></i>
-                                            <span class="nav-text">Stock Control</span>
+                                            <span class="nav-text">Projects</span>
                                         </a>
                                     </li>
                                 </ul>
@@ -1040,9 +1040,15 @@
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="javascript:void(0)">Inventory</a></li>
-                                    <li class="active breadcrumb-item">Stock Control</li>
+
+                                <ol class="breadcrumb" style="display:flow-root;">
+                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Projects", "Inventory")">Back</a></li>
+                                    <li class="breadcrumb-item float-right">Details</li>
+                                    <li class="breadcrumb-item float-right">Projects </li>
+                                    <li class="breadcrumb-item float-right">Inventory</li>
+
+
+
                                 </ol>
                             </div>
                             <!-- /page header -->
@@ -1050,76 +1056,78 @@
 
                                 <!-- Entry Heading -->
                                 <div class="dt-entry__heading">
-                                    <h3 class="dt-entry__title">Projects</h3>
+                                    <h3 class="dt-entry__title">Project details: #001</h3>
                                 </div>
-                                <!-- /entry heading -->
-                                <a href="javascript:void(0)" class="btn btn-shadow btn-default compose-btn btn-rounded" data-toggle="modal" data-target="#composeModal">
-                                    <i class="icon icon-plus icon-fw mr-2"></i>New project
-                                </a>
+                                <!-- /entry heading
+        <a href="javascript:void(0)" class="btn btn-shadow btn-default compose-btn btn-rounded" data-toggle="modal" data-target="#composeModal">
+            <i class="icon icon-plus icon-fw mr-2"></i>New task
+        </a> -->
                             </div>
-                            <!-- Grid -->
                             <div class="row">
+                                <div class="col-md-6 col-6">
+                                    <a href="@Url.Action("Binloc_tasks", "Inventory")">
+                                        <!-- Card -->
+                                        <div class="dt-card">
 
-                                <!-- Grid Item -->
-                                <div class="col-xl-12">
+                                            <!-- Card Body -->
+                                            <div class="dt-card__body p-xl-8 py-sm-8 py-6 px-4">
+
+                                                <span class="badge badge-success badge-top-right">In progress</span>
+
+                                                <!-- Media -->
+                                                <div class="media">
+
+                                                    <i class="icon icon-revenue-new icon-5x mr-xl-5 mr-3 align-self-center"></i>
+
+                                                    <!-- Media Body -->
+                                                    <div class="media-body">
+                                                        <p class="mb-1 h1">Start</p>
+                                                        <span class="d-block text-light-gray">Click here to start or continue</span>
+                                                    </div>
+                                                    <!-- /media body -->
+
+                                                </div>
+
+                                                <!-- /media -->
+
+                                            </div>
+                                            <!-- /card body -->
+
+                                        </div>
+                                        <!-- /card -->
+                                    </a>
+                                </div>
+                                <div class="col-md-4 col-6">
 
                                     <!-- Card -->
                                     <div class="dt-card">
 
                                         <!-- Card Body -->
-                                        <div class="dt-card__body">
+                                        <div class="dt-card__body p-xl-8 py-sm-8 py-6 px-4">
+                                            <!-- Media -->
+                                            <div class="media">
 
-                                            <!-- List -->
-                                            <div class="d-sm-flex flex-sm-row">
+                                                <i class="icon icon-orders-new icon-5x mr-xl-5 mr-3 align-self-center"></i>
 
-                                                <!-- User Avatar
-                                                <img class="dt-avatar size-60 mr-6 mb-6 mb-sm-0"
-                                                     src="https://via.placeholder.com/150x150" alt="User">
-                                                <!-- /user avatar-->
-                                                <!-- Content -->
-                                                <div class="flex-1 overflow-hidden mb-6 mb-sm-0 pr-sm-3">
-                                                    <div class="user-detail mb-3">
-                                                        <span class="user-name">Toma de inventario anual</span>
-                                                        <span class="dt-separator-v">&nbsp;</span>
-                                                        <span class="badge sm badge badge-success mb-1 mr-1">In progress</span>
-                                                    </div>
-                                                    <div style="text-align:justify;">
-                                                        
-                                                            Toma de inventario anual de productos en almacen distribuido por las areas de DRY, COOLER, REFRIGERATED.
-                                                        
-                                                    </div>
-                                                  
-                                                    <span class="min-w-150 d-inline-block border-top mb-2"></span>
-                                                    <div class="d-flex flex-wrap mb-4">
-                                                        <div class="pr-3">Total products: <span class="text-dark">1223</span></div>
-                                                        <div class="pr-3">Areas: <span class="text-dark">15</span></div>
-                                                        <div>Date: <span class="text-dark">15/10/2019</span></div>
-                                                    </div>
-                                                    <div class="d-flex flex-sm-row flex-column">
- <div>Progress: &nbsp; </div>
+                                                <!-- Media Body -->
+                                                <div class="media-body">
+                                                   
+                                                    <div>
                                                         <div class="dt-indicator-item__info" data-fill="82" data-max="100"
                                                              data-percent="true"
-                                                             data-sufix="Job Success" style="width: 220px">
+                                                             data-sufix="Job Success" >
                                                             <span class="dt-indicator-item__count text-success text-nowrap mr-3">0</span>
                                                             <div class="dt-indicator-item__bar">
                                                                 <div class="dt-indicator-item__fill bg-success"></div>
                                                             </div>
                                                         </div>
                                                     </div>
+                                                    <span class="d-block text-light-gray">Progress (0/3)</span>
                                                 </div>
-                                                <!-- /content -->
-
-                                                <div class="min-w-120">
-                                                    <a href="javascript:void(0)"
-                                                       class="btn btn-primary text-uppercase btn-block">Details</a>
-                                                    <a href="javascript:void(0)"
-                                                       class="btn btn-outline-light text-light-gray text-uppercase btn-block">
-                                                        <i class="icon icon-file-upload icon-fw"></i> <span>Upload to SAP</span>
-                                                    </a>
-                                                </div>
+                                                <!-- /media body -->
 
                                             </div>
-                                            <!-- /list -->
+                                            <!-- /media -->
 
                                         </div>
                                         <!-- /card body -->
@@ -1128,9 +1136,681 @@
                                     <!-- /card -->
 
                                 </div>
+                            </div><br /><br />
+                            <!-- Grid -->
+                            <div class="row">
+
+                                <!-- Grid Item -->
+                                <div class="col-xl-12">
+
+                                    <!-- Module -->
+                                    <div class="dt-module">
+
+             
+                                        <!-- /module sidebar -->
+                                        <!-- Module Container -->
+                                        <div class="dt-module__container col-xl-12"  style="max-width:100% !important">
+
+                                            <!-- Module Header -->
+                                            <div class="dt-module__header">
+                                                <!-- Dropdown -->
+                                                <div class="dropdown">
+
+
+                                                </div>
+                                                <!-- /dropdown <i class="icon icon-horizontal-more icon-xl"></i> -->
+                                                <!-- Title -->
+                                                <!-- Search Box -->
+                                                <form class="search-box right-side-icon">
+                                                    <input class="form-control form-control-lg" type="search"
+                                                           placeholder="Search in app...">
+                                                    <button type="submit" class="search-icon">
+                                                        <i class="icon icon-search icon-lg"></i>
+                                                    </button>
+                                                </form>
+                                                <!-- /search box -->
+                                                <!-- Title -->
+                                                <!-- Filter  <a class="dt-module__filter text-dark" href="javascript:void(0)">
+        <i class="icon icon-filter-new icon-xl"></i>
+    </a>-->
+                                                <!-- /filter -->
+
+                                            </div>
+                                            <!-- /module header -->
+                                            <!-- Module Content -->
+                                            <div class="dt-module__content ps-custom-scrollbar">
+
+                                                <!-- Module Content Inner -->
+                                                <div class="dt-module__content-inner">
+
+                                                    <!-- Module List -->
+                                                    <div class="dt-module__list">
+                                                        <h3 style="background-color:aliceblue;display:inline-block">01.A.01.A.01</h3>
+                                                        <!-- Module Heading -->
+                                                        <h5 class="text-light-gray mb-2">Control number: 1</h5>
+                                                        <!-- /module heading -->
+                                                        <!-- Module Item -->
+                                                        <div class="dt-module__list-item">
+
+                                                            <!-- Checkbox Icon -->
+                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                                <input id="icon-checkbox-1" type="checkbox" checked>
+                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-1">
+                                                                    <span class="unchecked">
+                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                    </span>
+                                                                    <span class="checked">
+                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                    </span>
+                                                                </label>
+                                                            </span>
+                                                            <!-- /checkbox icon -->
+                                                            <!-- Module Content -->
+                                                            <div>
+                                                                <a href="task-manager-inner.html"
+                                                                   class="dt-module__list-item-content">
+                                                                    BEV00001 | SODA 1/2 LITRO MANZANITA LIFT
+                                                                </a>     <div class="dt-module__list-item-info">
+
+                                                                    <span style="font-size:10px;">10/23/2019 8:34 PM</span>
+
+                                                                </div>
+                                                            </div>
+                                                            
+                                                            <!-- /module content -->
+                                                            <!-- Module Info -->
+                                                       
+                                                            <!-- /module info -->
+                                                        </div>
+                                                        <!-- /module item -->
+                                                        
+                                                        <!-- Module Heading -->
+                                                        <br />
+                                                        <h5 class="text-light-gray">Control number: 2</h5>
+                                                        <!-- /module heading -->
+                                                        <!-- Module Item -->
+                                                        <div class="dt-module__list-item">
+
+                                                            <!-- Checkbox Icon -->
+                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                                <input id="icon-checkbox-1" type="checkbox">
+                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-1">
+                                                                    <span class="unchecked">
+                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                    </span>
+                                                                    <span class="checked">
+                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                    </span>
+                                                                </label>
+                                                            </span>
+                                                            <!-- /checkbox icon -->
+                                                            <!-- Module Content -->
+                                                            <a href="task-manager-inner.html"
+                                                               class="dt-module__list-item-content">
+                                                                NOT SELECTED
+                                                            </a>
+                                                            <!-- /module content -->
+                                                            <!-- Module Info -->
+                                                            <div class="dt-module__list-item-info">
+                                                                <div class="badge-group">
+                                                                    <span class="badge badge-warning">Waiting</span>
+                                                                </div>
+                                                                
+
+                                                            </div>
+                                                            <!-- /module info -->
+                                                        </div>
+                                                        <!-- /module item -->
+                                                   
+
+                                                    </div>
+                                                    <!-- /module list -->
+                                                    
+                                                    <div class="dt-module__list">
+                                                        <h3 style="background-color:aliceblue;display:inline-block">01.A.01.A.02</h3>
+                                                        <!-- Module Heading -->
+                                                        <h5 class="text-light-gray mb-2">Control number: 1</h5>
+                                                        <!-- /module heading -->
+                                                        <!-- Module Item -->
+                                                        <div class="dt-module__list-item">
+
+                                                            <!-- Checkbox Icon -->
+                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                                <input id="icon-checkbox-5" type="checkbox">
+                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-5">
+                                                                    <span class="unchecked">
+                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                    </span>
+                                                                    <span class="checked">
+                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                    </span>
+                                                                </label>
+                                                            </span>
+                                                            <!-- /checkbox icon -->
+                                                            <!-- Module Content -->
+                                                            <a href="task-manager-inner.html"
+                                                               class="dt-module__list-item-content">
+                                                                NOT SELECTED
+                                                            </a>
+                                                            <!-- /module content -->
+                                                            <!-- Module Info -->
+                                                            <div class="dt-module__list-item-info">
+                                                                <div class="badge-group">
+                                                                    <span class="badge badge-warning">Waiting</span>
+                                                                </div>
+                                                                
+                                                                
+                                                            </div>
+                                                            <!-- /module info -->
+                                                        </div>
+                                                        <!-- /module item -->
+                                                        
+
+                                                    </div>
+                                                    <!-- /module list -->
+
+                                                </div>
+                                                <!-- /module content inner -->
+
+                                            </div>
+                                            <!-- /module content -->
+
+                                        </div>
+                                        <!-- /module container -->
+                                        <!-- Module Drawer -->
+                                        <div class="dt-module__drawer dt-drawer position-left">
+
+                                            <!-- Module Drawer Inner -->
+                                            <div class="dt-module__drawer-inner">
+
+                                                <div class="dt-module__drawer-header">
+                                                    <a href="javascript:void(0)" class="d-inline-block" data-dismiss="mdrawer">
+                                                        <i class="icon icon-arrow-long-left icon-2x mr-3"></i> <span class="align-middle">Back</span>
+                                                    </a>
+                                                </div>
+
+                                                <!-- Actionable Drawer -->
+                                                <div class="dt-actionable-drawer">
+
+                                                    <!-- Menu Bar -->
+                                                    <div class="dt-action-bar">
+
+                                                        <!-- Action Menu -->
+                                                        <ul class="dt-action-nav">
+
+                                                            <!-- Menu Item -->
+                                                            <!-- /menu item -->
+                                                            <!-- Menu Item -->
+                                                            <!-- /menu item -->
+                                                            <!-- Menu Item -->
+                                                            <li class="dt-action-nav__item">
+                                                                <a href="javascript:void(0)" class="dt-action-nav__link"
+                                                                   data-switch="mdrawer" data-target="#drawer-search-bar">
+                                                                    <i class="icon icon-search icon-fw"></i>
+                                                                </a>
+                                                            </li>
+                                                            <!-- /menu item -->
+                                                            <!-- Menu Item -->
+                                                            <!-- /menu item -->
+                                                            <!-- Menu Item -->
+                                                            <li class="dt-action-nav__item dropdown">
+                                                                <!-- Dropdown Button -->
+                                                                <a href="#" class="dropdown-toggle no-arrow dt-action-nav__link"
+                                                                   data-toggle="dropdown" aria-haspopup="true"
+                                                                   aria-expanded="false">
+                                                                    <i class="icon icon-circle-add-o"></i>
+                                                                </a>
+                                                                <!-- /dropdown button -->
+                                                                <!-- Dropdown Menu -->
+                                                                <div class="dropdown-menu">
+                                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                                        Add New
+                                                                        Bin Location
+                                                                    </a>
+                                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                                        Assign New
+                                                                        Task
+                                                                    </a>
+                                                                    <a class="dropdown-item" href="javascript:void(0)">
+                                                                        Add New
+                                                                        Team Member
+                                                                    </a>
+                                                                </div>
+                                                                <!-- /dropdown menu -->
+                                                            </li>
+                                                            <!-- /menu item -->
+                                                        </ul>
+                                                        <!-- /action menu -->
+
+                                                    </div>
+                                                    <!-- /menu bar -->
+                                                    <!-- Drawer Content Area -->
+                                                    <div class="dt-action-content-wrapper ps-custom-scrollbar">
+
+                                                        <div class="dt-action-content">
+
+                                                            <!-- Search -->
+                                                            <div class="dt-notification fade" id="drawer-search-bar">
+                                                                <!-- Search Box -->
+                                                                <form class="search-box right-side-icon mw-100 mb-8">
+                                                                    <input class="form-control form-control-lg" id="address-1"
+                                                                           name="address-1" placeholder="Search..."
+                                                                           type="search">
+                                                                    <button type="submit" class="search-icon">
+                                                                        <i class="icon icon-search icon-lg"></i>
+                                                                    </button>
+                                                                </form>
+                                                                <!-- /search box -->
+
+                                                                <h4>Bin Locations Added</h4>
+
+                                                                <!-- Search Result-->
+                                                                <div class="search-result">
+                                                                    <a href="javascript:void(0)" class="dt-avatar-wrapper">
+                                                                        <!-- Avatar -->
+                                                                        <span class="dt-avatar bg-primary text-white font-italic">A</span>
+                                                                        <!-- /avatar -->
+                                                                        <!-- Avatar Info -->
+                                                                        <span class="dt-avatar-info">
+                                                                            <span class="dt-avatar-name">Chat Bull</span>
+                                                                            <span class="f-12">Example Web</span>
+                                                                        </span>
+                                                                        <!-- /avatar info -->
+
+                                                                    </a>
+                                                                </div>
+                                                                <!-- /search result-->
+                                                                <!-- Search Result-->
+                                                                <div class="search-result">
+                                                                    <a href="javascript:void(0)" class="dt-avatar-wrapper">
+                                                                        <!-- Avatar -->
+                                                                        <span class="dt-avatar bg-primary text-white font-italic">H</span>
+                                                                        <!-- /avatar -->
+                                                                        <!-- Avatar Info -->
+                                                                        <span class="dt-avatar-info">
+                                                                            <span class="dt-avatar-name">Flexile</span>
+                                                                            <span class="f-12">Example Web</span>
+                                                                        </span>
+                                                                        <!-- /avatar info -->
+
+                                                                    </a>
+                                                                </div>
+                                                                <!-- /search result-->
+                                                                <!-- Search Result-->
+                                                                <div class="search-result">
+                                                                    <a href="javascript:void(0)" class="dt-avatar-wrapper">
+                                                                        <!-- Avatar -->
+                                                                        <span class="dt-avatar bg-primary text-white font-italic">J</span>
+                                                                        <!-- /avatar -->
+                                                                        <!-- Avatar Info -->
+                                                                        <span class="dt-avatar-info">
+                                                                            <span class="dt-avatar-name">Admin Template</span>
+                                                                            <span class="f-12">Example Web</span>
+                                                                        </span>
+                                                                        <!-- /avatar info -->
+
+                                                                    </a>
+                                                                </div>
+                                                                <!-- /search result-->
+
+                                                            </div>
+                                                            <!-- /search -->
+                                                            <!-- Notification -->
+                                                            <div class="dt-notification fade" id="drawer-notifications">
+
+                                                                <div class="d-flex align-items-center mb-6">
+                                                                    <h5 class="mb-0">Notifications (7)</h5>
+
+                                                                    <div class="ml-auto action-area">
+                                                                        <a href="javascript:void(0)">Mark All Read</a>
+
+                                                                        <!-- Dropdown -->
+                                                                        <span class="dropdown ml-2 d-inline-block">
+                                                                            <a class="dropdown-toggle no-arrow" href="#" data-toggle="dropdown"
+                                                                               aria-haspopup="true" aria-expanded="false">
+                                                                                <i class="icon icon-settings icon-lg text-light-gray"></i>
+                                                                            </a>
+
+                                                                            <span class="dropdown-menu dropdown-menu-right">
+                                                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                                                    <i class="icon icon-editors icon-fw"></i>
+                                                                                    Edit
+                                                                                </a>
+                                                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                                                    <i class="icon icon-contacts icon-fw"></i>
+                                                                                    Contact List
+                                                                                </a>
+                                                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                                                    <i class="icon icon-heart icon-fw"></i>
+                                                                                    Favourite List
+                                                                                </a>
+                                                                            </span>
+                                                                        </span>
+                                                                        <!-- /dropdown -->
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Stella Johnson</span> and <span class="user-name">Chris Harris</span>
+                                                                            have birthdays today. Help them celebrate!
+                                                                        </span>
+                                                                        <span class="meta-date">8 hours ago</span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Jonathan Madano</span> commented on your post.
+                                                                        </span>
+                                                                        <span class="meta-date">9 hours ago</span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150" alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Chelsea Brown</span> sent a video recomendation.
+                                                                        </span>
+                                                                        <span class="meta-date">
+                                                                            <i class="icon icon-play-circle text-primary icon-fw mr-1"></i>
+                                                                            13 hours ago
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Alex Dolgove</span> and <span class="user-name">Chris Harris</span>
+                                                                            like your post.
+                                                                        </span>
+                                                                        <span class="meta-date">
+                                                                            <i class="icon icon-like text-light-blue icon-fw mr-1"></i>
+                                                                            yesterday at 9:30
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150" alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Amay Mathur</span> and <span class="user-name">Domnic Harris</span>
+                                                                            comment your post.
+                                                                        </span>
+                                                                        <span class="meta-date">
+                                                                            <i class="icon icon-message icon-fw mr-1"></i>
+                                                                            yesterday at 9:30
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Steve Smith</span> and <span class="user-name">Jimmy</span>
+                                                                            inviting on our page.
+                                                                        </span>
+                                                                        <span class="meta-date">
+                                                                            Monday at 18:30
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body">
+                                                                        <span class="message">
+                                                                            <span class="user-name">Alex Dolgove</span> and <span class="user-name">Chris Harris</span>
+                                                                            like your post.
+                                                                        </span>
+                                                                        <span class="meta-date">
+                                                                            <i class="icon icon-like text-light-blue icon-fw mr-1"></i>
+                                                                            yesterday at 9:30
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                </a>
+                                                                <!-- /media -->
+                                                            </div>
+                                                            <!-- /notification -->
+                                                            <!-- Messages -->
+                                                            <div class="dt-notification fade" id="drawer-messages">
+                                                                <div class="d-flex align-items-center mb-6">
+                                                                    <h5 class="mb-0">Messages (5)</h5>
+
+                                                                    <div class="ml-auto action-area">
+                                                                        <a href="javascript:void(0)">Mark All Read</a>
+
+                                                                        <!-- Dropdown -->
+                                                                        <span class="dropdown ml-2 d-inline-block">
+                                                                            <a class="dropdown-toggle no-arrow" href="#" data-toggle="dropdown"
+                                                                               aria-haspopup="true" aria-expanded="false">
+                                                                                <i class="icon icon-settings icon-lg text-light-gray"></i>
+                                                                            </a>
+
+                                                                            <span class="dropdown-menu dropdown-menu-right">
+                                                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                                                    <i class="icon icon-editors icon-fw"></i>
+                                                                                    Edit
+                                                                                </a>
+                                                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                                                    <i class="icon icon-contacts icon-fw"></i>
+                                                                                    Contact List
+                                                                                </a>
+                                                                                <a class="dropdown-item" href="javascript:void(0)">
+                                                                                    <i class="icon icon-heart icon-fw"></i>
+                                                                                    Favourite List
+                                                                                </a>
+                                                                            </span>
+                                                                        </span>
+                                                                        <!-- /dropdown -->
+
+                                                                    </div>
+                                                                </div>
+
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150" alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body text-truncate">
+                                                                        <span class="user-name mb-1">Chris Mathew</span>
+                                                                        <span class="message text-light-gray text-truncate">Okay.. I will be waiting for your...</span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                    <span class="action-area h-100 min-w-80 text-right">
+                                                                        <span class="meta-date mb-1">8 hours ago</span>
+                                                                        <!-- Toggle Button -->
+                                                                        <span class="toggle-button" data-toggle="tooltip" data-placement="left"
+                                                                              title="Mark as read">
+                                                                            <span class="show"><i class="icon icon-dot-o icon-fw f-10 text-light-gray"></i></span>
+                                                                            <span class="hide"><i class="icon icon-dot icon-fw f-10 text-light-gray"></i></span>
+                                                                        </span>
+                                                                        <!-- /toggle button -->
+                                                                    </span>
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body text-truncate">
+                                                                        <span class="user-name mb-1">Alia Joseph</span>
+                                                                        <span class="message text-light-gray text-truncate">
+                                                                            Alia Joseph just joined Messenger! Be the first to send a welcome message or sticker.
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                    <span class="action-area h-100 min-w-80 text-right">
+                                                                        <span class="meta-date mb-1">9 hours ago</span>
+                                                                        <!-- Toggle Button -->
+                                                                        <span class="toggle-button" data-toggle="tooltip" data-placement="left"
+                                                                              title="Mark as read">
+                                                                            <span class="show"><i class="icon icon-dot-o icon-fw f-10 text-light-gray"></i></span>
+                                                                            <span class="hide"><i class="icon icon-dot icon-fw f-10 text-light-gray"></i></span>
+                                                                        </span>
+                                                                        <!-- /toggle button -->
+                                                                    </span>
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body text-truncate">
+                                                                        <span class="user-name mb-1">Joshua Brian</span>
+                                                                        <span class="message text-light-gray text-truncate">
+                                                                            Alex will explain you how to keep the HTML structure and all that.
+                                                                        </span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                    <span class="action-area h-100 min-w-80 text-right">
+                                                                        <span class="meta-date mb-1">12 hours ago</span>
+                                                                        <!-- Toggle Button -->
+                                                                        <span class="toggle-button" data-toggle="tooltip" data-placement="left"
+                                                                              title="Mark as read">
+                                                                            <span class="show"><i class="icon icon-dot-o icon-fw f-10 text-light-gray"></i></span>
+                                                                            <span class="hide"><i class="icon icon-dot icon-fw f-10 text-light-gray"></i></span>
+                                                                        </span>
+                                                                        <!-- /toggle button -->
+                                                                    </span>
+                                                                </a>
+                                                                <!-- /media -->
+                                                                <!-- Media -->
+                                                                <a href="javascript:void(0)" class="media">
+
+                                                                    <!-- Avatar -->
+                                                                    <img class="dt-avatar mr-3"
+                                                                         src="https://via.placeholder.com/150x150"
+                                                                         alt="User">
+                                                                    <!-- avatar -->
+                                                                    <!-- Media Body -->
+                                                                    <span class="media-body text-truncate">
+                                                                        <span class="user-name mb-1">Domnic Brown</span>
+                                                                        <span class="message text-light-gray text-truncate">Okay.. I will be waiting for your...</span>
+                                                                    </span>
+                                                                    <!-- /media body -->
+
+                                                                    <span class="action-area h-100 min-w-80 text-right">
+                                                                        <span class="meta-date mb-1">yesterday</span>
+                                                                        <!-- Toggle Button -->
+                                                                        <span class="toggle-button" data-toggle="tooltip" data-placement="left"
+                                                                              title="Mark as read">
+                                                                            <span class="show"><i class="icon icon-dot-o icon-fw f-10 text-light-gray"></i></span>
+                                                                            <span class="hide"><i class="icon icon-dot icon-fw f-10 text-light-gray"></i></span>
+                                                                        </span>
+                                                                        <!-- /toggle button -->
+                                                                    </span>
+                                                                </a>
+                                                                <!-- /media -->
+                                                            </div>
+                                                            <!-- /messages -->
+
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /drawer content area -->
+
+                                                </div>
+                                                <!-- /actionable drawer -->
+
+                                            </div>
+                                            <!-- /module drawer inner -->
+
+                                        </div>
+                                        <!-- /module drawer -->
+
+                                    </div>
+                                    <!-- /module -->
+
+                                </div>
                                 <!-- /grid item -->
-            
-                            
 
                             </div>
                             <!-- /grid -->

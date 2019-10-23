@@ -48,36 +48,6 @@
 
             <!-- Header -->
             <header class="dt-header">
-
-                <!-- Topbar -->
-                <div class="dt-topbar" style="background-color:#f4f4f4 !important; color:#512DA8 !important">
-
-                    <!-- Custom Container -->
-                    <div class="dt-container">
-
-                        <!-- Topbar Inner -->
-                        <div class="dt-topbar__inner">
-                            <div class="d-flex align-items-center text-truncate mr-2">
-                                <i class="icon icon-megaphone icon-fw mr-3 icon-xl"></i>
-                                <span class="text-truncate" style="color:#512DA8 !important">A new version is going to release on 21st July. Stay tuned!</span>
-                            </div>
-
-                            @*<ul class="dt-list dt-list-xl dt-list-bordered text-uppercase">
-                                    <li class="dt-list__item">
-                                        <a href="javascript:void(0)" class="dt-list__link">Login</a>
-                                    </li>
-                                    <li class="dt-list__item">
-                                        <a href="javascript:void(0)" class="dt-list__link">Sign up</a>
-                                    </li>
-                                </ul>*@
-                        </div>
-                        <!-- /topbar inner -->
-
-                    </div>
-                    <!-- /custom container -->
-
-                </div>
-                <!-- /topbar -->
                 <!-- Header Top -->
                 <div class="dt-header__top">
 
@@ -112,7 +82,7 @@
                                 <!-- Header Menu -->
                                 <!-- /header menu -->
                                 <!-- Header Menu -->
-                               
+
                                 <!-- /header menu -->
                                 <!-- Header Menu -->
                                 <ul class="dt-nav">
@@ -669,8 +639,8 @@
                                 <!-- Sub-menu -->
                                 <ul class="sub-menu">
 
-                                    <li class="nav-item" id="stock_submenu" style="display:none">
-                                        <a href="@Url.Action("Projects", "Inventory")" class="nav-link">
+                                    <li class="nav-item " id="stock_submenu" style="display:none">
+                                        <a href="@Url.Action("Stock_Control", "Inventory")" class="nav-link">
                                             <i class="icon icon-question-circle icon-fw icon-xl"></i>
                                             <span class="nav-text">Projects</span>
                                         </a>
@@ -1070,10 +1040,100 @@
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <h1 class="dt-page__title">Dashboard</h1>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item">Inventory</li>
+                                    <li class="active breadcrumb-item">Projects</li>
+                                </ol>
                             </div>
                             <!-- /page header -->
+                            <div class="dt-entry__header">
 
+                                <!-- Entry Heading -->
+                                <div class="dt-entry__heading">
+                                    <h3 class="dt-entry__title">Projects</h3>
+                                </div>
+                                <!-- /entry heading -->
+                                <a href="javascript:void(0)" class="btn btn-shadow btn-default compose-btn btn-rounded" data-toggle="modal" data-target="#composeModal">
+                                    <i class="icon icon-plus icon-fw mr-2"></i>New project
+                                </a>
+                            </div>
+                            <!-- Grid -->
+                            <div class="row">
+
+                                <!-- Grid Item -->
+                                <div class="col-xl-12">
+
+                                    <!-- Card -->
+                                    <div class="dt-card">
+
+                                        <!-- Card Body -->
+                                        <div class="dt-card__body">
+
+                                            <!-- List -->
+                                            <div class="d-sm-flex flex-sm-row">
+
+                                                <!-- User Avatar
+                                                <img class="dt-avatar size-60 mr-6 mb-6 mb-sm-0"
+                                                     src="https://via.placeholder.com/150x150" alt="User">
+                                                <!-- /user avatar-->
+                                                <!-- Content -->
+                                                <div class="flex-1 overflow-hidden mb-6 mb-sm-0 pr-sm-3">
+                                                    <div class="user-detail mb-3">
+                                                        <span class="user-name">Toma de inventario anual</span>
+                                                        <span class="dt-separator-v">&nbsp;</span>
+                                                        <span class="badge sm badge badge-success mb-1 mr-1">In progress</span>
+                                                    </div>
+                                                    <div style="text-align:justify;">
+                                                        
+                                                            Toma de inventario anual de productos en almacen distribuido por las areas de DRY, COOLER, REFRIGERATED.
+                                                        
+                                                    </div>
+                                                  
+                                                    <span class="min-w-150 d-inline-block border-top mb-2"></span>
+                                                    <div class="d-flex flex-wrap mb-4">
+                                                        <div class="pr-3">Total products: <span class="text-dark">1223</span></div>
+                                                        <div class="pr-3">Areas: <span class="text-dark">15</span></div>
+                                                        <div>Date: <span class="text-dark">15/10/2019</span></div>
+                                                    </div>
+                                                    <div class="d-flex flex-sm-row flex-column">
+ <div>Progress: &nbsp; </div>
+                                                        <div class="dt-indicator-item__info" data-fill="82" data-max="100"
+                                                             data-percent="true"
+                                                             data-sufix="Job Success" style="width: 220px">
+                                                            <span class="dt-indicator-item__count text-success text-nowrap mr-3">0</span>
+                                                            <div class="dt-indicator-item__bar">
+                                                                <div class="dt-indicator-item__fill bg-success"></div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /content -->
+
+                                                <div class="min-w-120">
+                                                    <a href="@Url.Action("Binloc_master", "Inventory")"
+                                                       class="btn btn-primary text-uppercase btn-block">Details</a>
+                                                    <a href="javascript:void(0)"
+                                                       class="btn btn-outline-light text-light-gray text-uppercase btn-block">
+                                                        <i class="icon icon-file-upload icon-fw"></i> <span>Upload to SAP</span>
+                                                    </a>
+                                                </div>
+
+                                            </div>
+                                            <!-- /list -->
+
+                                        </div>
+                                        <!-- /card body -->
+
+                                    </div>
+                                    <!-- /card -->
+
+                                </div>
+                                <!-- /grid item -->
+            
+                            
+
+                            </div>
+                            <!-- /grid -->
 
                         </div>
                         <!-- /site content -->
