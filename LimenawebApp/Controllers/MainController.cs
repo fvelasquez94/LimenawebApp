@@ -15,6 +15,8 @@ namespace LimenawebApp.Controllers
         private Interna_DLIEntities internadli = new Interna_DLIEntities();
         private dbComerciaEntities dbcmk = new dbComerciaEntities();
         // GET: Main Dashboard_sales
+        //CLASS GENERAL
+        private clsGeneral generalClass = new clsGeneral();
 
         public class tablahijospadreAct
         {
@@ -351,6 +353,40 @@ namespace LimenawebApp.Controllers
                 ViewData["Menu"] = "Home";
                 ViewData["Page"] = "Operations";
                 ViewBag.menunameid = "home_menuOper";
+                ViewBag.submenunameid = "";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+        public ActionResult Dashboard_Inventory()
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Home";
+                ViewData["Page"] = "Inventory";
+                ViewBag.menunameid = "home_menuInventory";
                 ViewBag.submenunameid = "";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);

@@ -250,6 +250,11 @@ namespace LimenawebApp.Controllers
                     return RedirectToAction("Dashboard_customers", "Main", null);
 
                 }
+                else if (activeuser.Departments.Contains("Inventory"))
+                {
+                    return RedirectToAction("Dashboard_Inventory", "Main", null);
+
+                }
 
             }
 

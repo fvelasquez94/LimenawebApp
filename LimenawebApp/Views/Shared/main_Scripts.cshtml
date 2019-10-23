@@ -1,0 +1,161 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!-- Optional JavaScript -->
+<script src="~/Content/main/node_modules/jquery/dist/jquery.min.js"></script>
+<script src="~/Content/main/node_modules/moment/moment.js"></script>
+<script src="~/Content/main/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Perfect Scrollbar jQuery -->
+<script src="~/Content/main/node_modules/perfect-scrollbar/dist/perfect-scrollbar.min.js"></script>
+<!-- /perfect scrollbar jQuery -->
+<!-- masonry script -->
+<script src="~/Content/main/node_modules/masonry-layout/dist/masonry.pkgd.min.js"></script>
+<script src="~/Content/main/node_modules/sweetalert2/dist/sweetalert2.js"></script>
+<script src="~/Content/main/assets/js/functions.js"></script>
+<script src="~/Content/main/assets/js/customizer.js"></script>
+
+<script src="~/Content/main/node_modules/chart.js/dist/Chart.min.js"></script>
+@*<script src="http://maps.google.com/maps/api/js?key=AIzaSyBbyv4oQ2Y4cDpMC8MGhERZ_kicy4YKcuc"></script>*@
+<script src="~/Content/main/node_modules/gmaps/gmaps.min.js"></script>
+<script src='~/Content/main/node_modules/echarts/dist/echarts.min.js'></script>
+<script src='~/Content/main/node_modules/echarts-liquidfill/dist/echarts-liquidfill.min.js'></script>
+
+<script src="~/Content/main/assets/js/custom/charts/dashboard-real-estate.js"></script>
+<!-- Custom JavaScript -->
+<script src="~/Content/main/assets/js/script.js"></script>
+<script src="~/Content/main/assets/js/custom/maps/gmaps.js"></script>
+<!--FOR MENU-->
+<script>
+    var string = @Html.Raw(ViewBag.lstDepartments);
+    var roles = @Html.Raw(ViewBag.lstRoles);
+    string.forEach(function (element) {
+        if (element == "Sales") {
+            document.getElementById("home_menuSales").style.display = "block";
+            document.getElementById("marketing_menu").style.display = "block";
+            //document.getElementById("accr_menu").style.display = "block";
+            //document.getElementById("oper_menu").style.display = "block";
+
+            roles.forEach(function (elementrol) {
+                if (elementrol == "DSD") {
+                    document.getElementById("dsd_menu").style.display = "block";
+                }
+                if (elementrol == "Sales Manager") {
+                    document.getElementById("ss2_submenu").style.display = "block";
+                    document.getElementById("ss3_submenu").style.display = "block";
+                }
+                if (elementrol == "Sales Representative") {
+                    document.getElementById("ss1_submenu").style.display = "block";
+                    document.getElementById("ss3_submenu").style.display = "block";
+                    document.getElementById("ss4_submenu").style.display = "block";
+                    document.getElementById("ss5_submenu").style.display = "block";
+                    document.getElementById("routes_submenu").style.display = "block";
+                    document.getElementById("tasks_submenu").style.display = "block";
+                    document.getElementById("drop1").style.display = "block";
+
+                    $("#quickAccess_salesreps").show();
+                    $("#quickAccess_salesreps2").show();
+                }
+                if (elementrol == "Sales Supervisor") {
+                    document.getElementById("routes_submenu").style.display = "block";
+                    document.getElementById("drop1").style.display = "block";
+                    document.getElementById("ss1_submenu").style.display = "block";
+                    document.getElementById("ss3_submenu").style.display = "block";
+                    document.getElementById("ss4_submenu").style.display = "block";
+                    document.getElementById("ss5_submenu").style.display = "block";
+                    document.getElementById("tasks_submenu").style.display = "block";
+                    document.getElementById("manag_menu").style.display = "block";
+                    document.getElementById("newcustomers_submenu").style.display = "block";
+                }
+                if (elementrol == "Credits Authorizer") {
+                    document.getElementById("ss4_submenu").style.display = "block";
+                    document.getElementById("ss5_submenu").style.display = "block";
+                }
+            });
+        }
+        if (element == "Operations") {
+            document.getElementById("home_menuOper").style.display = "block";
+            document.getElementById("oper_menu").style.display = "block";
+
+            roles.forEach(function (elementrol) {
+                if (elementrol == "Planning") {
+                    document.getElementById("invo1_submenu").style.display = "block";
+                    document.getElementById("reportop1_submenu").style.display = "block";
+                }
+                if (elementrol == "Quality Control") {
+                    document.getElementById("invo2_submenu").style.display = "block";
+                }
+                if (elementrol == "SO Print") {
+                    document.getElementById("invo3_submenu").style.display = "block";
+
+                }
+                if (elementrol == "Purchases") {
+                    document.getElementById("operpur_submenu").style.display = "block";
+                }
+            });
+        }
+        if (element == "Inventory") {
+            document.getElementById("home_menuInventory").style.display = "block";
+            document.getElementById("inventory_menu").style.display = "block";
+
+            roles.forEach(function (elementrol) {
+                if (elementrol == "Admin") {
+                    document.getElementById("stock_submenu").style.display = "block";
+                }
+                if (elementrol == "Supervisor") {
+                    document.getElementById("stock_submenu").style.display = "block";
+                }
+                if (elementrol == "Picker") {
+                    document.getElementById("stock_submenu").style.display = "block";
+
+                }
+            });
+        }
+
+        if (element == "Management") {
+            document.getElementById("manag_menu").style.display = "block";
+            document.getElementById("dsd_menu").style.display = "block";
+            document.getElementById("invo1_submenu").style.display = "block";
+            document.getElementById("invo2_submenu").style.display = "block";
+            document.getElementById("invo3_submenu").style.display = "block";
+            document.getElementById("accr_menu").style.display = "block";
+            document.getElementById("oper_menu").style.display = "block";
+            document.getElementById("operpur_submenu").style.display = "block";
+            document.getElementById("forms_submenu").style.display = "block";
+            document.getElementById("newcustomers_submenu").style.display = "block";
+            document.getElementById("users_submenu").style.display = "block";
+            document.getElementById("ss1_submenu").style.display = "block";
+            document.getElementById("ss2_submenu").style.display = "block";
+            document.getElementById("ss3_submenu").style.display = "block";
+            document.getElementById("ss4_submenu").style.display = "block";
+            document.getElementById("ss5_submenu").style.display = "block";
+            document.getElementById("routes_submenu").style.display = "block";
+            document.getElementById("drop1").style.display = "block";
+            document.getElementById("reportop1_submenu").style.display = "block";
+            document.getElementById("tasks_submenu").style.display = "block";
+
+        }
+        if (element == "Customer") {
+            document.getElementById("home_menuCustomers").style.display = "block";
+        }
+        //document.getElementById("reports_menu").style.display = "block";
+    });
+</script>
+<!--END-->
+<!--FOR ACTIVE MENU-->
+<script>
+
+          var idMenu = "@ViewBag.menunameid";
+    var menu = document.getElementById(idMenu);
+    menu.classList.add("active");
+
+    var idsubMenu = "@ViewBag.submenunameid";
+    if (idsubMenu != "") {
+        var submenu = document.getElementById(idsubMenu);
+        submenu.classList.add("active");
+    }
+
+
+
+</script>
