@@ -15146,6 +15146,11 @@
     <Content Include="Views\Inventory\Binloc.cshtml" />
     <Content Include="Views\Inventory\Binloc_master.cshtml" />
     <Content Include="Views\Inventory\Binloc_tasks.cshtml" />
+    <Content Include="Views\Inventory\Projects_new.cshtml" />
+    <Content Include="Views\Shared\temp_head.cshtml" />
+    <Content Include="Views\Shared\temp_header.cshtml" />
+    <Content Include="Views\Shared\main_sidebar.cshtml" />
+    <Content Include="Views\Shared\main_footer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -25,8 +25,8 @@ var creado = 0;
 	$.fn.bootstrapNumber = function( options ) {
      
 		var settings = $.extend({
-			upClass: 'info',
-			downClass: 'info',
+			upClass: 'primary',
+			downClass: 'primary',
 			upText: '+',
 			downText: '-',
 			center: true
@@ -49,12 +49,12 @@ var creado = 0;
 				clone.trigger('change');
 				return true;
 			}
-            if ($('#btndown')) {
-                $("#btndown").remove();
-            }
-            if ($('#btnup')) {
-                $("#btnup").remove();
-            }
+            //if ($('#btndown')) {
+            //    $("#btndown").remove();
+            //}
+            //if ($('#btnup')) {
+            //    $("#btnup").remove();
+            //}
                 var group = $("<div class='input-group'></div>");
                 var down = $("<button type='button' id='btndown'>" + settings.downText + "</button>").attr('class', 'btn btn-' + settings.downClass).click(function () {
                     setText(parseInt(clone.val() || clone.attr('value')) - step);

@@ -16,6 +16,24 @@ namespace LimenawebApp.Controllers
         private dbComerciaEntities dbcmk = new dbComerciaEntities();
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
+
+
+        public bool isAdminRole (string roles) {
+            //SABER SI ES ADMIN
+            bool isAdmin = false;
+            if (roles.Contains("Super Admin") || roles.Contains("Admin") || roles.Contains("Supervisor"))
+            {
+                isAdmin = true;
+            }
+            else
+            {
+                isAdmin = false;
+
+            }
+            return isAdmin;
+        }
+
+
         // GET: Inventory
         public ActionResult Projects()
         {
@@ -25,7 +43,7 @@ namespace LimenawebApp.Controllers
                 //HEADER
                 //ACTIVE PAGES
                 ViewData["Menu"] = "Inventory";
-                ViewData["Page"] = "Stock Control";
+                ViewData["Page"] = "Projects";
                 ViewBag.menunameid = "inventory_menu";
                 ViewBag.submenunameid = "stock_submenu";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
@@ -39,6 +57,10 @@ namespace LimenawebApp.Controllers
 
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
+
+
+                var isadmin = isAdminRole(activeuser.Roles);
+                ViewBag.adminRole = isadmin;
                 return View();
 
             }
@@ -49,6 +71,42 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+        public ActionResult Projects_new()
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Inventory";
+                ViewData["Page"] = "Projects";
+                ViewBag.menunameid = "inventory_menu";
+                ViewBag.submenunameid = "stock_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
 
         public ActionResult Binloc_master()
         {

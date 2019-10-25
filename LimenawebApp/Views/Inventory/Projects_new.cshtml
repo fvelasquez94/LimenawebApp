@@ -1,0 +1,397 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/temp_head.cshtml")
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="dt-loader-container">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Header -->
+            @Html.Partial("~/Views/Shared/temp_header.cshtml")
+            <!-- /header -->
+            <!-- Site Main -->
+            <main class="dt-main">
+                <!-- Sidebar -->
+                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
+                <!-- /sidebar -->
+                <!-- Custom Container -->
+                <div class="dt-container">
+
+                    <!-- Site Content Wrapper -->
+                    <div class="dt-content-wrapper">
+
+                        <!-- Site Content -->
+                        <div class="dt-content">
+
+                            <!-- Page Header -->
+                            <div class="dt-page__header">
+                                <ol class="breadcrumb" style="display:flow-root;">
+                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Projects", "Inventory")">Back</a></li>
+                                    <li class="breadcrumb-item float-right">New</li>
+                                    <li class="breadcrumb-item float-right">Projects </li>
+                                    <li class="breadcrumb-item float-right">Inventory</li>
+
+
+
+                                </ol>
+                            </div>
+                            <!-- /page header -->
+                            <div class="dt-entry__header">
+
+                                <!-- Entry Heading -->
+                                <div class="dt-entry__heading">
+                                    <h3 class="dt-entry__title">New project</h3>
+                                </div>
+                                <!-- /entry heading -->
+
+
+                            </div>
+                            <!-- Grid -->
+                            <div class="row">
+
+                                <!-- Grid Item -->
+                                <div class="col-xl-4">
+
+                                    <!-- Card -->
+                                    <div class="dt-card">
+
+                                        <!-- Card Header -->
+                                        <div class="dt-card__header">
+
+                                            <!-- Card Heading -->
+                                            <div class="dt-card__heading">
+                                                <h3 class="dt-card__title">Information</h3>
+                                            </div>
+                                            <!-- /card heading -->
+
+                                        </div>
+                                        <!-- /card header -->
+                                        <!-- Card Body -->
+                                        <div class="dt-card__body">
+
+                                            <!-- Form -->
+                                            <form>
+
+                                                <!-- Form Group -->
+                                                <div class="form-group">
+                                                    <label for="projectName">Project Name</label>
+                                                    <input type="text" class="form-control" id="projectName" placeholder="">
+
+                                                </div>
+                                                <!-- /form group -->
+                                                <!-- Form Group -->
+                                                <div class="form-group">
+                                                    <label for="projectDesc">Description</label>
+                                                    <textarea class="form-control" id="projectDesc"  placeholder=""></textarea>
+                                               
+                                                </div>
+                                                <!-- /form group -->
+                                                <!-- Form Group -->
+                                                <div class="form-group">
+                                                    <label for="projectName">Counts</label>
+                                                    <input type="number" class="form-control" id="projectTimes" aria-describedby="emailHelp1" value="1" min="1" max="5">
+                                                    <small id="emailHelp1" class="form-text">
+                                                        Note: type total of counts for the Bin Locations.
+                                                    </small>
+                                                </div>
+                                                <!-- /form group -->
+                                                <!-- Form Group -->
+                                                <div class="form-group custom-control custom-checkbox">
+                                                    <input type="checkbox" class="custom-control-input" id="checkbox-1">
+                                                    <label class="custom-control-label" for="checkbox-1">
+                                                        Assign Bin Locations after create
+                                                    </label>
+                                                </div>
+                                                <!-- /form group -->
+                                                <!-- Form Group -->
+                                                <div class="form-group mb-0">
+                                                    <button type="submit" class="btn btn-primary text-uppercase">Create</button>
+
+                                                </div>
+                                                <!-- /form group -->
+
+
+                                            </form>
+                                            <!-- /form -->
+
+                                        </div>
+                                        <!-- /card body -->
+
+                                    </div>
+                                    <!-- /card -->
+
+                                </div>
+                                <!-- /grid item -->
+                                <!-- Grid Item -->
+                                <div class="col-xl-8" id="assignbinloc">
+
+                                    <!-- Card -->
+                                    <div class="dt-card dt-card__full-height">
+
+                                        <!-- Card Header -->
+                                        <div class="dt-card__header">
+
+                                            <!-- Card Heading -->
+                                            <div class="dt-card__heading">
+                                                <h3 class="dt-card__title">Bin Locations</h3>
+                                            </div>
+                                            <!-- /card heading -->
+
+                                        </div>
+                                        <!-- /card header -->
+                                        <!-- Card Body -->
+                                        <div class="dt-card__body">
+
+                                            <!-- Form -->
+                                            <div class="form-row">
+                                                <div class="col-sm-4 mb-3">
+                                                    <label>Picker</label>
+                                                    <div class="input-group">
+                                                        <div class="input-group-prepend">
+                                                            <span class="input-group-text" id="inputGroupPrepend2">@@</span>
+                                                        </div>
+                                                        <select class="form-control" id="selPicker">
+                                                            <option>Select a picker</option>
+                                                            <option>ANTONIO RIVERA</option>
+                                                            <option>JUAN PEREZ</option>
+
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <h3 class="dt-card__title">From</h3>
+                                            <div class="form-row">
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Warehouse</label>
+                                                    <select class="form-control" id="selWarehouseFrom">
+                                                        <option>NA</option>
+                                                        <option selected>01</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Aisle</label>
+                                                    <select class="form-control" id="selAisleFrom">
+                                                        <option>NA</option>
+                                                        <option>A</option>
+                                                        <option>B</option>
+                                                        <option>C</option>
+                                                        <option>D</option>
+                                                        <option>E</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Position</label>
+                                                    <select class="form-control" id="selPositionFrom">
+                                                        <option>NA</option>
+                                                        <option>01</option>
+                                                        <option>02</option>
+                                                        <option>03</option>
+                                                        <option>04</option>
+                                                        <option>05</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Level</label>
+                                                    <select class="form-control" id="selLevelFrom">
+                                                        <option>NA</option>
+                                                        <option>A</option>
+                                                        <option>B</option>
+                                                        <option>C</option>
+                                                        <option>D</option>
+                                                        <option>E</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Pallet Position</label>
+                                                    <select class="form-control" id="selPalletFrom">
+                                                        <option>NA</option>
+                                                        <option>01</option>
+                                                        <option>02</option>
+                                                        <option>03</option>
+                                                        <option>04</option>
+                                                        <option>05</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <h3 class="dt-card__title">To</h3>
+                                            <div class="form-row">
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Warehouse</label>
+                                                    <select class="form-control" id="selWarehouseTo">
+                                                        <option>NA</option>
+                                                        <option selected>01</option>
+
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Aisle</label>
+                                                    <select class="form-control" id="selAisleTo">
+                                                        <option>NA</option>
+                                                        <option>A</option>
+                                                        <option>B</option>
+                                                        <option>C</option>
+                                                        <option>D</option>
+                                                        <option>E</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Position</label>
+                                                    <select class="form-control" id="selPositionTo">
+                                                        <option>NA</option>
+                                                        <option>01</option>
+                                                        <option>02</option>
+                                                        <option>03</option>
+                                                        <option>04</option>
+                                                        <option>05</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Level</label>
+                                                    <select class="form-control" id="selLevelTo">
+                                                        <option>NA</option>
+                                                        <option>A</option>
+                                                        <option>B</option>
+                                                        <option>C</option>
+                                                        <option>D</option>
+                                                        <option>E</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-2 mb-3">
+                                                    <label for="validationDefault02">Pallet Position</label>
+                                                    <select class="form-control" id="selPalletTo">
+                                                        <option>NA</option>
+                                                        <option>01</option>
+                                                        <option>02</option>
+                                                        <option>03</option>
+                                                        <option>04</option>
+                                                        <option>05</option>
+                                                    </select>
+                                                </div>                        
+                                                <div class="col-sm-2 mb-3">
+                                                    <button type="submit" class="btn btn-primary text-uppercase">Add</button>
+                                                </div>
+                                            </div>
+                                            <!-- /form group -->
+                                            <!-- Form Group -->
+                                            <!-- /form group -->
+                                            <!-- Form Group -->
+                            
+                                            <!-- /form group -->
+                                            <hr />
+                                            <div class="dt-card overflow-hidden">
+
+                                                <!-- Card Body -->
+                                                <div class="dt-card__body p-0">
+
+                                                    <!-- Tables -->
+                                                    <div class="table-responsive">
+                                                        <table class="table table-hover mb-0">
+                                                            <thead>
+                                                                <tr>
+                                                                   
+                                                                    <th class="text-uppercase" scope="col">Bin Location</th>
+                                                                    <th class="text-uppercase" scope="col">Picker</th>
+                                                                    <th class="text-uppercase" scope="col">Initial Count</th>
+                                                                    <th class="text-uppercase" scope="col"></th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                <tr>
+                                                                    <td>01.A.01.A.01</td>
+                                                                    <td>ANTONIO RIVERA</td>
+                                                                    <td>1</td>
+                                                                    <td><a href="javascript:void(0)" class="btn-link">X</a></td>
+                                                                </tr>   
+                                                                <tr>
+                                                                    <td>01.A.01.A.02</td>
+                                                                    <td>ANTONIO RIVERA</td>
+                                                                    <td>1</td>
+                                                                    <td><a href="javascript:void(0)" class="btn-link">X</a></td>
+                                                                </tr>
+
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                    <!-- /tables -->
+
+                                                </div>
+                                                <!-- /card body -->
+
+                                            </div>
+
+
+                                        </div>
+                                        <!-- /card body -->
+
+                                    </div>
+                                    <!-- /card -->
+
+                                </div>
+                                <!-- /grid item -->
+
+                            </div>
+                            <!-- /grid -->
+
+                        </div>
+                        <!-- /site content -->
+
+                    </div>
+                    <!-- /site content wrapper -->
+
+                </div>
+                <!-- /custom Container -->
+
+            </main>
+            <!-- /main -->
+            <!-- Footer -->
+            <footer class="dt-footer">
+                <div class="dt-container">
+                    Copyright Distribuidora Limena © 2019
+                </div>
+            </footer>
+            <!-- /footer -->
+
+        </div>
+    </div>
+    <!-- /root -->
+    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+    <script>
+
+        $(document).ready(function () {
+            $('#assignbinloc').hide();
+    
+
+        });
+
+        $('#checkbox-1').click(function () {
+
+            if ($(this).prop('checked')) {
+                // do what you need here     
+                $('#assignbinloc').show();
+            }
+            else {
+                // do what you need here         
+                $('#assignbinloc').hide();
+            }
+        });
+    </script>
+</body>
+</html>
