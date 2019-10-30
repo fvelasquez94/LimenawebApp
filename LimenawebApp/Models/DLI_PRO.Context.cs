@@ -50,5 +50,6 @@ namespace LimenawebApp.Models
         public virtual DbSet<ITT1> ITT1 { get; set; }
         public virtual DbSet<OITT> OITT { get; set; }
         public virtual DbSet<PlanningUoMInfo> PlanningUoMInfo { get; set; }
+        public virtual DbSet<OBIN> OBIN { get; set; }
     }
 }

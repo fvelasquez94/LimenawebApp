@@ -5,6 +5,85 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="dbLimenaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Inv_Projects">
+          <Key>
+            <PropertyRef Name="ID_project" />
+          </Key>
+          <Property Name="ID_project" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" Nullable="false" />
+          <Property Name="Creation_date" Type="datetime" Nullable="false" />
+          <Property Name="End_date" Type="datetime" Nullable="false" />
+          <Property Name="IDusers_assigned" Type="varchar(max)" Nullable="false" />
+          <Property Name="isfinished" Type="bit" Nullable="false" />
+          <Property Name="isuploaded" Type="bit" Nullable="false" />
+          <Property Name="Areas" Type="int" Nullable="false" />
+          <Property Name="Max_counts" Type="int" Nullable="false" />
+          <Property Name="Error" Type="int" Nullable="false" />
+          <Property Name="MensajeError" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_empresa" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Inv_Projects_BinLoc">
+          <Key>
+            <PropertyRef Name="ID_binloc" />
+          </Key>
+          <Property Name="ID_binloc" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Bin_IDSAP" Type="int" Nullable="false" />
+          <Property Name="Bin_location" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Warehouse" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Aisle" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Position" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Levelpst" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Pallet_position" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Area" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Internal_sort" Type="int" Nullable="false" />
+          <Property Name="creation_date" Type="datetime" Nullable="false" />
+          <Property Name="ID_userCreate" Type="int" Nullable="false" />
+          <Property Name="UserNameCreate" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_userAssigned" Type="int" Nullable="false" />
+          <Property Name="UserNameAssigned" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="end_date" Type="datetime" Nullable="false" />
+          <Property Name="Actual_counts" Type="int" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="ID_status" Type="int" Nullable="false" />
+          <Property Name="isfinished" Type="bit" Nullable="false" />
+          <Property Name="comments" Type="varchar(max)" Nullable="false" />
+          <Property Name="ID_project" Type="int" Nullable="false" />
+          <Property Name="ID_empresa" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Inv_Projects_Task">
+          <Key>
+            <PropertyRef Name="ID_projects_task" />
+          </Key>
+          <Property Name="ID_projects_task" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_binloc" Type="int" Nullable="false" />
+          <Property Name="Bin_location" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="creation_date" Type="datetime" Nullable="false" />
+          <Property Name="ID_userEnd" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="ID_status" Type="int" Nullable="false" />
+          <Property Name="comments" Type="varchar(max)" Nullable="false" />
+          <Property Name="end_date" Type="datetime" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="isselected" Type="bit" Nullable="false" />
+          <Property Name="ItemCode" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ItemName" Type="varchar(max)" Nullable="false" />
+          <Property Name="UoM_code" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UoM_entry" Type="int" Nullable="false" />
+          <Property Name="Quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="UoM_code2" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UoM_entry2" Type="int" Nullable="false" />
+          <Property Name="Quantity2" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="UoM_code3" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UoM_entry3" Type="int" Nullable="false" />
+          <Property Name="Quantity3" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="UoM_code4" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="UoM_entry4" Type="int" Nullable="false" />
+          <Property Name="Quantity4" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="Final_quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
+          <Property Name="ID_empresa" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Purchase_data">
           <Key>
             <PropertyRef Name="ID_purchaseData" />
@@ -190,6 +269,8 @@
           <Property Name="URL_image2" Type="varchar(max)" />
           <Property Name="ItemCodeReturn" Type="varchar" MaxLength="100" />
           <Property Name="ItemNameReturn" Type="varchar" MaxLength="500" />
+          <Property Name="Error" Type="int" />
+          <Property Name="MensajeError" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Tb_InventoryDetailsTRDSD">
           <Key>
@@ -519,6 +600,9 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="dbLimenaModelStoreContainer">
+          <EntitySet Name="Inv_Projects" EntityType="Self.Inv_Projects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Inv_Projects_BinLoc" EntityType="Self.Inv_Projects_BinLoc" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Inv_Projects_Task" EntityType="Self.Inv_Projects_Task" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Purchase_data" EntityType="Self.Purchase_data" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Purchase_data_details" EntityType="Self.Purchase_data_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Sys_Companies" EntityType="Self.Sys_Companies" Schema="dbo" store:Type="Tables" />
@@ -751,6 +835,9 @@
           <EntitySet Name="Tb_planning_print" EntityType="dbLimenaModel.Tb_planning_print" />
           <EntitySet Name="Tb_NewCustomers" EntityType="dbLimenaModel.Tb_NewCustomers" />
           <EntitySet Name="Tb_CreditsRequest" EntityType="dbLimenaModel.Tb_CreditsRequest" />
+          <EntitySet Name="Inv_Projects" EntityType="dbLimenaModel.Inv_Projects" />
+          <EntitySet Name="Inv_Projects_BinLoc" EntityType="dbLimenaModel.Inv_Projects_BinLoc" />
+          <EntitySet Name="Inv_Projects_Task" EntityType="dbLimenaModel.Inv_Projects_Task" />
         </EntityContainer>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -1160,6 +1247,87 @@
           <Property Name="URL_image2" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ItemCodeReturn" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="ItemNameReturn" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Error" Type="Int32" />
+          <Property Name="MensajeError" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Inv_Projects">
+          <Key>
+            <PropertyRef Name="ID_project" />
+          </Key>
+          <Property Name="ID_project" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Creation_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="End_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IDusers_assigned" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="isfinished" Type="Boolean" Nullable="false" />
+          <Property Name="isuploaded" Type="Boolean" Nullable="false" />
+          <Property Name="Areas" Type="Int32" Nullable="false" />
+          <Property Name="Max_counts" Type="Int32" Nullable="false" />
+          <Property Name="Error" Type="Int32" Nullable="false" />
+          <Property Name="MensajeError" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_empresa" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Inv_Projects_BinLoc">
+          <Key>
+            <PropertyRef Name="ID_binloc" />
+          </Key>
+          <Property Name="ID_binloc" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Bin_IDSAP" Type="Int32" Nullable="false" />
+          <Property Name="Bin_location" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Warehouse" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Aisle" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Position" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Levelpst" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Pallet_position" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Area" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Internal_sort" Type="Int32" Nullable="false" />
+          <Property Name="creation_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_userCreate" Type="Int32" Nullable="false" />
+          <Property Name="UserNameCreate" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_userAssigned" Type="Int32" Nullable="false" />
+          <Property Name="UserNameAssigned" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="end_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Actual_counts" Type="Int32" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="ID_status" Type="Int32" Nullable="false" />
+          <Property Name="isfinished" Type="Boolean" Nullable="false" />
+          <Property Name="comments" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ID_project" Type="Int32" Nullable="false" />
+          <Property Name="ID_empresa" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Inv_Projects_Task">
+          <Key>
+            <PropertyRef Name="ID_projects_task" />
+          </Key>
+          <Property Name="ID_projects_task" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_binloc" Type="Int32" Nullable="false" />
+          <Property Name="Bin_location" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="creation_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ID_userEnd" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="ID_status" Type="Int32" Nullable="false" />
+          <Property Name="comments" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="end_date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="isselected" Type="Boolean" Nullable="false" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="UoM_code" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UoM_entry" Type="Int32" Nullable="false" />
+          <Property Name="Quantity" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="UoM_code2" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UoM_entry2" Type="Int32" Nullable="false" />
+          <Property Name="Quantity2" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="UoM_code3" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UoM_entry3" Type="Int32" Nullable="false" />
+          <Property Name="Quantity3" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="UoM_code4" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="UoM_entry4" Type="Int32" Nullable="false" />
+          <Property Name="Quantity4" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="Final_quantity" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
+          <Property Name="ID_empresa" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1602,6 +1770,8 @@
           <EntitySetMapping Name="Tb_CreditsRequest">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_CreditsRequest">
               <MappingFragment StoreEntitySet="Tb_CreditsRequest">
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
                 <ScalarProperty Name="ItemNameReturn" ColumnName="ItemNameReturn" />
                 <ScalarProperty Name="ItemCodeReturn" ColumnName="ItemCodeReturn" />
                 <ScalarProperty Name="URL_image2" ColumnName="URL_image2" />
@@ -1627,6 +1797,88 @@
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="ID_creditRequest" ColumnName="ID_creditRequest" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inv_Projects">
+            <EntityTypeMapping TypeName="dbLimenaModel.Inv_Projects">
+              <MappingFragment StoreEntitySet="Inv_Projects">
+                <ScalarProperty Name="ID_empresa" ColumnName="ID_empresa" />
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="Max_counts" ColumnName="Max_counts" />
+                <ScalarProperty Name="Areas" ColumnName="Areas" />
+                <ScalarProperty Name="isuploaded" ColumnName="isuploaded" />
+                <ScalarProperty Name="isfinished" ColumnName="isfinished" />
+                <ScalarProperty Name="IDusers_assigned" ColumnName="IDusers_assigned" />
+                <ScalarProperty Name="End_date" ColumnName="End_date" />
+                <ScalarProperty Name="Creation_date" ColumnName="Creation_date" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID_project" ColumnName="ID_project" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inv_Projects_BinLoc">
+            <EntityTypeMapping TypeName="dbLimenaModel.Inv_Projects_BinLoc">
+              <MappingFragment StoreEntitySet="Inv_Projects_BinLoc">
+                <ScalarProperty Name="ID_empresa" ColumnName="ID_empresa" />
+                <ScalarProperty Name="ID_project" ColumnName="ID_project" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="isfinished" ColumnName="isfinished" />
+                <ScalarProperty Name="ID_status" ColumnName="ID_status" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="Actual_counts" ColumnName="Actual_counts" />
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="UserNameAssigned" ColumnName="UserNameAssigned" />
+                <ScalarProperty Name="ID_userAssigned" ColumnName="ID_userAssigned" />
+                <ScalarProperty Name="UserNameCreate" ColumnName="UserNameCreate" />
+                <ScalarProperty Name="ID_userCreate" ColumnName="ID_userCreate" />
+                <ScalarProperty Name="creation_date" ColumnName="creation_date" />
+                <ScalarProperty Name="Internal_sort" ColumnName="Internal_sort" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Pallet_position" ColumnName="Pallet_position" />
+                <ScalarProperty Name="Levelpst" ColumnName="Levelpst" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Aisle" ColumnName="Aisle" />
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
+                <ScalarProperty Name="Bin_location" ColumnName="Bin_location" />
+                <ScalarProperty Name="Bin_IDSAP" ColumnName="Bin_IDSAP" />
+                <ScalarProperty Name="ID_binloc" ColumnName="ID_binloc" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inv_Projects_Task">
+            <EntityTypeMapping TypeName="dbLimenaModel.Inv_Projects_Task">
+              <MappingFragment StoreEntitySet="Inv_Projects_Task">
+                <ScalarProperty Name="ID_empresa" ColumnName="ID_empresa" />
+                <ScalarProperty Name="Final_quantity" ColumnName="Final_quantity" />
+                <ScalarProperty Name="Quantity4" ColumnName="Quantity4" />
+                <ScalarProperty Name="UoM_entry4" ColumnName="UoM_entry4" />
+                <ScalarProperty Name="UoM_code4" ColumnName="UoM_code4" />
+                <ScalarProperty Name="Quantity3" ColumnName="Quantity3" />
+                <ScalarProperty Name="UoM_entry3" ColumnName="UoM_entry3" />
+                <ScalarProperty Name="UoM_code3" ColumnName="UoM_code3" />
+                <ScalarProperty Name="Quantity2" ColumnName="Quantity2" />
+                <ScalarProperty Name="UoM_entry2" ColumnName="UoM_entry2" />
+                <ScalarProperty Name="UoM_code2" ColumnName="UoM_code2" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="UoM_entry" ColumnName="UoM_entry" />
+                <ScalarProperty Name="UoM_code" ColumnName="UoM_code" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="isselected" ColumnName="isselected" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="end_date" ColumnName="end_date" />
+                <ScalarProperty Name="comments" ColumnName="comments" />
+                <ScalarProperty Name="ID_status" ColumnName="ID_status" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ID_userEnd" ColumnName="ID_userEnd" />
+                <ScalarProperty Name="creation_date" ColumnName="creation_date" />
+                <ScalarProperty Name="Bin_location" ColumnName="Bin_location" />
+                <ScalarProperty Name="ID_binloc" ColumnName="ID_binloc" />
+                <ScalarProperty Name="ID_projects_task" ColumnName="ID_projects_task" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

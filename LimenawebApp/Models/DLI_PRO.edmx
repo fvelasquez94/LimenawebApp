@@ -111,6 +111,75 @@
           <Property Name="LineText" Type="ntext" />
           <Property Name="StageId" Type="int" />
         </EntityType>
+        <EntityType Name="OBIN">
+          <Key>
+            <PropertyRef Name="AbsEntry" />
+          </Key>
+          <Property Name="AbsEntry" Type="int" Nullable="false" />
+          <Property Name="BinCode" Type="nvarchar" MaxLength="228" Nullable="false" />
+          <Property Name="WhsCode" Type="nvarchar" MaxLength="8" />
+          <Property Name="SysBin" Type="char" MaxLength="1" />
+          <Property Name="SL1Abs" Type="int" />
+          <Property Name="SL1Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="SL2Abs" Type="int" />
+          <Property Name="SL2Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="SL3Abs" Type="int" />
+          <Property Name="SL3Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="SL4Abs" Type="int" />
+          <Property Name="SL4Code" Type="nvarchar" MaxLength="50" />
+          <Property Name="Attr1Abs" Type="int" />
+          <Property Name="Attr1Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr2Abs" Type="int" />
+          <Property Name="Attr2Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr3Abs" Type="int" />
+          <Property Name="Attr3Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr4Abs" Type="int" />
+          <Property Name="Attr4Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr5Abs" Type="int" />
+          <Property Name="Attr5Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr6Abs" Type="int" />
+          <Property Name="Attr6Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr7Abs" Type="int" />
+          <Property Name="Attr7Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr8Abs" Type="int" />
+          <Property Name="Attr8Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr9Abs" Type="int" />
+          <Property Name="Attr9Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Attr10Abs" Type="int" />
+          <Property Name="Attr10Val" Type="nvarchar" MaxLength="20" />
+          <Property Name="Disabled" Type="char" MaxLength="1" />
+          <Property Name="Descr" Type="nvarchar" MaxLength="50" />
+          <Property Name="BarCode" Type="nvarchar" MaxLength="100" />
+          <Property Name="AltSortCod" Type="nvarchar" MaxLength="50" />
+          <Property Name="ItmRtrictT" Type="smallint" />
+          <Property Name="SpcItmCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="SpcItmGrpC" Type="smallint" />
+          <Property Name="SngBatch" Type="char" MaxLength="1" />
+          <Property Name="RtrictType" Type="smallint" />
+          <Property Name="RtrictResn" Type="nvarchar" MaxLength="254" />
+          <Property Name="RtrictDate" Type="datetime" />
+          <Property Name="DataSource" Type="char" MaxLength="1" />
+          <Property Name="UserSign" Type="smallint" />
+          <Property Name="Transfered" Type="char" MaxLength="1" />
+          <Property Name="Instance" Type="smallint" />
+          <Property Name="LogInstanc" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="UserSign2" Type="smallint" />
+          <Property Name="UpdateDate" Type="datetime" />
+          <Property Name="Deleted" Type="char" MaxLength="1" />
+          <Property Name="MinLevel" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="MaxLevel" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ReceiveBin" Type="char" MaxLength="1" />
+          <Property Name="NoAutoAllc" Type="char" MaxLength="1" />
+          <Property Name="MaxWeight1" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Wght1Unit" Type="smallint" />
+          <Property Name="MaxWeight2" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Wght2Unit" Type="smallint" />
+          <Property Name="UoMRtrict" Type="smallint" />
+          <Property Name="SpcUoMCode" Type="int" />
+          <Property Name="SpcUGPCode" Type="int" />
+          <Property Name="SngUoMCode" Type="int" />
+        </EntityType>
         <EntityType Name="OCRD">
           <Key>
             <PropertyRef Name="CardCode" />
@@ -913,13 +982,6 @@ warning 6002: The table/view 'DLI_PRO.dbo.SalesRep' does not have a primary key 
           <Property Name="CatCommission" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6013: The table/view 'DLI_PRO.dbo.SDK_State_and_Supervisor' does not have a primary key defined and no valid primary key could be inferred. This table/view has been excluded. To use the entity, you will need to review your schema, add the correct keys, and uncomment it.
-        <EntityType Name="SDK_State_and_Supervisor">
-          <Property Name="Supervisor" Type="int" />
-          <Property Name="StateCode" Type="nvarchar" MaxLength="3" />
-          <Property Name="State" Type="nvarchar" MaxLength="100" />
-        </EntityType>-->
-        <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Supervisor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Supervisor">
           <Key>
@@ -1027,6 +1089,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySet Name="@TRUCKS" EntityType="Self.@TRUCKS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ITM1" EntityType="Self.ITM1" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ITT1" EntityType="Self.ITT1" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OBIN" EntityType="Self.OBIN" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OCRD" EntityType="Self.OCRD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OHEM" EntityType="Self.OHEM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OITT" EntityType="Self.OITT" Schema="dbo" store:Type="Tables" />
@@ -1696,6 +1759,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySet Name="ITT1" EntityType="DLI_PROModel.ITT1" />
           <EntitySet Name="OITT" EntityType="DLI_PROModel.OITT" />
           <EntitySet Name="PlanningUoMInfo" EntityType="DLI_PROModel.PlanningUoMInfo" />
+          <EntitySet Name="OBIN" EntityType="DLI_PROModel.OBIN" />
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
@@ -2273,6 +2337,75 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="InvQty" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="NumInBuy" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="TotalCases" Type="Decimal" Precision="38" Scale="19" />
+        </EntityType>
+        <EntityType Name="OBIN">
+          <Key>
+            <PropertyRef Name="AbsEntry" />
+          </Key>
+          <Property Name="AbsEntry" Type="Int32" Nullable="false" />
+          <Property Name="BinCode" Type="String" Nullable="false" MaxLength="228" FixedLength="false" Unicode="true" />
+          <Property Name="WhsCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="SysBin" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="SL1Abs" Type="Int32" />
+          <Property Name="SL1Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SL2Abs" Type="Int32" />
+          <Property Name="SL2Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SL3Abs" Type="Int32" />
+          <Property Name="SL3Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SL4Abs" Type="Int32" />
+          <Property Name="SL4Code" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Attr1Abs" Type="Int32" />
+          <Property Name="Attr1Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr2Abs" Type="Int32" />
+          <Property Name="Attr2Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr3Abs" Type="Int32" />
+          <Property Name="Attr3Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr4Abs" Type="Int32" />
+          <Property Name="Attr4Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr5Abs" Type="Int32" />
+          <Property Name="Attr5Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr6Abs" Type="Int32" />
+          <Property Name="Attr6Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr7Abs" Type="Int32" />
+          <Property Name="Attr7Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr8Abs" Type="Int32" />
+          <Property Name="Attr8Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr9Abs" Type="Int32" />
+          <Property Name="Attr9Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Attr10Abs" Type="Int32" />
+          <Property Name="Attr10Val" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Disabled" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Descr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BarCode" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AltSortCod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ItmRtrictT" Type="Int16" />
+          <Property Name="SpcItmCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SpcItmGrpC" Type="Int16" />
+          <Property Name="SngBatch" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="RtrictType" Type="Int16" />
+          <Property Name="RtrictResn" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="RtrictDate" Type="DateTime" Precision="3" />
+          <Property Name="DataSource" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="UserSign" Type="Int16" />
+          <Property Name="Transfered" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Instance" Type="Int16" />
+          <Property Name="LogInstanc" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="UserSign2" Type="Int16" />
+          <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+          <Property Name="Deleted" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MinLevel" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="MaxLevel" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ReceiveBin" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NoAutoAllc" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="MaxWeight1" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Wght1Unit" Type="Int16" />
+          <Property Name="MaxWeight2" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Wght2Unit" Type="Int16" />
+          <Property Name="UoMRtrict" Type="Int16" />
+          <Property Name="SpcUoMCode" Type="Int32" />
+          <Property Name="SpcUGPCode" Type="Int32" />
+          <Property Name="SngUoMCode" Type="Int32" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -3255,6 +3388,76 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
                 <ScalarProperty Name="DocDate" ColumnName="DocDate" />
                 <ScalarProperty Name="DocNum" ColumnName="DocNum" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OBIN">
+            <EntityTypeMapping TypeName="DLI_PROModel.OBIN">
+              <MappingFragment StoreEntitySet="OBIN">
+                <ScalarProperty Name="SngUoMCode" ColumnName="SngUoMCode" />
+                <ScalarProperty Name="SpcUGPCode" ColumnName="SpcUGPCode" />
+                <ScalarProperty Name="SpcUoMCode" ColumnName="SpcUoMCode" />
+                <ScalarProperty Name="UoMRtrict" ColumnName="UoMRtrict" />
+                <ScalarProperty Name="Wght2Unit" ColumnName="Wght2Unit" />
+                <ScalarProperty Name="MaxWeight2" ColumnName="MaxWeight2" />
+                <ScalarProperty Name="Wght1Unit" ColumnName="Wght1Unit" />
+                <ScalarProperty Name="MaxWeight1" ColumnName="MaxWeight1" />
+                <ScalarProperty Name="NoAutoAllc" ColumnName="NoAutoAllc" />
+                <ScalarProperty Name="ReceiveBin" ColumnName="ReceiveBin" />
+                <ScalarProperty Name="MaxLevel" ColumnName="MaxLevel" />
+                <ScalarProperty Name="MinLevel" ColumnName="MinLevel" />
+                <ScalarProperty Name="Deleted" ColumnName="Deleted" />
+                <ScalarProperty Name="UpdateDate" ColumnName="UpdateDate" />
+                <ScalarProperty Name="UserSign2" ColumnName="UserSign2" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="LogInstanc" ColumnName="LogInstanc" />
+                <ScalarProperty Name="Instance" ColumnName="Instance" />
+                <ScalarProperty Name="Transfered" ColumnName="Transfered" />
+                <ScalarProperty Name="UserSign" ColumnName="UserSign" />
+                <ScalarProperty Name="DataSource" ColumnName="DataSource" />
+                <ScalarProperty Name="RtrictDate" ColumnName="RtrictDate" />
+                <ScalarProperty Name="RtrictResn" ColumnName="RtrictResn" />
+                <ScalarProperty Name="RtrictType" ColumnName="RtrictType" />
+                <ScalarProperty Name="SngBatch" ColumnName="SngBatch" />
+                <ScalarProperty Name="SpcItmGrpC" ColumnName="SpcItmGrpC" />
+                <ScalarProperty Name="SpcItmCode" ColumnName="SpcItmCode" />
+                <ScalarProperty Name="ItmRtrictT" ColumnName="ItmRtrictT" />
+                <ScalarProperty Name="AltSortCod" ColumnName="AltSortCod" />
+                <ScalarProperty Name="BarCode" ColumnName="BarCode" />
+                <ScalarProperty Name="Descr" ColumnName="Descr" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="Attr10Val" ColumnName="Attr10Val" />
+                <ScalarProperty Name="Attr10Abs" ColumnName="Attr10Abs" />
+                <ScalarProperty Name="Attr9Val" ColumnName="Attr9Val" />
+                <ScalarProperty Name="Attr9Abs" ColumnName="Attr9Abs" />
+                <ScalarProperty Name="Attr8Val" ColumnName="Attr8Val" />
+                <ScalarProperty Name="Attr8Abs" ColumnName="Attr8Abs" />
+                <ScalarProperty Name="Attr7Val" ColumnName="Attr7Val" />
+                <ScalarProperty Name="Attr7Abs" ColumnName="Attr7Abs" />
+                <ScalarProperty Name="Attr6Val" ColumnName="Attr6Val" />
+                <ScalarProperty Name="Attr6Abs" ColumnName="Attr6Abs" />
+                <ScalarProperty Name="Attr5Val" ColumnName="Attr5Val" />
+                <ScalarProperty Name="Attr5Abs" ColumnName="Attr5Abs" />
+                <ScalarProperty Name="Attr4Val" ColumnName="Attr4Val" />
+                <ScalarProperty Name="Attr4Abs" ColumnName="Attr4Abs" />
+                <ScalarProperty Name="Attr3Val" ColumnName="Attr3Val" />
+                <ScalarProperty Name="Attr3Abs" ColumnName="Attr3Abs" />
+                <ScalarProperty Name="Attr2Val" ColumnName="Attr2Val" />
+                <ScalarProperty Name="Attr2Abs" ColumnName="Attr2Abs" />
+                <ScalarProperty Name="Attr1Val" ColumnName="Attr1Val" />
+                <ScalarProperty Name="Attr1Abs" ColumnName="Attr1Abs" />
+                <ScalarProperty Name="SL4Code" ColumnName="SL4Code" />
+                <ScalarProperty Name="SL4Abs" ColumnName="SL4Abs" />
+                <ScalarProperty Name="SL3Code" ColumnName="SL3Code" />
+                <ScalarProperty Name="SL3Abs" ColumnName="SL3Abs" />
+                <ScalarProperty Name="SL2Code" ColumnName="SL2Code" />
+                <ScalarProperty Name="SL2Abs" ColumnName="SL2Abs" />
+                <ScalarProperty Name="SL1Code" ColumnName="SL1Code" />
+                <ScalarProperty Name="SL1Abs" ColumnName="SL1Abs" />
+                <ScalarProperty Name="SysBin" ColumnName="SysBin" />
+                <ScalarProperty Name="WhsCode" ColumnName="WhsCode" />
+                <ScalarProperty Name="BinCode" ColumnName="BinCode" />
+                <ScalarProperty Name="AbsEntry" ColumnName="AbsEntry" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

@@ -39,5 +39,7 @@ namespace LimenawebApp.Models
         public string URL_image2 { get; set; }
         public string ItemCodeReturn { get; set; }
         public string ItemNameReturn { get; set; }
+        public int Error { get; set; }
+        public string MensajeError { get; set; }
     }
 }

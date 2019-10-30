@@ -1,4 +1,4 @@
-﻿
+﻿@model List<LimenawebApp.Controllers.InventoryController.binlocationTasks>
 @{
     Layout = null;
 }
@@ -59,7 +59,7 @@
 
                                 <!-- Entry Heading -->
                                 <div class="dt-entry__heading">
-                                    <h3 class="dt-entry__title">Project details: #001</h3>
+                                    <h3 class="dt-entry__title">Project details: #@ViewBag.project.ID_project | @ViewBag.project.Name</h3>
                                 </div>
                                 <!-- /entry heading
                     <a href="javascript:void(0)" class="btn btn-shadow btn-default compose-btn btn-rounded" data-toggle="modal" data-target="#composeModal">
@@ -68,7 +68,7 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6 col-6">
-                                    <a href="@Url.Action("Binloc_tasks", "Inventory")">
+                                    <a href="@Url.Action("Binloc_tasks", "Inventory", new { idproj=ViewBag.project.ID_project, idtask=0, idbin=0})">
                                         <!-- Card -->
                                         <div class="dt-card">
 
@@ -125,7 +125,7 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    <span class="d-block text-light-gray">Progress (0/3)</span>
+                                                    <span class="d-block text-light-gray">My progress (0/3)</span>
                                                 </div>
                                                 <!-- /media body -->
 
@@ -185,130 +185,99 @@
 
                                                 <!-- Module Content Inner -->
                                                 <div class="dt-module__content-inner">
-
+                                                    @foreach (var binloc in Model)
+                                                    {
                                                     <!-- Module List -->
                                                     <div class="dt-module__list">
-                                                        <h3 style="background-color:aliceblue;display:inline-block">01.A.01.A.01</h3>
+                                                        <h3 style="background-color:aliceblue;display:inline-block">@(binloc.Aisle + binloc.Position + binloc.Level + binloc.PalletPosition)</h3>
                                                         <!-- Module Heading -->
-                                                        <h5 class="text-light-gray mb-2">Count: 1</h5>
+                                                        @foreach(var task in binloc.LstTasks)
+                                                        {
+
+                                                            <h5 class="text-light-gray mb-2">Count: @task.Count</h5>
                                                         <!-- /module heading -->
                                                         <!-- Module Item -->
-                                                        <div class="dt-module__list-item">
+                                                            <div class="dt-module__list-item">
 
-                                                            <!-- Checkbox Icon -->
-                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
-                                                                <input id="icon-checkbox-1" type="checkbox" checked>
-                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-1">
-                                                                    <span class="unchecked">
-                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
-                                                                    </span>
-                                                                    <span class="checked">
-                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
-                                                                    </span>
-                                                                </label>
-                                                            </span>
-                                                            <!-- /checkbox icon -->
-                                                            <!-- Module Content -->
-                                                            <div>
-                                                                <a href="task-manager-inner.html"
-                                                                   class="dt-module__list-item-content">
-                                                                    BEV00001 | SODA 1/2 LITRO MANZANITA LIFT
-                                                                </a>     <div class="dt-module__list-item-info">
+                                                                <!-- Checkbox Icon -->
+                                                                <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                                    @if (task.ID_status == 2)
+        {
+                                                            <input id="icon-checkbox-@task.id" type="checkbox" checked disabled>
+}
+else
+{
+                                                            <input id="icon-checkbox-@task.id" type="checkbox" disabled>}
+                                                                    <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-@task.id">
+                                                                        <span class="unchecked">
+                                                                            <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                        </span>
+                                                                        <span class="checked">
+                                                                            <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                        </span>
+                                                                    </label>
+                                                                </span>
+                                                                <!-- /checkbox icon -->
+                                                                <!-- Module Content -->
 
-                                                                    <span style="font-size:10px;">10/23/2019 8:34 PM</span>
+                                                                @if (task.ItemCode == "")
+    {
+        if (task.Count == binloc.actualCount)
+        {
+                                                            <a href="@Url.Action("Binloc_tasks", "Inventory", new { idproj=ViewBag.project.ID_project, idtask=task.id, idbin=task.idbinloc})"
+                                                               class="dt-module__list-item-content">
+                                                                NOT SELECTED
+                                                            </a>
+}
+else
+{
+                                                            <a href="javascript:void(0);"
+                                                               class="dt-module__list-item-content">
+                                                                NOT SELECTED
+                                                            </a>
+}
 
+}
+else
+{
+                                                            <a href="#"
+                                                               class="dt-module__list-item-content">
+                                                                @task.ItemName
+                                                            </a>
+}
+                                                                <div>
+
+                                                                    <div class="dt-module__list-item-info">
+                                                                        @if (task.ID_status == 2)
+            {<span style="font-size:10px;">@task.end_date.ToShortDateString() @task.end_date.ToShortTimeString()</span>}
+
+
+                                                                    </div>
                                                                 </div>
-                                                            </div>
 
-                                                            <!-- /module content -->
-                                                            <!-- Module Info -->
-                                                            <!-- /module info -->
-                                                        </div>
+                                                                <!-- /module content -->
+                                                                <!-- Module Info -->
+                                                                @if (task.ID_status == 1)
+    {<div class="dt-module__list-item-info">
+                                                                <div class="badge-group">
+                                                                    <span class="badge badge-warning">Waiting</span>
+                                                                </div>
+
+
+                                                            </div>}
+                                                                <!-- /module info -->
+                                                            </div>
                                                         <!-- /module item -->
                                                         <!-- Module Heading -->
                                                         <br />
-                                                        <h5 class="text-light-gray">Count: 2</h5>
-                                                        <!-- /module heading -->
-                                                        <!-- Module Item -->
-                                                        <div class="dt-module__list-item">
-
-                                                            <!-- Checkbox Icon -->
-                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
-                                                                <input id="icon-checkbox-1" type="checkbox">
-                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-1">
-                                                                    <span class="unchecked">
-                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
-                                                                    </span>
-                                                                    <span class="checked">
-                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
-                                                                    </span>
-                                                                </label>
-                                                            </span>
-                                                            <!-- /checkbox icon -->
-                                                            <!-- Module Content -->
-                                                            <a href="task-manager-inner.html"
-                                                               class="dt-module__list-item-content">
-                                                                NOT SELECTED
-                                                            </a>
-                                                            <!-- /module content -->
-                                                            <!-- Module Info -->
-                                                            <div class="dt-module__list-item-info">
-                                                                <div class="badge-group">
-                                                                    <span class="badge badge-warning">Waiting</span>
-                                                                </div>
-
-
-                                                            </div>
-                                                            <!-- /module info -->
-                                                        </div>
-                                                        <!-- /module item -->
-
+                                                        }
 
                                                     </div>
+                                                   
                                                     <!-- /module list -->
-
-                                                    <div class="dt-module__list">
-                                                        <h3 style="background-color:aliceblue;display:inline-block">01.A.01.A.02</h3>
-                                                        <!-- Module Heading -->
-                                                        <h5 class="text-light-gray mb-2">Count: 1</h5>
-                                                        <!-- /module heading -->
-                                                        <!-- Module Item -->
-                                                        <div class="dt-module__list-item">
-
-                                                            <!-- Checkbox Icon -->
-                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
-                                                                <input id="icon-checkbox-5" type="checkbox">
-                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-5">
-                                                                    <span class="unchecked">
-                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
-                                                                    </span>
-                                                                    <span class="checked">
-                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
-                                                                    </span>
-                                                                </label>
-                                                            </span>
-                                                            <!-- /checkbox icon -->
-                                                            <!-- Module Content -->
-                                                            <a href="task-manager-inner.html"
-                                                               class="dt-module__list-item-content">
-                                                                NOT SELECTED
-                                                            </a>
-                                                            <!-- /module content -->
-                                                            <!-- Module Info -->
-                                                            <div class="dt-module__list-item-info">
-                                                                <div class="badge-group">
-                                                                    <span class="badge badge-warning">Waiting</span>
-                                                                </div>
+ }
 
 
-                                                            </div>
-                                                            <!-- /module info -->
-                                                        </div>
-                                                        <!-- /module item -->
-
-
-                                                    </div>
-                                                    <!-- /module list -->
 
                                                 </div>
                                                 <!-- /module content inner -->

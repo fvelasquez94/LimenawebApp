@@ -38,5 +38,7 @@ namespace LimenawebApp.Models
         public bool Deleted { get; set; }
         public int closedOrderTimes { get; set; }
         public int DeletedSAP { get; set; }
+        public int Error { get; set; }
+        public string MensajeError { get; set; }
     }
 }

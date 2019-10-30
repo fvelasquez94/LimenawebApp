@@ -34,6 +34,9 @@
         <EntityTypeShape EntityType="dbLimenaModel.Tb_planning_print" Width="1.5" PointX="7.375" PointY="14.75" />
         <EntityTypeShape EntityType="dbLimenaModel.Tb_NewCustomers" Width="1.5" PointX="9.375" PointY="14.75" />
         <EntityTypeShape EntityType="dbLimenaModel.Tb_CreditsRequest" Width="1.5" PointX="3.375" PointY="15.75" />
+        <EntityTypeShape EntityType="dbLimenaModel.Inv_Projects" Width="1.5" PointX="16.375" PointY="0.75" />
+        <EntityTypeShape EntityType="dbLimenaModel.Inv_Projects_BinLoc" Width="1.5" PointX="16.375" PointY="5.75" />
+        <EntityTypeShape EntityType="dbLimenaModel.Inv_Projects_Task" Width="1.5" PointX="16.375" PointY="12.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

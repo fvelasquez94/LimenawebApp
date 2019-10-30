@@ -201,8 +201,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.10.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.10\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.11.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.11\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -243,6 +243,8 @@
     <Compile Include="Controllers\CommercialController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\Utils.cs" />
+    <Compile Include="Controllers\WebService.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -381,6 +383,15 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Inv_Projects.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_Projects_BinLoc.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_Projects_Task.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\ITM1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -389,6 +400,9 @@
     </Compile>
     <Compile Include="Models\Matriz_Formato.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\OBIN.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\OCRD.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
@@ -15151,6 +15165,7 @@
     <Content Include="Views\Shared\temp_header.cshtml" />
     <Content Include="Views\Shared\main_sidebar.cshtml" />
     <Content Include="Views\Shared\main_footer.cshtml" />
+    <Content Include="Views\Home\test_webservice.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

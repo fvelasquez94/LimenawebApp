@@ -43,7 +43,7 @@
                             <!-- Page Header -->
                             <div class="dt-page__header">
                                 <ol class="breadcrumb" style="display:flow-root;">
-                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Binloc", "Inventory")">Back</a></li>
+                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Binloc", "Inventory", new { id=ViewBag.project.ID_project})">Back</a></li>
                                     <li class="breadcrumb-item float-right">Details</li>
                                     <li class="breadcrumb-item float-right">Projects </li>
                                     <li class="breadcrumb-item float-right">Inventory</li>
@@ -57,7 +57,7 @@
 
                                 <!-- Entry Heading -->
                                 <div class="dt-entry__heading">
-                                    <h3 class="dt-entry__title">Bin Location: 01.A.01.A.01 | Count: 2</h3>
+                                    <h3 class="dt-entry__title">Bin Location: @ViewBag.binloc.BinCode.Substring(2) | Count: @ViewBag.binloc.LstTasks[0].Count</h3>
                                 </div>
                                 <!-- /entry heading
                     <a href="javascript:void(0)" class="btn btn-shadow btn-default compose-btn btn-rounded" data-toggle="modal" data-target="#composeModal">
@@ -478,20 +478,30 @@
         $('#UOMlst').on('change', function () {
             $("#UOMlst2").val('0').trigger("change");
             $("#UOMlst3").val('0').trigger("change");
-            $("#UOMlst2 option").show();
-            $("#UOMlst3 option").show();
+            $("#UOMlst2 option").prop("disabled", false);
+            $("#UOMlst2 option").css("display", "block"); 
+            $("#UOMlst3 option").prop("disabled", false);
+            $("#UOMlst3 option").css("display", "block"); 
+            
             if (this.value != 0) {
-                $("#UOMlst2 option[value='" + this.value + "']").hide(); 
-                $("#UOMlst3 option[value='" + this.value + "']").hide(); 
+                $("#UOMlst2 option[value='" + this.value + "']").prop("disabled", true); 
+                $("#UOMlst2 option[value='" + this.value + "']").css("display", "none");   
+                $("#UOMlst3 option[value='" + this.value + "']").prop("disabled", true); 
+                $("#UOMlst3 option[value='" + this.value + "']").css("display", "none"); 
             }
             
         });
         $('#UOMlst2').on('change', function () {
             $("#UOMlst3").val('0').trigger("change");
-            $("#UOMlst3 option").show();
+            $("#UOMlst3 option").prop("disabled", false);
+            $("#UOMlst3 option").css("display", "block"); 
             if (this.value != 0) {
-                $("#UOMlst3 option[value='" + $('#UOMlst').val() + "']").hide();
-                $("#UOMlst3 option[value='" + this.value + "']").hide();
+
+                $("#UOMlst3 option[value='" + $('#UOMlst').val() + "']").prop("disabled", true);
+                $("#UOMlst3 option[value='" + $('#UOMlst').val() + "']").css("display", "none"); 
+
+                $("#UOMlst3 option[value='" + this.value + "']").prop("disabled", true);
+                $("#UOMlst3 option[value='" + this.value + "']").css("display", "none"); 
             }
 
         });

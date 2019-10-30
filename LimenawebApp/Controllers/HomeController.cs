@@ -12,6 +12,7 @@ using Recaptcha.Web.Mvc;
 using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
+using System.Net;
 
 namespace LimenawebApp.Controllers
 {
@@ -34,6 +35,48 @@ namespace LimenawebApp.Controllers
         {
             return View();
         }
+        public ActionResult test_webservice()
+        {
+            //string url = string.Format("http://test.limenainc.net:81/Servicio.svc?singleWsdl");
+            //WebRequest request = HttpWebRequest.Create(url);
+            //using (WebResponse response = request.GetResponse())
+            //{
+            //    using (StreamReader reader = new StreamReader(response.GetResponseStream()))
+            //    {
+            //        string urlText = reader.ReadToEnd();
+            //        //Do whatever you need to do
+            //    }
+            //}
+
+            var resultado = ExampleWebMethod(4, 5);
+
+            return View();
+        }
+
+        private static WebService ExampleAPI = new WebService("http://test.limenainc.net:81/Servicio.svc?singleWsdl");    // DEFAULT location of the WebService, containing the WebMethods
+
+        public static void ChangeUrl(string webserviceEndpoint)
+        {
+            ExampleAPI = new WebService(webserviceEndpoint);
+        }
+
+        public static string ExampleWebMethod(int num1, int num2)
+        {
+            ExampleAPI.PreInvoke();
+
+            ExampleAPI.AddParameter("Num1", num1.ToString());                    // Case Sensitive! To avoid typos, just copy the WebMethod's signature and paste it
+            ExampleAPI.AddParameter("Num2", num2.ToString());     // all parameters are passed as strings
+            try
+            {
+                ExampleAPI.Invoke("GetSuma");                // name of the WebMethod to call (Case Sentitive again!)
+            }
+            finally { ExampleAPI.PosInvoke(); }
+
+            return ExampleAPI.ResultString;                           // you can either return a string or an XML, your choice
+        }
+
+
+
         public ActionResult Test_barcode()
         {
 

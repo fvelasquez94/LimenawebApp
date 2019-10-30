@@ -33,6 +33,8 @@
           <Property Name="Deleted" Type="bit" />
           <Property Name="closedOrderTimes" Type="int" />
           <Property Name="DeletedSAP" Type="int" />
+          <Property Name="Error" Type="int" />
+          <Property Name="MensajeError" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Tb_Bonificaciones">
           <Key>
@@ -75,6 +77,8 @@
           <Property Name="deleted" Type="bit" />
           <Property Name="closedOrderTimes" Type="int" />
           <Property Name="DeletedSAP" Type="int" />
+          <Property Name="Error" Type="int" />
+          <Property Name="MensajeError" Type="varchar" MaxLength="500" />
         </EntityType>
         <EntityType Name="Tb_ConfigBolsa">
           <Key>
@@ -176,6 +180,8 @@
           <Property Name="Deleted" Type="Boolean" />
           <Property Name="closedOrderTimes" Type="Int32" />
           <Property Name="DeletedSAP" Type="Int32" />
+          <Property Name="Error" Type="Int32" />
+          <Property Name="MensajeError" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Tb_Bonificaciones">
           <Key>
@@ -218,6 +224,8 @@
           <Property Name="deleted" Type="Boolean" />
           <Property Name="closedOrderTimes" Type="Int32" />
           <Property Name="DeletedSAP" Type="Int32" />
+          <Property Name="Error" Type="Int32" />
+          <Property Name="MensajeError" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -258,6 +266,8 @@
           <EntitySetMapping Name="Tb_Autorizaciones">
             <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Autorizaciones">
               <MappingFragment StoreEntitySet="Tb_Autorizaciones">
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
                 <ScalarProperty Name="DeletedSAP" ColumnName="DeletedSAP" />
                 <ScalarProperty Name="closedOrderTimes" ColumnName="closedOrderTimes" />
                 <ScalarProperty Name="Deleted" ColumnName="Deleted" />
@@ -288,6 +298,8 @@
           <EntitySetMapping Name="Tb_Bonificaciones">
             <EntityTypeMapping TypeName="Interna_DLIModel.Tb_Bonificaciones">
               <MappingFragment StoreEntitySet="Tb_Bonificaciones">
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
                 <ScalarProperty Name="DeletedSAP" ColumnName="DeletedSAP" />
                 <ScalarProperty Name="closedOrderTimes" ColumnName="closedOrderTimes" />
                 <ScalarProperty Name="deleted" ColumnName="deleted" />

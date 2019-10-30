@@ -186,7 +186,7 @@ namespace LimenawebApp.Controllers
                 //FIN HEADER
 
                 //Lista de productos con filtro de Pepperi, el dia 22/08/2019 se solicito eliminar el GOYA/PRE-SALE (114)
-                var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114 && a.Credits =="NO") select a);
+                var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114 && a.Credits =="NO" || a.id== "BUL300326") select a);
 
 
                 var lstCategories = (from f in products select f.category_name).Distinct().OrderBy(c => c).ToList();
@@ -720,6 +720,8 @@ namespace LimenawebApp.Controllers
                             //ver cuantas veces se cerro la orden
                             newDet.closedOrderTimes = timesClosed;
                             newDet.DeletedSAP = 0;
+                            newDet.Error = 0;
+                            newDet.MensajeError = "";
                             if (items.deleted == true)
                             {
                                 newDet.Deleted = true;
@@ -1068,7 +1070,8 @@ namespace LimenawebApp.Controllers
                 newBonificacion.CantidadPedido = Convert.ToInt32(productinfoPedido.Quantity);
                 newBonificacion.DocPepperi =pepperi;
                 newBonificacion.RutaDef = routedf;
-
+                newBonificacion.Error = 0;
+                newBonificacion.MensajeError = "";
                 newBonificacion.DeletedSAP = 0;
 
                 internadli.Tb_Bonificaciones.Add(newBonificacion);
@@ -6026,7 +6029,8 @@ public ActionResult Prices_requestpdo(int docnum)
                     newRequest.LineNum = 0;
                     newRequest.URL_image = "";
                     newRequest.URL_image2 = "";
-
+                    newRequest.Error = 0;
+                    newRequest.MensajeError = "";
                     if (returnProduct == "0")
                     {
                         newRequest.ItemCodeReturn = "";
