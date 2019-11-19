@@ -20,7 +20,7 @@
                 <!-- /brand tool -->
                 <!-- Brand logo -->
                 <span class="dt-brand__logo">
-                    <a class="dt-brand__logo-link" href="index.html">
+                    <a class="dt-brand__logo-link" href="#">
                         <img class="dt-brand__logo-img d-none d-sm-inline-block" src="~/Content/main/assets/images/LogoLimenaWebIcono.png" alt="Limena">
                         <img class="dt-brand__logo-img d-sm-none" src="~/Content/main/assets/images/LogoLimenaWebIcono.png" alt="Limena">
                     </a>
@@ -86,7 +86,7 @@
                             <div class="dropdown-menu dropdown-menu-right dropdown-menu-media">
                                 <!-- Dropdown Menu Header -->
                                 <div class="dropdown-menu-header">
-                                    <h4 class="title">Notifications (9)</h4>
+                                    <h4 class="title">Notifications (0)</h4>
 
                                     <div class="ml-auto action-area">
                                         <a href="javascript:void(0)">Mark All Read</a> <a class="ml-2"
@@ -100,7 +100,7 @@
                                 <div class="dropdown-menu-body ps-custom-scrollbar">
 
                                     <div class="h-auto">
-                                        <!-- Media -->
+                                        @*<!-- Media -->
                                         <a href="javascript:void(0)" class="media">
 
                                             <!-- Avatar -->
@@ -118,68 +118,8 @@
                                             <!-- /media body -->
 
                                         </a>
-                                        <!-- /media -->
-                                        <!-- Media -->
-                                        <a href="javascript:void(0)" class="media">
-
-                                            <!-- Avatar -->
-                                            <img class="dt-avatar mr-3"
-                                                 src="https://via.placeholder.com/150x150" alt="User">
-                                            <!-- avatar -->
-                                            <!-- Media Body -->
-                                            <span class="media-body">
-                                                <span class="message">
-                                                    <span class="user-name">Jonathan Madano</span> commented on your post.
-                                                </span>
-                                                <span class="meta-date">9 hours ago</span>
-                                            </span>
-                                            <!-- /media body -->
-
-                                        </a>
-                                        <!-- /media -->
-                                        <!-- Media -->
-                                        <a href="javascript:void(0)" class="media">
-
-                                            <!-- Avatar -->
-                                            <img class="dt-avatar mr-3"
-                                                 src="https://via.placeholder.com/150x150" alt="User">
-                                            <!-- avatar -->
-                                            <!-- Media Body -->
-                                            <span class="media-body">
-                                                <span class="message">
-                                                    <span class="user-name">Chelsea Brown</span> sent a video recomendation.
-                                                </span>
-                                                <span class="meta-date">
-                                                    <i class="icon icon-play-circle text-primary icon-fw mr-1"></i>
-                                                    13 hours ago
-                                                </span>
-                                            </span>
-                                            <!-- /media body -->
-
-                                        </a>
-                                        <!-- /media -->
-                                        <!-- Media -->
-                                        <a href="javascript:void(0)" class="media">
-
-                                            <!-- Avatar -->
-                                            <img class="dt-avatar mr-3"
-                                                 src="https://via.placeholder.com/150x150" alt="User">
-                                            <!-- avatar -->
-                                            <!-- Media Body -->
-                                            <span class="media-body">
-                                                <span class="message">
-                                                    <span class="user-name">Alex Dolgove</span> and <span class="user-name">Chris Harris</span>
-                                                    like your post.
-                                                </span>
-                                                <span class="meta-date">
-                                                    <i class="icon icon-like text-light-blue icon-fw mr-1"></i>
-                                                    yesterday at 9:30
-                                                </span>
-                                            </span>
-                                            <!-- /media body -->
-
-                                        </a>
-                                        <!-- /media -->
+                                        <!-- /media -->*@
+                                        
                                     </div>
 
                                 </div>
@@ -260,12 +200,12 @@
                                 <div class="dt-avatar-wrapper flex-nowrap p-6 mt-n2 bg-gradient-purple text-white rounded-top">
                                     <span class="dt-avatar-info">
                                         <span class="dt-avatar-name">@ViewData["nameUser"]</span>
-                                        <span class="f-12">Administrator</span>
+                                        @*<span class="f-12">Administrator</span>*@
                                     </span>
                                 </div>
-                                <a class="dropdown-item" href="javascript:void(0)">
+                                @*<a class="dropdown-item" href="javascript:void(0)">
                                     <i class="icon icon-settings icon-fw mr-2 mr-sm-1"></i>Setting
-                                </a>
+                                </a>*@
                                 <a class="dropdown-item" href="@Url.Action("Log_out", "Home")">
                                     <i class="icon icon-editors icon-fw mr-2 mr-sm-1"></i>Sign out
                                 </a>
@@ -464,7 +404,7 @@
                                 </li>
 
                                 <li class="nav-item" id="invo2_submenu" style="display:none">
-                                    <a href="page-blank.html?menu=traffic" class="nav-link">
+                                    <a href="@Url.Action("QualityControl_planning", "Invoices")" class="nav-link">
                                         <i class="icon icon-traffic icon-fw icon-xl"></i>
                                         <span class="nav-text">Quality Control</span>
                                     </a>
@@ -528,10 +468,15 @@
 
                     <!-- Sub-menu -->
                     <ul class="sub-menu">
-
+                        <li class="nav-item " id="dashboardinv_submenu">
+                            <a href="@Url.Action("Dashboard_inventory", "Main")" class="nav-link">
+                                <i class="icon icon-dashboard icon-fw icon-xl"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
                         <li class="nav-item " id="stock_submenu" style="display:none">
                             <a href="@Url.Action("Projects", "Inventory")" class="nav-link">
-                                <i class="icon icon-question-circle icon-fw icon-xl"></i>
+                                <i class="icon icon-projects icon-fw icon-xl"></i>
                                 <span class="nav-text">Projects</span>
                             </a>
                         </li>

@@ -41,5 +41,10 @@ namespace LimenawebApp.Models
         public decimal Quantity4 { get; set; }
         public decimal Final_quantity { get; set; }
         public int ID_empresa { get; set; }
+        public int ID_project { get; set; }
+        public string Area { get; set; }
+        public int Internal_sort { get; set; }
+        public string Type { get; set; }
+        public string Aisle { get; set; }
     }
 }

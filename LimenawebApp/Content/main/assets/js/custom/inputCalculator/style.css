@@ -1,0 +1,38 @@
+
+/*========================*/
+
+/*======== HEADER ========*/
+
+/*========================*/
+
+/*=========================*/
+
+/*===== DEMONSTRATION =====*/
+
+/*=========================*/
+ .demonstration {
+  text-align: center;
+}
+.demonstration .jcalculator_wrap {
+
+}
+.demonstration .jcalculator_wrap input {
+  
+}
+.demonstration .jcalculator_wrap input:focus {
+
+}
+.demonstration .jcalculator_wrap input:focus .jcalculator {
+    display: block;
+}
+/*========================*/
+
+/*========= SHARE ========*/
+
+/*========================*/
+
+/*=========================*/
+
+/*========= FOOTER ========*/
+
+/*=========================*/

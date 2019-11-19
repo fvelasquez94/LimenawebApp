@@ -51,6 +51,9 @@
           <Property Name="comments" Type="varchar(max)" Nullable="false" />
           <Property Name="ID_project" Type="int" Nullable="false" />
           <Property Name="ID_empresa" Type="int" Nullable="false" />
+          <Property Name="Error" Type="bit" />
+          <Property Name="MensajeError" Type="nvarchar" MaxLength="500" />
+          <Property Name="OnSAP" Type="bit" />
         </EntityType>
         <EntityType Name="Inv_Projects_Task">
           <Key>
@@ -83,6 +86,11 @@
           <Property Name="Quantity4" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="Final_quantity" Type="decimal" Precision="18" Scale="0" Nullable="false" />
           <Property Name="ID_empresa" Type="int" Nullable="false" />
+          <Property Name="ID_project" Type="int" Nullable="false" />
+          <Property Name="Area" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Internal_sort" Type="int" Nullable="false" />
+          <Property Name="Type" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Aisle" Type="varchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="Purchase_data">
           <Key>
@@ -1296,6 +1304,9 @@
           <Property Name="comments" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="ID_project" Type="Int32" Nullable="false" />
           <Property Name="ID_empresa" Type="Int32" Nullable="false" />
+          <Property Name="Error" Type="Boolean" />
+          <Property Name="MensajeError" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="OnSAP" Type="Boolean" />
         </EntityType>
         <EntityType Name="Inv_Projects_Task">
           <Key>
@@ -1328,6 +1339,11 @@
           <Property Name="Quantity4" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="Final_quantity" Type="Decimal" Nullable="false" Precision="18" Scale="0" />
           <Property Name="ID_empresa" Type="Int32" Nullable="false" />
+          <Property Name="ID_project" Type="Int32" Nullable="false" />
+          <Property Name="Area" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Internal_sort" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Aisle" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1822,6 +1838,9 @@
           <EntitySetMapping Name="Inv_Projects_BinLoc">
             <EntityTypeMapping TypeName="dbLimenaModel.Inv_Projects_BinLoc">
               <MappingFragment StoreEntitySet="Inv_Projects_BinLoc">
+                <ScalarProperty Name="OnSAP" ColumnName="OnSAP" />
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
                 <ScalarProperty Name="ID_empresa" ColumnName="ID_empresa" />
                 <ScalarProperty Name="ID_project" ColumnName="ID_project" />
                 <ScalarProperty Name="comments" ColumnName="comments" />
@@ -1852,6 +1871,11 @@
           <EntitySetMapping Name="Inv_Projects_Task">
             <EntityTypeMapping TypeName="dbLimenaModel.Inv_Projects_Task">
               <MappingFragment StoreEntitySet="Inv_Projects_Task">
+                <ScalarProperty Name="Aisle" ColumnName="Aisle" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Internal_sort" ColumnName="Internal_sort" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="ID_project" ColumnName="ID_project" />
                 <ScalarProperty Name="ID_empresa" ColumnName="ID_empresa" />
                 <ScalarProperty Name="Final_quantity" ColumnName="Final_quantity" />
                 <ScalarProperty Name="Quantity4" ColumnName="Quantity4" />

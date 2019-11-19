@@ -33,7 +33,8 @@
 <script src="~/Content/main/node_modules/datatables.net/js/jquery.dataTables.js"></script>
 <script src="~/Content/main/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
 <script src="~/Content/main/assets/js/custom/data-table.js"></script>
-
+<!--select2-->
+<script src="~/Content/appcontent/assets/vendor/select2/js/select2.full.js"></script>
 <script src="~/Content/appcontent/assets/vendor/js-init/bootstrap-number-input.js"></script>
 
 <!--FOR MENU-->
@@ -106,7 +107,7 @@
             });
         }
         if (element == "Inventory") {
-            document.getElementById("home_menuInventory").style.display = "block";
+            //document.getElementById("home_menuInventory").style.display = "block";
             document.getElementById("inventory_menu").style.display = "block";
 
             roles.forEach(function (elementrol) {
@@ -144,7 +145,7 @@
             document.getElementById("drop1").style.display = "block";
             document.getElementById("reportop1_submenu").style.display = "block";
             document.getElementById("tasks_submenu").style.display = "block";
-
+            document.getElementById("inventory_menu").style.display = "block";
         }
         if (element == "Customer") {
             document.getElementById("home_menuCustomers").style.display = "block";

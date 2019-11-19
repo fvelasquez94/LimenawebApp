@@ -45,5 +45,6 @@ namespace LimenawebApp.Models
         public decimal CantBonif { get; set; }
         public decimal FactorBonif { get; set; }
         public string Credits { get; set; }
+        public string StorageType { get; set; }
     }
 }

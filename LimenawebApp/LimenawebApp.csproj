@@ -201,8 +201,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.11.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.11\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.12.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.12\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -1955,6 +1955,16 @@
     <Content Include="Content\main\assets\js\custom\datetime-pickers.js" />
     <Content Include="Content\main\assets\js\custom\dropzone.js" />
     <Content Include="Content\main\assets\js\custom\editor-summernote.js" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\css\jcalculator.css" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\index.html" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\js\jcalculator.js" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\js\min\jcalculator.min.js" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\px\fb.svg" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\px\gplus.svg" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\px\icon.png" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\px\og_img.jpg" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\px\tw.svg" />
+    <Content Include="Content\main\assets\js\custom\inputCalculator\style.css" />
     <Content Include="Content\main\assets\js\custom\maps\am-maps.js" />
     <Content Include="Content\main\assets\js\custom\maps\data-maps.js" />
     <Content Include="Content\main\assets\js\custom\maps\gmaps.js" />
@@ -11997,6 +12007,22 @@
     <Content Include="Content\main\vendors\gaxon-icon\fonts\gaxondrift.svg" />
     <Content Include="Content\main\vendors\gaxon-icon\icons-reference.html" />
     <Content Include="Content\main\vendors\gaxon-icon\styles.css" />
+    <Content Include="Content\videos\ajax.js" />
+    <Content Include="Content\videos\gold.jpg" />
+    <Content Include="Content\videos\IGNITE_compress.mp4" />
+    <Content Include="Content\videos\lazyload.config.js" />
+    <Content Include="Content\videos\lazyload.js" />
+    <Content Include="Content\videos\LUGAR.jpg" />
+    <Content Include="Content\videos\owl.carousel.min.css" />
+    <Content Include="Content\videos\pjax.min.js" />
+    <Content Include="Content\videos\PLATINO FINAL COMPRESS.mp4" />
+    <Content Include="Content\videos\plugin.js" />
+    <Content Include="Content\videos\popper.min.js" />
+    <Content Include="Content\videos\scrollreveal.min.js" />
+    <Content Include="Content\videos\style.css" />
+    <Content Include="Content\videos\theme.css" />
+    <Content Include="Content\videos\theme.js" />
+    <Content Include="Content\videos\utils.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -15166,6 +15192,10 @@
     <Content Include="Views\Shared\main_sidebar.cshtml" />
     <Content Include="Views\Shared\main_footer.cshtml" />
     <Content Include="Views\Home\test_webservice.cshtml" />
+    <Content Include="Views\Inventory\Binloc_general.cshtml" />
+    <Content Include="Views\Inventory\Binloc_newlocation.cshtml" />
+    <Content Include="Views\Inventory\Binloc_general2.cshtml" />
+    <Content Include="Views\Inventory\Binloc_tasksEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

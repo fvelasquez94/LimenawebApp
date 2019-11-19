@@ -1,0 +1,416 @@
+﻿@model IQueryable<LimenawebApp.Models.Inv_Projects_Task>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/temp_head.cshtml")
+    <style>
+        tr.group {
+            background-color: #f6f6f6 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="dt-loader-container">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Header -->
+            @Html.Partial("~/Views/Shared/temp_header.cshtml")
+            <!-- /header -->
+            <!-- Site Main -->
+            <main class="dt-main">
+                <!-- Sidebar -->
+                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
+                <!-- /sidebar -->
+                <!-- Custom Container -->
+                <div class="dt-container">
+
+                    <!-- Site Content Wrapper -->
+                    <div class="dt-content-wrapper">
+
+                        <!-- Site Content -->
+                        <div class="dt-content">
+
+                            <!-- Page Header -->
+                            <div class="dt-page__header">
+
+                                <ol class="breadcrumb" style="display:flow-root;">
+                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Projects", "Inventory")">Back</a></li>
+                                    <li class="breadcrumb-item float-right">Details</li>
+                                    <li class="breadcrumb-item float-right">Projects </li>
+                                    <li class="breadcrumb-item float-right">Inventory</li>
+
+
+
+                                </ol>
+                            </div>
+                            <!-- /page header -->
+                            <div class="dt-entry__header">
+
+                                <!-- Entry Heading -->
+                                <div class="dt-entry__heading">
+                                    <h3 class="dt-entry__title">Project details: #@ViewBag.project.ID_project | @ViewBag.project.Name</h3>
+                                </div>
+
+                            </div>
+
+                            <!-- Grid -->
+                            <div class="row">
+                                <!-- Grid Item -->
+                                <div class="col-md-12 dt-masonry__item">
+
+                                    <!-- Card -->
+                                    <div class="">
+
+                                        <!-- Card Header -->
+                                        <div class="dt-card__header mb-0">
+
+                                            <!-- Card Heading -->
+                                            <div class="dt-card__heading">
+                                                <a href="@Url.Action("Binloc_general", "Inventory", new { idproj = ViewBag.project.ID_project })" id="btnGroupby" class="btn btn-primary btn-xs">Group by Bin Location</a>
+                                            </div>
+                                            <!-- /card heading -->
+                                            <!-- Card Tools -->
+                                            <div class="dt-card__tools">
+                                                <!-- List -->
+                                                <ul class="dt-list dt-list-sm dt-list-cm-0">
+                                                    <!-- List Item -->
+                                                    <!-- /list item -->
+                                                    <!-- List Item -->
+                                                    <li class="dt-list__item">
+                                                        <!-- Dropdown -->
+                                                        <div class="dropdown d-inline-block">
+                                                            <a class="dropdown-toggle d-inline-block f-12 py-1 px-2 py-1 border rounded" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                Show
+                                                            </a>
+
+                                                            <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(83px, 27px, 0px);">
+
+                                                                <div class="custom-control custom-checkbox dropdown-item">
+                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-aisle">
+                                                                    <label class="custom-control-label" for="checkbox-aisle">
+                                                                        Aisle
+                                                                    </label>
+                                                                </div>
+                                                                <div class="custom-control custom-checkbox dropdown-item">
+                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-area">
+                                                                    <label class="custom-control-label" for="checkbox-area">
+                                                                        Area
+                                                                    </label>
+                                                                </div>
+                                                                <div class="custom-control custom-checkbox dropdown-item">
+                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-type">
+                                                                    <label class="custom-control-label" for="checkbox-type">
+                                                                        Type
+                                                                    </label>
+                                                                </div>
+                                                                <div class="custom-control custom-checkbox dropdown-item">
+                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-user">
+                                                                    <label class="custom-control-label" for="checkbox-user">
+                                                                        User
+                                                                    </label>
+                                                                </div>                                                                
+                                                                <div class="custom-control custom-checkbox dropdown-item">
+                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-qty">
+                                                                    <label class="custom-control-label" for="checkbox-qty">
+                                                                        Quantity
+                                                                    </label>
+                                                                </div>
+
+                                                            </div>
+                                                        </div>
+                                                        <!-- /dropdown -->
+                                                    </li>
+                                                    <!-- /list item -->
+                                                </ul>
+                                                <!-- /list -->
+
+                                            </div>
+                                            <!-- /card tools -->
+
+                                        </div><br /><br />
+                                        <!-- /card header -->
+                                        <!-- Card Body -->
+                                        <div class="dt-card__body p-0">
+                                            <div class="table-responsive">
+                                                <!-- Tables -->
+                                                <table id="historytable" class="table table-theme table-row v-middle" style="width:100%">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th hidden><span class="text-muted">ID</span></th>
+                                                            <th class="colBin"><span class="text-muted">BIN</span></th>
+                                                            <th class="colCount"><span class="text-muted">COUNT</span></th>
+                                                            <th class="colItemName"><span class="text-muted">PRODUCT</span></th>
+
+                                                            <th class="colAisle"><span class="text-muted">AISLE</span></th>
+                                                            <th class="colArea"><span class="text-muted">AREA</span></th>
+                                                            <th class="colType"><span class="text-muted">TYPE</span></th>
+                                                            <th class="colUser"><span class="text-muted">USER</span></th>
+                                                            <th class="colItemCode"><span class="text-muted">ITEMCODE</span></th>
+                                                            <th class="colUom"><span class="text-muted">UOM 1</span></th>
+                                                            <th class="colQTY"><span class="text-muted">QTY 1</span></th>
+                                                            <th class="colUom"><span class="text-muted">UOM 2</span></th>
+                                                            <th class="colQTY"><span class="text-muted">QTY 2</span></th>
+                                                            <th class="colUom"><span class="text-muted">UOM 3</span></th>
+                                                            <th class="colQTY"><span class="text-muted">QTY 3</span></th>
+                                                            <th class="colQTYf"><span class="text-muted">TOTAL EACHES</span></th>
+                                                            <th class="colDate"><span class="text-muted">DATE</span></th>
+                                                            <th><span class="text-muted">STATUS</span></th>
+
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var item in Model)
+                    {
+                                                        <tr data-id="@item.ID_projects_task">
+
+                                                            <td hidden>@item.ID_projects_task</td>
+                                                            <td class="rowBin">@item.Bin_location.Substring(2)</td>
+                                                            <td class="rowCount">Count @item.Count</td>
+                                                            <td class="rowItemName">
+                                                                @if (item.ItemName == "")
+        {<label>NOT SELECTED</label> }
+else
+{ <label>@item.ItemName.ToUpper()</label>}
+                                                            </td>
+
+                                                            <td class="rowAisle">@item.Aisle</td>
+                                                            <td class="rowArea">@item.Area</td>
+                                                            <td class="rowType">@item.Type</td>
+                                                            <td class="rowUser">@item.UserName</td>
+                                                            <td class="rowItemCode">@item.ItemCode</td>
+                                                            <td class="rowUomC">@item.UoM_code</td>
+                                                            <td class="rowQTY">@item.Quantity</td>
+                                                            <td class="rowUomC">@item.UoM_code2</td>
+                                                            <td class="rowQTY">@item.Quantity2</td>
+                                                            <td class="rowUomC">@item.UoM_code3</td>
+                                                            <td class="rowQTY">@item.Quantity3</td>
+                                                            <td class="rowQTYf">@item.Final_quantity</td>
+                                                            <td class="rowDate">@Convert.ToDateTime(item.end_date).ToShortDateString()</td>
+                                                            <td>
+                                                                @if (item.ID_status == 1)
+        {
+                                                        <span class="badge badge-warning">Waiting</span>
+}                                                                                                                  @if (item.ID_status == 2)
+        {
+                                                        <span class="badge badge-info">Finished</span>
+}
+                                                        </td>
+
+
+                                                        </tr>
+}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+                                            <!-- /tables -->
+
+                                        </div>
+                                        <!-- /card body -->
+
+                                    </div>
+                                    <!-- /card -->
+
+                                </div>
+                                <!-- /grid item -->
+
+
+                            </div>
+                            <!-- /grid -->
+
+
+                        </div>
+                        <!-- /site content -->
+
+                    </div>
+                    <!-- /site content wrapper -->
+
+                </div>
+                <!-- /custom Container -->
+            </main>
+            <!-- /main -->
+            <!-- Footer -->
+            <footer class="dt-footer">
+                <div class="dt-container">
+                    Copyright Distribuidora Limena © 2019
+                </div>
+            </footer>
+            <!-- /footer -->
+
+        </div>
+    </div>
+    <!-- /root -->
+    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+    <script>
+
+        $('input.valprod[type="checkbox"]').on('change', function () {
+            $('input.valprod[name="' + this.name + '"]').not(this).prop('checked', false);
+        });
+
+        $(document).ready(function () {
+            $('.rowUomC').hide();
+            $('.rowQTY').hide();
+         
+            $('.colQTY').hide();
+          
+            $('.colUom').hide();
+            $('.rowItemCode').hide();
+            $('.colItemCode').hide();
+            $('.rowDate').hide();
+            $('.colDate').hide();
+            $('.colAisle').hide();
+            $('.colArea').hide();
+            $('.colType').hide();
+            $('.colUser').hide();
+            $('.rowDate').hide();
+            $('.rowAisle').hide();
+            $('.rowArea').hide();
+            $('.rowType').hide();
+            $('.rowUser').hide();
+
+            //table2 = $('#historytable').DataTable({
+            //    "order": [],
+            //    "search": { regex: true },
+            //    "columnDefs": [{
+            //        "targets": 'no-sort',
+            //        "orderable": false,
+            //    }]
+            //});
+
+
+            var groupColumn = 3;
+            var table2 = $('#historytable').DataTable({
+                "columnDefs": [
+                    { "visible": false, "targets": groupColumn }, {
+                   "targets": 'no-sort',
+                   "orderable": false,
+                }
+                ],
+                "order": [[groupColumn, 'asc']],
+                //"displayLength": 25,
+                paging: false,
+                "drawCallback": function (settings) {
+                    var api = this.api();
+                    var rows = api.rows({ page: 'current' }).nodes();
+                    var last = null;
+
+                    api.column(groupColumn, { page: 'current' }).data().each(function (group, i) {
+                        if (last !== group) {
+                            $(rows).eq(i).before(
+                                '<tr class="group"><td colspan="17">' + group + '</td></tr>'
+                            );
+
+                            last = group;
+                        }
+                    });
+                }
+            });
+
+        });
+
+        //    $('#chk_all2').change(function () {
+        //        if (this.checked) {
+        //            //table.$("input.selectchk").prop("checked", true);
+        //            $('input.selectchk2', table2.rows({ filter: 'applied' }).nodes()).prop("checked", true);
+
+        //        } else {
+        //            //table.$("input.selectchk").prop("checked", false);
+        //            $('input.selectchk2*', table2.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+
+        //        }
+
+        //});
+
+        $('#checkbox-area').click(function () {
+
+            if ($(this).prop('checked')) {
+                // do what you need here
+                $('.rowArea').show();
+                $('.colArea').show();
+            }
+            else {
+                $('.rowArea').hide();
+                $('.colArea').hide();
+            }
+            
+        });
+
+        $('#checkbox-qty').click(function () {
+
+            if ($(this).prop('checked')) {
+                // do what you need here
+                $('.rowUomC').show();
+                $('.rowQTY').show();
+                $('.colQTY').show();
+                $('.colUom').show();
+            }
+            else {
+                $('.rowUomC').hide();
+                $('.rowQTY').hide();
+                $('.colQTY').hide();
+                $('.colUom').hide();
+            }
+        });
+
+        $('#checkbox-aisle').click(function () {
+
+            if ($(this).prop('checked')) {
+                // do what you need here
+                $('.rowAisle').show();
+                $('.colAisle').show();
+            }
+            else {
+                $('.rowAisle').hide();
+                $('.colAisle').hide();
+            }
+        });
+
+        $('#checkbox-type').click(function () {
+
+            if ($(this).prop('checked')) {
+                // do what you need here
+                $('.colType').show();
+                $('.rowType').show();
+            }
+            else {
+                $('.colType').hide();
+                $('.rowType').hide();
+            }
+        });
+        $('#checkbox-user').click(function () {
+
+            if ($(this).prop('checked')) {
+                // do what you need here
+                $('.colUser').show();
+                $('.rowUser').show();
+            }
+            else {
+                $('.colUser').hide();
+                $('.rowUser').hide();
+            }
+        });
+
+        
+
+    </script>
+</body>
+</html>

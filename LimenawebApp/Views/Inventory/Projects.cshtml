@@ -62,11 +62,11 @@
                                 </div>
                                 <!-- /entry heading -->
                                 @if (ViewBag.adminRole)
-                        {
-                            <a href="@Url.Action("Projects_new", "Inventory")" class="btn btn-shadow btn-default compose-btn btn-rounded">
-                                <i class="icon icon-plus icon-fw mr-2"></i>New project
-                            </a>
-                }
+                                {
+                                    <a href="@Url.Action("Projects_new", "Inventory")" class="btn btn-shadow btn-default compose-btn btn-rounded">
+                                        <i class="icon icon-plus icon-fw mr-2"></i>New project
+                                    </a>
+                                }
 
                             </div>
                             <!-- Grid -->
@@ -75,87 +75,91 @@
                                 <!-- Grid Item -->
                                 <div class="col-xl-12">
                                     @foreach (var project in Model)
-    {
-                                <!-- Card -->
-                                <div class="dt-card">
+                                    {
+                                        <!-- Card -->
+                                        <div class="dt-card">
 
-                                    <!-- Card Body -->
-                                    <div class="dt-card__body">
+                                            <!-- Card Body -->
+                                            <div class="dt-card__body">
 
-                                        <!-- List -->
-                                        <div class="d-sm-flex flex-sm-row">
+                                                <!-- List -->
+                                                <div class="d-sm-flex flex-sm-row">
 
-                                            <!-- User Avatar
-            <img class="dt-avatar size-60 mr-6 mb-6 mb-sm-0"
-                 src="https://via.placeholder.com/150x150" alt="User">
-            <!-- /user avatar-->
-                                            <!-- Content -->
-                                            <div class="flex-1 overflow-hidden mb-6 mb-sm-0 pr-sm-3">
-                                                <div class="user-detail mb-3">
-                                                    <span class="user-name">@project.Name</span>
-                                                    <span class="dt-separator-v">&nbsp;</span>
-                                                    @if (project.isfinished == true)
-                    {<span class="badge sm badge badge-info mb-1 mr-1">Closed</span>
-}
-else
-{<span class="badge sm badge badge-success mb-1 mr-1"> Open</span>
-                                                  
-}
-                                                </div>
-                                                <div style="text-align:justify;">
-                                                    @project.Description
-                                            </div>
+                                                    <!-- User Avatar
+                                                    <img class="dt-avatar size-60 mr-6 mb-6 mb-sm-0"
+                                                         src="https://via.placeholder.com/150x150" alt="User">
+                                                    <!-- /user avatar-->
+                                                    <!-- Content -->
+                                                    <div class="flex-1 overflow-hidden mb-6 mb-sm-0 pr-sm-3">
+                                                        <div class="user-detail mb-3">
+                                                            <span class="user-name">@project.Name</span>
+                                                            <span class="dt-separator-v">&nbsp;</span>
+                                                            @if (project.isfinished == true)
+                                                            {<span class="badge sm badge badge-info mb-1 mr-1">Closed</span>
+                                                            }
+                                                            else
+                                                            {<span class="badge sm badge badge-success mb-1 mr-1"> Open</span>
 
-                                            <span class="min-w-150 d-inline-block border-top mb-2"></span>
-                                            <div class="d-flex flex-wrap mb-4">
-                                                <div class="pr-3">Total products: <span class="text-dark">0</span></div>
-                                                <div class="pr-3">Areas: <span class="text-dark">@project.Areas</span></div>
-                                                <div>Date: <span class="text-dark">@project.Creation_date.ToShortDateString()</span></div>
-                                            </div>
-                                            <div class="d-flex flex-sm-row flex-column">
-                                                <div>Progress: &nbsp; </div>
-                                                <div class="dt-indicator-item__info" data-fill="0" data-max="100"
-                                                     data-percent="true"
-                                                     data-sufix="Job Success" style="width: 220px">
-                                                    <span class="dt-indicator-item__count text-success text-nowrap mr-3">0</span>
-                                                    <div class="dt-indicator-item__bar">
-                                                        <div class="dt-indicator-item__fill bg-success"></div>
+                                                            }
+                                                        </div>
+                                                        <div style="text-align:justify;">
+                                                            @project.Description
+                                                        </div>
+
+                                                        <span class="min-w-150 d-inline-block border-top mb-2"></span>
+                                                        <div class="d-flex flex-wrap mb-4">
+                                                            @*if (ViewBag.adminRole==false)
+                                                            {
+                                                        <div class="pr-3">Assigned locations: <span class="text-dark">ViewBag.cuenta</span></div>}*@
+                                                        <div class="pr-3">Total locations: <span class="text-dark">@project.Areas</span></div>
+                                                        <div>Date: <span class="text-dark">@project.Creation_date.ToShortDateString()</span></div>
+                                                        </div>
+                                                        <div class="d-flex flex-sm-row flex-column">
+                                                            <div>Progress: &nbsp; </div>
+                                                            <div class="dt-indicator-item__info" data-fill="0" data-max="100"
+                                                                 data-percent="true"
+                                                                 data-sufix="Job Success" style="width: 220px">
+                                                                <span class="dt-indicator-item__count text-success text-nowrap mr-3">0</span>
+                                                                <div class="dt-indicator-item__bar">
+                                                                    <div class="dt-indicator-item__fill bg-success"></div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
+                                                    <!-- /content -->
+
+                                                    <div class="min-w-120">
+                                                        @if (ViewBag.adminRole)
+                                                        {
+                                                            <a href="#" data-idproj="@project.ID_project" data-maxcounts="@project.Max_counts"   data-toggle="modal" data-target="#composeModal"
+                                                               class="btn btn-primary text-uppercase btn-block">Details</a> @*<a href="Url.Action("Binloc_master", "Inventory")"
+                                                                class="btn btn-primary text-uppercase btn-block">Details</a>*@
+
+                                                            if (project.isfinished == false)
+                                                            {
+                                                                <a href="javascript:void(0)" onclick="deleteRequest(@project.ID_project)" class="btn btn-outline-light text-light-gray text-uppercase btn-block">
+                                                                    <i class="icon icon-trash icon-fw"></i> <span>Delete</span>
+                                                                </a>}
+
+
+                                                        }
+                                                        else
+                                                        {
+                                                            <a href="@Url.Action("Binloc", "Inventory", new { id=project.ID_project})"
+                                                               class="btn btn-primary text-uppercase btn-block">Details</a>
+                                                        }
+
+
+                                                    </div>
+
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <!-- /content -->
 
-                                            <div class="min-w-120">
-                                                @if (ViewBag.adminRole)
-    {
-                                            <a href="@Url.Action("Binloc_master", "Inventory")"
-                                               class="btn btn-primary text-uppercase btn-block">Details</a>
-                                            
-                                               if (project.isfinished == false){
-                                            <a href="javascript:void(0)" onclick="deleteRequest(@project.ID_project)" class="btn btn-outline-light text-light-gray text-uppercase btn-block">
-                                                <i class="icon icon-trash icon-fw"></i> <span>Delete</span>
-                                            </a>}
-
-
-}
-else
-{
-                                            <a href="@Url.Action("Binloc", "Inventory", new { id=project.ID_project})"
-                                               class="btn btn-primary text-uppercase btn-block">Details</a>
-}
-
+                                                <!-- /list -->
 
                                             </div>
+                                            <!-- /card body -->
 
-                                    </div>
-
-                                    <!-- /list -->
-
-                                </div>
-                                <!-- /card body -->
-
-                                </div>}
+                                        </div>}
                                     <!-- /card -->
 
                                 </div>
@@ -183,9 +187,90 @@ else
 
         </div>
     </div>
+
+
+    <!-- Modal -->
+    <div class="modal fade contact-modal" id="composeModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <!-- Modal Dialog -->
+        <div class="modal-dialog modal-sm" role="document">
+            <!-- Modal Content -->
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Project Details
+                    </h4>
+                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="icon icon-remove icon-fw icon-xl"></i>
+                    </a>
+                </div>
+                <!-- /modal header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="row no-gutters">
+
+                        <input hidden id="IDprojectDet" type="text" />
+                        <div class="col-lg-12 order-lg-1">
+                     
+                                <div class="form-group">
+                                    <label>Select an option</label>
+                                    <select id="optionsProject" class="form-control">
+
+                                    </select>
+                                </div>
+
+                           
+                          
+                        </div>
+                    </div>
+                </div>
+                <!-- /modal body -->
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <a class="btn btn-primary" id="btngo" href="javascript:void(0)" data-dismiss="modal">
+                         <span>GO</span>
+                    </a>
+                </div>
+                <!-- /modal footer -->
+            </div>
+            <!-- /modal content -->
+        </div>
+        <!-- /modal dialog -->
+
+    </div>
+    <!-- /modal -->
     <!-- /root -->
     @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
     <script>
+
+        $(document).on("click", "#btngo", function () {
+
+
+            if ($("#optionsProject").val() == "General") {
+                            var url = '@Url.Action("Binloc_general", "Inventory", new { idproj = "TTF"})';                
+                url = url.replace('TTF', $("#IDprojectDet").val());                                     
+            url = url.replace('amp;', '');
+            //newurl = newurl.replace('amp;', '');
+            window.location.href = url;
+
+            } else if ($("#optionsProject").val() == "Details") {
+                            var url = '@Url.Action("Binloc", "Inventory", new { id = "TTF", messagetoken = "", })';                
+                url = url.replace('TTF', $("#IDprojectDet").val());                                      
+            url = url.replace('amp;', '');
+            //newurl = newurl.replace('amp;', '');
+            window.location.href = url;
+            } else {
+            var url = '@Url.Action("Binloc_master", "Inventory", new { idproj = "TTF", count = "KKP" })';                
+                url = url.replace('TTF', $("#IDprojectDet").val());                          
+                url = url.replace('KKP', $("#optionsProject").val());              
+            url = url.replace('amp;', '');
+            //newurl = newurl.replace('amp;', '');
+            window.location.href = url;
+            }
+
+        });
+
                     function deleteRequest(id) {
 
                 swal({
@@ -200,17 +285,54 @@ else
                     cancelButtonText: 'No'
                 }).then((willDelete) => {
                     if (willDelete.value) {
-                       
+
                             var url = '@Url.Action("DeleteProject", "Inventory", new { id = "AUREQ" })';
                         url = url.replace('AUREQ', id);
                         var newurl = url;
                         window.location.href = newurl;
                         } else {
-                     
+
                         }
                     });
 
-            }
+        }
+
+
+        (function ($) {
+            'use strict';
+            $('#composeModal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);// Button that triggered the modal
+
+                var IDproj = button.data("idproj");// Extract info from data-* attributes
+                var Maxcounts = button.data("maxcounts");
+
+                $("#optionsProject").html("");
+
+                for (var i = 1; i <= Maxcounts; i++) {
+                    $("#optionsProject").append
+                        ($('<option></option>').val(i).html("Count " + i));
+                }
+                var issuperadmin = '@ViewBag.issuperadmin';
+                if (issuperadmin == "1") {
+                    $("#optionsProject").append($('<option></option>').val("General").html("General"));
+                }
+                
+                var isadminandpicker = '@ViewBag.isadminandticker';
+                if (isadminandpicker == "1") {
+                    $("#optionsProject").append($('<option></option>').val("Details").html("Details"));
+                }
+
+                //$("#optionsProject").append($('<option></option>').val("Schema").html("Schema"));
+
+                var modal = $(this);
+                //modal.find('.modal-title').text('Edit data: ' + recipient)
+            
+                $("#IDprojectDet").val(IDproj);
+
+            })
+        })(jQuery);
+
     </script>
 </body>
 </html>

@@ -38,5 +38,8 @@ namespace LimenawebApp.Models
         public string comments { get; set; }
         public int ID_project { get; set; }
         public int ID_empresa { get; set; }
+        public Nullable<bool> Error { get; set; }
+        public string MensajeError { get; set; }
+        public Nullable<bool> OnSAP { get; set; }
     }
 }

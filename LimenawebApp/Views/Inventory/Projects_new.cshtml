@@ -116,7 +116,7 @@
                                                 <div class="form-group custom-control custom-checkbox">
                                                     <input type="checkbox" class="custom-control-input" id="checkbox-1">
                                                     <label class="custom-control-label" for="checkbox-1">
-                                                        Assign Bin Locations after create
+                                                        Assign first count
                                                     </label>
                                                 </div>
                                                 <!-- /form group -->
@@ -169,10 +169,11 @@
                                                         </div>
                                                         <select class="form-control" id="selPicker">
                                                             <option value="0">Select a picker</option>
-                                                            @foreach (var item in ViewBag.usuarios) {
-                                                                 <option value="@item.ID_User">@item.Name @item.Lastname</option>
-                                                            }
- 
+                                                            @foreach (var item in ViewBag.usuarios)
+                    {
+                                        <option value="@item.ID_User">@item.Name @item.Lastname</option>
+}
+
 
                                                         </select>
                                                     </div>
@@ -187,6 +188,33 @@
                                             </div><br />
                                             <h3 class="dt-card__title">Filter by</h3>
                                             <div class="form-row">
+                                                <div class="col-sm-3 mb-3">
+                                                    <label for="validationDefault02">Type</label>
+                                                    <select class="form-control" id="selTypeFrom">
+                                                        <option value="0">NA</option>
+                                                        @foreach (var item in Model.Select(c => c.Type).Distinct().OrderBy(c => c))
+            {
+                                            <option>@item.ToUpper()</option>
+}
+
+                                                    </select>
+                                                </div>
+                                                <div class="col-sm-3 mb-3">
+                                                    <label for="validationDefault02">Area</label>
+                                                    <select class="form-control" id="selAreaFrom">
+                                                        <option value="0">NA</option>
+                                                        @foreach (var item in Model.Select(c => c.Area).Distinct().OrderBy(c => c))
+            {
+                                            <option>@item</option>
+}
+
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                            <h3 class="dt-card__title">From</h3>
+                                            <div class="form-row">
+
                                                 <div class="col-sm-2 mb-3" style="display:none;">
                                                     <label for="validationDefault02">Warehouse</label>
                                                     <select class="form-control" id="selWarehouseFrom">
@@ -199,9 +227,9 @@
                                                     <select class="form-control" id="selAisleFrom">
                                                         <option value="0">NA</option>
                                                         @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
-                                {
-                                    <option>@item</option>
-        }
+                {
+                                        <option>@item</option>
+}
 
                                                     </select>
                                                 </div>
@@ -243,9 +271,9 @@
                                                     <select class="form-control" id="selAisleTo">
                                                         <option value="0">NA</option>
                                                         @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
-                                {
-                                    <option>@item</option>
-        }
+                {
+                                        <option>@item</option>
+}
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-2 mb-3">
@@ -751,6 +779,36 @@
         });
 
 
+        $('#selAreaFrom').on('change', function () {
+            if (this.value != 0) {
+                var search2 = [];
+
+                    search2.push($(this).val());
+                    search2 = search2.join('|');
+                    table.column(8).search("^" + search2 + "$", true, false, true).draw();
+
+            } else {
+
+                table.column(8).search('').draw();
+            }
+
+        });
+        $('#selTypeFrom').on('change', function () {
+            if (this.value != 0) {
+                var search2 = [];
+
+                    search2.push($(this).val());
+                    search2 = search2.join('|');
+                    table.column(7).search("^" + search2 + "$", true, false, true).draw();
+
+            } else {
+
+                table.column(7).search('').draw();
+            }
+
+        });
+
+
 
         //TO
         $('#selAisleTo').on('change', function () {
@@ -1083,7 +1141,7 @@
                         for (var i = 0, len = data.length; i < len; i++) {
 
                             if (i != 0) {
-                                if (data[i][0] == true && data[i][11] !="") {
+                                if (data[i][0] == true && data[i][9] !="Not Assigned") {
                                     objects.push({
                                         Bin_IDSAP: data[i][10],
                                         Bin_location: data[i][13],
@@ -1106,7 +1164,7 @@
                         }
 
 
-                        console.log(objects);
+                        //console.log(objects);
 
                         //document.getElementById("loader").style.display = "block";
                         $.ajax
@@ -1129,7 +1187,13 @@
                                             title: 'Project created successfully.'
                                         })
 
-
+                                        oSettings = table.settings();
+                                        oSettings[0]._iDisplayLength = 10;
+                                        table.search('').columns().search('').draw();
+                                        $("#selAisleTo").val('0').trigger("change");
+                                        $("#selAisleFrom").val('0').trigger("change");
+                                        $('#selAreaFrom').val('0').trigger("change");
+                                        $('#selTypeFrom').val('0').trigger("change");
                                         setTimeout(
                                             function () {
                                                  window.location.href = '@Url.Action("Projects", "Inventory", null)';
@@ -1143,7 +1207,12 @@
                                 },
                                 error: function () {
                                     $("#btn-addProject").attr("disabled", false);
-
+                                    oSettings = table.settings();
+                                    oSettings[0]._iDisplayLength = 10;
+                                    table.search('').columns().search('').draw();
+                                    $("#selAisleTo").val('0').trigger("change");
+                                    $("#selAisleFrom").val('0').trigger("change");
+                                    $('#selTypeFrom').val('0').trigger("change");
                                 },
                             });
                        

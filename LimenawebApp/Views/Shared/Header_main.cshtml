@@ -123,12 +123,12 @@
 
             <ul class="navbar-nav header-links">
                 <li class="nav-item dropdown" id="home_menuSales" style="display:none">
-                    <a class="nav-link mr-lg-3"  href="@Url.Action("Dashboard_sales", "Main")" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link mr-lg-3" href="@Url.Action("Dashboard_sales", "Main")" aria-haspopup="true" aria-expanded="false">
                         Home
                     </a>
                 </li>
                 <li class="nav-item dropdown" id="home_menuCustomers" style="display:none">
-                    <a class="nav-link mr-lg-3"  href="@Url.Action("Dashboard_customers", "Main")" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link mr-lg-3" href="@Url.Action("Dashboard_customers", "Main")" aria-haspopup="true" aria-expanded="false">
                         Bonifications
                     </a>
                 </li>
@@ -169,7 +169,7 @@
                         <ul class="collapse" id="multi_menu2" data-parent="#accordion">
                             <li id="ss4_submenu" style="display:none">
                                 <a href="@Url.Action("Credits_authorize", "Commercial")" class="dropdown-item">Credits Authorize</a>
-                            </li>                            
+                            </li>
                             <li id="ss5_submenu" style="display:none">
                                 <a href="@Url.Action("Credits_request", "Commercial")" class="dropdown-item">Credits Request</a>
                             </li>
@@ -230,6 +230,13 @@
 
 
                 </li>
+                <li class="nav-item dropdown" id="inventory_menu" style="display:none">
+                    <a class="nav-link mr-lg-3" id="stock_submenu" href="@Url.Action("Projects","Inventory")" aria-haspopup="true" aria-expanded="false">
+                        Inventory
+                    </a>
+                </li>
+
+
                 @*<li class="nav-item dropdown" id="reports_menu" style="display:none">
             <a class="nav-link dropdown-toggle mr-lg-3" id="rep1Nav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Reports

@@ -861,20 +861,22 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="CantBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
           <Property Name="FactorBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
           <Property Name="Credits" Type="nvarchar" MaxLength="10" />
+          <Property Name="StorageType" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Dsd_Products">
           <Key>
             
+            
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="nvarchar" MaxLength="35" Nullable="false" />
-          <Property Name="Product" Type="nvarchar" MaxLength="123" />
+          <Property Name="id" Type="nvarchar" MaxLength="65" Nullable="false" />
+          <Property Name="Product" Type="nvarchar" MaxLength="153" />
           <Property Name="Price" Type="numeric" Precision="19" Scale="6" />
           <Property Name="PriceList" Type="smallint" Nullable="false" />
           <Property Name="SRP" Type="decimal" Precision="11" Scale="2" />
-          <Property Name="CodeBars" Type="nvarchar" MaxLength="254" />
+          <Property Name="CodeBars" Type="nvarchar" MaxLength="254" Nullable="false" />
           <Property Name="category_name" Type="varchar" MaxLength="15" />
           <Property Name="subcategory_name" Type="nvarchar" MaxLength="20" />
           <Property Name="DSD" Type="varchar" MaxLength="1" />
@@ -980,6 +982,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.SalesRep' does not have a primary key 
           <Property Name="id_SalesRep" Type="int" Nullable="false" />
           <Property Name="Slp_Name" Type="nvarchar" MaxLength="155" Nullable="false" />
           <Property Name="CatCommission" Type="int" Nullable="false" />
+          <Property Name="U_id_Supervisor" Type="smallint" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Supervisor' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1034,6 +1037,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
             <PropertyRef Name="DocNum" />
             <PropertyRef Name="OpenTotalSO" />
             <PropertyRef Name="Blocked" />
+            <PropertyRef Name="StatusPlanningFlow" />
           </Key>
           <Property Name="LineNum" Type="int" Nullable="false" />
           <Property Name="U_BinLocation" Type="nvarchar" MaxLength="20" />
@@ -1055,6 +1059,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="TreeType" Type="char" MaxLength="1" />
           <Property Name="NoPepperi" Type="nvarchar" MaxLength="100" />
           <Property Name="U_DeliveryR" Type="nvarchar" MaxLength="30" />
+          <Property Name="StatusPlanningFlow" Type="nvarchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1156,7 +1161,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Products].[MinPercIndiv] AS [MinPercIndiv], 
     [BI_Dim_Products].[CantBonif] AS [CantBonif], 
     [BI_Dim_Products].[FactorBonif] AS [FactorBonif], 
-    [BI_Dim_Products].[Credits] AS [Credits]
+    [BI_Dim_Products].[Credits] AS [Credits], 
+    [BI_Dim_Products].[StorageType] AS [StorageType]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -1247,7 +1253,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
             <DefiningQuery>SELECT 
     [SalesRep].[id_SalesRep] AS [id_SalesRep], 
     [SalesRep].[Slp_Name] AS [Slp_Name], 
-    [SalesRep].[CatCommission] AS [CatCommission]
+    [SalesRep].[CatCommission] AS [CatCommission], 
+    [SalesRep].[U_id_Supervisor] AS [U_id_Supervisor]
     FROM [dbo].[SalesRep] AS [SalesRep]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Supervisor" EntityType="Self.Supervisor" store:Type="Views" store:Schema="dbo">
@@ -1304,7 +1311,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [view_ordenesAbiertasDet].[Blocked] AS [Blocked], 
     [view_ordenesAbiertasDet].[TreeType] AS [TreeType], 
     [view_ordenesAbiertasDet].[NoPepperi] AS [NoPepperi], 
-    [view_ordenesAbiertasDet].[U_DeliveryR] AS [U_DeliveryR]
+    [view_ordenesAbiertasDet].[U_DeliveryR] AS [U_DeliveryR], 
+    [view_ordenesAbiertasDet].[StatusPlanningFlow] AS [StatusPlanningFlow]
     FROM [dbo].[view_ordenesAbiertasDet] AS [view_ordenesAbiertasDet]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="view_VendorsData" EntityType="Self.view_VendorsData" store:Type="Views" store:Schema="dbo">
@@ -1844,6 +1852,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="CantBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
           <Property Name="FactorBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
           <Property Name="Credits" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="StorageType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
@@ -1872,12 +1881,12 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Key>
             <PropertyRef Name="id" />
           </Key>
-          <Property Name="id" Type="String" MaxLength="35" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Product" Type="String" MaxLength="123" FixedLength="false" Unicode="true" />
+          <Property Name="id" Type="String" MaxLength="65" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Product" Type="String" MaxLength="153" FixedLength="false" Unicode="true" />
           <Property Name="Price" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="PriceList" Type="Int16" Nullable="false" />
           <Property Name="SRP" Type="Decimal" Precision="11" Scale="2" />
-          <Property Name="CodeBars" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="CodeBars" Type="String" MaxLength="254" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="category_name" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
           <Property Name="subcategory_name" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="DSD" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
@@ -2180,6 +2189,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="id_SalesRep" Type="Int32" Nullable="false" />
           <Property Name="Slp_Name" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="true" />
           <Property Name="CatCommission" Type="Int32" Nullable="false" />
+          <Property Name="U_id_Supervisor" Type="Int16" />
         </EntityType>
         <EntityType Name="Supervisor">
           <Key>
@@ -2210,6 +2220,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
             <PropertyRef Name="DocNum" />
             <PropertyRef Name="OpenTotalSO" />
             <PropertyRef Name="Blocked" />
+            <PropertyRef Name="StatusPlanningFlow" />
           </Key>
           <Property Name="LineNum" Type="Int32" Nullable="false" />
           <Property Name="U_BinLocation" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
@@ -2231,6 +2242,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="TreeType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="NoPepperi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="U_DeliveryR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="StatusPlanningFlow" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="view_VendorsData">
           <Key>
@@ -2859,6 +2871,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="StorageType" ColumnName="StorageType" />
                 <ScalarProperty Name="Credits" ColumnName="Credits" />
                 <ScalarProperty Name="FactorBonif" ColumnName="FactorBonif" />
                 <ScalarProperty Name="CantBonif" ColumnName="CantBonif" />
@@ -3227,6 +3240,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="SalesRep">
             <EntityTypeMapping TypeName="DLI_PROModel.SalesRep">
               <MappingFragment StoreEntitySet="SalesRep">
+                <ScalarProperty Name="U_id_Supervisor" ColumnName="U_id_Supervisor" />
                 <ScalarProperty Name="CatCommission" ColumnName="CatCommission" />
                 <ScalarProperty Name="Slp_Name" ColumnName="Slp_Name" />
                 <ScalarProperty Name="id_SalesRep" ColumnName="id_SalesRep" />
@@ -3259,6 +3273,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="view_ordenesAbiertasDet">
             <EntityTypeMapping TypeName="DLI_PROModel.view_ordenesAbiertasDet">
               <MappingFragment StoreEntitySet="view_ordenesAbiertasDet">
+                <ScalarProperty Name="StatusPlanningFlow" ColumnName="StatusPlanningFlow" />
                 <ScalarProperty Name="U_DeliveryR" ColumnName="U_DeliveryR" />
                 <ScalarProperty Name="NoPepperi" ColumnName="NoPepperi" />
                 <ScalarProperty Name="TreeType" ColumnName="TreeType" />

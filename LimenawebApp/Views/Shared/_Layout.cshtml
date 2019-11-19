@@ -7,7 +7,19 @@
     @if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos")
     {
         @Html.Partial("~/Views/Shared/Style_landingpage.cshtml")
+        <!-- OWL CAROUSEL
+        <link rel="stylesheet" href="~/Content/videos/owl.carousel.min.css">
 
+        <link rel="stylesheet" href="~/Content/videos/theme.css" type="text/css" />
+        <link rel="stylesheet" href="~/Content/videos/style.css" type="text/css" />
+
+        <style>
+
+            video#bgvid, video#bgvid2 {
+                width: 100%;
+                height: auto;
+            }
+        </style>-->
     }
 
     else if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll" || ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll Edit")
@@ -441,6 +453,9 @@
         @Html.Partial("~/Views/Shared/Menu_landingpage.cshtml")
         @RenderBody()
         @Html.Partial("~/Views/Shared/Footer_landingpage.cshtml")
+
+
+
     }
     else if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll" || ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll Edit")
     {
@@ -463,6 +478,9 @@
 @if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos")
 {
     @Html.Partial("~/Views/Shared/Scripts_landingpage.cshtml")
+
+
+
 }
 else if (ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll" || ViewBag.Title == "Distribuidora Limeña - Líderes en productos latinos Enroll Edit")
 {
