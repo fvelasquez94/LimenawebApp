@@ -1,4 +1,4 @@
-﻿@model IQueryable<LimenawebApp.Models.Inv_Projects_Task>
+﻿@model List<LimenawebApp.Models.Inv_ProjectsTasks_mod>
 @{
     Layout = null;
 }
@@ -87,6 +87,7 @@
                                             <!-- Card Tools -->
                                             <div class="dt-card__tools">
                                                 <!-- List -->
+                                        
                                                 <ul class="dt-list dt-list-sm dt-list-cm-0">
                                                     <!-- List Item -->
                                                     <!-- /list item -->
@@ -113,6 +114,12 @@
                                                                     </label>
                                                                 </div>
                                                                 <div class="custom-control custom-checkbox dropdown-item">
+                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-qty">
+                                                                    <label class="custom-control-label" for="checkbox-qty">
+                                                                        More UOMs
+                                                                    </label>
+                                                                </div>
+                                                                <div class="custom-control custom-checkbox dropdown-item">
                                                                     <input type="checkbox" class="custom-control-input" id="checkbox-type">
                                                                     <label class="custom-control-label" for="checkbox-type">
                                                                         Type
@@ -123,13 +130,8 @@
                                                                     <label class="custom-control-label" for="checkbox-user">
                                                                         User
                                                                     </label>
-                                                                </div>                                                                
-                                                                <div class="custom-control custom-checkbox dropdown-item">
-                                                                    <input type="checkbox" class="custom-control-input" id="checkbox-qty">
-                                                                    <label class="custom-control-label" for="checkbox-qty">
-                                                                        Quantity
-                                                                    </label>
                                                                 </div>
+
 
                                                             </div>
                                                         </div>
@@ -154,65 +156,62 @@
 
                                                             <th hidden><span class="text-muted">ID</span></th>
                                                             <th class="colBin"><span class="text-muted">BIN</span></th>
-                                                            <th class="colCount"><span class="text-muted">COUNT</span></th>
+                                                            <th class="colCount"><span class="text-muted">COUNT No.</span></th>
                                                             <th class="colItemName"><span class="text-muted">PRODUCT</span></th>
-
-                                                            <th class="colAisle"><span class="text-muted">AISLE</span></th>
-                                                            <th class="colArea"><span class="text-muted">AREA</span></th>
-                                                            <th class="colType"><span class="text-muted">TYPE</span></th>
-                                                            <th class="colUser"><span class="text-muted">USER</span></th>
-                                                            <th class="colItemCode"><span class="text-muted">ITEMCODE</span></th>
-                                                            <th class="colUom"><span class="text-muted">UOM 1</span></th>
-                                                            <th class="colQTY"><span class="text-muted">QTY 1</span></th>
+                                                            <th class="colunitCost"><span class="text-muted">UNIT COST</span></th>
+                                                            <th class="colStock"><span class="text-muted">STOCK</span></th>
+                                                            <th class="colUom2"><span class="text-muted">UOM(CASES)</span></th>
+                                                            <th class="colQTY2"><span class="text-muted">TOTAL CASES</span></th>
                                                             <th class="colUom"><span class="text-muted">UOM 2</span></th>
                                                             <th class="colQTY"><span class="text-muted">QTY 2</span></th>
                                                             <th class="colUom"><span class="text-muted">UOM 3</span></th>
                                                             <th class="colQTY"><span class="text-muted">QTY 3</span></th>
                                                             <th class="colQTYf"><span class="text-muted">TOTAL EACHES</span></th>
-                                                            <th class="colDate"><span class="text-muted">DATE</span></th>
-                                                            <th><span class="text-muted">STATUS</span></th>
-
-
-
+                                                            <th class="colQTYf"><span class="text-muted">DIFF QTY</span></th>
+                                                            <th class="colQTYf"><span class="text-muted">DIFF COST</span></th>
+                  
+                                                            <th class="colAisle"><span class="text-muted">AISLE</span></th>
+                                                            <th class="colArea"><span class="text-muted">AREA</span></th>
+                                                            <th class="colType"><span class="text-muted">TYPE</span></th>
+                                                            <th class="colUser"><span class="text-muted">USER</span></th>
+                                                            <th class="colItemCode"><span class="text-muted">ITEMCODE</span></th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach (var item in Model)
                     {
-                                                        <tr data-id="@item.ID_projects_task">
+                                                        <tr data-id="@item.ID_projects_task" class="additionalinfo">
 
                                                             <td hidden>@item.ID_projects_task</td>
                                                             <td class="rowBin">@item.Bin_location.Substring(2)</td>
-                                                            <td class="rowCount">Count @item.Count</td>
+                                                            <td class="rowCount" colspan="3">Count @item.Count</td>
                                                             <td class="rowItemName">
                                                                 @if (item.ItemName == "")
         {<label>NOT SELECTED</label> }
 else
 { <label>@item.ItemName.ToUpper()</label>}
                                                             </td>
-
+                                                            <td class="rowunitCost" hidden>@item.unitcost.ToString("C3")</td>
+                                                            <td class="rowStock" hidden>@item.stock.ToString("0.00")</td>
+                                                            <td class="rowUomC2">@item.UoM_code</td>
+                                                            <td class="rowQTY2">@item.Quantity</td>
+                                                            <td class="rowUomC">@item.UoM_code2</td>
+                                                            <td class="rowQTY">@item.Quantity2</td>
+                                                            <td class="rowUomC">@item.UoM_code3</td>
+                                                            <td class="rowQTY">@item.Quantity3</td>
+                                                 
+                                                            <td class="rowQTYf">@item.Final_quantity</td>
+                                                            <td class="rowQTYf"></td>
+                                                            <td class="rowQTYf"></td>
                                                             <td class="rowAisle">@item.Aisle</td>
                                                             <td class="rowArea">@item.Area</td>
                                                             <td class="rowType">@item.Type</td>
                                                             <td class="rowUser">@item.UserName</td>
                                                             <td class="rowItemCode">@item.ItemCode</td>
-                                                            <td class="rowUomC">@item.UoM_code</td>
-                                                            <td class="rowQTY">@item.Quantity</td>
-                                                            <td class="rowUomC">@item.UoM_code2</td>
-                                                            <td class="rowQTY">@item.Quantity2</td>
-                                                            <td class="rowUomC">@item.UoM_code3</td>
-                                                            <td class="rowQTY">@item.Quantity3</td>
-                                                            <td class="rowQTYf">@item.Final_quantity</td>
-                                                            <td class="rowDate">@Convert.ToDateTime(item.end_date).ToShortDateString()</td>
-                                                            <td>
-                                                                @if (item.ID_status == 1)
-        {
-                                                        <span class="badge badge-warning">Waiting</span>
-}                                                                                                                  @if (item.ID_status == 2)
-        {
-                                                        <span class="badge badge-info">Finished</span>
-}
-                                                        </td>
+
+
+
+
 
 
                                                         </tr>
@@ -275,13 +274,12 @@ else
             $('.colUom').hide();
             $('.rowItemCode').hide();
             $('.colItemCode').hide();
-            $('.rowDate').hide();
-            $('.colDate').hide();
+      
             $('.colAisle').hide();
             $('.colArea').hide();
             $('.colType').hide();
             $('.colUser').hide();
-            $('.rowDate').hide();
+    
             $('.rowAisle').hide();
             $('.rowArea').hide();
             $('.rowType').hide();
@@ -312,19 +310,58 @@ else
                     var api = this.api();
                     var rows = api.rows({ page: 'current' }).nodes();
                     var last = null;
+                    var sum = 0;
+                    var sumEaches = 0;
+                    var indexlast = 0;
+                    var indexsum = 0;
+                    api.column(groupColumn, { page: 'current' }).data().each(function (group, i, $currTable) {
+                        indexsum++;
+                        sum += parseInt($currTable.rows(rows[i]._DT_RowIndex).data()[0][7]);
+                        sumEaches += parseInt($currTable.rows(rows[i]._DT_RowIndex).data()[0][12]);
+                        if (last == group) {
+                            
 
-                    api.column(groupColumn, { page: 'current' }).data().each(function (group, i) {
-                        if (last !== group) {
-                            $(rows).eq(i).before(
-                                '<tr class="group"><td colspan="17">' + group + '</td></tr>'
-                            );
+                        } else {
+                            //Comparamos si el siguiente aun esta en el grupo
+                            var e = i + 1;
+                            try {
+                                if ($currTable.rows(rows[i]._DT_RowIndex).data()[0][3] == $currTable.rows(rows[e]._DT_RowIndex).data()[0][3]) {
+                                    //Es igual el siguiente, por lo tanto NO hacemos NADA
 
-                            last = group;
+                                } else {
+
+                                    var indexinsert = 0;
+                                    indexinsert = (i + 1) - indexsum;
+                                    var diffqty = 0;
+                                    var diffcost = 0;
+                                    diffqty = parseInt($currTable.rows(rows[i]._DT_RowIndex).data()[0][5]) - sumEaches;
+
+
+                                    var totalstockcost = (parseInt($currTable.rows(rows[i]._DT_RowIndex).data()[0][5]) * parseFloat($currTable.rows(rows[i]._DT_RowIndex).data()[0][4].substring(1)));
+                                    var totalcountcost = ($currTable.rows(rows[i]._DT_RowIndex).data()[0][4].substring(1) * sumEaches)
+                                    diffcost = totalstockcost - totalcountcost;
+
+                                    $(rows).eq(indexinsert).before('<tr class="group"><td>' + group + '</td><td></td><td>' + $currTable.rows(rows[i]._DT_RowIndex).data()[0][4] + '</td><td >' + $currTable.rows(rows[i]._DT_RowIndex).data()[0][5] + '</td><td>' + $currTable.rows(rows[i]._DT_RowIndex).data()[0][6] + '</td><td>' + sum + '</td><td class="rowQTY"></td><td class="rowQTY"></td><td class="rowQTY"></td><td class="rowQTY"></td><td>' + sumEaches + '</td><td>' + diffqty + '</td><td colspan="5">$' + diffcost.toFixed(2) + '</td></tr>'
+                                    );
+
+                                    last = group;
+                                    sum = 0;
+                                    indexsum = 0;
+                                    sumEaches = 0;
+                                }
+                            }
+                            catch{
+                                console.log("index");
+                            }
                         }
                     });
                 }
             });
 
+
+
+            //$(".additionalinfo").hide();
+            $('.rowQTY').hide();
         });
 
         //    $('#chk_all2').change(function () {

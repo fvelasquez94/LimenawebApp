@@ -402,18 +402,18 @@ namespace LimenawebApp.Controllers
 
                         //Creamos uno nuevo
                         List<Inv_Projects_BinLoc> existen = new List<Inv_Projects_BinLoc>();
-                            foreach (var items in objects)
-                            {
-                                var itemexist = dblim.Inv_Projects_BinLoc.Where(d => d.ID_project == idproj && d.Bin_location == items.Bin_location).FirstOrDefault();
+                        foreach (var items in objects)
+                        {
+                            var itemexist = dblim.Inv_Projects_BinLoc.Where(d => d.ID_project == idproj && d.Bin_location == items.Bin_location).FirstOrDefault();
 
-                                if (itemexist != null) //si se esta en el mismo conteo NUNCA aparecera, mpero si es un nuevo conteo aparecera, por lo tanto hay que borrar esta cabecera
-                                {
+                            if (itemexist != null) //si se esta en el mismo conteo NUNCA aparecera, mpero si es un nuevo conteo aparecera, por lo tanto hay que borrar esta cabecera
+                            {
                                 items.ID_binloc = itemexist.ID_binloc;
-                                    existen.Add(items);
-                                   
-                                }
-                                else
-                                {
+                                existen.Add(items);
+
+                            }
+                            else
+                            {
 
                                 items.Count = project.Max_counts;//max conteo
                                 if (items.Area == null) { items.Area = ""; }
@@ -435,56 +435,56 @@ namespace LimenawebApp.Controllers
                             }
 
 
-                            }
+                        }
                         foreach (var ext in existen)
                         {
                             objects.Remove(ext);
-                        }                       
-                            try
-                            {
-                                dblim.BulkInsert(objects);
+                        }
+                        try
+                        {
+                            dblim.BulkInsert(objects);
 
-                                List<Inv_Projects_Task> lsttoadd = new List<Inv_Projects_Task>();
-                                foreach (var items in objects)
-                                {
-                                    Inv_Projects_Task newtask = new Inv_Projects_Task();
-                                    newtask.ID_binloc = items.ID_binloc;
-                                    newtask.Bin_location = items.Bin_location;
-                                    newtask.comments = "";
-                                    newtask.creation_date = DateTime.UtcNow;
-                                    newtask.end_date = DateTime.UtcNow;
-                                    newtask.ID_userEnd = items.ID_userAssigned;
-                                    newtask.UserName = items.UserNameAssigned;
-                                    newtask.ID_status = 1;
-                                    newtask.Count = maxcounts;
-                                    newtask.isselected = false;
-                                    newtask.ItemCode = "";
-                                    newtask.ItemName = "";
-                                    newtask.UoM_code = "";
-                                    newtask.UoM_entry = 0;
-                                    newtask.Quantity = 0;
-                                    newtask.UoM_code2 = "";
-                                    newtask.UoM_entry2 = 0;
-                                    newtask.Quantity2 = 0;
-                                    newtask.UoM_code3 = "";
-                                    newtask.UoM_entry3 = 0;
-                                    newtask.Quantity3 = 0;
-                                    newtask.UoM_code4 = "";
-                                    newtask.UoM_entry4 = 0;
-                                    newtask.Quantity4 = 0;
-                                    newtask.Final_quantity = 0;
-                                    newtask.ID_empresa = activeuser.ID_Company;
-                                    newtask.ID_project = idproj;
-                                    newtask.Internal_sort = items.Internal_sort;
-                                    newtask.Area = items.Area;
+                            List<Inv_Projects_Task> lsttoadd = new List<Inv_Projects_Task>();
+                            foreach (var items in objects)
+                            {
+                                Inv_Projects_Task newtask = new Inv_Projects_Task();
+                                newtask.ID_binloc = items.ID_binloc;
+                                newtask.Bin_location = items.Bin_location;
+                                newtask.comments = "";
+                                newtask.creation_date = DateTime.UtcNow;
+                                newtask.end_date = DateTime.UtcNow;
+                                newtask.ID_userEnd = items.ID_userAssigned;
+                                newtask.UserName = items.UserNameAssigned;
+                                newtask.ID_status = 1;
+                                newtask.Count = maxcounts;
+                                newtask.isselected = false;
+                                newtask.ItemCode = "";
+                                newtask.ItemName = "";
+                                newtask.UoM_code = "";
+                                newtask.UoM_entry = 0;
+                                newtask.Quantity = 0;
+                                newtask.UoM_code2 = "";
+                                newtask.UoM_entry2 = 0;
+                                newtask.Quantity2 = 0;
+                                newtask.UoM_code3 = "";
+                                newtask.UoM_entry3 = 0;
+                                newtask.Quantity3 = 0;
+                                newtask.UoM_code4 = "";
+                                newtask.UoM_entry4 = 0;
+                                newtask.Quantity4 = 0;
+                                newtask.Final_quantity = 0;
+                                newtask.ID_empresa = activeuser.ID_Company;
+                                newtask.ID_project = idproj;
+                                newtask.Internal_sort = items.Internal_sort;
+                                newtask.Area = items.Area;
                                 newtask.Type = items.Type;
                                 newtask.Aisle = items.Aisle;
                                 lsttoadd.Add(newtask);
-                                }
+                            }
 
 
 
-                                dblim.BulkInsert(lsttoadd);
+                            dblim.BulkInsert(lsttoadd);
 
 
                             List<Inv_Projects_Task> lsttoadd2 = new List<Inv_Projects_Task>();
@@ -531,17 +531,57 @@ namespace LimenawebApp.Controllers
 
 
                         }
-                            catch (Exception ex)
-                            {
-                                ttresult = "ERROR SAVING DATA: " + ex.Message;
-                                return Json(ttresult, JsonRequestBehavior.AllowGet);
-                            }
+                        catch (Exception ex)
+                        {
+                            ttresult = "ERROR SAVING DATA: " + ex.Message;
+                            return Json(ttresult, JsonRequestBehavior.AllowGet);
+                        }
 
                         project.Areas = project.Areas + objects.Count();
                         dblim.Entry(project).State = EntityState.Modified;
                         dblim.SaveChanges();
 
                     }
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                ttresult = "Expired session, please refresh the page.";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
+
+
+        [HttpPost]
+        public ActionResult SaveProduct(string ItemCode, string ItemName, int ID_Picker, string pickerName, int idproj, int actualcount)
+        {
+            string ttresult = "";
+            try
+            {
+                if (generalClass.checkSession())
+                {
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                    var usuario = (from a in dblim.Sys_Users where (a.ID_User == activeuser.ID_User) select a).FirstOrDefault();
+                    var project = dblim.Inv_Projects.Where(f => f.ID_project == idproj).FirstOrDefault();
+
+
+                        dblim.Entry(project).State = EntityState.Modified;
+                        dblim.SaveChanges();
+
+                    
 
                     ttresult = "SUCCESS";
                     return Json(ttresult, JsonRequestBehavior.AllowGet);
@@ -615,6 +655,9 @@ namespace LimenawebApp.Controllers
                 ViewBag.history = history;
 
                 ViewBag.count = count;
+
+                var generalProducts = (from a in dlipro.BI_Dim_Products select a).ToList();
+                ViewBag.generalProducts = generalProducts;
 
                 return View(lstBinLocations);
 
@@ -751,11 +794,32 @@ namespace LimenawebApp.Controllers
                 var project = dblim.Inv_Projects.Where(f => f.ID_project == idproj).FirstOrDefault();
                 ViewBag.project = project;
 
-                var history = dblim.Inv_Projects_Task.Where(c => c.ID_project == idproj);
+                var history = dblim.Inv_Projects_Task.Where(c => c.ID_project == idproj).Select(c => new Inv_ProjectsTasks_mod { ID_projects_task = c.ID_projects_task, ID_binloc = c.ID_binloc, Bin_location = c.Bin_location,
+                    creation_date = c.creation_date, ID_userEnd = c.ID_userEnd, UserName = c.UserName, ID_status = c.ID_status, comments = c.comments, end_date = c.end_date, Count = c.Count, isselected = c.isselected, ItemCode = c.ItemCode, ItemName = c.ItemName,
+                    UoM_code = c.UoM_code, UoM_entry = c.UoM_entry, Quantity = c.Quantity, UoM_code2 = c.UoM_code2, UoM_entry2 = c.UoM_entry2, Quantity2 = c.Quantity2,
+                    UoM_code3 = c.UoM_code3,
+                    UoM_entry3 = c.UoM_entry3,
+                    Quantity3 = c.Quantity3,
+                    UoM_code4 = c.UoM_code4,
+                    UoM_entry4 = c.UoM_entry4,
+                    Quantity4 = c.Quantity4, Final_quantity = c.Final_quantity, ID_empresa = c.ID_empresa, ID_project = c.ID_project, Area = c.Area, Internal_sort = c.Internal_sort, Type = c.Type, Aisle = c.Aisle, unitcost=0, stock=0, casescost=0, casesstock=0
+                }).ToList();
 
-                var products = history.Where(c => c.ItemCode != "").Select(c=>c.ItemCode).ToArray();
+                var products = history.Where(c => c.ItemCode != "").Select(c=>c.ItemCode).Distinct().ToArray();
 
-                var cost = dlipro.BI_Dim_Products.Where(d => products.Contains(d.id)).Select(d => d.unitCost);
+                var cost = dlipro.BI_Dim_Products.Where(d => products.Contains(d.id)).ToArray();
+
+
+                foreach (var item in history) {
+                    if (item.ItemCode == "") {
+                        item.ItemCode = "NOT SELECTED";
+                    }
+                    var existe = cost.Where(d => d.id == item.ItemCode).FirstOrDefault();
+                    if (existe != null) {
+                        item.unitcost = Convert.ToDecimal(existe.unitCost);
+                        item.stock = Convert.ToDecimal(existe.Stock);
+                    }
+                }
 
                 return View(history);
 

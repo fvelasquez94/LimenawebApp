@@ -16,5 +16,6 @@ namespace LimenawebApp.Models
     {
         public string Code { get; set; }
         public string Name { get; set; }
+        public string U_Active { get; set; }
     }
 }

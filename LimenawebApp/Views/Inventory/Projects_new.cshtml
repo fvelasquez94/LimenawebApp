@@ -194,7 +194,7 @@
                                                         <option value="0">NA</option>
                                                         @foreach (var item in Model.Select(c => c.Type).Distinct().OrderBy(c => c))
             {
-                                            <option>@item.ToUpper()</option>
+                                            <option value="@item">@item.ToUpper()</option>
 }
 
                                                     </select>
@@ -226,10 +226,10 @@
                                                     <label for="validationDefault02">Aisle</label>
                                                     <select class="form-control" id="selAisleFrom">
                                                         <option value="0">NA</option>
-                                                        @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
+                                                        @*foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
                 {
-                                        <option>@item</option>
-}
+                                        <option>item</option>
+}*@
 
                                                     </select>
                                                 </div>
@@ -270,10 +270,7 @@
                                                     <label for="validationDefault02">Aisle</label>
                                                     <select class="form-control" id="selAisleTo">
                                                         <option value="0">NA</option>
-                                                        @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
-                {
-                                        <option>@item</option>
-}
+
                                                     </select>
                                                 </div>
                                                 <div class="col-sm-2 mb-3">
@@ -564,7 +561,7 @@
             $('#assignbinlocList').hide();
 
             table = $('#datatable2').DataTable({
-                "order": [],
+                "order": [[1, "asc"]],
                 "search": { regex: true },
                 "columnDefs": [{
                     "targets": 'no-sort',
@@ -585,81 +582,26 @@
 
             }
 
-        });
+
+             });
         });
 
-        $('#selAisleFrom').on('change', function () {
+        
+        $('#selTypeFrom').on('change', function () {
             if (this.value != 0) {
-                var id = this.value;
-                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
-                var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Aisle == id;
-                });
+                var search2 = [];
 
-                var result = newArray.map(item => item.Position)
-                    .filter((value, index, self) => self.indexOf(value) === index)
+                //CLEAN
+               
 
-
-                $("#selPositionFrom").html("");
-                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
-                $("#selLevelFrom").html("");
-                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
-                $("#selPalletFrom").html("");
-                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
-                $.each(result, function (i, bin) {
-                    $("#selPositionFrom").append
-                        ($('<option data-aisle=' + id + '></option>').val(bin).html(bin));
-                });
-
-                result = [];
-
-                //FIltramos en tabla
-
-                filterMasterTable(table, $("#selWarehouseFrom").val(), $("#selAisleFrom").val(), $("#selPositionFrom").val(), $("#selLevelFrom").val(), $("#selPalletFrom").val(),
-                    $("#selWarehouseTo").val(), $("#selAisleTo").val(), $("#selPositionTo").val(), $("#selLevelTo").val(), $("#selPalletTo").val());
-
-
-
-                //var search2 = [];
-                //var val1 = '';
-                //var val2 = '';
-                //$.each($('#selAisleFrom option:selected'), function () {
-                //    //search2.push($(this).val());
-                //    val1 = $(this).index();
-                //});
-                //$.each($('#selAisleTo option:selected'), function () {
-                //    //search2.push($(this).val());
-                //    val2 = $(this).index();
-                //});
-
-                //if (val2 == 0) {
-
-                //    //verificamos que campos estan llenos
-
-
-                //    search2.push($(this).val());
-                //    search2 = search2.join('|');
-                //    table.column(3).search("^" + search2 + "$", true, false, true).draw();
-                //} else {
-
-                //    var select = document.getElementById("selAisleFrom");
-                //    for (var i = val1; i <= val2; i++) {
-                //        var option = select.options[i];
-                //        // now have option.text, option.valuel
-                //        search2.push(option.value);
-                //    }
-
-                //    search2 = search2.join('|');
-                //    table.column(3).search("^" + search2 + "$", true, false, true).draw();
-                //}
-
-
-            } else {
                 table.column(13).search('').draw();
                 table.column(3).search('').draw();
                 table.column(4).search('').draw();
                 table.column(5).search('').draw();
                 table.column(6).search('').draw();
+                table.column(8).search('').draw();
+                $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
                 $("#selPositionFrom").html("");
                 $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
                 $("#selLevelFrom").html("");
@@ -673,18 +615,294 @@
                 $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
                 $("#selPalletTo").html("");
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+                ///
+                    search2.push($(this).val());
+                    search2 = search2.join('|');
+                    table.column(7).search("^" + search2 + "$", true, false, true).draw();
+
+
+                var id = this.value;
+
+                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
+
+                var newArray = mainlst_BinLocationArray.filter(function (el) {
+                    return el.Type == id;
+                });
+
+                var result = newArray.map(item => item.Area)
+                    .filter((value, index, self) => self.indexOf(value) === index)
+
+
+                $("#selAreaFrom").html("");
+                $("#selPositionFrom").html("");
+                $("#selAreaFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $.each(result, function (i, bin) {
+                    $("#selAreaFrom").append
+                        ($('<option data-type=' + id + '></option>').val(bin).html(bin));
+                });
+
+                result = [];
+
+
+                ////Agregamos a AisleFROM
+
+                //var returnedBinLocations = $.grep(mainlst_BinLocationArray, function (obj) { return obj.Type >= id });
+
+                //var resultf = [];
+                //var mapf = new Map();
+                //for (var itemf of returnedBinLocations) {
+                //    if (!mapf.has(itemf.Aisle)) {
+                //        mapf.set(itemf.Aisle, true);    // set any value to Map
+                //        resultf.push({
+                //            Aisle: itemf.Aisle
+                //        });
+                //    }
+                //}
+
+
+                //$("#selAisleFrom").html("");
+                //$("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                //    $.each(resultf, function (i, aisle) {
+                //        $("#selAisleFrom").append
+                //        ($('<option></option>').val(aisle.Aisle).html(aisle.Aisle));
+                //});
+
+                //
+
+
+         
+
+
+            } else {
+
+                table.column(7).search('').draw();
+                table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                table.column(8).search('').draw();
+                $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+            }
+
+        });
+        //AREA
+
+        $('#selAreaFrom').on('change', function () {
+            if (this.value != 0) {
+                var search2 = [];
+                var type = $(this).find(':selected').attr('data-type')
+                //CLEAN
+                table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                    search2.push($(this).val());
+                    search2 = search2.join('|');
+                    table.column(8).search("^" + search2 + "$", true, false, true).draw();
+
+                $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+                ///
+
+
+                var id = this.value;
+
+                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
+
+                var newArray = mainlst_BinLocationArray.filter(function (el) {
+                    return el.Area == id && el.Type == type;
+                });
+
+                var result = newArray.map(item => item.Aisle)
+                    .filter((value, index, self) => self.indexOf(value) === index)
+
+
+                $("#selAisleFrom").html("");
+                $("#selPositionFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $.each(result, function (i, bin) {
+                    $("#selAisleFrom").append
+                        ($('<option data-area="' + id + '" data-type=' + type + '></option>').val(bin).html(bin));
+                    $("#selAisleTo").append
+                        ($('<option data-area="' + id + '" data-type=' + type + '></option>').val(bin).html(bin));
+                });
+
+                result = [];
+                //
+
+
+            } else {
+
+                table.column(8).search('').draw();
+                table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                      $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+  
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+            }
+
+        });
+
+        $('#selAisleFrom').on('change', function () {
+            if (this.value != 0) {
+                var id = this.value;
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
+                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
+                var newArray = mainlst_BinLocationArray.filter(function (el) {
+                    return el.Aisle == id && el.Area == area && el.Type == type;
+                });
+
+                var result = newArray.map(item => item.Position)
+                    .filter((value, index, self) => self.indexOf(value) === index)
+
+
+                result.sort(function (a, b) {
+                    return a - b;
+                });
+
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $.each(result, function (i, bin) {
+                    $("#selPositionFrom").append
+                        ($('<option data-aisle=' + id + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
+                });
+
+                result = [];
+
+
+                //Agregamos a AisleTO
+
+                var returnedBinLocations = $.grep(mainlst_BinLocationArray, function (obj) { return obj.Aisle >= id && obj.Area == area && obj.Type == type});
+
+                var resultf = [];
+                var mapf = new Map();
+                for (var itemf of returnedBinLocations) {
+                    if (!mapf.has(itemf.Aisle)) {
+                        mapf.set(itemf.Aisle, true);    // set any value to Map
+                        resultf.push({
+                            Aisle: itemf.Aisle
+                        });
+                    }
+                }
+
+
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                    $.each(resultf, function (i, aisle) {
+                    $("#selAisleTo").append
+                        ($('<option data-area="' + area + '" data-type=' + type + '></option>').val(aisle.Aisle).html(aisle.Aisle));
+                });
+
+                //
+
+
+                //FIltramos en tabla
+
+                filterMasterTable(table, $("#selWarehouseFrom").val(), $("#selAisleFrom").val(), $("#selPositionFrom").val(), $("#selLevelFrom").val(), $("#selPalletFrom").val(),
+                    $("#selWarehouseTo").val(), $("#selAisleTo").val(), $("#selPositionTo").val(), $("#selLevelTo").val(), $("#selPalletTo").val());
+
+
+
+            } else {
+                table.column(13).search('').draw();
+       
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+
+                filterMasterTable(table, $("#selWarehouseFrom").val(), $("#selAisleFrom").val(), $("#selPositionFrom").val(), $("#selLevelFrom").val(), $("#selPalletFrom").val(),
+                    $("#selWarehouseTo").val(), $("#selAisleTo").val(), $("#selPositionTo").val(), $("#selLevelTo").val(), $("#selPalletTo").val());
             }
 
         });
 
         $('#selPositionFrom').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Position = id && el.Aisle == aisle;
+                    return el.Position = id && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -699,7 +917,7 @@
                 $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selLevelFrom").append
-                        ($('<option data-position=' + id + ' data-aisle=' + aisle + '></option>').val(bin).html(bin));
+                        ($('<option data-position=' + id + ' data-aisle=' + aisle + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -725,13 +943,14 @@
 
         $('#selLevelFrom').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var position = $(this).find(':selected').attr('data-position')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Level == id && el.Position == position && el.Aisle == aisle;
+                    return el.Level == id && el.Position == position && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -743,7 +962,7 @@
                 $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selPalletFrom").append
-                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + '></option>').val(bin).html(bin));
+                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -778,38 +997,6 @@
 
         });
 
-
-        $('#selAreaFrom').on('change', function () {
-            if (this.value != 0) {
-                var search2 = [];
-
-                    search2.push($(this).val());
-                    search2 = search2.join('|');
-                    table.column(8).search("^" + search2 + "$", true, false, true).draw();
-
-            } else {
-
-                table.column(8).search('').draw();
-            }
-
-        });
-        $('#selTypeFrom').on('change', function () {
-            if (this.value != 0) {
-                var search2 = [];
-
-                    search2.push($(this).val());
-                    search2 = search2.join('|');
-                    table.column(7).search("^" + search2 + "$", true, false, true).draw();
-
-            } else {
-
-                table.column(7).search('').draw();
-            }
-
-        });
-
-
-
         //TO
         $('#selAisleTo').on('change', function () {
             if (this.value != 0) {
@@ -823,17 +1010,21 @@
                     $("#selPalletTo").html("");
                     $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 } else {
-
-                var id = this.value;
+                    var type = $(this).find(':selected').attr('data-type');
+                    var area = $(this).find(':selected').attr('data-area');
+                    var id = this.value;
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Aisle == id;
+                    return el.Aisle == id && el.Area == area && el.Type == type;
                 });
 
                 var result = newArray.map(item => item.Position)
                     .filter((value, index, self) => self.indexOf(value) === index)
 
 
+                    result.sort(function (a, b) {
+                        return a - b;
+                    });
                 $("#selPositionTo").html("");
                 $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
                 $("#selLevelTo").html("");
@@ -842,7 +1033,7 @@
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selPositionTo").append
-                        ($('<option data-aisle=' + id + '></option>').val(bin).html(bin));
+                        ($('<option data-aisle=' + id + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                     result = [];
@@ -858,6 +1049,10 @@
 
             } else {
                 table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
                 $("#selPositionTo").html("");
                 $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
                 $("#selLevelTo").html("");
@@ -875,12 +1070,13 @@
 
         $('#selPositionTo').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Position = id && el.Aisle == aisle;
+                    return el.Position = id && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -895,7 +1091,7 @@
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selLevelTo").append
-                        ($('<option data-position=' + id + ' data-aisle=' + aisle + '></option>').val(bin).html(bin));
+                        ($('<option data-position=' + id + ' data-aisle=' + aisle + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -922,13 +1118,14 @@
 
         $('#selLevelTo').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var position = $(this).find(':selected').attr('data-position')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Level == id && el.Position == position && el.Aisle == aisle;
+                    return el.Level == id && el.Position == position && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -940,7 +1137,7 @@
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selPalletTo").append
-                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + '></option>').val(bin).html(bin));
+                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];

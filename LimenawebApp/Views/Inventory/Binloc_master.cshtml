@@ -73,7 +73,6 @@
                                     <div class="">
 
                                         <!-- Card Header -->
-
                                         <!-- /card header -->
                                         <!-- Card Body -->
                                         <div class="dt-card__body">
@@ -87,6 +86,11 @@
                                                        aria-selected="true">New assignment</a>
                                                 </li>
                                                 <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#products" role="tab"
+                                                       aria-controls="products"
+                                                       aria-selected="true">Product Assignment</a>
+                                                </li>
+                                                <li class="nav-item">
                                                     <a class="nav-link" data-toggle="tab" href="#profile" role="tab"
                                                        aria-controls="profile"
                                                        aria-selected="true">Counting history</a>
@@ -94,450 +98,497 @@
                                             </ul>
                                             <!-- /tab navigation -->
                                             <!-- Tab Content --><br /><br /><br /><br />
-                                                                      <div class="tab-content">
+                                            <div class="tab-content">
 
-                                                                          <!-- Tab Pane -->
-                                                                          <div id="home" class="tab-pane active">
-                                                                              <!-- Grid Item -->
-                                                                              <div class="row">
-                                                                              <div class="col-xl-12" id="assignbinloc">
+                                                <!-- Tab Pane -->
+                                                <div id="home" class="tab-pane active">
+                                                    <!-- Grid Item -->
+                                                    <div class="row">
+                                                        <div class="col-xl-12" id="assignbinloc">
 
-                                                                                  <!-- Card -->
-                                                                                  <div class="dt-card dt-card__full-height">
+                                                            <!-- Card -->
+                                                            <div class="dt-card dt-card__full-height">
 
-                                                                                      <!-- Card Header -->
-                                                                                      <div class="dt-card__header">
+                                                                <!-- Card Header -->
+                                                                <div class="dt-card__header">
 
-                                                                                          <!-- Card Heading -->
-                                                                                          <div class="dt-card__heading">
-                                                                                              <h3 class="dt-card__title">Bin Locations</h3>
-                                                                                          </div>
-                                                                                          <!-- /card heading -->
+                                                                    <!-- Card Heading -->
+                                                                    <div class="dt-card__heading">
+                                                                        <h3 class="dt-card__title">Bin Locations</h3>
+                                                                    </div>
+                                                                    <!-- /card heading -->
 
-                                                                                      </div>
-                                                                                      <!-- /card header -->
-                                                                                      <!-- Card Body -->
-                                                                                      <div class="dt-card__body">
+                                                                </div>
+                                                                <!-- /card header -->
+                                                                <!-- Card Body -->
+                                                                <div class="dt-card__body">
 
-                                                                                          <!-- Form -->
-                                                                                          <div class="form-row">
-                                                                                              <div class="col-sm-7 mb-3">
-                                                                                                  <label>Picker</label>
-                                                                                                  <div class="input-group">
-                                                                                                      <div class="input-group-prepend">
-                                                                                                          <span class="input-group-text" id="inputGroupPrepend2">@@</span>
-                                                                                                      </div>
-                                                                                                      <select class="form-control" id="selPicker">
-                                                                                                          <option value="0">Select a picker</option>
-                                                                                                          @foreach (var item in ViewBag.usuarios)
-                    {
-                                                                                      <option value="@item.ID_User">@item.Name @item.Lastname</option>
-}
+                                                                    <!-- Form -->
+                                                                    <div class="form-row">
+                                                                        <div class="col-sm-7 mb-3">
+                                                                            <label>Picker</label>
+                                                                            <div class="input-group">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="inputGroupPrepend2">@@</span>
+                                                                                </div>
+                                                                                <select class="form-control" id="selPicker">
+                                                                                    <option value="0">Select a picker</option>
+                                                                                    @foreach (var item in ViewBag.usuarios)
+                                                                                    {
+                                                                                        <option value="@item.ID_User">@item.Name @item.Lastname</option>
+                                                                                    }
 
 
-                                                                                                      </select>
-                                                                                                  </div>
-                                                                                              </div>
-                                                                                              <div class="col-sm-3 mb-3">
-                                                                                                  <label>&nbsp;</label>
-                                                                                                  <div class="input-group">
-                                                                                                      <button type="submit" id="btn-add" class="btn btn-primary text-uppercase">Add</button>
-                                                                                                  </div>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="col-sm-3 mb-3">
+                                                                            <label>&nbsp;</label>
+                                                                            <div class="input-group">
+                                                                                <button type="submit" id="btn-add" class="btn btn-primary text-uppercase">Add</button>
+                                                                            </div>
 
-                                                                                              </div>
-                                                                                          </div><br />
-                                                                                          <h3 class="dt-card__title">Filter by</h3>
-                                                                                          <div class="form-row">
-                                                                                              <div class="col-sm-3 mb-3">
-                                                                                                  <label for="validationDefault02">Type</label>
-                                                                                                  <select class="form-control" id="selTypeFrom">
-                                                                                                      <option value="0">NA</option>
-                                                                                                      @foreach (var item in Model.Select(c => c.Type).Distinct().OrderBy(c => c))
-                {
-                                                                                      <option>@item.ToUpper()</option>
-}
+                                                                        </div>
+                                                                    </div><br />
+                                                                    <h3 class="dt-card__title">Filter by</h3>
+                                                                    <div class="form-row">
+                                                                        <div class="col-sm-3 mb-3">
+                                                                            <label for="validationDefault02">Type</label>
+                                                                            <select class="form-control" id="selTypeFrom">
+                                                                                <option value="0">NA</option>
+                                                                                @foreach (var item in Model.Select(c => c.Type).Distinct().OrderBy(c => c))
+                                                                                {
+                                                                                    <option value="@item">@item.ToUpper()</option>
+                                                                                }
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-3 mb-3">
-                                                                                                  <label for="validationDefault02">Area</label>
-                                                                                                  <select class="form-control" id="selAreaFrom">
-                                                                                                      <option value="0">NA</option>
-                                                                                                      @foreach (var item in Model.Select(c => c.Area).Distinct().OrderBy(c => c))
-                {
-                                                                                      <option>@item</option>
-}
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-3 mb-3">
+                                                                            <label for="validationDefault02">Area</label>
+                                                                            <select class="form-control" id="selAreaFrom">
+                                                                                <option value="0">NA</option>
 
-                                                                                                  </select>
-                                                                                              </div>
 
-                                                                                          </div>
-                                                                                          <h3 class="dt-card__title">From</h3>
-                                                                                          <div class="form-row">
-                                                                                              <div class="col-sm-2 mb-3" style="display:none;">
-                                                                                                  <label for="validationDefault02">Warehouse</label>
-                                                                                                  <select class="form-control" id="selWarehouseFrom">
-                                                                                                      <option selected>01</option>
+                                                                            </select>
+                                                                        </div>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Aisle</label>
-                                                                                                  <select class="form-control" id="selAisleFrom">
-                                                                                                      <option value="0">NA</option>
-                                                                                                      @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
-                {
-                                                                                      <option>@item</option>
-}
+                                                                    </div>
+                                                                    <h3 class="dt-card__title">From</h3>
+                                                                    <div class="form-row">
+                                                                        <div class="col-sm-2 mb-3" style="display:none;">
+                                                                            <label for="validationDefault02">Warehouse</label>
+                                                                            <select class="form-control" id="selWarehouseFrom">
+                                                                                <option selected>01</option>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Position</label>
-                                                                                                  <select class="form-control" id="selPositionFrom">
-                                                                                                      <option value="0">NA</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Aisle</label>
+                                                                            <select class="form-control" id="selAisleFrom">
+                                                                                <option value="0">NA</option>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Level</label>
-                                                                                                  <select class="form-control" id="selLevelFrom">
-                                                                                                      <option value="0">NA</option>
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Pallet Position</label>
-                                                                                                  <select class="form-control" id="selPalletFrom">
-                                                                                                      <option value="0">NA</option>
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-1 mb-3">
-                                                                                                  <label for="validationDefault02">&nbsp;</label>
-                                                                                                  <span id="labelFromBin" class="badge badge-pill badge-success mb-1 mr-1"></span>
-                                                                                              </div>
-                                                                                          </div>
-                                                                                          <h3 class="dt-card__title">To</h3>
-                                                                                          <div class="form-row">
-                                                                                              <div class="col-sm-2 mb-3" style="display:none;">
-                                                                                                  <label for="validationDefault02">Warehouse</label>
-                                                                                                  <select class="form-control" id="selWarehouseTo">
-                                                                                                      <option selected>01</option>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Aisle</label>
-                                                                                                  <select class="form-control" id="selAisleTo">
-                                                                                                      <option value="0">NA</option>
-                                                                                                      @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
-                {
-                                                                                      <option>@item</option>
-}
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Position</label>
-                                                                                                  <select class="form-control" id="selPositionTo">
-                                                                                                      <option value="0">NA</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Position</label>
+                                                                            <select class="form-control" id="selPositionFrom">
+                                                                                <option value="0">NA</option>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Level</label>
-                                                                                                  <select class="form-control" id="selLevelTo">
-                                                                                                      <option value="0">NA</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Level</label>
+                                                                            <select class="form-control" id="selLevelFrom">
+                                                                                <option value="0">NA</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Pallet Position</label>
+                                                                            <select class="form-control" id="selPalletFrom">
+                                                                                <option value="0">NA</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-1 mb-3">
+                                                                            <label for="validationDefault02">&nbsp;</label>
+                                                                            <span id="labelFromBin" class="badge badge-pill badge-success mb-1 mr-1"></span>
+                                                                        </div>
+                                                                    </div>
+                                                                    <h3 class="dt-card__title">To</h3>
+                                                                    <div class="form-row">
+                                                                        <div class="col-sm-2 mb-3" style="display:none;">
+                                                                            <label for="validationDefault02">Warehouse</label>
+                                                                            <select class="form-control" id="selWarehouseTo">
+                                                                                <option selected>01</option>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-2 mb-3">
-                                                                                                  <label for="validationDefault02">Pallet Position</label>
-                                                                                                  <select class="form-control" id="selPalletTo">
-                                                                                                      <option value="0">NA</option>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Aisle</label>
+                                                                            <select class="form-control" id="selAisleTo">
+                                                                                <option value="0">NA</option>
+                                                                                @foreach (var item in Model.Select(c => c.Aisle).Distinct().OrderBy(c => c))
+                                                                                {
+                                                                                    <option>@item</option>
+                                                                                }
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Position</label>
+                                                                            <select class="form-control" id="selPositionTo">
+                                                                                <option value="0">NA</option>
 
-                                                                                                  </select>
-                                                                                              </div>
-                                                                                              <div class="col-sm-1 mb-3">
-                                                                                                  <label for="validationDefault02">&nbsp;</label>
-                                                                                                  <span id="labelToBin" class="badge badge-pill badge-success mb-1 mr-1"></span>
-                                                                                              </div>
-                                                                                              <div class="col-sm-1 mb-3">
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Level</label>
+                                                                            <select class="form-control" id="selLevelTo">
+                                                                                <option value="0">NA</option>
 
-                                                                                              </div>
-                                                                                              <div class="col-sm-1 mb-3">
-                                                                                                  <div class="form-group mb-0">
-                                                                                                      <button type="submit" id="btn-addProject" class="btn btn-primary text-uppercase">Create</button>
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-2 mb-3">
+                                                                            <label for="validationDefault02">Pallet Position</label>
+                                                                            <select class="form-control" id="selPalletTo">
+                                                                                <option value="0">NA</option>
 
-                                                                                                  </div>
-                                                                                              </div>
-                                                                                          </div>
-                                                                                          <!-- /form group -->
-                                                                                          <!-- Form Group -->
-                                                                                          <!-- /form group -->
-                                                                                          <!-- Form Group -->
-                                                                                          <!-- /form group -->
+                                                                            </select>
+                                                                        </div>
+                                                                        <div class="col-sm-1 mb-3">
+                                                                            <label for="validationDefault02">&nbsp;</label>
+                                                                            <span id="labelToBin" class="badge badge-pill badge-success mb-1 mr-1"></span>
+                                                                        </div>
+                                                                        <div class="col-sm-1 mb-3">
+
+                                                                        </div>
+                                                                        <div class="col-sm-1 mb-3">
+                                                                            <div class="form-group mb-0">
+                                                                                <button type="submit" id="btn-addProject" class="btn btn-primary text-uppercase">Create</button>
+
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <!-- /form group -->
+                                                                    <!-- Form Group -->
+                                                                    <!-- /form group -->
+                                                                    <!-- Form Group -->
+                                                                    <!-- /form group -->
 
 
 
-                                                                                      </div>
-                                                                                      <!-- /card body -->
+                                                                </div>
+                                                                <!-- /card body -->
 
-                                                                                  </div>
-                                                                                  <!-- /card -->
+                                                            </div>
+                                                            <!-- /card -->
 
-                                                                              </div>
-                                                                              <!-- /grid item -->
+                                                        </div>
+                                                        <!-- /grid item -->
 
-                                                                       </div>
-                                                                          <style>
-                                                                              .dt-icon-bg:after {
-                                                                                  width: 2.2rem !important;
-                                                                                  height: 2.2rem !important;
-                                                                              }
+                                                    </div>
+                                                    <style>
+                                                        .dt-icon-bg:after {
+                                                            width: 2.2rem !important;
+                                                            height: 2.2rem !important;
+                                                        }
 
-                                                                              .dt-icon-bg {
-                                                                                  font-size: 2.2rem !important;
-                                                                              }
-                                                                          </style><!-- Change Value from Here -->
-                                                                          <!-- /grid -->
-                                                                          <div class="row" id="assignbinlocList">
-                                                                              <div class="col-xl-12">
-                                                                                  <div class="dt-card">
+                                                        .dt-icon-bg {
+                                                            font-size: 2.2rem !important;
+                                                        }
+                                                    </style><!-- Change Value from Here -->
+                                                    <!-- /grid -->
+                                                    <div class="row" id="assignbinlocList">
+                                                        <div class="col-xl-12">
+                                                            <div class="dt-card">
 
-                                                                                      <!-- Card Body -->
-                                                                                      <div class="dt-card__body p-0">
-                                                                                          <div class="table-responsive" id="tbhidd" style="display:none;">
-                                                                                              <!-- Tables -->
-                                                                                              <table id="datatable2" class="table table-theme table-row v-middle" style="width:100%" >
-                                                                                                  <thead>
-                                                                                                      <tr>
-                                                                                                          <th class="no-sort">
-                                                                                                              <label class="ui-check m-0 ">
-                                                                                                                  <input type="checkbox" class="selectchkAll" id="chk_all" value="0">
-                                                                                                                  <i></i>
-                                                                                                              </label>
-                                                                                                          </th>
+                                                                <!-- Card Body -->
+                                                                <div class="dt-card__body p-0">
+                                                                    <div class="table-responsive" id="tbhidd" style="display:none;">
+                                                                        <!-- Tables -->
+                                                                        <table id="datatable2" class="table table-theme table-row v-middle" style="width:100%">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="no-sort">
+                                                                                        <label class="ui-check m-0 ">
+                                                                                            <input type="checkbox" class="selectchkAll" id="chk_all" value="0">
+                                                                                            <i></i>
+                                                                                        </label>
+                                                                                    </th>
 
-                                                                                                          <th><span class="text-muted">BIN</span></th>
-                                                                                                          <th hidden><span class="text-muted">WHS</span></th>
-                                                                                                          <th><span class="text-muted">AISLE</span></th>
-                                                                                                          <th><span class="text-muted">POS</span></th>
-                                                                                                          <th><span class="text-muted">LEVEL</span></th>
-                                                                                                          <th><span class="text-muted">PALLET</span></th>
-                                                                                                          <th><span class="text-muted">TYPE</span></th>
-                                                                                                          <th><span class="text-muted">AREA</span></th>
-                                                                                                          <th><span class="text-muted">USER</span></th>
-                                                                                                          <th style="display:none">ID</th>
-                                                                                                          <th style="display:none">ID USER</th>
-                                                                                                          <th style="display:none">ORDER</th>
-                                                                                                          <th hidden>BIN</th>
-
-
-                                                                                                      </tr>
-                                                                                                  </thead>
-                                                                                                  <tbody>
-                                                                                                      @foreach (var item in Model)
-                                {
-                                                                      <tr class=" " data-id="@item.id">
-                                                                          <td>
-                                                                              <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
-                                                                                  <input type="checkbox" data-marked="0" value="0" class="selectchk" id="chk_@item.id">
-                                                                                  <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-1">
-                                                                                      <span class="unchecked">
-                                                                                          <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
-                                                                                      </span>
-                                                                                      <span class="checked">
-                                                                                          <i class="icon icon-remove icon-fw icon-1x text-danger"></i>
-                                                                                      </span>
-                                                                                  </label>
-                                                                              </span>
+                                                                                    <th><span class="text-muted">BIN</span></th>
+                                                                                    <th hidden><span class="text-muted">WHS</span></th>
+                                                                                    <th><span class="text-muted">AISLE</span></th>
+                                                                                    <th><span class="text-muted">POS</span></th>
+                                                                                    <th><span class="text-muted">LEVEL</span></th>
+                                                                                    <th><span class="text-muted">PALLET</span></th>
+                                                                                    <th><span class="text-muted">TYPE</span></th>
+                                                                                    <th><span class="text-muted">AREA</span></th>
+                                                                                    <th><span class="text-muted">USER</span></th>
+                                                                                    <th style="display:none">ID</th>
+                                                                                    <th style="display:none">ID USER</th>
+                                                                                    <th style="display:none">ORDER</th>
+                                                                                    <th hidden>BIN</th>
 
 
-                                                                              <i style="display:none" class="icon icon-user dt-icon-bg bg-success text-primary iconbinloc"></i>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var item in Model)
+                                                                                {
+                                                                                    <tr class=" " data-id="@item.id">
+                                                                                        <td>
+                                                                                            <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                                                                <input type="checkbox" data-marked="0" value="0" class="selectchk" id="chk_@item.id">
+                                                                                                <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-1">
+                                                                                                    <span class="unchecked">
+                                                                                                        <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                                                    </span>
+                                                                                                    <span class="checked">
+                                                                                                        <i class="icon icon-remove icon-fw icon-1x text-danger"></i>
+                                                                                                    </span>
+                                                                                                </label>
+                                                                                            </span>
 
-                                                                          </td>
-                                                                          <td style="min-width:30px;text-align:center">
-                                                                              <small>@item.BinCode.Substring(2)</small>
-                                                                          </td>
-                                                                          <td hidden><small>@item.WhsCode</small></td>
-                                                                          <td><small>@item.Aisle</small></td>
-                                                                          <td><small>@item.Position</small></td>
-                                                                          <td><small>@item.Level</small></td>
-                                                                          <td><small>@item.PalletPosition</small></td>
-                                                                          <td><small>@item.Type</small></td>
-                                                                          <td><small>@item.Area</small></td>
-                                                                          <td class="userA"><small class="text-muted">Not Assigned</small></td>
-                                                                          <td style="display:none">@item.id</td>
-                                                                          <td style="display:none" class="userAID">@item.id</td>
-                                                                          <td style="display:none">@item.Order</td>
-                                                                          <td hidden>@item.BinCode</td>
 
-                                                                      </tr>
-}
-                                                                                                  </tbody>
+                                                                                            <i style="display:none" class="icon icon-user dt-icon-bg bg-success text-primary iconbinloc"></i>
 
-                                                                                              </table>
-                                                                                          </div>
+                                                                                        </td>
+                                                                                        <td style="min-width:30px;text-align:center">
+                                                                                            <small>@item.BinCode.Substring(2)</small>
+                                                                                        </td>
+                                                                                        <td hidden><small>@item.WhsCode</small></td>
+                                                                                        <td><small>@item.Aisle</small></td>
+                                                                                        <td><small>@item.Position</small></td>
+                                                                                        <td><small>@item.Level</small></td>
+                                                                                        <td><small>@item.PalletPosition</small></td>
+                                                                                        <td><small>@item.Type</small></td>
+                                                                                        <td><small>@item.Area</small></td>
+                                                                                        <td class="userA"><small class="text-muted">Not Assigned</small></td>
+                                                                                        <td style="display:none">@item.id</td>
+                                                                                        <td style="display:none" class="userAID">@item.id</td>
+                                                                                        <td style="display:none">@item.Order</td>
+                                                                                        <td hidden>@item.BinCode</td>
 
-                                                                                          <!-- /tables -->
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
 
-                                                                                      </div>
-                                                                                      <!-- /card body -->
+                                                                        </table>
+                                                                    </div>
 
-                                                                                  </div>
-                                                                              </div>
-                                                                          </div>
-                                                                      </div>
+                                                                    <!-- /tables -->
+
+                                                                </div>
+                                                                <!-- /card body -->
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <!-- /tab pane-->
                                                 <!-- Tab Pane -->
-                                                                          <div id="profile" class="tab-pane">
-                                                                              <div class="row" id="history">
-                                                                                  <div class="col-xl-12">
-                                                                                      <div class="dt-card">
-                                                                                          <div class="dt-card__header mb-0">
+                                                <div id="profile" class="tab-pane">
+                                                    <div class="row" id="history">
+                                                        <div class="col-xl-12">
+                                                            <div class="dt-card">
+                                                                <div class="dt-card__header mb-0">
 
-                                                                                              <!-- Card Heading -->
-                                                                                              <div class="dt-card__heading">
-                                                                                                  <button type="button" id="btnDelHistory" class="btn btn-secondary btn-xs">Delete</button>
-                                                                                              </div>
-                                                                                              <!-- /card heading -->
-                                                                                              <!-- Card Tools -->
-                                                                                              <div class="dt-card__tools">
-                                                                                                  <!-- List -->
-                                                                                                  <ul class="dt-list dt-list-sm dt-list-cm-0">
-                                                                                                      <!-- List Item -->
-                                                                                                  
-                                                                                                      <!-- /list item -->
-                                                                                                      <!-- List Item -->
-                                                                                                      <li class="dt-list__item">
-                                                                                                          <!-- Dropdown -->
-                                                                                                          <div class="dropdown d-inline-block">
-                                                                                                              <a class="dropdown-toggle d-inline-block f-12 py-1 px-2 py-1 border rounded" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                                                  Show
-                                                                                                              </a>
+                                                                    <!-- Card Heading -->
+                                                                    <div class="dt-card__heading">
+                                                                        <button type="button" id="btnDelHistory" class="btn btn-secondary btn-xs">Delete</button>
+                                                                    </div>
+                                                                    <!-- /card heading -->
+                                                                    <!-- Card Tools -->
+                                                                    <div class="dt-card__tools">
+                                                                        <!-- List -->
+                                                                        <ul class="dt-list dt-list-sm dt-list-cm-0">
+                                                                            <!-- List Item -->
+                                                                            <!-- /list item -->
+                                                                            <!-- List Item -->
+                                                                            <li class="dt-list__item">
+                                                                                <!-- Dropdown -->
+                                                                                <div class="dropdown d-inline-block">
+                                                                                    <a class="dropdown-toggle d-inline-block f-12 py-1 px-2 py-1 border rounded" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                                        Show
+                                                                                    </a>
 
-                                                                                                              <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(83px, 27px, 0px);">
+                                                                                    <div class="dropdown-menu dropdown-menu-right" x-placement="bottom-end" style="position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(83px, 27px, 0px);">
 
-                                                                                                                  <div class="custom-control custom-checkbox dropdown-item">
-                                                                                                                      <input type="checkbox" class="custom-control-input" id="checkbox-2">
-                                                                                                                      <label class="custom-control-label" for="checkbox-2">
-                                                                                                                          Products
-                                                                                                                      </label>
-                                                                                                                  </div>
-                                                                                                                  <div class="custom-control custom-checkbox dropdown-item">
-                                                                                                                      <input type="checkbox" class="custom-control-input" id="checkbox-3">
-                                                                                                                      <label class="custom-control-label" for="checkbox-3">
-                                                                                                                          Quantity
-                                                                                                                      </label>
-                                                                                                                  </div>
-                                                                                                                  <div class="custom-control custom-checkbox dropdown-item">
-                                                                                                                      <input type="checkbox" class="custom-control-input" id="checkbox-5">
-                                                                                                                      <label class="custom-control-label" for="checkbox-5">
-                                                                                                                          Total Eaches
-                                                                                                                      </label>
-                                                                                                                  </div>
-                                                                                                                  <div class="custom-control custom-checkbox dropdown-item">
-                                                                                                                      <input type="checkbox" class="custom-control-input" id="checkbox-4">
-                                                                                                                      <label class="custom-control-label" for="checkbox-4">
-                                                                                                                          Date
-                                                                                                                      </label>
-                                                                                                                  </div>
+                                                                                        <div class="custom-control custom-checkbox dropdown-item">
+                                                                                            <input type="checkbox" class="custom-control-input" id="checkbox-2">
+                                                                                            <label class="custom-control-label" for="checkbox-2">
+                                                                                                Products
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <div class="custom-control custom-checkbox dropdown-item">
+                                                                                            <input type="checkbox" class="custom-control-input" id="checkbox-3">
+                                                                                            <label class="custom-control-label" for="checkbox-3">
+                                                                                                Quantity
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <div class="custom-control custom-checkbox dropdown-item">
+                                                                                            <input type="checkbox" class="custom-control-input" id="checkbox-5">
+                                                                                            <label class="custom-control-label" for="checkbox-5">
+                                                                                                Total Eaches
+                                                                                            </label>
+                                                                                        </div>
+                                                                                        <div class="custom-control custom-checkbox dropdown-item">
+                                                                                            <input type="checkbox" class="custom-control-input" id="checkbox-4">
+                                                                                            <label class="custom-control-label" for="checkbox-4">
+                                                                                                Date
+                                                                                            </label>
+                                                                                        </div>
 
-                                                                                                              </div>
-                                                                                                          </div>
-                                                                                                          <!-- /dropdown -->
-                                                                                                      </li>
-                                                                                                      <!-- /list item -->
-                                                                                                  </ul>
-                                                                                                  <!-- /list -->
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- /dropdown -->
+                                                                            </li>
+                                                                            <!-- /list item -->
+                                                                        </ul>
+                                                                        <!-- /list -->
 
-                                                                                              </div>
-                                                                                              <!-- /card tools -->
+                                                                    </div>
+                                                                    <!-- /card tools -->
 
-                                                                                          </div><br /><br />
-                                                                                          <!-- Card Body -->
-                                                                                          <div class="dt-card__body p-0">
-                                                                                              <div class="table-responsive">
-                                                                                                  <!-- Tables -->
-                                                                                                  <table id="historytable" class="table table-theme table-row v-middle" style="width:100%">
-                                                                                                      <thead>
-                                                                                                          <tr>
-                                                                                                              <th class="no-sort">
-                                                                                                                  <label class="ui-check m-0 ">
-                                                                                                                      <input type="checkbox" class="selectchkAll2" id="chk_all2" value="0">
-                                                                                                                      <i></i>
-                                                                                                                  </label>
-                                                                                                              </th>
+                                                                </div><br /><br />
+                                                                <!-- Card Body -->
+                                                                <div class="dt-card__body p-0">
+                                                                    <div class="table-responsive">
+                                                                        <!-- Tables -->
+                                                                        <table id="historytable" class="table table-theme table-row v-middle" style="width:100%">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="no-sort">
+                                                                                        <label class="ui-check m-0 ">
+                                                                                            <input type="checkbox" class="selectchkAll2" id="chk_all2" value="0">
+                                                                                            <i></i>
+                                                                                        </label>
+                                                                                    </th>
 
-                                                                                                              <th hidden><span class="text-muted">ID</span></th>
-                                                                                                              <th><span class="text-muted">BIN</span></th>
-                                                                                                              <th><span class="text-muted">AREA</span></th>
-                                                                                                              <th><span class="text-muted">USER</span></th>
-                                                                                                              <th class="colItemName"><span class="text-muted">ITEM</span></th>
-                                                                                                              <th class="colUom"><span class="text-muted">UOM 1</span></th>
-                                                                                                              <th class="colQTY"><span class="text-muted">QTY 1</span></th>
-                                                                                                              <th class="colUom"><span class="text-muted">UOM 2</span></th>
-                                                                                                              <th class="colQTY"><span class="text-muted">QTY 2</span></th>
-                                                                                                              <th class="colUom"><span class="text-muted">UOM 3</span></th>
-                                                                                                              <th class="colQTY"><span class="text-muted">QTY 3</span></th>
-                                                                                                              <th class="colQTYf"><span class="text-muted">TOTAL EACHES</span></th>
-                                                                                                              <th class="colDate"><span class="text-muted">DATE</span></th>
-                                                                                                              <th><span class="text-muted">STATUS</span></th>
-
+                                                                                    <th hidden><span class="text-muted">ID</span></th>
+                                                                                    <th><span class="text-muted">BIN</span></th>
+                                                                                    <th><span class="text-muted">AREA</span></th>
+                                                                                    <th><span class="text-muted">USER</span></th>
+                                                                                    <th class="colItemName"><span class="text-muted">ITEM</span></th>
+                                                                                    <th class="colUom"><span class="text-muted">UOM 1</span></th>
+                                                                                    <th class="colQTY"><span class="text-muted">QTY 1</span></th>
+                                                                                    <th class="colUom"><span class="text-muted">UOM 2</span></th>
+                                                                                    <th class="colQTY"><span class="text-muted">QTY 2</span></th>
+                                                                                    <th class="colUom"><span class="text-muted">UOM 3</span></th>
+                                                                                    <th class="colQTY"><span class="text-muted">QTY 3</span></th>
+                                                                                    <th class="colQTYf"><span class="text-muted">TOTAL EACHES</span></th>
+                                                                                    <th class="colDate"><span class="text-muted">DATE</span></th>
+                                                                                    <th><span class="text-muted">STATUS</span></th>
 
 
-                                                                                                          </tr>
-                                                                                                      </thead>
-                                                                                                      <tbody>
-                                                                                                          @foreach (var item in ViewBag.history)
-                {
-                                                                                                          <tr data-id="@item.ID_projects_task">
-                                                                                                              <td>
-                                                                                                                  @if (item.ID_status == 1)
-                                                                                                                  {
-                                                                                                              <input type="checkbox" value="0" class="selectchk2" id="chk_@item.ID_projects_task">}
-                                                                                                              </td>
-                                                                                                              <td hidden>@item.ID_projects_task</td>
-                                                                                                              <td>@item.Bin_location.Substring(2)</td>
-                                                                                                              <td>@item.Area</td>
-                                                                                                              <td>@item.UserName</td>
-                                                                                                              <td class="rowItemName">@item.ItemName</td>
-                                                                                                              <td class="rowUomC">@item.UoM_code</td>
-                                                                                                              <td class="rowQTY">@item.Quantity</td>
-                                                                                                              <td class="rowUomC">@item.UoM_code2</td>
-                                                                                                              <td class="rowQTY">@item.Quantity2</td>
-                                                                                                              <td class="rowUomC">@item.UoM_code3</td>
-                                                                                                              <td class="rowQTY">@item.Quantity3</td>
-                                                                                                              <td class="rowQTYf">@item.Final_quantity</td>
-                                                                                                              <td  class="rowDate">@Convert.ToDateTime(item.end_date).ToShortDateString()</td>
-                                                                                                              <td>
-                                                                                                                  @if (item.ID_status == 1)
-    {
-                                                                                                              <span class="badge badge-warning">Waiting</span>
-}                                                                                                                  @if (item.ID_status == 2)
-    {
-                                                                                                              <span class="badge badge-info">Finished</span>
-}
-                                                                                                              </td>
+
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody>
+                                                                                @foreach (var item in ViewBag.history)
+                                                                                {
+                                                                                    <tr data-id="@item.ID_projects_task">
+                                                                                        <td>
+                                                                                            @if (item.ID_status == 1)
+                                                                                            {
+                                                                                                <input type="checkbox" value="0" class="selectchk2" id="chk_@item.ID_projects_task">}
+                                                                                        </td>
+                                                                                        <td hidden>@item.ID_projects_task</td>
+                                                                                        <td>@item.Bin_location.Substring(2)</td>
+                                                                                        <td>@item.Area</td>
+                                                                                        <td>@item.UserName</td>
+                                                                                        <td class="rowItemName">@item.ItemName</td>
+                                                                                        <td class="rowUomC">@item.UoM_code</td>
+                                                                                        <td class="rowQTY">@item.Quantity</td>
+                                                                                        <td class="rowUomC">@item.UoM_code2</td>
+                                                                                        <td class="rowQTY">@item.Quantity2</td>
+                                                                                        <td class="rowUomC">@item.UoM_code3</td>
+                                                                                        <td class="rowQTY">@item.Quantity3</td>
+                                                                                        <td class="rowQTYf">@item.Final_quantity</td>
+                                                                                        <td class="rowDate">@Convert.ToDateTime(item.end_date).ToShortDateString()</td>
+                                                                                        <td>
+                                                                                            @if (item.ID_status == 1)
+                                                                                            {
+                                                                                                <span class="badge badge-warning">Waiting</span>
+                                                                                            }                                                                                                                  @if (item.ID_status == 2)
+                                                                                            {
+                                                                                                <span class="badge badge-info">Finished</span>
+                                                                                            }
+                                                                                        </td>
 
 
-                                                                                                          </tr>
-}
-                                                                                                      </tbody>
+                                                                                    </tr>
+                                                                                }
+                                                                            </tbody>
 
-                                                                                                  </table>
-                                                                                              </div>
+                                                                        </table>
+                                                                    </div>
 
-                                                                                              <!-- /tables -->
+                                                                    <!-- /tables -->
 
-                                                                                          </div>
-                                                                                          <!-- /card body -->
+                                                                </div>
+                                                                <!-- /card body -->
 
-                                                                                      </div>
-                                                                                  </div>
-                                                                              </div>
-                                                                          </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                                 <!-- /tab pane-->
+                                                <!-- Tab Pane -->
+                                                <div id="products" class="tab-pane">
+                                                    <div class="row" id="productss">
+                                                        <div class="col-xl-12">
+                                                            <div class="dt-card">
+                                                                <div class="dt-card__header mb-0">
 
+                                                                    <!-- Card Heading -->
+                                                                    <div class="dt-card__heading">
+                                                                        <button type="button" id="btnDelHistory" class="btn btn-secondary btn-xs">Delete</button>
+
+
+                                                                    </div>
+                                                                    <!-- /card tools -->
+                                                                    <div class="dt-card__tools">
+                                                                        <a href="#" data-toggle="modal" data-target="#composeModal" class="btn btn-shadow btn-default compose-btn btn-rounded">
+                                                                            <i class="icon icon-plus icon-fw mr-2"></i>New product
+                                                                        </a>
+                                                                    </div>
+                                                                </div>
+                                                                <!-- Card Body -->
+                                                                <div class="dt-card__body p-0">
+                                                                    <div class="table-responsive">
+                                                                        <!-- Tables -->
+                                                                        <table id="productstable" class="table table-theme table-row v-middle" style="width:100%">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                    <th class="no-sort">
+                                                                                        <label class="ui-check m-0 ">
+                                                                                            <input type="checkbox" class="selectchkAll3" id="chk_all3" value="0">
+                                                                                            <i></i>
+                                                                                        </label>
+                                                                                    </th>
+
+                                                                                    <th hidden><span class="text-muted">ID</span></th>
+                                                                                    <th><span class="text-muted">ITEMCODE</span></th>
+                                                                                    <th><span class="text-muted">ITEMNAME</span></th>
+                                                                                    <th><span class="text-muted">PICKER</span></th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody></tbody>
+
+                                                                        </table>
+                                                                    </div>
+
+                                                                    <!-- /tables -->
+
+                                                                </div>
+                                                                <!-- /card body -->
+
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /tab pane-->
                                             </div>
                                             <!-- /tab content -->
 
@@ -575,11 +626,88 @@
 
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade contact-modal" id="composeModal" tabindex="-1" role="dialog" aria-hidden="true">
+
+        <!-- Modal Dialog -->
+        <div class="modal-dialog modal-lg" role="document">
+            <!-- Modal Content -->
+            <div class="modal-content">
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        New Product Assignment
+                    </h4>
+                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
+                        <i class="icon icon-remove icon-fw icon-xl"></i>
+                    </a>
+                </div>
+                <!-- /modal header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <div class="row no-gutters">
+
+                        <div class="col-lg-12 order-lg-1">
+
+                            <div class="col-md-12">
+                                <label>Picker</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="inputGroupPrepend2">@@</span>
+                                    </div>
+                                    <select class="form-control" id="selPicker">
+                                        <option value="0">Select a picker</option>
+                                        @foreach (var item in ViewBag.usuarios)
+                {
+                        <option value="@item.ID_User">@item.Name @item.Lastname</option>
+}
+
+
+                                    </select>
+                                </div>
+                            </div>
+                            <br />
+
+                            <div class="col-md-12">
+                                <label>Select a Product</label>
+                                <div class="input-group">
+
+                                    <select id="optionsProduct" class="form-control" style="width:100%;">
+                                        @foreach (var item in ViewBag.generalproducts)
+        {
+                                <option value="@item.id">@item.Product</option>
+}
+                                    </select>
+                                </div>
+                            </div>
+
+
+
+
+                        </div>
+                    </div>
+                    
+                </div>
+                <!-- /modal body -->
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <a class="btn btn-primary" id="btn-saveproduct" href="javascript:void(0)" data-dismiss="modal">
+                        <span>SAVE</span>
+                    </a>
+                </div>
+                <!-- /modal footer -->
+            </div>
+            <!-- /modal content -->
+        </div>
+        <!-- /modal dialog -->
+
+    </div>
+    <!-- /modal -->
     <!-- /root -->
     @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
     <script>
 
-        function filterMasterTable(tablesel, warehouseFrom, aisleFrom, positionFrom, levelFrom, palletFrom, warehouseTo, aisleTo, positionTo, levelTo, palletTo) {
+function filterMasterTable(tablesel, warehouseFrom, aisleFrom, positionFrom, levelFrom, palletFrom, warehouseTo, aisleTo, positionTo, levelTo, palletTo) {
 
             if (warehouseFrom == '0' && warehouseTo == '0') {
                 //No hacemos nada
@@ -710,7 +838,7 @@
 
 
             table = $('#datatable2').DataTable({
-                "order": [],
+                "order": [[1, "asc"]],
                 "search": { regex: true },
                 "columnDefs": [{
                     "targets": 'no-sort',
@@ -727,6 +855,8 @@
                 }]
             });
 
+
+            $("#optionsProduct").select2();
         });
 
              $('#chk_all').change(function () {
@@ -768,7 +898,7 @@
                 $('.rowItemName').hide();
                 $('.colItemName').hide();
             }
-            
+
         });
 
         $('#checkbox-3').click(function () {
@@ -814,78 +944,21 @@
             }
         });
 
-        $('#selAisleFrom').on('change', function () {
+        $('#selTypeFrom').on('change', function () {
             if (this.value != 0) {
-                var id = this.value;
-                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
-                var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Aisle == id;
-                });
+                var search2 = [];
 
-                var result = newArray.map(item => item.Position)
-                    .filter((value, index, self) => self.indexOf(value) === index)
+                //CLEAN
 
 
-                $("#selPositionFrom").html("");
-                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
-                $("#selLevelFrom").html("");
-                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
-                $("#selPalletFrom").html("");
-                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
-                $.each(result, function (i, bin) {
-                    $("#selPositionFrom").append
-                        ($('<option data-aisle=' + id + '></option>').val(bin).html(bin));
-                });
-
-                result = [];
-
-                //FIltramos en tabla
-
-                filterMasterTable(table, $("#selWarehouseFrom").val(), $("#selAisleFrom").val(), $("#selPositionFrom").val(), $("#selLevelFrom").val(), $("#selPalletFrom").val(),
-                    $("#selWarehouseTo").val(), $("#selAisleTo").val(), $("#selPositionTo").val(), $("#selLevelTo").val(), $("#selPalletTo").val());
-
-
-
-                //var search2 = [];
-                //var val1 = '';
-                //var val2 = '';
-                //$.each($('#selAisleFrom option:selected'), function () {
-                //    //search2.push($(this).val());
-                //    val1 = $(this).index();
-                //});
-                //$.each($('#selAisleTo option:selected'), function () {
-                //    //search2.push($(this).val());
-                //    val2 = $(this).index();
-                //});
-
-                //if (val2 == 0) {
-
-                //    //verificamos que campos estan llenos
-
-
-                //    search2.push($(this).val());
-                //    search2 = search2.join('|');
-                //    table.column(3).search("^" + search2 + "$", true, false, true).draw();
-                //} else {
-
-                //    var select = document.getElementById("selAisleFrom");
-                //    for (var i = val1; i <= val2; i++) {
-                //        var option = select.options[i];
-                //        // now have option.text, option.valuel
-                //        search2.push(option.value);
-                //    }
-
-                //    search2 = search2.join('|');
-                //    table.column(3).search("^" + search2 + "$", true, false, true).draw();
-                //}
-
-
-            } else {
                 table.column(13).search('').draw();
                 table.column(3).search('').draw();
                 table.column(4).search('').draw();
                 table.column(5).search('').draw();
                 table.column(6).search('').draw();
+                table.column(8).search('').draw();
+                $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
                 $("#selPositionFrom").html("");
                 $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
                 $("#selLevelFrom").html("");
@@ -899,18 +972,305 @@
                 $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
                 $("#selPalletTo").html("");
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+                ///
+                    search2.push($(this).val());
+                    search2 = search2.join('|');
+                    table.column(7).search("^" + search2 + "$", true, false, true).draw();
+
+
+                var id = this.value;
+
+                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
+
+                var newArray = mainlst_BinLocationArray.filter(function (el) {
+                    return el.Type == id;
+                });
+
+                var result = newArray.map(item => item.Area)
+                    .filter((value, index, self) => self.indexOf(value) === index)
+
+
+                $("#selAreaFrom").html("");
+                $("#selPositionFrom").html("");
+                $("#selAreaFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $.each(result, function (i, bin) {
+                    $("#selAreaFrom").append
+                        ($('<option data-type=' + id + '></option>').val(bin).html(bin));
+                });
+
+                result = [];
+
+
+                ////Agregamos a AisleFROM
+
+                //var returnedBinLocations = $.grep(mainlst_BinLocationArray, function (obj) { return obj.Type >= id });
+
+                //var resultf = [];
+                //var mapf = new Map();
+                //for (var itemf of returnedBinLocations) {
+                //    if (!mapf.has(itemf.Aisle)) {
+                //        mapf.set(itemf.Aisle, true);    // set any value to Map
+                //        resultf.push({
+                //            Aisle: itemf.Aisle
+                //        });
+                //    }
+                //}
+
+
+                //$("#selAisleFrom").html("");
+                //$("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                //    $.each(resultf, function (i, aisle) {
+                //        $("#selAisleFrom").append
+                //        ($('<option></option>').val(aisle.Aisle).html(aisle.Aisle));
+                //});
+
+                //
+
+
+
+
+
+            } else {
+
+                table.column(7).search('').draw();
+                table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                table.column(8).search('').draw();
+                $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+            }
+
+        });
+        //AREA
+
+        $('#selAreaFrom').on('change', function () {
+            if (this.value != 0) {
+                var search2 = [];
+                var type = $(this).find(':selected').attr('data-type')
+                //CLEAN
+                table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                    search2.push($(this).val());
+                    search2 = search2.join('|');
+                    table.column(8).search("^" + search2 + "$", true, false, true).draw();
+
+                $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+                ///
+
+
+                var id = this.value;
+
+                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
+
+                var newArray = mainlst_BinLocationArray.filter(function (el) {
+                    return el.Area == id && el.Type == type;
+                });
+
+                var result = newArray.map(item => item.Aisle)
+                    .filter((value, index, self) => self.indexOf(value) === index)
+
+
+                $("#selAisleFrom").html("");
+                $("#selPositionFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $.each(result, function (i, bin) {
+                    $("#selAisleFrom").append
+                        ($('<option data-area="' + id + '" data-type=' + type + '></option>').val(bin).html(bin));
+                    $("#selAisleTo").append
+                        ($('<option data-area="' + id + '" data-type=' + type + '></option>').val(bin).html(bin));
+                });
+
+                result = [];
+                //
+
+
+            } else {
+
+                table.column(8).search('').draw();
+                table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                      $("#selAisleFrom").html("");
+                $("#selAisleFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+            }
+
+        });
+
+        $('#selAisleFrom').on('change', function () {
+            if (this.value != 0) {
+                var id = this.value;
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
+                var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
+                var newArray = mainlst_BinLocationArray.filter(function (el) {
+                    return el.Aisle == id && el.Area == area && el.Type == type;
+                });
+
+                var result = newArray.map(item => item.Position)
+                    .filter((value, index, self) => self.indexOf(value) === index)
+
+
+                result.sort(function (a, b) {
+                    return a - b;
+                });
+
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+
+
+                $.each(result, function (i, bin) {
+                    $("#selPositionFrom").append
+                        ($('<option data-aisle=' + id + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
+                });
+
+                result = [];
+
+
+                //Agregamos a AisleTO
+
+                var returnedBinLocations = $.grep(mainlst_BinLocationArray, function (obj) { return obj.Aisle >= id && obj.Area == area && obj.Type == type});
+
+                var resultf = [];
+                var mapf = new Map();
+                for (var itemf of returnedBinLocations) {
+                    if (!mapf.has(itemf.Aisle)) {
+                        mapf.set(itemf.Aisle, true);    // set any value to Map
+                        resultf.push({
+                            Aisle: itemf.Aisle
+                        });
+                    }
+                }
+
+
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                    $.each(resultf, function (i, aisle) {
+                    $("#selAisleTo").append
+                        ($('<option data-area="' + area + '" data-type=' + type + '></option>').val(aisle.Aisle).html(aisle.Aisle));
+                });
+
+                //
+
+
+                //FIltramos en tabla
+
+                filterMasterTable(table, $("#selWarehouseFrom").val(), $("#selAisleFrom").val(), $("#selPositionFrom").val(), $("#selLevelFrom").val(), $("#selPalletFrom").val(),
+                    $("#selWarehouseTo").val(), $("#selAisleTo").val(), $("#selPositionTo").val(), $("#selLevelTo").val(), $("#selPalletTo").val());
+
+
+
+            } else {
+                table.column(13).search('').draw();
+
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
+                $("#selPositionFrom").html("");
+                $("#selPositionFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelFrom").html("");
+                $("#selLevelFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletFrom").html("");
+                $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
+                $("#selAisleTo").html("");
+                $("#selAisleTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPositionTo").html("");
+                $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selLevelTo").html("");
+                $("#selLevelTo").append($('<option selected></option>').val(0).html("NA"));
+                $("#selPalletTo").html("");
+                $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
+
+                filterMasterTable(table, $("#selWarehouseFrom").val(), $("#selAisleFrom").val(), $("#selPositionFrom").val(), $("#selLevelFrom").val(), $("#selPalletFrom").val(),
+                    $("#selWarehouseTo").val(), $("#selAisleTo").val(), $("#selPositionTo").val(), $("#selLevelTo").val(), $("#selPalletTo").val());
             }
 
         });
 
         $('#selPositionFrom').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Position = id && el.Aisle == aisle;
+                    return el.Position = id && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -925,7 +1285,7 @@
                 $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selLevelFrom").append
-                        ($('<option data-position=' + id + ' data-aisle=' + aisle + '></option>').val(bin).html(bin));
+                        ($('<option data-position=' + id + ' data-aisle=' + aisle + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -951,13 +1311,14 @@
 
         $('#selLevelFrom').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var position = $(this).find(':selected').attr('data-position')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Level == id && el.Position == position && el.Aisle == aisle;
+                    return el.Level == id && el.Position == position && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -969,7 +1330,7 @@
                 $("#selPalletFrom").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selPalletFrom").append
-                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + '></option>').val(bin).html(bin));
+                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -990,34 +1351,7 @@
         });
 
 
-        $('#selAreaFrom').on('change', function () {
-            if (this.value != 0) {
-                var search2 = [];
 
-                search2.push($(this).val());
-                search2 = search2.join('|');
-                table.column(8).search("^" + search2 + "$", true, false, true).draw();
-
-            } else {
-
-                table.column(8).search('').draw();
-            }
-
-        });
-        $('#selTypeFrom').on('change', function () {
-            if (this.value != 0) {
-                var search2 = [];
-
-                search2.push($(this).val());
-                search2 = search2.join('|');
-                table.column(7).search("^" + search2 + "$", true, false, true).draw();
-
-            } else {
-
-                table.column(7).search('').draw();
-            }
-
-        });
         $('#selPalletFrom').on('change', function () {
             if (this.value != 0) {
                 result = [];
@@ -1030,8 +1364,6 @@
             }
 
         });
-
-
 
         //TO
         $('#selAisleTo').on('change', function () {
@@ -1046,17 +1378,21 @@
                     $("#selPalletTo").html("");
                     $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 } else {
-
-                var id = this.value;
+                    var type = $(this).find(':selected').attr('data-type');
+                    var area = $(this).find(':selected').attr('data-area');
+                    var id = this.value;
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Aisle == id;
+                    return el.Aisle == id && el.Area == area && el.Type == type;
                 });
 
                 var result = newArray.map(item => item.Position)
                     .filter((value, index, self) => self.indexOf(value) === index)
 
 
+                    result.sort(function (a, b) {
+                        return a - b;
+                    });
                 $("#selPositionTo").html("");
                 $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
                 $("#selLevelTo").html("");
@@ -1065,7 +1401,7 @@
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selPositionTo").append
-                        ($('<option data-aisle=' + id + '></option>').val(bin).html(bin));
+                        ($('<option data-aisle=' + id + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                     result = [];
@@ -1081,6 +1417,10 @@
 
             } else {
                 table.column(13).search('').draw();
+                table.column(3).search('').draw();
+                table.column(4).search('').draw();
+                table.column(5).search('').draw();
+                table.column(6).search('').draw();
                 $("#selPositionTo").html("");
                 $("#selPositionTo").append($('<option selected></option>').val(0).html("NA"));
                 $("#selLevelTo").html("");
@@ -1098,12 +1438,13 @@
 
         $('#selPositionTo').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Position = id && el.Aisle == aisle;
+                    return el.Position = id && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -1118,7 +1459,7 @@
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selLevelTo").append
-                        ($('<option data-position=' + id + ' data-aisle=' + aisle + '></option>').val(bin).html(bin));
+                        ($('<option data-position=' + id + ' data-aisle=' + aisle + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -1145,13 +1486,14 @@
 
         $('#selLevelTo').on('change', function () {
             if (this.value != 0) {
-
+                var type = $(this).find(':selected').attr('data-type')
+                var area = $(this).find(':selected').attr('data-area')
                 var id = this.value;
                 var aisle = $(this).find(':selected').attr('data-aisle')
                 var position = $(this).find(':selected').attr('data-position')
                 var mainlst_BinLocationArray = @Html.Raw((ViewBag.arrayBin));
                 var newArray = mainlst_BinLocationArray.filter(function (el) {
-                    return el.Level == id && el.Position == position && el.Aisle == aisle;
+                    return el.Level == id && el.Position == position && el.Aisle == aisle && el.Area == area && el.Type == type;
                 });
 
 
@@ -1163,7 +1505,7 @@
                 $("#selPalletTo").append($('<option selected></option>').val(0).html("NA"));
                 $.each(result, function (i, bin) {
                     $("#selPalletTo").append
-                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + '></option>').val(bin).html(bin));
+                        ($('<option data-level=' + id + ' data-aisle=' + aisle + ' data-position=' + position + ' data-area="' + area + '" data-type=' + type + '></option>').val(bin).html(bin));
                 });
 
                 result = [];
@@ -1194,7 +1536,6 @@
             }
 
         });
-
 
         $('#checkbox-1').click(function () {
 
@@ -1321,7 +1662,7 @@
 
                         oSettings = table.settings();
                         oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
-                     
+
                         table.search('').columns().search('').draw();
 
 
@@ -1375,8 +1716,8 @@
 
                         }
 
-                       
-                 
+
+
                         if (objects.length > 0) {
                             oSettings[0]._iDisplayLength = 10;
                             $.ajax
@@ -1427,7 +1768,7 @@
 
                         } else {
                             $("#btn-addProject").attr("disabled", false);
-                          
+
                             var toast = swal.mixin({
                                 toast: true,
                                 position: 'top-end',
@@ -1456,7 +1797,7 @@
                     }
 
                 });
-            
+
 
 
 
@@ -1490,7 +1831,7 @@
 
                         oSettings2 = table2.settings();
                         oSettings2[0]._iDisplayLength = oSettings2[0].fnRecordsTotal();
-                     
+
                         table2.search('').columns().search('').draw();
 
 
@@ -1530,8 +1871,8 @@
 
                         }
 
-                       
-                 
+
+
                         if (objects2.length > 0) {
                             oSettings2[0]._iDisplayLength = 10;
                             $.ajax
@@ -1574,7 +1915,7 @@
 
                         } else {
                             $("#btnDelHistory").attr("disabled", false);
-                          
+
                             var toast = swal.mixin({
                                 toast: true,
                                 position: 'top-end',
@@ -1590,7 +1931,7 @@
                             oSettings2 = table2.settings();
                             oSettings2[0]._iDisplayLength = 10;
                             table2.search('').columns().search('').draw();
-                          
+
                         }
                         //document.getElementById("loader").style.display = "block";
 
@@ -1600,11 +1941,89 @@
                     }
 
                 });
-            
+
 
 
 
         });
+
+
+        $("#btn-saveproduct").click(function () {
+
+            var times = '@ViewBag.count';
+            var project = '@ViewBag.project.ID_project';
+
+
+                swal.fire({
+                    title: 'Add Product',
+                    text: "Are you sure you want to add this product?",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        //Guardamos
+
+                        $("#btn-saveproduct").attr("disabled", true);
+                        var productID = $("#optionsProduct").val();
+                        var productName = $("#optionsProduct option:selected").text();
+                        var pickerID = $("#selPicker").val();
+                        var pickerName = $("#selPicker option:selected").text();
+
+
+
+                            $.ajax
+                            ({
+                                    url: '/Inventory/SaveProduct',
+                                type: 'POST',
+                                    data: { 'ItemCode': productID, 'ItemName': productName, 'ID_Picker': pickerID, 'Picker': pickerName,'actualcount': times, 'idproj':project },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        var toast = swal.mixin({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+
+                                        toast({
+                                            type: 'success',
+                                            title: 'Data saved successfully.'
+                                        })
+
+
+                                        setTimeout(
+                                            function () {
+                                                var url = '@Url.Action("Binloc_master", "Inventory", new { idproj = ViewBag.project.ID_project, count=ViewBag.count })';
+                                                url = url.replace('amp;', '');
+                                                 window.location.href = url;
+                                            }, 2000);
+
+                                    } else {
+
+                                    }
+                                    $("#btn-saveproduct").attr("disabled", false);
+
+                                },
+                                error: function () {
+                                    $("#btn-saveproduct").attr("disabled", false);
+                                },
+                            });
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+
+
+
+        });
+
 
     </script>
 </body>

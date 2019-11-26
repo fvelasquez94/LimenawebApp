@@ -46,5 +46,6 @@ namespace LimenawebApp.Models
         public decimal FactorBonif { get; set; }
         public string Credits { get; set; }
         public string StorageType { get; set; }
+        public Nullable<decimal> Stock { get; set; }
     }
 }

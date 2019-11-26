@@ -46,6 +46,7 @@
           </Key>
           <Property Name="Code" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="U_Active" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="@TRUCKS">
           <Key>
@@ -862,6 +863,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="FactorBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
           <Property Name="Credits" Type="nvarchar" MaxLength="10" />
           <Property Name="StorageType" Type="nvarchar" MaxLength="20" />
+          <Property Name="Stock" Type="numeric" Precision="19" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1162,7 +1164,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Products].[CantBonif] AS [CantBonif], 
     [BI_Dim_Products].[FactorBonif] AS [FactorBonif], 
     [BI_Dim_Products].[Credits] AS [Credits], 
-    [BI_Dim_Products].[StorageType] AS [StorageType]
+    [BI_Dim_Products].[StorageType] AS [StorageType], 
+    [BI_Dim_Products].[Stock] AS [Stock]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -1853,6 +1856,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="FactorBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
           <Property Name="Credits" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
           <Property Name="StorageType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Stock" Type="Decimal" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
@@ -2019,6 +2023,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           </Key>
           <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="U_Active" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OHEM">
           <Key>
@@ -2871,6 +2876,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="Stock" ColumnName="Stock" />
                 <ScalarProperty Name="StorageType" ColumnName="StorageType" />
                 <ScalarProperty Name="Credits" ColumnName="Credits" />
                 <ScalarProperty Name="FactorBonif" ColumnName="FactorBonif" />
@@ -3070,6 +3076,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="C_PICKERS">
             <EntityTypeMapping TypeName="DLI_PROModel.C_PICKERS">
               <MappingFragment StoreEntitySet="@PICKERS">
+                <ScalarProperty Name="U_Active" ColumnName="U_Active" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Code" ColumnName="Code" />
               </MappingFragment>
