@@ -201,8 +201,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.18.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.18\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.20.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.20\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +390,9 @@
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Inv_Projects_Task.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Inv_Project_products.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\ITM1.cs">
@@ -1627,6 +1630,7 @@
     <Content Include="Content\appcontent\assets\vendor\summernote\summernote.css" />
     <Content Include="Content\appcontent\assets\vendor\summernote\summernote.js" />
     <Content Include="Content\appcontent\assets\vendor\summernote\summernote.min.js" />
+    <Content Include="Content\appcontent\assets\vendor\tableeditorinline\SimpleTableCellEditor.es6.min.js" />
     <Content Include="Content\appcontent\assets\vendor\tableeditorinline\SimpleTableCellEditor.js" />
     <Content Include="Content\appcontent\assets\vendor\themify-icons\css\themify-icons.css" />
     <Content Include="Content\appcontent\assets\vendor\themify-icons\fonts\themify.svg" />
@@ -15196,6 +15200,11 @@
     <Content Include="Views\Inventory\Binloc_newlocation.cshtml" />
     <Content Include="Views\Inventory\Binloc_general2.cshtml" />
     <Content Include="Views\Inventory\Binloc_tasksEdit.cshtml" />
+    <Content Include="Views\Inventory\Binloc_taskproduct.cshtml" />
+    <Content Include="Views\Inventory\Binloc_lstproduct.cshtml" />
+    <Content Include="Views\Main\Dashboard_OperationsPurchases.cshtml" />
+    <Content Include="Views\Operations\new_Data.cshtml" />
+    <Content Include="Views\Operations\edit_process.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

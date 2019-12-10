@@ -21,13 +21,14 @@ namespace LimenawebApp.Controllers
         // GET: Operations
         private dbLimenaEntities dblim = new dbLimenaEntities();
         private DLI_PROEntities dlipro = new DLI_PROEntities();
-
+        //CLASS GENERAL
+        private clsGeneral generalClass = new clsGeneral();
         private MatrizComprasEntities dbMatriz = new MatrizComprasEntities();
         public ActionResult Purchase_data(string fstartd, string fendd)
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
                 //ACTIVE PAGES
@@ -78,6 +79,41 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+        public ActionResult edit_process(int data=0, string ItemCode="")
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Process";
+                ViewBag.menunameid = "inventory_menu";
+                ViewBag.submenunameid = "stock_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
 
         public ActionResult ProductCatalog()
         {
@@ -490,6 +526,54 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+
+        public ActionResult new_Data()
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "New Data";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "operpur_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                List<view_MatrizMadre> data = (from b in dbMatriz.view_MatrizMadre select b).ToList();
+
+                return View(data);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+
+        public class MyObj_SubCat
+
+        {
+            public int? id { get; set; }
+            public string name { get; set; }
+            public string category { get; set; }
+
+        }
         //public JsonResult CustomServerSideSearchAction()
         //{
         //    // action inside a standard controller
@@ -831,6 +915,71 @@ namespace LimenawebApp.Controllers
 
 
         }
+        public class MyObj_save
+
+        {
+            public string ItemCode { get; set; }
+            public string Description { get; set; }
+            public string Vendor { get; set; }
+            public string Brand { get; set; }
+            public string Category { get; set; }
+            public string Subcategory { get; set; }
+
+        }
+        [HttpPost]
+        public ActionResult Save_DataProcess(List<MyObj_save> objects, string Categories, string Subcategories, string Providers, string Brands)
+        {
+            string ttresult = "";
+            try
+            {
+                int userid = 0;
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                if (activeuser != null)
+                {
+                    userid = activeuser.ID_User;
+                }
+
+                Purchase_data newDataM = new Purchase_data();
+                newDataM.Date_create = DateTime.UtcNow;
+                newDataM.Date_data = DateTime.UtcNow.AddDays(-1);
+                newDataM.User_create = userid;
+                newDataM.query1 = "";
+                newDataM.query2 = "";
+                newDataM.Categories = Categories;
+                newDataM.SubCategories = Subcategories;
+                newDataM.Providers = Providers;
+                newDataM.Brands = Brands;
+                dblim.Purchase_data.Add(newDataM);
+                dblim.SaveChanges();
+
+
+
+                List<Purchase_data_details> lsttosave = new List<Purchase_data_details>();
+                foreach (var items in objects)
+                {
+                    Purchase_data_details newDet = new Purchase_data_details();
+
+                    lsttosave.Add(newDet);
+                    
+                }
+
+                dblim.BulkInsert(lsttosave);
+
+                ttresult = "SUCCESS";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
 
         [HttpPost]
         public ActionResult SaveEdit_PurchaseData(int id, List<MatrizMadre> objects)

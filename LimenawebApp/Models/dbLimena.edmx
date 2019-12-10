@@ -5,6 +5,20 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="dbLimenaModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Inv_Project_products">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ItemName" Type="varchar(max)" Nullable="false" />
+          <Property Name="ID_Picker" Type="int" Nullable="false" />
+          <Property Name="PickerName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="count" Type="int" Nullable="false" />
+          <Property Name="ID_project" Type="int" Nullable="false" />
+          <Property Name="Used" Type="bit" Nullable="false" />
+          <Property Name="Bin_locations" Type="varchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="Inv_Projects">
           <Key>
             <PropertyRef Name="ID_project" />
@@ -608,6 +622,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="dbLimenaModelStoreContainer">
+          <EntitySet Name="Inv_Project_products" EntityType="Self.Inv_Project_products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Inv_Projects" EntityType="Self.Inv_Projects" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Inv_Projects_BinLoc" EntityType="Self.Inv_Projects_BinLoc" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Inv_Projects_Task" EntityType="Self.Inv_Projects_Task" Schema="dbo" store:Type="Tables" />
@@ -846,6 +861,7 @@
           <EntitySet Name="Inv_Projects" EntityType="dbLimenaModel.Inv_Projects" />
           <EntitySet Name="Inv_Projects_BinLoc" EntityType="dbLimenaModel.Inv_Projects_BinLoc" />
           <EntitySet Name="Inv_Projects_Task" EntityType="dbLimenaModel.Inv_Projects_Task" />
+          <EntitySet Name="Inv_Project_products" EntityType="dbLimenaModel.Inv_Project_products" />
         </EntityContainer>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -1344,6 +1360,20 @@
           <Property Name="Internal_sort" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Aisle" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Inv_Project_products">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ID_Picker" Type="Int32" Nullable="false" />
+          <Property Name="PickerName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="count" Type="Int32" Nullable="false" />
+          <Property Name="ID_project" Type="Int32" Nullable="false" />
+          <Property Name="Used" Type="Boolean" Nullable="false" />
+          <Property Name="Bin_locations" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1903,6 +1933,21 @@
                 <ScalarProperty Name="Bin_location" ColumnName="Bin_location" />
                 <ScalarProperty Name="ID_binloc" ColumnName="ID_binloc" />
                 <ScalarProperty Name="ID_projects_task" ColumnName="ID_projects_task" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Inv_Project_products">
+            <EntityTypeMapping TypeName="dbLimenaModel.Inv_Project_products">
+              <MappingFragment StoreEntitySet="Inv_Project_products">
+                <ScalarProperty Name="Bin_locations" ColumnName="Bin_locations" />
+                <ScalarProperty Name="Used" ColumnName="Used" />
+                <ScalarProperty Name="ID_project" ColumnName="ID_project" />
+                <ScalarProperty Name="count" ColumnName="count" />
+                <ScalarProperty Name="PickerName" ColumnName="PickerName" />
+                <ScalarProperty Name="ID_Picker" ColumnName="ID_Picker" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

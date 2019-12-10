@@ -1,0 +1,493 @@
+﻿@{
+    ViewBag.Title = "Distribuidora Limeña - New Data";
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/temp_head.cshtml")
+    <style>
+
+    </style>
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="dt-loader-container">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Header -->
+            @Html.Partial("~/Views/Shared/temp_header.cshtml")
+            <!-- /header -->
+            <!-- Site Main -->
+            <main class="dt-main">
+                <!-- Sidebar -->
+                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
+                <!-- /sidebar -->
+                <!-- Custom Container -->
+                <div class="dt-container">
+
+                    <!-- Site Content Wrapper -->
+                    <div class="dt-content-wrapper">
+
+                        <!-- Site Content -->
+                        <div class="dt-content">
+
+                            <!-- Page Header -->
+                            <div class="dt-page__header">
+                                <!-- Back -->
+                                <a href="@Url.Action("Purchase_data", "Operations")" class="text-dark">
+                                    <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Back</span>
+                                </a>
+                                <!-- /back -->
+                            </div><br />
+                            <!-- /page header -->
+                            <!-- Grid Item -->
+                            <div class="row">
+
+                                <!-- Grid Item -->
+                                <div class="col-xl-12">
+
+                                    <!-- Module -->
+                                    <div class="dt-module">
+
+                                        <!-- Module Sidebar -->
+                                        <div class="dt-module__sidebar">
+
+
+                                            <!-- /sidebar header -->
+                                            <!-- Sidebar Menu -->
+                                            <div class="dt-module__sidebar-content pt-md-7 ps-custom-scrollbar">
+
+                                                <!-- Sidebar Navigation -->
+                                                <ul class="dt-module-side-nav">
+
+                                                    <!-- Menu Header -->
+                                                    <li class="dt-module-side-nav__header">
+                                                        <span class="dt-module-side-nav__text">QUICK MENU</span>
+                                                    </li>
+                                                    <!-- /menu header -->
+                                                    <!-- Menu Item -->
+                                                    <li class="dt-module-side-nav__item">
+                                                        <a href="javascript:void(0)" class="dt-module-side-nav__link" data-toggle="mdrawer"
+                                                           data-target="#drawer-search-bar">
+                                                            <i class="icon icon-price-list icon-fw icon-lg"></i>
+                                                            <span class="dt-module-side-nav__text">Sales History</span>
+                                                        </a>
+                                                    </li>
+                                                    <!-- /menu item -->
+                                                    <!-- Menu Item -->
+                                                    <li class="dt-module-side-nav__item">
+                                                        <a href="javascript:void(0)" class="dt-module-side-nav__link">
+                                                            <i class="icon icon-users icon-fw icon-lg"></i>
+                                                            <span class="dt-module-side-nav__text">Sales Reviews</span>
+                                                        </a>
+                                                    </li>
+                                                    <!-- /menu item -->
+                                                    <!-- Menu Header -->
+                                                    <li class="dt-module-side-nav__header">
+                                                        <span class="dt-module-side-nav__text">OTHER</span>
+                                                    </li>
+                                                    <!-- /menu header -->
+                                                    <!-- Menu Item -->
+                                                    <li class="dt-module-side-nav__item">
+                                                        <a href="javascript:void(0)" class="dt-module-side-nav__link">
+                                                            <span class="dt-module-side-nav__text">Print Resume</span>
+                                                        </a>
+                                                    </li>
+                                                    <!-- /menu item -->
+
+
+                                                </ul>
+                                                <!-- /sidebar navigation -->
+                                                <!-- Contacts -->
+                                                <div class="dt-contacts contacts-list">
+
+
+                                                </div>
+                                                <!-- contacts -->
+
+                                            </div>
+                                            <!-- /sidebar Menu -->
+                                            <!-- Sidebar Header -->
+                                            <div class="dt-module__sidebar-header">
+
+                                                <!-- App Quick Menu -->
+                                                <div class="quick-menu-list">
+
+                                                    <!-- Search Box -->
+                                                    <!-- /search box -->
+
+
+                                                    <a href="javascript:void(0)" class="quick-menu d-md-none" data-toggle="mdrawer"
+                                                       data-target="#drawer-search-bar">
+                                                        <i class="icon icon-price-list"></i>
+                                                    </a>
+
+                                                    <!-- Dropdown -->
+                                                    <!-- /dropdown -->
+                                                    <a href="javascript:void(0)" class="quick-menu d-md-none"
+                                                       data-toggle="msidebar-content"><i class="icon icon-menu"></i></a>
+                                                </div>
+                                                <!-- /app quick menu -->
+
+                                            </div>
+                                        </div>
+                                        <!-- /module sidebar -->
+                                        <!-- Module Container -->
+                                        <div class="dt-module__container">
+
+                                            <!-- Module Header -->
+                                            <div class="dt-module__header">
+
+
+                                                <!-- Title -->
+                                                <div class="mx-auto text-center">
+                                                    <h3 class="dt-module__title">Process flow for: BV002332</h3>
+                                                    <i class="icon icon-horizontal-more icon-xl"></i>
+                                                </div>
+                                                <!-- Title -->
+
+                                            </div>
+                                            <!-- /module header -->
+                                            <!-- Module Content -->
+                                            <div class="dt-module__content ps-custom-scrollbar">
+
+                                                <!-- Module Content Inner -->
+                                                <div class="dt-module__content-inner">
+
+                                                    <form>
+
+                                                        <!-- Text Area -->
+                                                        <div class="form-group d-flex">
+                                                            <i class="icon icon-forms-advanced mt-2 mr-1"></i>
+                                                            <textarea class="form-control border-0 shadow-none bg-focus"
+                                                                      rows="2"
+                                                                      placeholder="Comments"></textarea>
+                                                        </div>
+                                                        <!-- /text area -->
+
+                                                    </form>
+
+                                                    <div class="row">
+                                                        <h4 class="display-4">Initial Forecast</h4> <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                            <input id="icon-checkbox-3" type="checkbox" checked>
+                                                            <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-3">
+                                                                <span class="unchecked">
+                                                                    <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                </span>
+                                                                <span class="checked">
+                                                                    <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+
+                                                    <h5 class="card-subtitle mb-0">Source: MatrizCompras Database</h5>
+                                                    <table class="table" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>1</th>
+                                                                <th>2</th>
+                                                                <th>3</th>
+                                                                <th>4</th>
+                                                                <th>5</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>BASE LINE</td>
+                                                                <td>149.3</td>
+                                                                <td>129.3</td>
+                                                                <td>109.3</td>
+                                                                <td>199.3</td>
+                                                                <td>129.3</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>FORECAST</td>
+                                                                <td>133.3</td>
+                                                                <td>139.3</td>
+                                                                <td>149.3</td>
+                                                                <td>159.3</td>
+                                                                <td>129.3</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- Badges -->
+                                                    <!-- /badges -->
+                                                    <!-- Form -->
+                                                    <!-- /form -->
+                                                    <!-- Separator -->
+                                                    <hr class="my-7">
+                                                    <!-- /separator -->
+                                                    <div class="row">
+                                                        <h4 class="display-4">Purchases Forecast</h4> <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                            <input id="icon-checkbox-3" type="checkbox">
+                                                            <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-3">
+                                                                <span class="unchecked">
+                                                                    <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                </span>
+                                                                <span class="checked">
+                                                                    <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+
+                                                    <h5 class="card-subtitle mb-0">Source: Purchases Agents</h5>
+                                                    <table class="table" id="tablepurchaseforecast" style="width:100%">
+                                                        <thead>
+                                                            <tr>
+                                                                <th></th>
+                                                                <th>1</th>
+                                                                <th>2</th>
+                                                                <th>3</th>
+                                                                <th>4</th>
+                                                                <th>5</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr style="color:black;">
+                                                                <td>FORECAST</td>
+                                                                <td class="editMe edits1" style="padding: .25rem;">133.3</td>
+                                                                <td class="editMe edits2" style="padding: .25rem;">139.3</td>
+                                                                <td class="editMe edits3" style="padding: .25rem;">149.3</td>
+                                                                <td class="editMe edits4" style="padding: .25rem;">159.3</td>
+                                                                <td class="editMe edits5" style="padding: .25rem;">129.3</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <!-- Badges -->
+                                                    <!-- /badges -->
+                                                    <!-- Form -->
+                                                    <!-- /form -->
+                                                    <!-- Separator -->
+                                                    <hr class="my-7">
+                                                    <!-- /separator -->
+                                                    <div class="row">
+                                                        <h4 class="display-4">Sales Reps Forecast</h4> <span class="dt-checkbox dt-checkbox-icon dt-checkbox-only mr-4">
+                                                            <input id="icon-checkbox-3" type="checkbox">
+                                                            <label class="font-weight-light dt-checkbox-content" for="icon-checkbox-3">
+                                                                <span class="unchecked">
+                                                                    <i class="icon icon-circle-check-o icon-fw icon-1x text-light-gray"></i>
+                                                                </span>
+                                                                <span class="checked">
+                                                                    <i class="icon icon-circle-check-o icon-fw icon-1x text-success"></i>
+                                                                </span>
+                                                            </label>
+                                                        </span>
+                                                    </div>
+
+                                                    <h5 class="card-subtitle mb-0">Source: Sales Reviews</h5>
+                                                    <!-- Badges -->
+                                                    <div class="badge-group mb-5">
+                                                        <span class="badge bg-dark-blue text-white">Show</span>
+                                                        <span class="badge badge-danger">Edit</span>
+                                                    </div>
+
+
+                                                </div>
+                                                <!-- /module content inner -->
+
+                                            </div>
+                                            <!-- /module content -->
+                                            <!-- Comment Box -->
+                                            <!-- /comment box -->
+
+                                        </div>
+                                        <!-- /module container -->
+                                        <!-- Module Drawer -->
+                                        <div class="dt-module__drawer dt-drawer position-left">
+
+                                            <!-- Module Drawer Inner -->
+                                            <div class="dt-module__drawer-inner">
+
+                                                <div class="dt-module__drawer-header">
+                                                    <a href="javascript:void(0)" class="d-inline-block" data-dismiss="mdrawer">
+                                                        <i class="icon icon-arrow-long-left icon-2x mr-3"></i> <span class="align-middle">Back</span>
+                                                    </a>
+                                                </div>
+
+                                                <!-- Actionable Drawer -->
+                                                <div class="dt-actionable-drawer">
+
+                                                    <!-- Menu Bar -->
+                                                    <div class="dt-action-bar">
+
+                                                        <!-- Action Menu -->
+                                                        <ul class="dt-action-nav">
+
+                                                            <!-- Menu Item -->
+                                                            <!-- /menu item -->
+                                                            <!-- Menu Item -->
+                                                            <li class="dt-action-nav__item">
+                                                                <a href="javascript:void(0)" class="dt-action-nav__link"
+                                                                   data-switch="mdrawer" data-target="#drawer-search-bar">
+                                                                    <i class="icon icon-price-list icon-fw"></i>
+                                                                </a>
+                                                            </li>
+                                                            <!-- /menu item -->
+                                                            <!-- Menu Item -->
+                                                            <!-- /menu item -->
+
+                                                        </ul>
+                                                        <!-- /action menu -->
+
+                                                    </div>
+                                                    <!-- /menu bar -->
+                                                    <!-- Drawer Content Area -->
+                                                    <div class="dt-action-content-wrapper ps-custom-scrollbar">
+
+                                                        <div class="dt-action-content">
+                                                            <h4>Sales History</h4>
+                                                            <!-- Search -->
+                                                            <div class="dt-notification fade" id="drawer-search-bar">
+                                                                <table class="table" style="width:100%">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Sales Rep</th>
+                                                                            <th>1</th>
+                                                                            <th>2</th>
+                                                                            <th>3</th>
+                                                                            <th>4</th>
+                                                                            <th>5</th>
+                                                                            <th>6</th>
+                                                                            <th>AVG</th>
+                                                                            <th>%</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <tr>
+                                                                            <td>Nayeli Soriano</td>
+                                                                            <td>149.3</td>
+                                                                            <td>129.3</td>
+                                                                            <td>109.3</td>
+                                                                            <td>199.3</td>
+                                                                            <td>129.3</td>
+                                                                            <td>129.3</td>
+                                                                            <td>29.3</td>
+                                                                            <td>12.33</td>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <td>Veruuzko Rodriguez</td>
+                                                                            <td>133.3</td>
+                                                                            <td>139.3</td>
+                                                                            <td>149.3</td>
+                                                                            <td>159.3</td>
+                                                                            <td>129.3</td>
+                                                                            <td>129.3</td>
+                                                                            <td>39.3</td>
+                                                                            <td>32.33</td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+
+                                                            </div>
+                                                            <!-- /search -->
+                                                            <!-- /notification -->
+                                                            <!-- /messages -->
+
+                                                        </div>
+
+                                                    </div>
+                                                    <!-- /drawer content area -->
+
+                                                </div>
+                                                <!-- /actionable drawer -->
+
+                                            </div>
+                                            <!-- /module drawer inner -->
+
+                                        </div>
+                                        <!-- /module drawer -->
+
+                                    </div>
+                                    <!-- /module -->
+
+                                </div>
+                                <!-- /grid item -->
+
+                            </div>
+                            <!-- /grid item -->
+
+
+                        </div>
+                        <!-- /site content -->
+
+                    </div>
+                    <!-- /site content wrapper -->
+
+                </div>
+                <!-- /custom Container -->
+
+            </main>
+            <!-- /main -->
+            <!-- Footer -->
+            <footer class="dt-footer">
+                <div class="dt-container">
+                    Copyright Distribuidora Limena © 2019
+                </div>
+            </footer>
+            <!-- /footer -->
+
+        </div>
+    </div>
+    <!-- /root -->
+    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+    <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //Basic editor
+            var simpleEditor = new SimpleTableCellEditor("tablepurchaseforecast");
+
+            simpleEditor.SetEditableClass("editMe");
+
+            $('#tablepurchaseforecast').on("cell:edited", function (event) {
+                console.log(`'${event.oldValue}' changed to '${event.newValue}'`);
+
+                event.element.style.backgroundColor = "#ffeea5";
+            });
+        });
+
+
+            //var editor;
+            //$(document).ready(function () {
+
+            //    var table = $('#tablepurchaseforecast').DataTable({
+            //        paging: false,
+            //        searching: false,
+            //        drawCallback: function (settings) {
+            //            var api = this.api();
+
+            //            $('.editable', api.table().body())
+            //                .editable()
+            //                .off('hidden')
+            //                .on('hidden', function (e, reason) {
+            //                    if (reason === 'save') {
+            //                        $(this).closest('tr').find('.savebtn').show();
+            //                        //$(this).closest('td').attr('data-order', $(this).text());
+            //                        table.row($(this).closest('tr')).invalidate().draw(false);
+            //                    }
+            //                });
+            //        }
+            //    });
+
+            //});
+    </script>
+</body>
+</html>
+
+

@@ -1,0 +1,126 @@
+﻿@model List<LimenawebApp.Models.Inv_Project_products>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/temp_head.cshtml")
+
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="dt-loader-container">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Header -->
+            @Html.Partial("~/Views/Shared/temp_header.cshtml")
+            <!-- /header -->
+            <!-- Site Main -->
+            <main class="dt-main">
+                <!-- Sidebar -->
+                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
+                <!-- /sidebar -->
+                <!-- Custom Container -->
+                <div class="dt-container">
+
+                    <!-- Site Content Wrapper -->
+                    <div class="dt-content-wrapper">
+
+                        <!-- Site Content -->
+                        <div class="dt-content">
+
+                            <!-- Page Header -->
+                            <div class="dt-page__header">
+                                <ol class="breadcrumb" style="display:flow-root;">
+                                
+                                    <li class="breadcrumb-item float-left"><a href="@Url.Action("Binloc", "Inventory", new { id=ViewBag.project.ID_project})">Back</a></li>
+                                    <li class="breadcrumb-item float-right">Projects </li>
+                                    <li class="breadcrumb-item float-right">Inventory</li>
+
+
+
+                                </ol>
+                            </div>
+                            <!-- /page header -->
+                            <div class="dt-entry__header">
+
+                                <!-- Entry Heading -->
+                                <div class="dt-entry__heading">
+                                    <h3 class="dt-entry__title">Products Assigned</h3>
+                                </div>
+
+
+                            </div>
+                            <!-- Grid -->
+                            <div class="row">
+
+                                <table id="lstproducts" class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                          
+                                            <th><span class="text-muted">ITEMCODE</span></th>
+                                            <th><span class="text-muted">ITEMNAME</span></th>
+                                            <th><span class="text-muted">BIN LOC</span></th>
+                                            <th><span class="text-muted">ACTIONS</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model) {
+                                        <tr>
+                                         
+         
+                                            <td>@item.ItemCode</td>
+                                            <td>@item.ItemName</td>
+                                            <td>@item.Bin_locations</td>
+                                            <td><a href="@Url.Action("Binloc_taskproduct", "Inventory", new { idproj = ViewBag.project.ID_project, ItemCode=item.ItemCode, ItemName=item.ItemName})" class="btn btn-sm btn-primary">Add count</a></td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+
+                            </div>
+                            <!-- /grid -->
+
+                        </div>
+                        <!-- /site content -->
+
+                    </div>
+                    <!-- /site content wrapper -->
+
+                </div>
+                <!-- /custom Container -->
+
+            </main>
+            <!-- /main -->
+            <!-- Footer -->
+            @Html.Partial("~/Views/Shared/main_footer.cshtml")
+            <!-- /footer -->
+
+        </div>
+    </div>
+
+
+
+    <!-- /modal -->
+    <!-- /root -->
+    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+    <script>
+
+      
+
+    </script>
+</body>
+</html>

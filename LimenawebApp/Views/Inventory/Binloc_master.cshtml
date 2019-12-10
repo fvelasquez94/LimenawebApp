@@ -1,6 +1,7 @@
 ﻿@model IQueryable<LimenawebApp.Controllers.InventoryController.binlocationslist>
 @{
     Layout = null;
+    var existe = "";
 }
 
 <!DOCTYPE html>
@@ -83,7 +84,7 @@
                                                 <li class="nav-item">
                                                     <a class="nav-link active" data-toggle="tab" href="#home" role="tab"
                                                        aria-controls="home"
-                                                       aria-selected="true">New assignment</a>
+                                                       aria-selected="true">BinLoc Assignment</a>
                                                 </li>
                                                 <li class="nav-item">
                                                     <a class="nav-link" data-toggle="tab" href="#products" role="tab"
@@ -538,58 +539,245 @@
                                                 <div id="products" class="tab-pane">
                                                     <div class="row" id="productss">
                                                         <div class="col-xl-12">
-                                                            <div class="dt-card">
-                                                                <div class="dt-card__header mb-0">
+                                                            <!-- Tab Navigation -->
+                                                            <ul class="card-header-links nav nav-underline text-uppercase"
+                                                                role="tablist">
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link active" data-toggle="tab" href="#newassignment" role="tab"
+                                                                       aria-controls="home"
+                                                                       aria-selected="true">New assignment</a>
+                                                                </li>
+                                                                <li class="nav-item">
+                                                                    <a class="nav-link" data-toggle="tab" href="#historypro" role="tab"
+                                                                       aria-controls="products"
+                                                                       aria-selected="true">History</a>
+                                                                </li>
 
-                                                                    <!-- Card Heading -->
-                                                                    <div class="dt-card__heading">
-                                                                        <button type="button" id="btnDelHistory" class="btn btn-secondary btn-xs">Delete</button>
+                                                            </ul>
+                                                            <br /><br />
+                                                            <div class="tab-content">
+
+                                                                <!-- Tab Pane -->
+                                                                <div id="newassignment" class="tab-pane active">
+                                                                    <!-- Grid Item -->
+                                                                    <div class="row">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="dt-card">
+                                                                                <div class="dt-card__header mb-0">
+
+                                                                                </div>
+                                                                                <!-- Card Body -->
+                                                                                <!-- Card Body -->
+                                                                                            <div class="dt-card__body p-0">
+                                                                                                <!-- Content Area -->
+                                                                                                <div class="custom-post-title">
+                                                                                                    <div class=" mt-2">
+                                                                                                    <label>Vendor:</label>
+                                                                                                    <select style="width:100%" class="form-control" id="btnVendor">
+                                                                                                        <option>Select...</option>
+                                                                                                        @foreach (var itemc in ViewBag.lstVendor)
+    {
+                                                                                                        <option value="@itemc">@itemc</option>
+                                                                                                    
+}
+                                                                                                    </select>
+
+                                                                                                        <button type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="filter_clear()">Clear filters</button>
+
+                                                                                                    </div><hr />
+
+                                                                                                    <div id="mainbrands">
+
+                                                                                                        @foreach (var itemc in ViewBag.lstVendor)
+            {
+                                                                                            <div class="mt-2" id="@itemc">
+                                                                                                @foreach (var itemsc in ViewBag.lstBrands)
+                                                                                                            {
+                                                                                                                if (itemsc.category == itemc)
+                                                                                                                {
+                                                                                                                    if (existe == itemsc.name)
+                                                                                                                    {
+
+                                                                                                                    }
+                                                                                                                    else {
+                                                                                                                        existe = itemsc.name;
+                                                                                                <button id="brandbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-light form-pill brandbtnsl" onclick="brandfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+                                                                                                
+                                                                                                        }
+
+                                                                                                }
+
+}
+
+                                                                                            </div>}
+
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <br /><br />
+                                                                                                              <div class="col-sm-12 mb-3">
+                                                                            <label>Picker</label>
+                                                                            <div class="input-group">
+                                                                                <div class="input-group-prepend">
+                                                                                    <span class="input-group-text" id="inputGroupPrepend2">@@</span>
+                                                                                </div>
+                                                                                <select class="form-control" id="selPicker2">
+                                                                                    <option value="0">Select a picker</option>
+                                                                                    @foreach (var item in ViewBag.usuarios)
+                                                                                    {
+                                                                                        <option value="@item.ID_User">@item.Name @item.Lastname</option>
+                                                                                    }
 
 
-                                                                    </div>
-                                                                    <!-- /card tools -->
-                                                                    <div class="dt-card__tools">
-                                                                        <a href="#" data-toggle="modal" data-target="#composeModal" class="btn btn-shadow btn-default compose-btn btn-rounded">
-                                                                            <i class="icon icon-plus icon-fw mr-2"></i>New product
-                                                                        </a>
+                                                                                </select>
+                                                                            </div>
+                                                                        </div><br />
+                                                                                                <div class="table-responsive">
+                                                                                                    <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0" style="width:100%">
+                                                                                                        <thead>
+                                                                                                            <tr>
+                                                                                                                <th class="no-sort">
+                                                                                                     
+                                                                                                                    <div class="custom-control custom-checkbox ">
+                                                                                                                        <input type="checkbox" class="custom-control-input selectchkAll4" id="chk_all4" value="0">
+                                                                                                                        <label class="custom-control-label" for="chk_all4">
+                                                                                                                            ALL
+                                                                                                                        </label>
+                                                                                                                    </div>
+                                                                                                                </th>
+                                                                                                                <th>VENDOR</th>
+
+                                                                                                                <th>BRAND</th>
+
+                                                                                                                <th>PRODUCT</th>
+                                                                                                                <th hidden>id</th>
+
+
+
+
+
+                                                                                                            </tr>
+                                                                                                        </thead>
+                                                                                                        <tfoot>
+                                                                                                        </tfoot>
+                                                                                                        <tbody>
+                                                                                                            @foreach (var product in ViewBag.generalProducts)
+                {
+                                                                                            <tr>
+                                                                                                <td>
+                                                                                                    <div class="custom-control custom-checkbox ">
+                                                                                                        <input type="checkbox" class="custom-control-input valprod" data-ID="@product.id" data-description="@product.Product" id="chk_@product.id">
+                                                                                                        <label class="custom-control-label" for="chk_@product.id">
+
+                                                                                                        </label>
+                                                                                                    </div>
+                                                                                                </td>
+                                                                                                <td>@product.Vendor_Name</td> 
+                                                                                                <td>@product.Brand_Name.Replace("'", "")</td>
+
+                                                                                                <td>@product.Product</td>
+                                                                                                <td hidden>@product.id</td>
+
+                                                                                            </tr>
+}
+                                                                                                        </tbody>
+                                                                                                    </table>
+                                                                                               
+                                                                                                </div>
+                                                                                                <br />
+                                                                                                <button id="btn-saveproduct" class="btn btn-primary">SAVE</button>
+
+                                                                                            </div>
+                                                                                <!-- /card body -->
+                                                                                <!-- /card body -->
+
+                                                                            </div>
+                                                                        </div>
+
+
                                                                     </div>
                                                                 </div>
-                                                                <!-- Card Body -->
-                                                                <div class="dt-card__body p-0">
-                                                                    <div class="table-responsive">
-                                                                        <!-- Tables -->
-                                                                        <table id="productstable" class="table table-theme table-row v-middle" style="width:100%">
-                                                                            <thead>
-                                                                                <tr>
-                                                                                    <th class="no-sort">
-                                                                                        <label class="ui-check m-0 ">
-                                                                                            <input type="checkbox" class="selectchkAll3" id="chk_all3" value="0">
-                                                                                            <i></i>
-                                                                                        </label>
-                                                                                    </th>
 
-                                                                                    <th hidden><span class="text-muted">ID</span></th>
-                                                                                    <th><span class="text-muted">ITEMCODE</span></th>
-                                                                                    <th><span class="text-muted">ITEMNAME</span></th>
-                                                                                    <th><span class="text-muted">PICKER</span></th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody></tbody>
+                                                                <!-- Tab Pane -->
+                                                                <div id="historypro" class="tab-pane">
+                                                                    <!-- Grid Item -->
+                                                                    <div class="row" id="lolss">
+                                                                        <div class="col-xl-12">
+                                                                            <div class="dt-card">
+                                                                                <div class="dt-card__header mb-0">
 
-                                                                        </table>
+                                                                                    <!-- Card Heading -->
+                                                                                    <div class="dt-card__heading">
+                                                                                        <button type="button" id="btnDelProduct" class="btn btn-secondary btn-xs">Delete</button>
+                                                                                    </div>
+                                                                                    <!-- /card heading -->
+                                                                                    <!-- Card Tools -->
+                                                                                    <div class="dt-card__tools">
+
+
+                                                                                    </div>
+                                                                                    <!-- /card tools -->
+
+                                                                                </div><br /><br />
+                                                                                <!-- Card Body -->
+                                                                                <!-- Card Body -->
+                                                                                <div class="dt-card__body p-0">
+                                                                                    <div class="table-responsive">
+                                                                                        <!-- Tables -->
+                                                                                        <table id="productstable" class="table table-theme table-row v-middle" style="width:100%">
+                                                                                            <thead>
+                                                                                                <tr>
+                                                                                                    <th class="no-sort">
+                                                                                                        <label class="ui-check m-0 ">
+                                                                                                            <input type="checkbox" class="selectchkAll3" id="chk_all3" value="0">
+                                                                                                            <i></i>
+                                                                                                        </label>
+                                                                                                    </th>
+
+                                                                                                    <th hidden><span class="text-muted">ID</span></th>
+                                                                                                    <th><span class="text-muted">ITEMCODE</span></th>
+                                                                                                    <th><span class="text-muted">ITEMNAME</span></th>
+                                                                                                    <th><span class="text-muted">PICKER</span></th>
+                                                                                                </tr>
+                                                                                            </thead>
+                                                                                            <tbody>
+                                                                                                @foreach (var item in ViewBag.assignedproducts)
+                                        {
+                                                        <tr>
+                                                            <td>
+
+                                                                <input type="checkbox" value="0" class="selectchk3" id="chk_@item.ID_detail">
+                                                            </td>
+                                                            <td hidden>@item.ID_detail</td>
+                                                            <td>@item.ItemCode</td>
+                                                            <td>@item.ItemName</td>
+                                                            <td>@item.PickerName</td>
+                                                        </tr>
+}
+                                                                                            </tbody>
+
+                                                                                        </table>
+                                                                                    </div>
+
+                                                                                    <!-- /tables -->
+
+                                                                                </div>
+                                                                                <!-- /card body -->
+                                                                                <!-- /card body -->
+
+                                                                            </div>
+                                                                        </div>
+
                                                                     </div>
-
-                                                                    <!-- /tables -->
-
                                                                 </div>
-                                                                <!-- /card body -->
-
                                                             </div>
+
+
+
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <!-- /tab pane-->
-                                            </div>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /tab pane-->
+                                                        </div>
                                             <!-- /tab content -->
 
                                         </div>
@@ -626,83 +814,7 @@
 
         </div>
     </div>
-    <!-- Modal -->
-    <div class="modal fade contact-modal" id="composeModal" tabindex="-1" role="dialog" aria-hidden="true">
 
-        <!-- Modal Dialog -->
-        <div class="modal-dialog modal-lg" role="document">
-            <!-- Modal Content -->
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">
-                        New Product Assignment
-                    </h4>
-                    <a href="javascript:void(0)" class="close" data-dismiss="modal" aria-label="Close">
-                        <i class="icon icon-remove icon-fw icon-xl"></i>
-                    </a>
-                </div>
-                <!-- /modal header -->
-                <!-- Modal Body -->
-                <div class="modal-body">
-                    <div class="row no-gutters">
-
-                        <div class="col-lg-12 order-lg-1">
-
-                            <div class="col-md-12">
-                                <label>Picker</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text" id="inputGroupPrepend2">@@</span>
-                                    </div>
-                                    <select class="form-control" id="selPicker">
-                                        <option value="0">Select a picker</option>
-                                        @foreach (var item in ViewBag.usuarios)
-                {
-                        <option value="@item.ID_User">@item.Name @item.Lastname</option>
-}
-
-
-                                    </select>
-                                </div>
-                            </div>
-                            <br />
-
-                            <div class="col-md-12">
-                                <label>Select a Product</label>
-                                <div class="input-group">
-
-                                    <select id="optionsProduct" class="form-control" style="width:100%;">
-                                        @foreach (var item in ViewBag.generalproducts)
-        {
-                                <option value="@item.id">@item.Product</option>
-}
-                                    </select>
-                                </div>
-                            </div>
-
-
-
-
-                        </div>
-                    </div>
-                    
-                </div>
-                <!-- /modal body -->
-                <!-- Modal Footer -->
-                <div class="modal-footer">
-                    <a class="btn btn-primary" id="btn-saveproduct" href="javascript:void(0)" data-dismiss="modal">
-                        <span>SAVE</span>
-                    </a>
-                </div>
-                <!-- /modal footer -->
-            </div>
-            <!-- /modal content -->
-        </div>
-        <!-- /modal dialog -->
-
-    </div>
-    <!-- /modal -->
     <!-- /root -->
     @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
     <script>
@@ -854,10 +966,106 @@ function filterMasterTable(tablesel, warehouseFrom, aisleFrom, positionFrom, lev
                     "orderable": false,
                 }]
             });
+            table3 = $('#productstable').DataTable({
+                "order": [],
+                "search": { regex: true },
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
 
 
             $("#optionsProduct").select2();
+            $("#btnVendor").select2();
+
+
+            table6 = $('#data_tableEditor').DataTable({
+                "order": [[2, "asc"]],
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }]
+            });
+
+            //filters
+
+            $("#mainbrands > *").css('display', 'none')
+
+
+            $('.btnsl').on('click', function () {
+                $('.btnsl').removeClass('brandsbtnsl');
+                $(this).addClass('brandsbtnsl');
+            });
+
+            $('.brandbtnsl').on('click', function () {
+                $('.brandbtnsl').removeClass('btnsubsel');
+                $(this).addClass('btnsubsel');
+            });
+
         });
+
+        //function filter(clicked_id) {
+        //    //var table6 = $('#data_tableEditor').DataTable();
+
+        //    //table.columns(4).search("").draw();
+        //    table6.columns(1).search("" + clicked_id + "", true, false, true).draw();
+        //    $("#mainbrands > *").css('display', 'none')
+        //    var x = document.getElementById(clicked_id);
+        //    if (x.style.display === "none") {
+        //        x.style.display = "block";
+        //    } else {
+        //        x.style.display = "none";
+        //    }
+
+        //    $('html, body').animate({ scrollTop: $("#data_tableEditor").offset().top }, 'slow');
+        //    $('input.valprod*', table6.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+        //    $('#chk_all4').prop("checked", false);
+ 
+        //}
+
+        $('#btnVendor').on('change', function () {
+            table6.columns(1).search("" + this.value + "", true, false, true).draw();
+            $("#mainbrands > *").css('display', 'none')
+            var x = document.getElementById(this.value);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+
+            //$('html, body').animate({ scrollTop: $("#data_tableEditor").offset().top }, 'slow');
+            $('input.valprod*', table6.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+            $('#chk_all4').prop("checked", false);
+        });
+
+
+
+        function filter_clear() {
+            //var table6 = $('#data_tableEditor').DataTable();
+            table6.columns(1).search("").draw();
+            table6.columns(2).search("").draw();
+
+            $("#mainbrands > *").css('display', 'none')
+            $('.btnsl').removeClass('brandsbtnsl');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+        function brandfilter(clicked_id) {
+            //var table6 = $('#data_tableEditor').DataTable();
+            table6.columns(2).search("" + clicked_id + "", true, false, true).draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+            $('input.valprod*', table6.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+            $('#chk_all4').prop("checked", false);
+        }
+
+        function brandfilter_clear() {
+            //var table6 = $('#data_tableEditor').DataTable();
+            table6.columns(2).search("").draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+
 
              $('#chk_all').change(function () {
             if (this.checked) {
@@ -884,6 +1092,32 @@ function filterMasterTable(tablesel, warehouseFrom, aisleFrom, positionFrom, lev
                     $('input.selectchk2*', table2.rows({ filter: 'applied' }).nodes()).prop("checked", false);
 
                 }
+
+        });
+
+        $('#chk_all3').change(function () {
+            if (this.checked) {
+                //table.$("input.selectchk").prop("checked", true);
+                $('input.selectchk3', table3.rows({ filter: 'applied' }).nodes()).prop("checked", true);
+
+            } else {
+                //table.$("input.selectchk").prop("checked", false);
+                $('input.selectchk3*', table3.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+
+            }
+
+        });
+
+        $('#chk_all4').change(function () {
+            if (this.checked) {
+                //table.$("input.selectchk").prop("checked", true);
+                $('input.valprod', table6.rows({ filter: 'applied' }).nodes()).prop("checked", true);
+
+            } else {
+                //table.$("input.selectchk").prop("checked", false);
+                $('input.valprod*', table6.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+
+            }
 
         });
 
@@ -1947,6 +2181,150 @@ function filterMasterTable(tablesel, warehouseFrom, aisleFrom, positionFrom, lev
 
         });
 
+                $("#btnDelProduct").click(function () {
+
+            var times = '@ViewBag.count';
+            var project = '@ViewBag.project.ID_project';
+
+
+                swal.fire({
+                    title: 'Delete',
+                    text: "Are you sure you want to delete selected products?",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        //Guardamos
+
+                        $("#btnDelProduct").attr("disabled", true);
+
+
+                        // var oTable = $('#htmlgrid').dataTable();
+                        //console.log(oTable.fnGetData());
+
+                        oSettings2 = table3.settings();
+                        oSettings2[0]._iDisplayLength = oSettings2[0].fnRecordsTotal();
+
+                        table3.search('').columns().search('').draw();
+
+
+                        var data2;
+                        data2 = Array();
+
+
+
+                        $("#productstable tr").each(function (i, v) {
+                            data2[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data2[i][ii] = true;
+                                    } else {
+                                        data2[i][ii] = false;
+                                    }
+                                }else {
+                                    data2[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+
+                        var objects2 = [];
+                        for (var i = 0, len = data2.length; i < len; i++) {
+
+                            if (i != 0) {
+                                if (data2[i][0] == true) {
+                                    objects2.push({
+                                        idtask: data2[i][1],
+
+                                    });
+                                }
+
+                            }
+
+                        }
+
+
+
+                        if (objects2.length > 0) {
+                            oSettings2[0]._iDisplayLength = 10;
+                            $.ajax
+                            ({
+                                    url: '/Inventory/Delete_Product',
+                                type: 'POST',
+                                    data: { 'objects': objects2, 'maxcounts': times, 'idproj':project },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        var toast = swal.mixin({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+
+                                        toast({
+                                            type: 'success',
+                                            title: 'Data deleted successfully.'
+                                        })
+
+
+                                        setTimeout(
+                                            function () {
+                                                window.location.reload(true)
+                                            }, 2000);
+
+                                    } else {
+
+                                    }
+                                    $("#btnDelProduct").attr("disabled", false);
+
+                                },
+                                error: function () {
+                                    $("#btnDelProduct").attr("disabled", false);
+
+                                },
+                            });
+
+                        } else {
+                            $("#btnDelProduct").attr("disabled", false);
+
+                            var toast = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toast({
+                                type: 'info',
+                                title: 'Please select at least one record'
+                            });
+
+                            oSettings2 = table3.settings();
+                            oSettings2[0]._iDisplayLength = 10;
+                            table3.search('').columns().search('').draw();
+
+                        }
+                        //document.getElementById("loader").style.display = "block";
+
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+
+
+
+        });
+
+
+
 
         $("#btn-saveproduct").click(function () {
 
@@ -1965,53 +2343,142 @@ function filterMasterTable(tablesel, warehouseFrom, aisleFrom, positionFrom, lev
                 }).then(function (result) {
                     if (result.value) {
                         //Guardamos
+                        var pickerID = $("#selPicker2").val();
+                        var pickerName = $("#selPicker2 option:selected").text();
+
+                        if (pickerID=='0') {
+                            var toast = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toast({
+                                type: 'info',
+                                title: 'Select a Picker'
+                            });
+
+
+                        } else {
 
                         $("#btn-saveproduct").attr("disabled", true);
-                        var productID = $("#optionsProduct").val();
-                        var productName = $("#optionsProduct option:selected").text();
-                        var pickerID = $("#selPicker").val();
-                        var pickerName = $("#selPicker option:selected").text();
+                    
 
 
 
-                            $.ajax
-                            ({
-                                    url: '/Inventory/SaveProduct',
-                                type: 'POST',
-                                    data: { 'ItemCode': productID, 'ItemName': productName, 'ID_Picker': pickerID, 'Picker': pickerName,'actualcount': times, 'idproj':project },
-                                success: function (result) {
-
-                                    if (result == "SUCCESS") {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
-
-                                        toast({
-                                            type: 'success',
-                                            title: 'Data saved successfully.'
-                                        })
 
 
-                                        setTimeout(
-                                            function () {
-                                                var url = '@Url.Action("Binloc_master", "Inventory", new { idproj = ViewBag.project.ID_project, count=ViewBag.count })';
-                                                url = url.replace('amp;', '');
-                                                 window.location.href = url;
-                                            }, 2000);
+                        oSettings2 = table6.settings();
+                        oSettings2[0]._iDisplayLength = oSettings2[0].fnRecordsTotal();
 
+                        table6.search('').columns().search('').draw();
+
+
+                        var data2;
+                        data2 = Array();
+
+
+
+                        $("#data_tableEditor tr").each(function (i, v) {
+                            data2[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data2[i][ii] = true;
                                     } else {
-
+                                        data2[i][ii] = false;
                                     }
-                                    $("#btn-saveproduct").attr("disabled", false);
+                                } else {
+                                    data2[i][ii] = $(this).text();
+                                }
 
-                                },
-                                error: function () {
-                                    $("#btn-saveproduct").attr("disabled", false);
-                                },
                             });
+                        })
+
+                        var objects2 = [];
+                        for (var i = 0, len = data2.length; i < len; i++) {
+
+                            if (i != 0) {
+                                if (data2[i][0] == true) {
+                                    objects2.push({
+                                        ItemCode: data2[i][4],
+                                        ItemName: data2[i][3],
+
+                                    });
+                                }
+
+                            }
+
+                        }
+
+
+
+
+                        if (objects2.length > 0) {
+
+                                oSettings2[0]._iDisplayLength = 10;
+                            $.ajax
+                                ({
+                                    url: '/Inventory/SaveProduct',
+                                    type: 'POST',
+                                    data: { 'objects': objects2, 'ID_Picker': pickerID, 'pickerName': pickerName, 'actualcount': times, 'idproj': project },
+                                    success: function (result) {
+
+                                        if (result == "SUCCESS") {
+                                            var toast = swal.mixin({
+                                                toast: true,
+                                                position: 'top-end',
+                                                showConfirmButton: false,
+                                                timer: 3000
+                                            });
+
+                                            toast({
+                                                type: 'success',
+                                                title: 'Data saved successfully.'
+                                            })
+
+
+                                            setTimeout(
+                                                function () {
+                                                    var url = '@Url.Action("Binloc_master", "Inventory", new { idproj = ViewBag.project.ID_project, count=ViewBag.count })';
+                                                    url = url.replace('amp;', '');
+                                                    window.location.href = url;
+                                                }, 2000);
+
+                                        } else {
+
+                                        }
+                                        $("#btn-saveproduct").attr("disabled", false);
+
+                                    },
+                                    error: function () {
+                                        $("#btn-saveproduct").attr("disabled", false);
+                                    },
+                                });
+                            
+
+                        }else {
+                                $("#btn-saveproduct").attr("disabled", false);
+
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'info',
+                                    title: 'Please select at least one record'
+                                });
+
+                                oSettings2 = table6.settings();
+                                oSettings2[0]._iDisplayLength = 10;
+                                table6.search('').columns().search('').draw();
+                            oSettings2[0]._iDisplayLength = 10;
+                            }
+                        }
 
                     } else if (result.dismiss == 'cancel') {
 

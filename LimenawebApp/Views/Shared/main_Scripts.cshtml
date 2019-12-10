@@ -33,9 +33,15 @@
 <script src="~/Content/main/node_modules/datatables.net/js/jquery.dataTables.js"></script>
 <script src="~/Content/main/node_modules/datatables.net-bs4/js/dataTables.bootstrap4.js"></script>
 <script src="~/Content/main/assets/js/custom/data-table.js"></script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
 <!--select2-->
 <script src="~/Content/appcontent/assets/vendor/select2/js/select2.full.js"></script>
 <script src="~/Content/appcontent/assets/vendor/js-init/bootstrap-number-input.js"></script>
+<!--Custom range date-->
+<script type="text/javascript" src="~/Content/appcontent/assets/vendor/calendarrangepicker/js/moment.min.js"></script>
+<script type="text/javascript" src="~/Content/appcontent/assets/vendor/calendarrangepicker/js/daterangepicker.min.js"></script>
 
 <!--FOR MENU-->
 <script>
@@ -86,23 +92,31 @@
             });
         }
         if (element == "Operations") {
-            document.getElementById("home_menuOper").style.display = "block";
+            //document.getElementById("home_menuOper").style.display = "block";
             document.getElementById("oper_menu").style.display = "block";
 
             roles.forEach(function (elementrol) {
                 if (elementrol == "Planning") {
                     document.getElementById("invo1_submenu").style.display = "block";
                     document.getElementById("reportop1_submenu").style.display = "block";
+                    document.getElementById("reportsOps").style.display = "block";
+                    document.getElementById("reportop1_submenu").style.display = "block";
+                    document.getElementById("InvoicesOps").style.display = "block";
                 }
                 if (elementrol == "Quality Control") {
                     document.getElementById("invo2_submenu").style.display = "block";
+                    document.getElementById("InvoicesOps").style.display = "block";
                 }
                 if (elementrol == "SO Print") {
+
                     document.getElementById("invo3_submenu").style.display = "block";
+                    document.getElementById("InvoicesOps").style.display = "block";
 
                 }
                 if (elementrol == "Purchases") {
+                    document.getElementById("purchasesOps").style.display = "block";
                     document.getElementById("operpur_submenu").style.display = "block";
+                    document.getElementById("operpur2_submenu").style.display = "block";
                 }
             });
         }

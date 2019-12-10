@@ -242,9 +242,7 @@
                 <li class="nav-item" id="home_menuCustomers" style="display:none">
                     <a class="nav-link" href="javascript:void(0)">Home</a>
                 </li>
-                <li class="nav-item" id="home_menuOper" style="display:none">
-                    <a class="nav-link" href="javascript:void(0)">Home</a>
-                </li>
+
                 <li class="nav-item" id="home_menuInventory" style="display:none">
                     <a class="nav-link" href="@Url.Action("Dashboard_Inventory", "Main")">Home</a>
                 </li>
@@ -391,13 +389,19 @@
                     <!-- Sub-menu -->
                     <ul class="sub-menu">
                         <li class="nav-item">
+                            <a href="@Url.Action("Dashboard_OperationsPurchases", "Main")" class="nav-link">
+                                <i class="icon icon-dashboard icon-fw icon-xl"></i>
+                                <span class="nav-text">Dashboard</span>
+                            </a>
+                        </li>
+                        <li class="nav-item" id="InvoicesOps" style="display:none">
                             <!-- Heading -->
                             <h3 class="menu-heading">Invoices</h3>
                             <!-- /heading -->
                             <!-- Menus -->
                             <ul class="nav-item__inner">
                                 <li class="nav-item" id="invo1_submenu" style="display:none">
-                                    <a href="page-blank.html?menu=affiliate-marketing" class="nav-link">
+                                    <a href="@Url.Action("Planning", "Invoices")" class="nav-link">
                                         <i class="icon icon-refer icon-fw icon-xl"></i>
                                         <span class="nav-text">Planning</span>
                                     </a>
@@ -410,7 +414,7 @@
                                     </a>
                                 </li>
                                 <li class="nav-item" id="invo3_submenu" style="display:none">
-                                    <a href="page-blank.html?menu=traffic" class="nav-link">
+                                    <a href="@Url.Action("OpenSalesOrders", "Invoices")" class="nav-link">
                                         <i class="icon icon-traffic icon-fw icon-xl"></i>
                                         <span class="nav-text">Open Sales Orders</span>
                                     </a>
@@ -420,22 +424,24 @@
                             <!-- /menus -->
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" id="purchasesOps" style="display:none;">
                             <!-- Heading -->
                             <h3 class="menu-heading">Purchases</h3>
                             <!-- /heading -->
                             <!-- Menus -->
+
                             <ul class="nav-item__inner">
+
                                 <li class="nav-item" id="operpur_submenu" style="display:none">
-                                    <a href="page-blank.html?menu=shopping" class="nav-link">
+                                    <a href="@Url.Action("Purchase_data", "Operations")" class="nav-link">
                                         <i class="icon icon-shopping-cart icon-fw icon-xl"></i>
                                         <span class="nav-text">Data Center</span>
                                     </a>
                                 </li>
 
                                 <li class="nav-item" id="operpur2_submenu" style="display:none">
-                                    <a href="page-blank.html?menu=wallet" class="nav-link">
-                                        <i class="icon icon-revenue icon-fw icon-xl"></i>
+                                    <a href="@Url.Action("ProductCatalog", "Operations")" class="nav-link">
+                                        <i class="icon icon-assignment icon-fw icon-xl"></i>
                                         <span class="nav-text">Product Catalog</span>
                                     </a>
                                 </li>
@@ -443,15 +449,15 @@
                             <!-- /menus -->
                         </li>
 
-                        <li class="nav-item">
+                        <li class="nav-item" id="reportsOps" style="display:none;">
                             <!-- Heading -->
                             <h3 class="menu-heading">Reports</h3>
                             <!-- /heading -->
                             <!-- Menus -->
                             <ul class="nav-item__inner">
                                 <li class="nav-item" id="reportop1_submenu" style="display:none">
-                                    <a href="page-blank.html?menu=gallery" class="nav-link">
-                                        <i class="icon icon-camera icon-fw icon-xl"></i>
+                                    <a href="@Url.Action("Routes_Report","Invoices")" class="nav-link">
+                                        <i class="icon icon-maps icon-fw icon-xl"></i>
                                         <span class="nav-text">Routes</span>
                                     </a>
                                 </li>

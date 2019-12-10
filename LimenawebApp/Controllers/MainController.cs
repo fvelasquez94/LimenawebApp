@@ -48,7 +48,7 @@ namespace LimenawebApp.Controllers
 
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
-                var showSurvey = 1;
+                var showSurvey = 0;
                 int isAdmin = 0;
                 if (showSurvey==1) {
 
@@ -410,7 +410,39 @@ namespace LimenawebApp.Controllers
             }
 
         }
+        public ActionResult Dashboard_OperationsPurchases()
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Home";
+                ViewData["Page"] = "Inventory";
+                ViewBag.menunameid = "home_menuInventory";
+                ViewBag.submenunameid = "";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
 
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
 
     }
 }

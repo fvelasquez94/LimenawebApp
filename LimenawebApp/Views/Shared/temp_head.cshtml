@@ -29,29 +29,32 @@
 <!-- Data table stylesheet -->
 <link href="~/Content/main/node_modules/datatables.net-bs4/css/dataTables.bootstrap4.css" rel="stylesheet"><!--select2-->
 <link href="~/Content/appcontent/assets/vendor/select2/css/select2.css" rel="stylesheet">
-<style>
-        @@media (max-width: 575.98px) {
-            .dt-module__content {
-                height:500px !important;
-            }
-        }
-        @@media (min-width: 768px) {
-            .dt-module__container {
-                max-width:100%;
-                flex: 1 0 auto;
-                -ms-flex: 1 0 auto;
-                display: -ms-flexbox;
-                display: flex;
-                -ms-flex-direction: column;
-                flex-direction: column;
-            }
-        }
-        @@media (max-width: 991.98px){
-        .dt-navbar>.nav-item:nth-last-of-type(2) .sub-menu {
-        left: 0 !important;
-        right: 0;
-    
-        }
+<link rel="stylesheet" type="text/css" href="~/Content/appcontent/assets/vendor/calendarrangepicker/css/daterangepicker.css" />
 
+
+<style>
+    @@media (max-width: 575.98px) {
+        .dt-module__content {
+            height: 500px !important;
         }
+    }
+
+    @@media (min-width: 768px) {
+        .dt-module__container {
+            max-width: 100%;
+            flex: 1 0 auto;
+            -ms-flex: 1 0 auto;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-direction: column;
+            flex-direction: column;
+        }
+    }
+
+    @@media (max-width: 991.98px) {
+        .dt-navbar > .nav-item:nth-last-of-type(2) .sub-menu {
+            left: 0 !important;
+            right: 0;
+        }
+    }
 </style>

@@ -80,11 +80,22 @@ namespace LimenawebApp.Controllers
                 else {
              
                     var binloc = dblim.Inv_Projects_BinLoc.Where(c => c.ID_userAssigned== activeuser.ID_User).ToList();
-
+                    
                     var projects = binloc.Select(c => c.ID_project).Distinct().ToArray();
 
                     lstprojects = dblim.Inv_Projects.Where(c => projects.Contains(c.ID_project)).ToList();
-                    
+
+                    //Verificamos si hay tambien proyectos asignados solo por productos
+                    var binlocProducts = dblim.Inv_Project_products.Where(c => c.ID_Picker == activeuser.ID_User && !projects.Contains(c.ID_project)).Select(c=>c.ID_project).Distinct().ToArray();
+
+                    if (binlocProducts.Length > 0) {
+                        var proj = dblim.Inv_Projects.Where(d => binlocProducts.Contains(d.ID_project)).ToList();
+
+                        foreach (var item in proj) {
+                            lstprojects.Add(item);
+                        }
+                    }
+
                 }
                 ViewBag.isadminandticker = adminandpicker;
                 ViewBag.cuenta = cuenta;
@@ -340,6 +351,14 @@ namespace LimenawebApp.Controllers
             public int idtask { get; set; }
 
         }
+
+        public class productsToAdd
+
+        {
+            public string ItemCode { get; set; }
+            public string ItemName { get; set; }
+
+        }
         [HttpPost]
         public ActionResult Delete_Details(List<taskTodelete> objects, int maxcounts, int idproj)
         {
@@ -368,6 +387,49 @@ namespace LimenawebApp.Controllers
 
 
                     
+
+                ttresult = "SUCCESS";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+        [HttpPost]
+        public ActionResult Delete_Product(List<taskTodelete> objects, int maxcounts, int idproj)
+        {
+            string ttresult = "";
+            try
+            {
+
+
+                try
+                {
+
+                    var arr = objects.Select(c => c.idtask).ToArray();
+
+                    var listtodelete = dblim.Inv_Project_products.Where(c => arr.Contains(c.ID_detail)).ToList();
+                    dblim.BulkDelete(listtodelete);
+
+
+
+                }
+                catch (Exception ex)
+                {
+                    ttresult = "ERROR SAVING DATA: " + ex.Message;
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+
+
 
                 ttresult = "SUCCESS";
                 return Json(ttresult, JsonRequestBehavior.AllowGet);
@@ -565,7 +627,7 @@ namespace LimenawebApp.Controllers
 
 
         [HttpPost]
-        public ActionResult SaveProduct(string ItemCode, string ItemName, int ID_Picker, string pickerName, int idproj, int actualcount)
+        public ActionResult SaveProduct(List<productsToAdd> objects, int ID_Picker, string pickerName, int idproj, int actualcount)
         {
             string ttresult = "";
             try
@@ -577,9 +639,24 @@ namespace LimenawebApp.Controllers
                     var usuario = (from a in dblim.Sys_Users where (a.ID_User == activeuser.ID_User) select a).FirstOrDefault();
                     var project = dblim.Inv_Projects.Where(f => f.ID_project == idproj).FirstOrDefault();
 
+                    List<Inv_Project_products> listtoupload = new List<Inv_Project_products>();
 
-                        dblim.Entry(project).State = EntityState.Modified;
-                        dblim.SaveChanges();
+                    foreach (var item in objects) {
+                        Inv_Project_products newAssignment = new Inv_Project_products();
+                        newAssignment.ItemCode = item.ItemCode;
+                        newAssignment.ItemName = item.ItemName;
+                        newAssignment.ID_Picker = ID_Picker;
+                        newAssignment.PickerName = pickerName;
+                        newAssignment.ID_project = idproj;
+                        newAssignment.count = actualcount;
+                        newAssignment.Used = false;
+                        newAssignment.Bin_locations = "";
+
+                        listtoupload.Add(newAssignment);
+
+                    }
+
+                        dblim.BulkInsert(listtoupload);
 
                     
 
@@ -656,8 +733,18 @@ namespace LimenawebApp.Controllers
 
                 ViewBag.count = count;
 
-                var generalProducts = (from a in dlipro.BI_Dim_Products select a).ToList();
+                var generalProducts = (from a in dlipro.BI_Dim_Products where (a.Vendor_Name != null && a.Brand_Name !=null) select a).ToList();
                 ViewBag.generalProducts = generalProducts;
+
+
+                var Vendor = (from f in generalProducts where (f.Vendor_Name !=null) select f.Vendor_Name).Distinct().OrderBy(c => c).ToList();
+                ViewBag.lstVendor = Vendor;
+
+                var lstBrands = (from f in generalProducts select new MyObj_SubCat { id = f.id_brand, name = f.Brand_Name.Replace("'", ""), category = f.Vendor_Name }).OrderBy(c => c.name).Distinct().ToList();
+                ViewBag.lstBrands = lstBrands;
+
+                var assignedproducts = (from re in dblim.Inv_Project_products where (re.ID_project == idproj && re.count == count) select re).ToList();
+                ViewBag.assignedproducts = assignedproducts;
 
                 return View(lstBinLocations);
 
@@ -974,7 +1061,7 @@ namespace LimenawebApp.Controllers
                 ViewBag.project = project;
 
 
-                var products = (from a in dlipro.BI_Dim_Products  select a);
+                var products = (from a in dlipro.BI_Dim_Products where (a.id_brand != 0) select a);
 
                 //var arraypro = products.Select(c => c.id).ToArray();
 
@@ -1005,8 +1092,99 @@ namespace LimenawebApp.Controllers
             }
         }
 
+        public ActionResult Binloc_taskproduct(int idproj, string ItemCode, string ItemName)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Inventory";
+                ViewData["Page"] = "Projects";
+                ViewBag.menunameid = "inventory_menu";
+                ViewBag.submenunameid = "stock_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                var project = dblim.Inv_Projects.Where(f => f.ID_project == idproj).FirstOrDefault();
+                ViewBag.project = project;
 
 
+                var binlocexist = dblim.Inv_Projects_BinLoc.Where(c => c.ID_project == idproj).Select(c => c.Bin_location).ToArray();
+
+
+                var lstBinLocations = dlipro.OBIN.Where(a => !a.SL1Code.Contains("SYSTEM-BIN-LOCATION") && !binlocexist.Contains(a.BinCode) && !a.SL1Code.Contains("ST")).Select(c => c.BinCode).Distinct().ToList();
+      
+                ViewBag.binloclst = lstBinLocations;
+
+                ViewBag.ItemName = ItemName;
+                ViewBag.ItemCode = ItemCode;
+
+                var actualcount = dblim.Inv_Project_products.Where(c => c.ID_project == idproj && c.ItemCode == ItemCode && c.ID_Picker == activeuser.ID_User).FirstOrDefault();
+                ViewBag.actualcount = actualcount.count;
+
+
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+        public ActionResult Binloc_lstproduct(int idproj)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Inventory";
+                ViewData["Page"] = "Projects";
+                ViewBag.menunameid = "inventory_menu";
+                ViewBag.submenunameid = "stock_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                var project = dblim.Inv_Projects.Where(f => f.ID_project == idproj).FirstOrDefault();
+                ViewBag.project = project;
+
+                var products = dblim.Inv_Project_products.Where(d => d.ID_project == idproj && d.ID_Picker == activeuser.ID_User).ToList();
+
+
+
+
+                return View(products);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
         public ActionResult Binloc_tasks(int idproj,int idtask=0, int idbin=0)
         {
             if (generalClass.checkSession())
@@ -1541,7 +1719,215 @@ namespace LimenawebApp.Controllers
 
         }
 
+        public ActionResult SaveandExit_product(string idproj, int conteo, string aisle, string ItemCode, string ItemName, string seluom1, int seluom1Code, int seluom1Quantity, string seluom2, int seluom2Code, int seluom2Quantity, string seluom3, int seluom3Code, int seluom3Quantity, string seluom4, int seluom4Code, int seluom4Quantity, string comment)
+        {
+            try
+            {
+                if (generalClass.checkSession())
+                {
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                    if (idproj != "")
+                    {
+                        var projid = Convert.ToInt32(idproj);
+                        var projss = (from a in dblim.Inv_Projects where (a.ID_project == projid) select a).FirstOrDefault();
 
+
+                        try
+                        {
+                            var projprod = dblim.Inv_Project_products.Where(c => c.ID_project == projid && c.ItemCode == ItemCode && c.ID_Picker == activeuser.ID_User).FirstOrDefault();
+                            List<string> TagIds = projprod.Bin_locations.Split(',').ToList();
+                            TagIds.Add(aisle);
+                            if (projprod.Bin_locations == "") {
+                                TagIds.RemoveAt(0);
+                            }
+                    
+                            string joined = string.Join(",", TagIds);
+
+                   
+                            projprod.Bin_locations = joined;
+                            dblim.Entry(projprod).State = EntityState.Modified;
+                            dblim.SaveChanges();
+
+                        }
+                        catch {
+
+                        }
+
+                        Inv_Projects_BinLoc items = new Inv_Projects_BinLoc();
+                        Inv_Projects_Task bintask = new Inv_Projects_Task();
+                        var lstBinLocations = dlipro.OBIN.Where(a => a.BinCode==aisle).FirstOrDefault();
+
+                        if (lstBinLocations == null)//NO APLICA O GENERICO
+                        {
+                            items.Bin_location = "01PRO_" + aisle;
+                            items.Warehouse = "01";
+                            items.Aisle = "A";
+                            items.Position = "NA";
+                            items.Levelpst = "NA";
+                            items.Pallet_position = "NA";
+                            items.Area = "NA";
+                            items.Type = "NA";
+                            items.Internal_sort = 9999;
+
+                        }
+                        else {
+                            items.Bin_location = lstBinLocations.BinCode;
+                            items.Aisle = lstBinLocations.SL1Code;
+                            items.Position = lstBinLocations.SL2Code;
+                            items.Levelpst = lstBinLocations.SL3Code;
+                            items.Pallet_position = lstBinLocations.SL4Code;
+                            items.Area = lstBinLocations.Attr2Val;
+                            items.Type = lstBinLocations.Attr1Val;
+                            items.Internal_sort = Convert.ToInt32(lstBinLocations.Attr3Val);
+                            
+                        }
+
+                       
+
+                        items.Bin_IDSAP = 0;
+                        items.Count = projss.Max_counts;//max conteo
+                   
+                        items.Warehouse = "01";
+
+                        items.creation_date = DateTime.UtcNow;
+                        items.ID_userCreate = activeuser.ID_User;
+                        items.UserNameCreate = activeuser.Name.ToUpper() + " " + activeuser.Lastname.ToUpper();
+                        items.end_date = DateTime.UtcNow;
+                        items.Actual_counts = conteo; //conteo seleccionado por usuario
+                        items.ID_status = 0;
+                        items.isfinished = false;
+                        items.comments = "";
+                        items.ID_project = projss.ID_project;
+                        items.ID_empresa = activeuser.ID_Company;
+                        items.Error = false;
+                        items.MensajeError = "";
+                        items.OnSAP = false;
+                        items.ID_userAssigned = activeuser.ID_User;
+                        items.UserNameAssigned = activeuser.Name.ToUpper() + " " + activeuser.Lastname.ToUpper();
+                        dblim.Inv_Projects_BinLoc.Add(items);
+                        dblim.SaveChanges();
+
+
+
+                        Inv_Projects_Task newtask = new Inv_Projects_Task();
+                        newtask.ID_binloc = items.ID_binloc;
+                        newtask.Bin_location = items.Bin_location;
+                        newtask.creation_date = DateTime.UtcNow;
+                        newtask.ID_userEnd = activeuser.ID_User;
+                        newtask.UserName = activeuser.Name.ToUpper() + " " + activeuser.Lastname.ToUpper();
+                        newtask.Count = conteo;
+                        newtask.ID_status = 2;
+                        newtask.isselected = false;
+                        newtask.ID_empresa = activeuser.ID_Company;
+                        newtask.ID_project = items.ID_project;
+                        newtask.Internal_sort = items.Internal_sort;
+                        newtask.Type = items.Type;
+                        newtask.Aisle = items.Aisle;
+                        newtask.Area = items.Area;
+                        ///newtask.Internal_sort = 9999;
+                        newtask.comments = comment;
+                        newtask.ItemCode = ItemCode;
+                        newtask.ItemName = ItemName;
+                        newtask.end_date = DateTime.UtcNow;
+                        newtask.UoM_code = seluom1;
+                        newtask.UoM_entry = seluom1Code;
+                        newtask.Quantity = seluom1Quantity;
+                        newtask.UoM_code2 = seluom2;
+                        newtask.UoM_entry2 = seluom2Code;
+                        newtask.Quantity2 = seluom2Quantity;
+                        newtask.UoM_code3 = seluom3;
+                        newtask.UoM_entry3 = seluom3Code;
+                        newtask.Quantity3 = seluom3Quantity;
+                        newtask.UoM_code4 = seluom4;
+                        newtask.UoM_entry4 = seluom4Code;
+                        newtask.Quantity4 = seluom4Quantity;
+
+                        var finalq = 0;
+                        if (ItemCode != "0")
+                        {
+                            //calcular final quantity
+                            if (seluom1.Contains("CASE"))
+                            {
+                                var selectuomconv = dlipro.OpenSalesOrders_DetailsUOM.Where(c => c.ItemCode == ItemCode && c.UomEntry == seluom1Code).FirstOrDefault();
+                                if (selectuomconv == null) { finalq = finalq + seluom1Quantity; }
+                                else
+                                {
+                                    finalq = finalq + Convert.ToInt32(seluom1Quantity * selectuomconv.Units);
+                                }
+                            }
+                            else
+                            {
+                                finalq = finalq + seluom1Quantity;
+                            }
+                            if (seluom2.Contains("CASE"))
+                            {
+                                var selectuomconv2 = dlipro.OpenSalesOrders_DetailsUOM.Where(c => c.ItemCode == ItemCode && c.UomEntry == seluom2Code).FirstOrDefault();
+                                if (selectuomconv2 == null) { finalq = finalq + seluom2Quantity; }
+                                else
+                                {
+                                    finalq = finalq + Convert.ToInt32(seluom2Quantity * selectuomconv2.Units);
+                                }
+                            }
+                            else
+                            {
+                                finalq = finalq + seluom2Quantity;
+                            }
+                            if (seluom3.Contains("CASE"))
+                            {
+                                var selectuomconv3 = dlipro.OpenSalesOrders_DetailsUOM.Where(c => c.ItemCode == ItemCode && c.UomEntry == seluom3Code).FirstOrDefault();
+                                if (selectuomconv3 == null) { finalq = finalq + seluom3Quantity; }
+                                else
+                                {
+                                    finalq = finalq + Convert.ToInt32(seluom3Quantity * selectuomconv3.Units);
+                                }
+                            }
+                            else
+                            {
+                                finalq = finalq + seluom3Quantity;
+                            }
+                            if (seluom4.Contains("CASE"))
+                            {
+                                var selectuomconv4 = dlipro.OpenSalesOrders_DetailsUOM.Where(c => c.ItemCode == ItemCode && c.UomEntry == seluom4Code).FirstOrDefault();
+                                if (selectuomconv4 == null) { finalq = finalq + seluom4Quantity; }
+                                else
+                                {
+                                    finalq = finalq + Convert.ToInt32(seluom4Quantity * selectuomconv4.Units);
+                                }
+                            }
+                            else
+                            {
+                                finalq = finalq + seluom4Quantity;
+                            }
+                        }
+
+
+                        newtask.Final_quantity = finalq;
+                        //
+
+                        dblim.Inv_Projects_Task.Add(newtask);
+                        dblim.SaveChanges();
+
+
+                        string result = "SUCCESS";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+
+                    }
+                    else
+                    {
+                        return Json("error", JsonRequestBehavior.AllowGet);
+                    }
+                }
+                else
+                {
+                    return Json("error", JsonRequestBehavior.AllowGet);
+                }
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+
+        }
         public ActionResult SaveandContinue_task(string idtask, string ItemCode, string ItemName, string seluom1, int seluom1Code, int seluom1Quantity, string seluom2, int seluom2Code, int seluom2Quantity, string seluom3, int seluom3Code, int seluom3Quantity, string seluom4, int seluom4Code, int seluom4Quantity, string comment)
         {
             try
