@@ -12,17 +12,18 @@ namespace LimenawebApp.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Transito_Final
+    public partial class Purchase_dataHistory
     {
-        public string ProdCodigo { get; set; }
-        public Nullable<int> NumTransito { get; set; }
-        public Nullable<System.DateTime> DocDate { get; set; }
-        public string DiaSemana { get; set; }
-        public Nullable<double> DifSemanas { get; set; }
-        public Nullable<int> NumFactura { get; set; }
-        public Nullable<int> CantCajas { get; set; }
-        public string FormulaDia { get; set; }
-        public Nullable<double> CoberturaSemanal { get; set; }
         public int ID_detail { get; set; }
+        public string ItemCode { get; set; }
+        public string Description { get; set; }
+        public decimal newValue { get; set; }
+        public int periodo { get; set; }
+        public int year { get; set; }
+        public int ID_purchaseData { get; set; }
+        public System.DateTime Last_update { get; set; }
+        public int source { get; set; }
+        public int ID_user { get; set; }
+        public string Username { get; set; }
     }
 }

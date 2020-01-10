@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Entity;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Web;
@@ -24,6 +25,220 @@ namespace LimenawebApp.Controllers
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
         private MatrizComprasEntities dbMatriz = new MatrizComprasEntities();
+
+
+        public ActionResult Initial_forecast(int iddata)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Purchase Data";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "operpur_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                var data = (from a in dbMatriz.PurchaseData_product where(a.ID_purchaseData== iddata) select a).ToList();
+                //var ids = (from a in data where (a.ID_purchaseData== iddata) select a.ItemCode).ToArray();
+
+                //var forecast = dbMatriz.Database.SqlQuery<Forecast_Cajas>("Select * from Forecast_Cajas").ToList<Forecast_Cajas>();
+                //forecast.Where(c => ids.Contains(c.CodProducto)).ToList();
+                //Tenemos todos los datos del forecast
+                //List<Initial_forecastData> initial_forecast = new List<Initial_forecastData>();
+                //foreach (var forec in data)
+                //{
+                //    Initial_forecastData newforrep = new Initial_forecastData();
+                //    newforrep.CodProducto = forec.ItemCode;
+                //    newforrep.Producto = data.Where(c => c.ItemCode == forec.ItemCode).Select(c => c.Description).FirstOrDefault();
+                //    newforrep.b1 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).FirstOrDefault();
+                //    newforrep.b2 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(1).FirstOrDefault();
+                //    newforrep.b3 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(2).FirstOrDefault();
+                //    newforrep.b4 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(3).FirstOrDefault();
+                //    newforrep.b5 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(4).FirstOrDefault();
+                //    newforrep.f1 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.Forecast ).FirstOrDefault();
+                //    newforrep.f2 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(1).FirstOrDefault();
+                //    newforrep.f3 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(2).FirstOrDefault();
+                //    newforrep.f4 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(3).FirstOrDefault();
+                //    newforrep.f5 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(4).FirstOrDefault();
+
+                //    initial_forecast.Add(newforrep);
+                //}
+
+
+                ViewBag.iddata = iddata;
+
+
+                //return View(initial_forecast);
+                return View(data);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+
+        public ActionResult Product_stats(string ItemCode, int data)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Purchase Data";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "operpur_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+                var product = dbMatriz.PurchaseData_product.Where(c => c.ID_purchaseData == data && c.ItemCode == ItemCode).FirstOrDefault();
+
+                ViewBag.iddata = data;
+                ViewBag.idproduct = product.ItemCode;
+
+                var salesHistory = dlipro.Database.SqlQuery<salesHistory_product>("Select * from BI_Sales_History_Matriz_Compras_Items where ItemCode={0} ORDER BY ITEMCODE , OffSetPeriod", ItemCode).ToList<salesHistory_product>();
+               
+                List<history_statsProduct> listsalesChart = new List<history_statsProduct>();
+                //Recorremos para asignar valores
+                for (var i = 1; i < 14; i++)
+                {
+                    history_statsProduct newperiod = new history_statsProduct();
+
+                    var prd = "";
+                    if (i >= 10)
+                    {
+                        prd = i.ToString();
+                    }
+                    else {
+                        prd = ("0" + i);
+                    }
+
+                        newperiod.category = "P" + i;
+                        newperiod.a2018 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2018).Select(a => a.LineTotal).FirstOrDefault()), 2);
+                        newperiod.a2019 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2019).Select(a => a.LineTotal).FirstOrDefault()), 2);
+                    newperiod.a2020 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2020).Select(a => a.LineTotal).FirstOrDefault()), 2);
+
+                    listsalesChart.Add(newperiod);
+                }
+
+                ViewBag.salesJSON = listsalesChart.ToArray();
+                return View(salesHistory);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult Agents_forecast(int iddata)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Purchase Data";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "operpur_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                var data = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == iddata) select a).ToList();
+                var dataprocess = (from a in dblim.Purchase_data where (a.ID_purchaseData == iddata) select a).FirstOrDefault();
+
+                ViewBag.iddata = iddata;
+                ViewBag.comment = dataprocess.query1;
+
+                return View(data);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+        public ActionResult Final_forecast(int iddata)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Purchase Data";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "operpur_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                var data = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == iddata) select a).ToList();
+                var dataprocess = (from a in dblim.Purchase_data where (a.ID_purchaseData == iddata) select a).FirstOrDefault();
+
+                ViewBag.iddata = iddata;
+                ViewBag.comment = dataprocess.query1;
+
+                return View(data);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
         public ActionResult Purchase_data(string fstartd, string fendd)
         {
             if (generalClass.checkSession())
@@ -80,6 +295,79 @@ namespace LimenawebApp.Controllers
             }
         }
 
+        public class Forecast_Cajas
+        {
+            public int? Anio { get; set; }
+            public int? Periodo { get; set; }
+            public string CodProducto { get; set; }
+            public decimal? BaseLine { get; set; }
+            public decimal? Forecast { get; set; }
+
+        }
+
+public class history_statsProduct
+{
+    public string category { get; set; }
+    public double a2018 { get; set; }
+    public double a2019 { get; set; }
+    public double a2020 { get; set; }
+
+
+}
+public class Initial_forecastData
+        {
+            public string CodProducto { get; set; }
+            public string Producto { get; set; }
+            public decimal? b1 { get; set; }
+            public decimal? b2 { get; set; }
+            public decimal? b3 { get; set; }
+            public decimal? b4 { get; set; }
+            public decimal? b5 { get; set; }
+            public decimal? f1 { get; set; }
+            public decimal? f2 { get; set; }
+            public decimal? f3 { get; set; }
+            public decimal? f4 { get; set; }
+            public decimal? f5 { get; set; }
+
+        }
+
+        public class salesHistory_product
+        {
+            public string id_Period { get; set; }
+            public string period { get; set; }
+            public Int32 OffSetPeriod { get; set; }
+            public Int16 Year_DLI { get; set; }
+            public string ItemCode { get; set; }
+            public decimal? LineTotal { get; set; }
+            public decimal? Profit { get; set; }
+            public decimal? Each { get; set; }
+        }
+
+        public class salesHistory
+        {
+            public Int64 ID { get; set; }
+            public int id_SalesRep { get; set; }
+            public string SalesRep { get; set; }
+            public decimal? Utility { get; set; }
+            public decimal? Invoices { get; set; }
+            public int SKUs { get; set; }
+            public int PreviousPeriod { get; set; }
+        }
+        public class forecastSalesReps
+        {
+            public int id_SalesRep { get; set; }
+            public string SalesRep { get; set; }
+            public decimal? p1 { get; set; }
+            public decimal? p2 { get; set; }
+            public decimal? p3 { get; set; }
+            public decimal? p4 { get; set; }
+            public decimal? p5 { get; set; }
+            public decimal? p6 { get; set; }
+            public decimal? AVG { get; set; }
+            public decimal? PCT { get; set; }
+
+
+        }
         public ActionResult edit_process(int data=0, string ItemCode="")
         {
             if (generalClass.checkSession())
@@ -103,7 +391,133 @@ namespace LimenawebApp.Controllers
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 
-                return View();
+    
+                var product = dbMatriz.PurchaseData_product.Where(c => c.ID_purchaseData == data && c.ItemCode == ItemCode).FirstOrDefault();
+
+                var salesHistory = dlipro.Database.SqlQuery<salesHistory>("Select * from BI_Sales_History_Matriz_Compras where ItemCode={0}", ItemCode).ToList<salesHistory>();
+
+                var salesreps = salesHistory.Select(c => c.id_SalesRep).Distinct().ToList();
+                List<forecastSalesReps> lstforecastRep = new List<forecastSalesReps>();
+         
+                foreach (var forec in salesreps)
+                {
+                    forecastSalesReps newforrep = new forecastSalesReps();
+                    newforrep.id_SalesRep = forec;
+                    newforrep.SalesRep = salesHistory.Where(c => c.id_SalesRep == forec).Select(c => c.SalesRep).FirstOrDefault();
+                    newforrep.p1 = salesHistory.Where(c => c.id_SalesRep == forec && c.PreviousPeriod == -1).Select(c => c.Invoices).FirstOrDefault();
+                    newforrep.p2 = salesHistory.Where(c => c.id_SalesRep == forec && c.PreviousPeriod == -2).Select(c => c.Invoices).FirstOrDefault();
+                    newforrep.p3 = salesHistory.Where(c => c.id_SalesRep == forec && c.PreviousPeriod == -3).Select(c => c.Invoices).FirstOrDefault();
+                    newforrep.p4 = salesHistory.Where(c => c.id_SalesRep == forec && c.PreviousPeriod == -4).Select(c => c.Invoices).FirstOrDefault();
+                    newforrep.p5 = salesHistory.Where(c => c.id_SalesRep == forec && c.PreviousPeriod == -5).Select(c => c.Invoices).FirstOrDefault();
+                    newforrep.p6 = salesHistory.Where(c => c.id_SalesRep == forec && c.PreviousPeriod == -6).Select(c => c.Invoices).FirstOrDefault();
+                  
+                    if (newforrep.p1 == null)
+                    {
+                        newforrep.p1 = 0;
+                    }
+                    if (newforrep.p2 == null)
+                    {
+                        newforrep.p2 = 0;
+                    }
+                    if (newforrep.p3 == null)
+                    {
+                        newforrep.p3 = 0;
+                    }
+                    if (newforrep.p4 == null)
+                    {
+                        newforrep.p4 = 0;
+                    }
+                    if (newforrep.p5 == null)
+                    {
+                        newforrep.p5 = 0;
+                    }
+                    if (newforrep.p6 == null)
+                    {
+                        newforrep.p6 = 0;
+                    }
+                    var sumtot = Convert.ToDecimal(newforrep.p1 + newforrep.p2 + newforrep.p3 + newforrep.p4 + newforrep.p5 + newforrep.p6);
+                    newforrep.AVG = sumtot/6;
+                    newforrep.PCT = 0;
+
+
+                    lstforecastRep.Add(newforrep);
+                }
+
+                foreach (var itt in lstforecastRep) {
+                    var sumav = lstforecastRep.Select(c => c.AVG).Sum();
+
+                    var totperc = ((itt.AVG / sumav) * 100);
+                    itt.PCT = totperc;
+                }
+
+                ///
+                forecastSalesReps newforrep34 = new forecastSalesReps();
+                newforrep34.id_SalesRep = 0;
+                newforrep34.SalesRep = "";
+                newforrep34.p1 = lstforecastRep.Select(c => c.p1).Sum();
+                newforrep34.p2 = lstforecastRep.Select(c => c.p2).Sum();
+                newforrep34.p3 = lstforecastRep.Select(c => c.p3).Sum();
+                newforrep34.p4 = lstforecastRep.Select(c => c.p4).Sum();
+                newforrep34.p5 = lstforecastRep.Select(c => c.p5).Sum();
+                newforrep34.p6 = lstforecastRep.Select(c => c.p6).Sum();
+
+                newforrep34.AVG = lstforecastRep.Select(c => c.AVG).Sum();
+                newforrep34.PCT = lstforecastRep.Select(c => c.PCT).Sum();
+
+
+                lstforecastRep.Add(newforrep34);
+                ///
+
+                ViewBag.salesHistory = lstforecastRep;
+
+                //Cargamos vendedores
+                List<forecastSalesReps> lstforecastRepEditable = new List<forecastSalesReps>();
+                foreach (var forec in salesreps)
+                {
+                    forecastSalesReps newforrep2 = new forecastSalesReps();
+                    newforrep2.id_SalesRep = forec;
+                    newforrep2.SalesRep = salesHistory.Where(c => c.id_SalesRep == forec).Select(c => c.SalesRep).FirstOrDefault();
+                    var datosedt = lstforecastRep.Where(a => a.id_SalesRep == forec).FirstOrDefault();
+
+                    newforrep2.p1 = ((product.Forecast1_source2 * datosedt.PCT)/100);
+                    newforrep2.p2 = ((product.Forecast2_source2 * datosedt.PCT) / 100);
+                    newforrep2.p3 = ((product.Forecast3_source2 * datosedt.PCT) / 100);
+                    newforrep2.p4 = ((product.Forecast4_source2 * datosedt.PCT) / 100);
+                    newforrep2.p5 = ((product.Forecast5_source2 * datosedt.PCT) / 100);
+                    newforrep2.p6 = 0;
+                    newforrep2.AVG = 0;
+                    newforrep2.PCT = 0;
+
+
+                    lstforecastRepEditable.Add(newforrep2);
+                }
+                //
+                forecastSalesReps newforrep3 = new forecastSalesReps();
+                newforrep3.id_SalesRep = 0;
+                newforrep3.SalesRep = "";
+                newforrep3.p1 = lstforecastRepEditable.Select(c => c.p1).Sum();
+                newforrep3.p2 = lstforecastRepEditable.Select(c => c.p2).Sum();
+                newforrep3.p3 = lstforecastRepEditable.Select(c => c.p3).Sum();
+                newforrep3.p4 = lstforecastRepEditable.Select(c => c.p4).Sum();
+                newforrep3.p5 = lstforecastRepEditable.Select(c => c.p5).Sum();
+                newforrep3.p6 = 0;
+                newforrep3.AVG = 0;
+                newforrep3.PCT = 0;
+
+
+                lstforecastRepEditable.Add(newforrep3);
+
+
+                ViewBag.SalesRepsEdit = lstforecastRepEditable;
+
+                var dataprocess = (from a in dblim.Purchase_data where (a.ID_purchaseData == data) select a).FirstOrDefault();
+
+                ViewBag.iddata = data;
+                ViewBag.comment = dataprocess.query1;
+
+
+
+                return View(product);
 
             }
             else
@@ -954,16 +1368,80 @@ namespace LimenawebApp.Controllers
 
 
 
-                List<Purchase_data_details> lsttosave = new List<Purchase_data_details>();
+                List<PurchaseData_product> lsttosave = new List<PurchaseData_product>();
                 foreach (var items in objects)
                 {
-                    Purchase_data_details newDet = new Purchase_data_details();
+                    PurchaseData_product newDet = new PurchaseData_product();
+                    newDet.ItemCode = items.ItemCode;
+                    newDet.Description = items.Description;
+                    newDet.Vendor = items.Vendor;
+                    newDet.Brand = items.Brand;
+                    newDet.Category = items.Category;
+                    newDet.Subcategory = items.Subcategory;
+                    newDet.Last_update = DateTime.UtcNow;
+                    newDet.Forecast1_source1 = 0;
+                    newDet.Forecast1_source1_period = 0;
+                    newDet.Forecast1_source1_year = 0;
+                    newDet.Forecast2_source1 = 0;
+                    newDet.Forecast2_source1_period = 0;
+                    newDet.Forecast2_source1_year = 0;
+                    newDet.Forecast3_source1 = 0;
+                    newDet.Forecast3_source1_period = 0;
+                    newDet.Forecast3_source1_year = 0;
+                    newDet.Forecast4_source1 = 0;
+                    newDet.Forecast4_source1_period = 0;
+                    newDet.Forecast4_source1_year = 0;
+                    newDet.Forecast5_source1 = 0;
+                    newDet.Forecast5_source1_period = 0;
+                    newDet.Forecast5_source1_year = 0;
+                    newDet.Forecast1_source2 = 0;
+                    newDet.Forecast2_source2 = 0;
+                    newDet.Forecast3_source2 = 0;
+                    newDet.Forecast4_source2 = 0;
+                    newDet.Forecast5_source2 = 0;
+                    newDet.Forecast1_source3 = 0;
+                    newDet.Forecast2_source3 = 0;
+                    newDet.Forecast3_source3 = 0;
+                    newDet.Forecast4_source3 = 0;
+                    newDet.Forecast5_source3 = 0;
+                    newDet.Baseline1 = 0;
+                    newDet.Baseline2 = 0;
+                    newDet.Baseline3 = 0;
+                    newDet.Baseline4 = 0;
+                    newDet.Baseline5 = 0;
+                    var forecast = dbMatriz.Database.SqlQuery<Forecast_Cajas>("Select * from Forecast_Cajas").ToList<Forecast_Cajas>();
 
+                    newDet.Forecast1_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).FirstOrDefault());
+                    newDet.Forecast1_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).FirstOrDefault();
+                    newDet.Forecast1_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).FirstOrDefault();
+                    newDet.Baseline1 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).FirstOrDefault();
+                    newDet.Forecast2_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(1).FirstOrDefault());
+                    newDet.Forecast2_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).Skip(1).FirstOrDefault();
+                    newDet.Forecast2_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).Skip(1).FirstOrDefault();
+                    newDet.Baseline2 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(1).FirstOrDefault();
+                    newDet.Forecast3_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(2).FirstOrDefault());
+                    newDet.Forecast3_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).Skip(2).FirstOrDefault();
+                    newDet.Forecast3_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).Skip(2).FirstOrDefault();
+                    newDet.Baseline3 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(2).FirstOrDefault();
+                    newDet.Forecast4_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(3).FirstOrDefault());
+                    newDet.Forecast4_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).Skip(3).FirstOrDefault();
+                    newDet.Forecast4_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).Skip(3).FirstOrDefault();
+                    newDet.Baseline4 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(3).FirstOrDefault();
+                    newDet.Forecast5_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(4).FirstOrDefault());
+                    newDet.Forecast5_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).Skip(4).FirstOrDefault();
+                    newDet.Forecast5_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).Skip(4).FirstOrDefault();
+                    newDet.Baseline5 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(4).FirstOrDefault();
+
+                    newDet.ID_purchaseData = newDataM.ID_purchaseData;
+                    newDet.SourceSel = 1;
+                    newDet.Comments = "";
                     lsttosave.Add(newDet);
                     
                 }
 
-                dblim.BulkInsert(lsttosave);
+                dbMatriz.BulkInsert(lsttosave);
+         
+
 
                 ttresult = "SUCCESS";
                 return Json(ttresult, JsonRequestBehavior.AllowGet);
@@ -974,10 +1452,6 @@ namespace LimenawebApp.Controllers
                 ttresult = "ERROR: " + ex.Message;
                 return Json(ttresult, JsonRequestBehavior.AllowGet);
             }
-
-
-
-
         }
 
 
@@ -1252,6 +1726,178 @@ namespace LimenawebApp.Controllers
 
 
         }
+        [HttpPost]
+        public ActionResult Save_agentforecast(string itemcode, string description, string periodo, decimal newval, int iddata)
+        {
+            string ttresult = "";
+            try
+            {
+                var producto = (from a in dbMatriz.PurchaseData_product where (a.ItemCode == itemcode && a.ID_purchaseData==iddata) select a).FirstOrDefault();
 
+                if (producto != null)
+                {
+                    //Existe por lo tanto actualizaremos
+
+                    if (periodo == "f1")
+                    {
+                        producto.Forecast1_source2 = newval;
+                    }
+                    else if (periodo == "f2") {
+                        producto.Forecast2_source2 = newval;
+                    }
+                    else if (periodo == "f3")
+                    {
+                        producto.Forecast3_source2 = newval;
+                    }
+                    else if (periodo == "f4")
+                    {
+                        producto.Forecast4_source2 = newval;
+                    }
+                    else if (periodo == "f5")
+                    {
+                        producto.Forecast5_source2 = newval;
+                    }
+
+                    producto.Last_update = DateTime.UtcNow;
+
+                    dbMatriz.Entry(producto).State = EntityState.Modified;
+                    dbMatriz.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+
+                    //Crearemos el nuevo registro
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+        [HttpPost]
+        public ActionResult Save_dataComment(string comment, int iddata)
+        {
+            string ttresult = "";
+            try
+            {
+                var data = (from a in dblim.Purchase_data where (a.ID_purchaseData == iddata) select a).FirstOrDefault();
+
+                if (data != null)
+                {
+                    //Existe por lo tanto actualizaremos
+
+                    data.query1 = comment;
+                    dblim.Entry(data).State = EntityState.Modified;
+                    dblim.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+
+                    ttresult = "NO DATA";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+        [HttpPost]
+        public ActionResult Save_productComment(string comment, int iddata, string product)
+        {
+            string ttresult = "";
+            try
+            {
+                var data = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == iddata && a.ItemCode==product) select a).FirstOrDefault();
+
+                if (data != null)
+                {
+                    //Existe por lo tanto actualizaremos
+
+                    data.Comments = comment;
+                    dbMatriz.Entry(data).State = EntityState.Modified;
+                    dbMatriz.SaveChanges();
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+
+                    ttresult = "NO DATA";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+        [HttpPost]
+        public ActionResult Save_finalforecast(string itemcode, string description, int periodo, int anio, decimal newval, int iddata)
+        {
+            string ttresult = "";
+            try
+            {
+                var producto = (from a in dbMatriz.Purchase_dataHistory where (a.ItemCode == itemcode && a.periodo == periodo && a.year == anio) select a).FirstOrDefault();
+
+                if (producto != null)
+                {
+                    //Existe por lo tanto actualizaremos
+                    producto.newValue = newval;
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+
+                    //Crearemos el nuevo registro
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
     }
 }

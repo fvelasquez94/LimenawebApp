@@ -201,8 +201,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.20.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.20\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.35.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.35\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -431,11 +431,17 @@
     <Compile Include="Models\PlanningUoMInfo.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PurchaseData_product.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Purchase_catalog.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Purchase_data.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Purchase_dataHistory.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Purchase_data_details.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -611,6 +617,7 @@
     <Content Include="Content\appcontent\assets\fonts\dropify.svg" />
     <Content Include="Content\appcontent\assets\img\badge\1063141.png" />
     <Content Include="Content\appcontent\assets\img\badge\credit-card.png" />
+    <Content Include="Content\appcontent\assets\img\badge\logoIBM-Cognos-Analytics.png" />
     <Content Include="Content\appcontent\assets\img\badge\newspaper.png" />
     <Content Include="Content\appcontent\assets\img\badge\tags.png" />
     <Content Include="Content\appcontent\assets\img\completed-task.png" />
@@ -15205,6 +15212,11 @@
     <Content Include="Views\Main\Dashboard_OperationsPurchases.cshtml" />
     <Content Include="Views\Operations\new_Data.cshtml" />
     <Content Include="Views\Operations\edit_process.cshtml" />
+    <Content Include="Views\Operations\Initial_forecast.cshtml" />
+    <Content Include="Views\Operations\Agents_forecast.cshtml" />
+    <Content Include="Views\Operations\Final_forecast.cshtml" />
+    <Content Include="Views\Operations\Product_stats.cshtml" />
+    <Content Include="Views\Main\Dashboard_ExternalApps.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

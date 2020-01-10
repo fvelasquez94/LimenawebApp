@@ -32,5 +32,7 @@ namespace LimenawebApp.Models
         public string Remarks { get; set; }
         public Nullable<int> IDSalesPerson { get; set; }
         public string BonifPendientes { get; set; }
+        public string WareHouse { get; set; }
+        public Nullable<int> NoWhs { get; set; }
     }
 }

@@ -1019,6 +1019,7 @@ namespace LimenawebApp.Controllers
             try
             {
                 if (unidades == null) { unidades = 0; }
+                if (uom == null) { uom = ""; }
                 int pedidodoc = Convert.ToInt32(pedido);
                 var so_details = (from a in dlipro.view_ordenesAbiertasDet where (a.DocNum == pedidodoc && a.Quantity > 0) select a).ToArray();
 
@@ -1067,7 +1068,16 @@ namespace LimenawebApp.Controllers
                 newBonificacion.CodAutorizo = 0;
                 newBonificacion.Autorizo = "";
                 newBonificacion.OrderClosed = false;
-                newBonificacion.CantidadPedido = Convert.ToInt32(productinfoPedido.Quantity);
+
+                if (productinfoPedido != null)
+                {
+                    newBonificacion.CantidadPedido = Convert.ToInt32(productinfoPedido.Quantity);
+                }
+                else {
+                    newBonificacion.CantidadPedido = 0;
+                }
+
+              
                 newBonificacion.DocPepperi =pepperi;
                 newBonificacion.RutaDef = routedf;
                 newBonificacion.Error = 0;
@@ -1541,7 +1551,41 @@ public ActionResult Prices_requestpdo(int docnum)
                 }
                 ViewBag.isAdmin = isAdmin;
 
-                    var detailsBonifications = finaldetails.Where(c => c.Bonificable == "Y");
+                
+
+                    var detailsBonifications = finaldetails.Where(c => c.Bonificable == "Y").ToList();
+                //Incluimos los nuevos para bonificaciones  StockBonif>0
+                var ordenDetails = finaldetails.FirstOrDefault();
+                var gift_products = (from a in dlipro.BI_Dim_Products
+                                     where (a.StockBonif > 0 && a.StockBonif != null && !a.id.Contains("SERVICES"))
+                                     select new Pedidos_precios
+                                     {
+                                         LineNum = 10000,
+                                         Quantity = a.StockBonif,
+                                         CardCode = ordenDetails.CardCode,
+                                         UomCode = "",
+                                         UomEntry = 0,
+                                         ItemCode = a.id,
+                                         ItemName = "GIFT - " + a.Product,
+                                         DocNum = docnum,
+                                         DocDate = ordenDetails.DocDate,
+                                         Price = 0,
+                                         NewPrice = 0,
+                                         Estado = 0,
+                                         MinPrice = 0,
+                                         Total = 0,
+                                         Brand_Name = a.Brand_Name,
+                                         id_brand = a.id_brand,
+                                         category_name = a.category_name,
+                                         id_subcategory = a.id_subcategory,
+                                         subcategory_name = a.subcategory_name,
+                                         Bonificable = a.Bonificables,
+                                         CantBonif = a.StockBonif,
+                                         FactorBonif = 1,
+                                         deleted = false
+                                     }).ToList();
+                //
+                detailsBonifications.AddRange(gift_products);
 
                 var lstCategories = (from f in detailsBonifications select f.category_name).Distinct().OrderBy(c => c).ToList();
                 ViewBag.lstCategories = lstCategories;

@@ -44,7 +44,7 @@
           <Property Name="CodPedido" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="CodCliente" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Cliente" Type="varchar" MaxLength="250" Nullable="false" />
-          <Property Name="CodProducto" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="CodProducto" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="Producto" Type="varchar" MaxLength="500" Nullable="false" />
           <Property Name="ID_brand" Type="varchar" MaxLength="10" Nullable="false" />
           <Property Name="Brand" Type="varchar" MaxLength="500" Nullable="false" />
@@ -191,7 +191,7 @@
           <Property Name="CodPedido" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="CodCliente" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Cliente" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
-          <Property Name="CodProducto" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CodProducto" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Producto" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
           <Property Name="ID_brand" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="Brand" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />

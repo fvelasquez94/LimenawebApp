@@ -26,5 +26,6 @@ namespace LimenawebApp.Models
         public string U_RLeader { get; set; }
         public string U_DelDayA { get; set; }
         public string U_DelDayB { get; set; }
+        public string U_Whs { get; set; }
     }
 }

@@ -408,5 +408,6 @@ namespace LimenawebApp.Models
         public string EnDflIBAN { get; set; }
         public Nullable<short> U_TimeWinStart { get; set; }
         public Nullable<short> U_TimeWinEnd { get; set; }
+        public string U_Warehouses { get; set; }
     }
 }

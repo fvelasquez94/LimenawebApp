@@ -33,5 +33,6 @@ namespace LimenawebApp.Models
         public Nullable<int> PrintOrder { get; set; }
         public string CambioPrecio { get; set; }
         public string TreeType { get; set; }
+        public string Whs { get; set; }
     }
 }

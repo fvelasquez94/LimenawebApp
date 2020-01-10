@@ -28,6 +28,8 @@ namespace LimenawebApp.Models
         public virtual DbSet<Matriz_Formato> Matriz_Formato { get; set; }
         public virtual DbSet<Purchase_catalog> Purchase_catalog { get; set; }
         public virtual DbSet<view_MatrizMadre> view_MatrizMadre { get; set; }
+        public virtual DbSet<PurchaseData_product> PurchaseData_product { get; set; }
         public virtual DbSet<Transito_Final> Transito_Final { get; set; }
+        public virtual DbSet<Purchase_dataHistory> Purchase_dataHistory { get; set; }
     }
 }

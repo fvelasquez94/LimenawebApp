@@ -305,6 +305,11 @@ namespace LimenawebApp.Controllers
                     return RedirectToAction("Dashboard_Inventory", "Main", null);
 
                 }
+                else if (activeuser.Departments.Contains("ExternalApps"))
+                {
+                    return RedirectToAction("Dashboard_ExternalApps", "Main", null);
+
+                }
 
             }
 
@@ -517,7 +522,7 @@ namespace LimenawebApp.Controllers
                         }
                     }
                     catch {
-
+                        idsup = 19;
                     }
 
                     dblim.Tb_NewCustomers.Add(newCustomer);

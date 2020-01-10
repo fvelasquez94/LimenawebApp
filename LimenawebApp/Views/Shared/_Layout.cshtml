@@ -917,7 +917,7 @@ else
                         contentType: false, // Not to set any content header
                         processData: false, // Not to process data
                         //async: true,
-                        //timeout: 80000,
+                        timeout: 30000,
                         data: fileData,
                         success: function (result) {
                             //$("#modal_demoform_saving").modal('hide');
@@ -926,14 +926,19 @@ else
                                 document.getElementById("loader").style.display = "none";
                                   window.location.href = '@Url.Action("Enroll", "Home", new { token =1})';
                             } else {
-                                console.log(result);
                                 document.getElementById("loader").style.display = "none";
+                                console.log(result);
+                                
                             }
 
                         },
-                        error: function (err) {
-                            //$("#modal_demoform_saving").modal('hide');
-                            //alert("An error is reported. Maximum request length exceeded");
+                        error: function (jqXHR, textStatus) {
+                            if (textStatus === 'timeout') {
+                                alert('Failed from timeout');
+                                //do something. Try again perhaps?
+                            } else {
+                                alert('Error, try again');
+                            }
                             document.getElementById("loader").style.display = "none";
                         }
 

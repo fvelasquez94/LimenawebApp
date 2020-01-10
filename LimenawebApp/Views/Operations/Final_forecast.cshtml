@@ -1,0 +1,225 @@
+﻿@model List<LimenawebApp.Models.PurchaseData_product>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Purchase Data";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/temp_head.cshtml")
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="dt-loader-container">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Header -->
+            @Html.Partial("~/Views/Shared/temp_header.cshtml")
+            <!-- /header -->
+            <!-- Site Main -->
+            <main class="dt-main">
+                <!-- Sidebar -->
+                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
+                <!-- /sidebar -->
+                <!-- Custom Container -->
+                <div class="dt-container">
+
+                    <!-- Site Content Wrapper -->
+                    <div class="dt-content-wrapper">
+
+                        <!-- Site Content -->
+                        <div class="dt-content">
+
+                            <!-- Page Header -->
+                            <div class="dt-page__header">
+                                <h1 class="dt-page__title">Final Forecast</h1>
+                                <!-- Page Header -->
+                                <!-- Back -->
+                                <!-- /back -->
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <!-- Back -->
+                                        <a href="@Url.Action("Agents_forecast", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
+                                            <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Back</span>
+                                        </a>
+                                        <!-- /back -->
+                                    </div>
+                                    <div class="col-md-6">
+                                        <!-- Back -->
+                                        <a href="@Url.Action("Final_forecast", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
+                                            <span class="display-6 align-middle ml-1 float-right">Results</span> <i class="icon icon-arrow-right icon-fw icon-1x float-right"></i>
+                                        </a>
+                                        <!-- /back -->
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- /page header -->
+                            <!--main content wrapper-->
+
+
+                            <div class="row">
+
+                                <div class="col-xl-12">
+                                    <div class="card card-shadow">
+                                        <div class="card-header">
+                                            <div class="custom-title-wrap bar-success">
+                                                <div class="custom-title">
+                                                    <!-- Text Area -->
+
+
+
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="card-body- pt-3 pb-4">
+                                            <div class="table-responsive">
+                                                <table id="data_table2" class="table table-custom" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+
+                                                            <th scope="col">ITEMCODE</th>
+                                                            <th scope="col">ITEM</th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col"></th>
+                                                            <th scope="col"></th>
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                    </tfoot>
+                                                    <tbody>
+                                                        @foreach (var item in Model)
+                                                        {
+
+                                                        <tr>
+                                                            <th>@item.ItemCode</th>
+                                                            <td>@item.Description</td>
+                                                            <td>Forecast</td>
+                                                            <td   data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u><br>Initial forecast: @item.Forecast1_source1 <br>Agents forecast: @item.Forecast1_source2  <br>Saved forecast: -">@item.Forecast1_source3</td>
+                                                            <td   data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u><br>Initial forecast: @item.Forecast2_source1 <br>Agents forecast: @item.Forecast2_source2 <br>Saved forecast: -">@item.Forecast2_source3</td>
+                                                            <td   data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u><br>Initial forecast: @item.Forecast3_source1 <br>Agents forecast: @item.Forecast3_source2 <br>Saved forecast: -">@item.Forecast3_source3</td>
+                                                            <td  data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u><br>Initial forecast: @item.Forecast4_source1 <br>Agents forecast: @item.Forecast4_source2 <br>Saved forecast: -">@item.Forecast4_source3</td>
+                                                            <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u><br>Initial forecast: @item.Forecast5_source1 <br>Agents forecast: @item.Forecast5_source2 <br>Saved forecast: -">@item.Forecast5_source3</td>
+                                                            <td><a href="@Url.Action("edit_process", "Operations", new { data=ViewBag.iddata, ItemCode=item.ItemCode})" class="btn btn-primary">Sales Data</a></td>
+                                                        </tr>
+
+
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- /grid item -->
+                            <div class="form-group d-flex">
+                                <i class="icon icon-forms-advanced mt-2 mr-1"></i>
+                                <textarea id="commentagent" class="form-control border-0 shadow-none bg-focus"
+                                          rows="2"
+                                          placeholder="Comments">@ViewBag.comment</textarea>
+                            </div>
+
+                        </div>
+                        <!-- /site content -->
+
+                    </div>
+                    <!-- /site content wrapper -->
+
+                </div>
+                <!-- /custom Container -->
+
+            </main>
+            <!-- /main -->
+            <!-- Footer -->
+            <footer class="dt-footer">
+                <div class="dt-container">
+                    Copyright Distribuidora Limena © 2019
+                </div>
+            </footer>
+            <!-- /footer -->
+
+        </div>
+    </div>
+    <!-- /root -->
+    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+
+</body>
+</html>
+
+
+<script>
+    $(document).ready(function () {
+        //Basic editor
+
+
+        $('#commentagent').blur(function () {
+            var comment = $.trim($("#commentagent").val());
+            var iddatad = '@ViewBag.iddata';
+            if (comment != "") {
+                // Guardamos si no viene vacio
+                $.ajax
+                    ({
+                        url: '/Operations/Save_dataComment',
+                        type: 'POST',
+                        data: { 'comment': comment, 'iddata': iddatad },
+                        success: function (result) {
+                            if (result == "SUCCESS") {
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'success',
+                                    title: 'Data saved successfully.'
+                                });
+
+
+                            } else {
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'info',
+                                    title: 'Something went wrong, try again'
+                                });
+                            }
+
+
+                        },
+                        error: function () {
+
+                        },
+                    });
+            }
+        });
+
+    });
+
+</script>

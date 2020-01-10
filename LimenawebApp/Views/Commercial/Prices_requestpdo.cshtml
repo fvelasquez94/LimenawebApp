@@ -428,6 +428,7 @@ else if (ViewBag.mostrarOrdenEditar == 0)
                                                             <th style="font-size:12px;">PRODUCT</th>
                                                             <th style="font-size:12px;">UOM</th>
                                                             <th style="font-size:12px;">SO QTY</th>
+                                                            <th style="font-size:12px;">GIFT STOCK</th>
                                                             <th style="font-size:12px;">FACTOR</th>
 
                                                             <th style="font-size:12px;">ACTIONS</th>
@@ -446,9 +447,37 @@ else if (ViewBag.mostrarOrdenEditar == 0)
                                     <td>@product.Brand_Name.Replace("'", "")</td>
 
                                     <td style="display:none;">@product.ItemCode</td>
-                                    <td>@product.ItemCode - @product.ItemName</td>
+                                    <td>
+                                        @if (product.LineNum == 10000)
+    {
+                                        <label>@product.ItemName</label>
+}
+else
+{
+                                        <label>@product.ItemCode - @product.ItemName</label>
+}
+                                       
+                                    </td>
                                     <td>@product.UomCode</td>
-                                    <td>@Math.Round(product.Quantity,0)</td>
+                                    <td>
+                                        @if (product.LineNum == 10000)
+                                        {
+                                            <label>0</label>
+                                        }
+                                        else {
+                                            <label> @Math.Round(product.Quantity, 0)</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (product.LineNum == 10000)
+    {
+                                        <label>@Math.Round(product.Quantity, 0)</label>
+}
+else
+{
+                                    <label> 0</label>
+}
+                                    </td>
                                     <td>@Math.Round(product.FactorBonif,0)</td>
 
                                     <td>

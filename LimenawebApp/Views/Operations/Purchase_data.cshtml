@@ -175,9 +175,9 @@
                                                     <td style="font-size:11px;">@item.SubCategories</td>
                                                     <td style="font-size:11px;">@item.Brands</td>
                                                     <td>
-                                                        <a href="@Url.Action("edit_purchaseData", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>Edit</a>
-                                                        <a href="@Url.Action("PurchaseData_Export", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-outline-success btn-sm form-pill"><i class="fa fa-file-excel-o"></i>Export</a>
-                                                        <a href="#" id="@item.ID_purchaseData" class="btn btn-sm btn-outline-danger btn-sm form-pill delbtn"><i class="fa fa-close"></i>Del</a>
+                                                        <a href="@Url.Action("Initial_forecast", "Operations", new { iddata = item.ID_purchaseData })" class="btn btn-sm btn-primary">Edit</a>
+                                                        <a href="@Url.Action("PurchaseData_Export", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-success">Export</a>
+                                                        <a href="#" id="@item.ID_purchaseData" class="btn btn-sm btn-danger delbtn">Del</a>
                                                     </td>
                                                 </tr>
                     }
