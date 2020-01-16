@@ -228,12 +228,16 @@
     {
         <style>
             @@media (min-width: 576px) {
-                .modal-dialog {
+                .qcmodal {
                     max-width: 100% !important;
                     margin: 1.75rem auto !important;
                 }
             }
-
+            @@media (min-width: 576px) {
+                .modalso {
+                    margin: 1.75rem auto !important;
+                }
+            }
             /*@@media (max-width: 510px) {
                 .modal-dialog {
                     max-width: 100% !important;
@@ -4102,6 +4106,51 @@ Configure tooltips globally
 
                     $.ajax({
                         url: '/Invoices/closeAllSalesOrders',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Sales Orders closed!',
+                                    'The Sales Orders have been deleted.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function transferItems(id_route) {
+
+            swal.fire({
+                title: 'Are you sure you want to close and print all Sales Orders for this route?',
+                text: "You won't be able to revert this",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/transferItems',
                         type: 'POST',
                         data: { 'id_route': id_route },
                         cache: false,

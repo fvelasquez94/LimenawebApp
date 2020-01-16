@@ -952,6 +952,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have
           <Property Name="CambioPrecio" Type="nvarchar" MaxLength="100" Nullable="false" />
           <Property Name="TreeType" Type="char" MaxLength="1" />
           <Property Name="Whs" Type="nvarchar" MaxLength="8" />
+          <Property Name="NoWhs" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_DetailsUOM' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1241,7 +1242,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [OpenSalesOrders_Details].[PrintOrder] AS [PrintOrder], 
     [OpenSalesOrders_Details].[CambioPrecio] AS [CambioPrecio], 
     [OpenSalesOrders_Details].[TreeType] AS [TreeType], 
-    [OpenSalesOrders_Details].[Whs] AS [Whs]
+    [OpenSalesOrders_Details].[Whs] AS [Whs], 
+    [OpenSalesOrders_Details].[NoWhs] AS [NoWhs]
     FROM [dbo].[OpenSalesOrders_Details] AS [OpenSalesOrders_Details]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="OpenSalesOrders_DetailsUOM" EntityType="Self.OpenSalesOrders_DetailsUOM" store:Type="Views" store:Schema="dbo">
@@ -2032,6 +2034,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="CambioPrecio" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="TreeType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="Whs" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="NoWhs" Type="Int32" />
         </EntityType>
         <EntityType Name="OpenSalesOrders_DetailsUOM">
           <Key>
@@ -3077,6 +3080,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="OpenSalesOrders_Details">
             <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders_Details">
               <MappingFragment StoreEntitySet="OpenSalesOrders_Details">
+                <ScalarProperty Name="NoWhs" ColumnName="NoWhs" />
                 <ScalarProperty Name="Whs" ColumnName="Whs" />
                 <ScalarProperty Name="TreeType" ColumnName="TreeType" />
                 <ScalarProperty Name="CambioPrecio" ColumnName="CambioPrecio" />

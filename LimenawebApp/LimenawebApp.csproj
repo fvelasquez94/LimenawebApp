@@ -15217,6 +15217,7 @@
     <Content Include="Views\Operations\Final_forecast.cshtml" />
     <Content Include="Views\Operations\Product_stats.cshtml" />
     <Content Include="Views\Main\Dashboard_ExternalApps.cshtml" />
+    <Content Include="Views\Invoices\QualityControl_storagetype.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

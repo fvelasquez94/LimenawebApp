@@ -212,4 +212,31 @@ namespace LimenawebApp.Models
         public string idSAPsupervisor{ get; set; }
 
     }
+
+    public class QualityControl_SO {
+        public int ID_Route { get; set; }
+        public string Route_name { get; set; }
+        public string ID_driver { get; set; }
+        public string Driver_name { get; set; }
+        public string ID_routeleader { get; set; }
+        public string Routeleader_name { get; set; }
+        public string ID_truck { get; set; }
+        public string Truck_name { get; set; }
+        public System.DateTime Departure { get; set; }
+        public bool isfinished { get; set; }
+        public string ID_SAPRoute { get; set; }
+        public string query1 { get; set; }
+        public string query2 { get; set; }
+        public decimal query3 { get; set; }
+        public string query4 { get; set; }
+        public string query5 { get; set; }
+        public decimal query6 { get; set; }
+        public System.DateTime Date { get; set; }
+        public bool Invoiced { get; set; }
+        public System.DateTime DateCheckIn { get; set; }
+        public System.DateTime DateCheckOut { get; set; }
+        public int ID_userValidate { get; set; }
+        public string Warehouse { get; set; }
+        public int transferred { get; set; }
+    }
 }

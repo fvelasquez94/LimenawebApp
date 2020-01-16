@@ -16,6 +16,42 @@
         
     }
 
+    function getSOdataByStorage(control) {
+        //Llamamos con AJAX
+
+        var id_salesOrder = $(control).data('saleso');
+        var sapdoc = $(control).data('saledoc');
+        var sapdocstorage = $(control).data('salestorage');
+        var sapdocpicker = $(control).data('picker');
+
+        if (sapdocpicker == "") {
+            $("#pickerlst").val("0").change();
+        } else {
+            $("#pickerlst option").filter(function () {
+                return this.text == sapdocpicker;
+            }).attr('selected', true).change();
+        }
+
+
+
+        $("#selectSOd").val(id_salesOrder);
+        $("#selectStoragetype").val(sapdocstorage);
+        $("#docselnum").html("DOC NUM: " + sapdoc);
+        if (sapdocstorage == "COOLER") {
+            $("#storageselso").html("STORAGE TYPE: COOLER, FREEZER");
+        } else {
+            $("#storageselso").html("STORAGE TYPE: " + sapdocstorage);
+        }
+
+
+        $('#SOdetails').modal('show');
+
+
+
+
+    }
+
+
     function getSOdata(control) {
         //Llamamos con AJAX
 
@@ -436,6 +472,143 @@
         }
 
        
+
+    }
+
+    function saveData_StorageType() {
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
+        var storage = $('#selectStoragetype').val();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+
+                var idt = $("#selectSOd").val();
+                //console.log(idt + objects + idpicker + pickername);
+                //console.log(objects);
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Invoices/Save_SODetailsByStorage',
+                        type: 'POST',
+                        data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                toastr.success("Data saved successfully.", "Success");
+                                document.getElementById("loader").style.display = "none";
+                                window.location.reload(true);
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+                                document.getElementById("loader").style.display = "none";
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+            
+
+        }
+
+
+
+    }
+
+    function restoreData_StorageType() {
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
+        var storage = $('#selectStoragetype').val();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Restore_SODetailsByStorage',
+                    type: 'POST',
+                    data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data restored successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+        }
+
+
+
+    }
+    function deleteData_StorageType() {
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
+        var storage = $('#selectStoragetype').val();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Delete_SODetailsByStorage',
+                    type: 'POST',
+                    data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data deleted successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+        }
+
+
 
     }
 

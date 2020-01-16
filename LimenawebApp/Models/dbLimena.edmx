@@ -416,6 +416,7 @@
           <Property Name="DateCheckIn" Type="datetime" />
           <Property Name="DateCheckOut" Type="datetime" />
           <Property Name="ID_userValidate" Type="int" />
+          <Property Name="Warehouse" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Tb_Planning_extra">
           <Key>
@@ -465,6 +466,11 @@
           <Property Name="DateCheckIn" Type="datetime" />
           <Property Name="DateCheckOut" Type="datetime" />
           <Property Name="ID_userValidate" Type="int" />
+          <Property Name="Warehouse" Type="varchar" MaxLength="50" />
+          <Property Name="QC_count" Type="int" />
+          <Property Name="Transferred" Type="int" />
+          <Property Name="MensajeError" Type="nvarchar(max)" />
+          <Property Name="Error" Type="int" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO_details">
           <Key>
@@ -500,6 +506,10 @@
           <Property Name="type" Type="varchar" MaxLength="10" />
           <Property Name="parent" Type="varchar" MaxLength="50" />
           <Property Name="childrendefqty" Type="int" />
+          <Property Name="Warehouse" Type="varchar" MaxLength="50" />
+          <Property Name="QC_count" Type="int" />
+          <Property Name="QC_totalCount" Type="int" />
+          <Property Name="Transferred" Type="int" />
         </EntityType>
         <EntityType Name="Tb_PreOrdersDetailsDSD">
           <Key>
@@ -1013,6 +1023,7 @@
           <Property Name="DateCheckIn" Type="DateTime" Precision="3" />
           <Property Name="DateCheckOut" Type="DateTime" Precision="3" />
           <Property Name="ID_userValidate" Type="Int32" />
+          <Property Name="Warehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO">
           <Key>
@@ -1043,6 +1054,11 @@
           <Property Name="DateCheckIn" Type="DateTime" Precision="3" />
           <Property Name="DateCheckOut" Type="DateTime" Precision="3" />
           <Property Name="ID_userValidate" Type="Int32" />
+          <Property Name="Warehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QC_count" Type="Int32" />
+          <Property Name="Transferred" Type="Int32" />
+          <Property Name="MensajeError" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Error" Type="Int32" />
         </EntityType>
         <Association Name="FK_Tb_PlanningSO_Tb_Planning">
           <End Type="dbLimenaModel.Tb_Planning" Role="Tb_Planning" Multiplicity="1" />
@@ -1090,6 +1106,10 @@
           <Property Name="type" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
           <Property Name="parent" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="childrendefqty" Type="Int32" />
+          <Property Name="Warehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="QC_count" Type="Int32" />
+          <Property Name="QC_totalCount" Type="Int32" />
+          <Property Name="Transferred" Type="Int32" />
         </EntityType>
         <EntityType Name="Purchase_data">
           <Key>
@@ -1583,6 +1603,7 @@
           <EntitySetMapping Name="Tb_Planning">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_Planning">
               <MappingFragment StoreEntitySet="Tb_Planning">
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
                 <ScalarProperty Name="ID_userValidate" ColumnName="ID_userValidate" />
                 <ScalarProperty Name="DateCheckOut" ColumnName="DateCheckOut" />
                 <ScalarProperty Name="DateCheckIn" ColumnName="DateCheckIn" />
@@ -1608,6 +1629,11 @@
           <EntitySetMapping Name="Tb_PlanningSO">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_PlanningSO">
               <MappingFragment StoreEntitySet="Tb_PlanningSO">
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="MensajeError" ColumnName="MensajeError" />
+                <ScalarProperty Name="Transferred" ColumnName="Transferred" />
+                <ScalarProperty Name="QC_count" ColumnName="QC_count" />
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
                 <ScalarProperty Name="ID_userValidate" ColumnName="ID_userValidate" />
                 <ScalarProperty Name="DateCheckOut" ColumnName="DateCheckOut" />
                 <ScalarProperty Name="DateCheckIn" ColumnName="DateCheckIn" />
@@ -1638,6 +1664,10 @@
           <EntitySetMapping Name="Tb_PlanningSO_details">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_PlanningSO_details">
               <MappingFragment StoreEntitySet="Tb_PlanningSO_details">
+                <ScalarProperty Name="Transferred" ColumnName="Transferred" />
+                <ScalarProperty Name="QC_totalCount" ColumnName="QC_totalCount" />
+                <ScalarProperty Name="QC_count" ColumnName="QC_count" />
+                <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
                 <ScalarProperty Name="childrendefqty" ColumnName="childrendefqty" />
                 <ScalarProperty Name="parent" ColumnName="parent" />
                 <ScalarProperty Name="type" ColumnName="type" />

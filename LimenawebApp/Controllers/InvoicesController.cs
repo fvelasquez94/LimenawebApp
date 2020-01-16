@@ -51,9 +51,9 @@ namespace LimenawebApp.Controllers
         }
         public ActionResult Planning_order(int id)
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
                 //PAGINAS ACTIVAS
@@ -73,8 +73,17 @@ namespace LimenawebApp.Controllers
                 ViewBag.lstAlerts = lstAlerts;
 
                 //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
 
-                var orders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id) select a).OrderBy(a => a.query3).ToList();
+                var orders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id && a.Warehouse==company_bodega) select a).OrderBy(a => a.query3).ToList();
                 ViewBag.orders = orders;
                 //FIN HEADER
 
@@ -143,7 +152,7 @@ namespace LimenawebApp.Controllers
                 ///////////////////////////////
                 List<Tb_Planning> rutaslst = new List<Tb_Planning>();
                 //Nuevo filtro por bodega
-                rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate) select a).ToList();
+                rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse==company_bodega) select a).ToList();
 
                 var rtids = rutaslst.Select(c => c.ID_Route).ToArray();
                 //Cargamos todos los datos maestros a utilizar
@@ -460,7 +469,7 @@ namespace LimenawebApp.Controllers
 
                 IEnumerable<OpenSalesOrders> SalesOrder;
                 //SalesOrder = (from b in dlipro.OpenSalesOrders select b).Take(10);
-                SalesOrder = (from b in dlipro.OpenSalesOrders where (b.SODate >= filtrostartdate && b.SODate <= filtroenddate) select b);
+                SalesOrder = (from b in dlipro.OpenSalesOrders where (b.SODate >= filtrostartdate && b.SODate <= filtroenddate && b.WareHouse==company_bodega) select b);
 
                 return View(SalesOrder);
 
@@ -472,11 +481,14 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+
+
         public ActionResult QualityControl_planning(string fstartd, string fendd)
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
                 //PAGINAS ACTIVAS
@@ -506,7 +518,7 @@ namespace LimenawebApp.Controllers
                 //var saturday = sunday.AddMonths(1).AddDays(-1);
                 //filtros de fecha (DIARIO)
                 var sunday = DateTime.Today;
-                var saturday = sunday.AddDays(1);
+                var saturday = sunday.AddDays(1).AddHours(20);
                 //FILTROS**************
 
                 if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
@@ -516,29 +528,145 @@ namespace LimenawebApp.Controllers
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
                 //FIN FILTROS*******************
 
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+                List<QualityControl_SO> lstPlanning = new List<QualityControl_SO>();
 
 
-                List<Tb_Planning> lstPlanning = new List<Tb_Planning>();
-                lstPlanning = (from a in dblim.Tb_Planning where(a.Departure >= filtrostartdate && a.Departure <= filtroenddate) select a).ToList();
+                if (company_bodega == "01")
+                {
+                    lstPlanning = (from a in dblim.Tb_Planning
+                                   where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate)
+                                   select new QualityControl_SO
+                                   {
+                                       ID_Route = a.ID_Route,
+                                       Route_name = a.Route_name,
+                                       ID_driver = a.ID_driver,
+                                       Driver_name = a.Driver_name,
+                                       ID_routeleader = a.ID_routeleader,
+                                       Routeleader_name = a.Routeleader_name,
+                                       ID_truck = a.ID_truck,
+                                       Truck_name = a.Truck_name,
+                                       Departure = a.Departure,
+                                       isfinished = a.isfinished,
+                                       ID_SAPRoute = a.ID_SAPRoute,
+                                       query1 = a.query1,
+                                       query2 = a.query2,
+                                       query3 = a.query3,
+                                       query4 = "",
+                                       query5 = "",
+                                       query6 = 0,
+                                       Date = a.Date,
+                                       Invoiced = a.Invoiced,
+                                       DateCheckIn = a.DateCheckIn,
+                                       DateCheckOut = a.DateCheckOut,
+                                       ID_userValidate = a.ID_userValidate,
+                                       Warehouse = a.Warehouse,
+                                       transferred = 0
+                                   }).ToList();
+                }
+                else {
+                    lstPlanning = (from a in dblim.Tb_Planning
+                                   where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega)
+                                   select new QualityControl_SO
+                                   {
+                                       ID_Route = a.ID_Route,
+                                       Route_name = a.Route_name,
+                                       ID_driver = a.ID_driver,
+                                       Driver_name = a.Driver_name,
+                                       ID_routeleader = a.ID_routeleader,
+                                       Routeleader_name = a.Routeleader_name,
+                                       ID_truck = a.ID_truck,
+                                       Truck_name = a.Truck_name,
+                                       Departure = a.Departure,
+                                       isfinished = a.isfinished,
+                                       ID_SAPRoute = a.ID_SAPRoute,
+                                       query1 = a.query1,
+                                       query2 = a.query2,
+                                       query3 = a.query3,
+                                       query4 = "",
+                                       query5 = "",
+                                       query6 = 0,
+                                       Date = a.Date,
+                                       Invoiced = a.Invoiced,
+                                       DateCheckIn = a.DateCheckIn,
+                                       DateCheckOut = a.DateCheckOut,
+                                       ID_userValidate = a.ID_userValidate,
+                                       Warehouse = a.Warehouse,        
+                                       transferred = 0
+                                   }).ToList();
+                }
+
+
+
 
                 var ArrayPlanning = lstPlanning.Select(a => a.ID_Route).ToArray();
 
                 List<Tb_PlanningSO> SalesOrder = new List<Tb_PlanningSO>();
-                SalesOrder = (from b in dblim.Tb_PlanningSO where (ArrayPlanning.Contains(b.ID_Route)) select b).ToList();
-                
+
+
+                    SalesOrder = (from b in dblim.Tb_PlanningSO where (ArrayPlanning.Contains(b.ID_Route)) select b).ToList();
+
+
+
+
                 //SalesOrder = (from b in dblim.Tb_PlanningSO where (ArrayPlanning.Contains(b.ID_Route)) select b).ToList();
 
                 //ESTADISTICA DE RUTAS POR ESTADO DE VISITAS
                 decimal totalRutas = lstPlanning.Count();
+                decimal totalRutas_bodega = lstPlanning.Count();
                 foreach (var rutait in lstPlanning)
                 {
                     var arrso = SalesOrder.Where(c=> c.ID_Route == rutait.ID_Route).Select(c => c.ID_salesorder).ToArray();
                     var count = SalesOrder.Where(c=> c.ID_Route == rutait.ID_Route).Select(c => c).Count();
                     var allvalidated = (from f in SalesOrder where (f.isfinished == true && f.ID_Route == rutait.ID_Route) select f).Count();
                     //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
-                    decimal finishedorCanceled = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated==true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I")) select e).Count();
- 
-                    totalRutas = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I")) select e).Count();             
+                    decimal finishedorCanceled = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated==true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count == e.QC_totalCount) select e).Count();
+                    //DATOS EN OTRA BODEGA
+                    decimal finishedorCanceled_bodega = 0;
+
+                    var existendeOtraBodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count == e.QC_totalCount && e.Warehouse != company_bodega) select e).Count();
+                    ViewBag.existendeOtraBodega = existendeOtraBodega;
+
+                    var existemibodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.type.Contains("I") && e.Warehouse == company_bodega) select e).Count();
+
+
+                    if (company_bodega == "01")
+                    {
+                        finishedorCanceled_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated == true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse == company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
+                    }
+                    else {
+                        finishedorCanceled_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated == true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse != company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
+                    }
+
+                    int trans = 0;
+                    //sabes si ya estan transferidas
+                    if (company_bodega == "01")
+                    {
+                        trans = SalesOrder.Where(a => a.Warehouse != company_bodega && a.Transferred >0 && a.ID_Route == rutait.ID_Route).Count();
+
+                        if (trans > 0) {
+                            rutait.transferred = 1;
+                        }
+                    }
+
+                    totalRutas = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count == e.QC_totalCount) select e).Count();
+                    if (company_bodega == "01")
+                    {
+                        totalRutas_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse == company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
+                    }
+                    else {
+                        totalRutas_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse != company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
+                    }
+                        
 
                     if (totalRutas != 0)
                     {
@@ -560,18 +688,77 @@ namespace LimenawebApp.Controllers
                     else
                     {
                         rutait.query1 = "0";
+                        rutait.query2 = "(0 / 0)";
                     }
 
-                    if (count == allvalidated) {
+
+                    if (totalRutas_bodega != 0)
+                    {
+                        if (finishedorCanceled_bodega != 0)
+                        {
+
+                            rutait.query4 = (((Convert.ToDecimal(finishedorCanceled_bodega) / totalRutas_bodega) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            rutait.query4 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        rutait.query5 = "(" + finishedorCanceled_bodega + " / " + totalRutas_bodega + ")";
+                        if (company_bodega == "01")
+                        {
+                            rutait.query6 = existemibodega;
+                        }
+                        else {
+                            rutait.query6 = totalRutas_bodega;
+                        }
+                     
+                    }
+                    else
+                    {
+                        rutait.query4 = "0";
+                        rutait.query5 = "(0 / 0)";
+                        if (company_bodega == "01")
+                        {
+                            rutait.query6 = existemibodega;
+                        }
+                        else
+                        {
+                            rutait.query6 = 0;
+                        }
+                    }
+
+
+                    if (count == allvalidated && totalRutas_bodega==0) {
                         rutait.query3 = 1;
                     }
                         
                    
                 }
+                //Verificamos si rutas estan finalizadas en bodega distinta
+                var mostrarbilloflading = 0;
+                var rutas="";
+                if (company_bodega == "01") {
+                    var lstotrabod = lstPlanning.Where(a => a.Warehouse != company_bodega).ToList();
+                    rutas = String.Join(",", lstotrabod.Select(o => o.ID_Route.ToString()).ToArray());
 
-
-                ViewBag.lstPlanning = lstPlanning;
-                return View();
+                    foreach (var subruta in lstotrabod) {
+                        if (Convert.ToDecimal(subruta.query4) >= 100)
+                        {
+                            mostrarbilloflading = 1;
+                        }
+                        else {
+                            mostrarbilloflading = 0;
+                        }
+                    }
+                }
+                ViewBag.rutasids = rutas;
+                ViewBag.mostrarBOF = mostrarbilloflading;
+                //ViewBag.lstPlanning = lstPlanning;
+                ViewBag.company = company_bodega;
+                return View(lstPlanning);
 
             }
             else
@@ -589,6 +776,7 @@ namespace LimenawebApp.Controllers
             public string data1 { get; set; }
             public string data2 { get; set; }
             public string Picker { get; set; }
+            public int delete { get; set; }
 
         }
 
@@ -642,9 +830,9 @@ namespace LimenawebApp.Controllers
 
         public ActionResult QualityControl(int id)
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
                 //PAGINAS ACTIVAS
@@ -675,12 +863,43 @@ namespace LimenawebApp.Controllers
                 }
 
                 List<Tb_PlanningSO> lstSalesOrders = new List<Tb_PlanningSO>();
-                lstSalesOrders = (from a in dblim.Tb_PlanningSO where(a.ID_Route == id) select a).OrderBy(a=>a.Customer_name ).ThenBy(a=>a.ID_customer).ToList();
 
-                var Arry = lstSalesOrders.Select(a => a.ID_salesorder).ToArray();
+                if (company_bodega == "01")
+                {
+                    lstSalesOrders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id) select a).OrderBy(a => a.Customer_name).ThenBy(a => a.ID_customer).ToList();
+                }
+                else {
+                    lstSalesOrders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id && a.Warehouse == company_bodega) select a).OrderBy(a => a.Customer_name).ThenBy(a => a.ID_customer).ToList();
+                }
+
+                
+
+
+
+
+                var Arry = lstSalesOrders.Where(a => a.Warehouse == company_bodega).Select(a => a.ID_salesorder).ToArray();
+               
 
                 List<Tb_PlanningSO_details> lstDetails = new List<Tb_PlanningSO_details>();
-                lstDetails = (from b in dblim.Tb_PlanningSO_details where(Arry.Contains(b.ID_salesorder) &&  b.Quantity>0 && !b.type.Contains("I")) select b).ToList();
+
+                if (company_bodega == "01")
+                {
+                    var Arry_Bodega = lstSalesOrders.Where(a => a.Warehouse != company_bodega).Select(a => a.ID_salesorder).ToArray();
+
+                    lstDetails = (from b in dblim.Tb_PlanningSO_details where (Arry.Contains(b.ID_salesorder) && b.Quantity > 0 && !b.type.Contains("I")) select b).ToList();
+
+                    var detallesdifbod = (from b in dblim.Tb_PlanningSO_details where (Arry_Bodega.Contains(b.ID_salesorder) && b.Quantity > 0 && !b.type.Contains("I") && b.Warehouse == company_bodega && b.QC_totalCount != b.QC_count) select b).ToList();
+
+                    if (detallesdifbod.Count > 0) {
+                        lstDetails.AddRange(detallesdifbod);
+                    }
+                }
+                else
+                {
+                    lstDetails = (from b in dblim.Tb_PlanningSO_details where (Arry.Contains(b.ID_salesorder) && b.Quantity > 0 && !b.type.Contains("I") && b.Warehouse == company_bodega) select b).ToList();
+                }
+
+
 
 
                 //ESTADISTICA DE SALES ORDERS POR ESTADO DE DETALLES
@@ -716,16 +935,17 @@ namespace LimenawebApp.Controllers
                         rutait.query2 = "(0/ 0)";
                     }
                 }
-                var consolidatedChildren = (from c in lstDetails  group c by new { c.ID_salesorder,c.ID_storagetype,c.Storage_type} into gcs
+                var consolidatedChildren = (from c in lstDetails group c by new { c.ID_salesorder, c.ID_storagetype, c.Storage_type } into gcs
 
-                                           select new ConsolidatedChild()
-                                           {
-                                               ID_salesOrder = gcs.Key.ID_salesorder,
-                                               ID_storage = gcs.Key.ID_storagetype,
-                                               Storage = gcs.Key.Storage_type,
-                                               data1 = "",
-                                               data2 = "",
-                                               Picker = ""
+                                            select new ConsolidatedChild()
+                                            {
+                                                ID_salesOrder = gcs.Key.ID_salesorder,
+                                                ID_storage = gcs.Key.ID_storagetype,
+                                                Storage = gcs.Key.Storage_type,
+                                                data1 = "",
+                                                data2 = "",
+                                                Picker = "",
+                                                delete = 0
                                            }).ToList();
 
 
@@ -868,6 +1088,265 @@ namespace LimenawebApp.Controllers
             }
         }
 
+
+
+        public ActionResult QualityControl_storagetype(int id)
+        {
+            if (generalClass.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Operation";
+                ViewData["Page"] = "Invoices";
+                ViewBag.menunameid = "oper_menu";
+                ViewBag.submenunameid = "drop3";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+                //FIN HEADER
+
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+                List<Tb_PlanningSO> lstSalesOrders = new List<Tb_PlanningSO>();
+
+
+                    lstSalesOrders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id) select a).OrderBy(a => a.Customer_name).ThenBy(a => a.ID_customer).ToList();
+                
+
+
+
+
+
+
+                var Arry = lstSalesOrders.Select(a => a.ID_salesorder).ToArray();
+
+
+                List<Tb_PlanningSO_details> lstDetails = new List<Tb_PlanningSO_details>();
+
+
+                    lstDetails = (from b in dblim.Tb_PlanningSO_details where (Arry.Contains(b.ID_salesorder) && b.Quantity > 0 && !b.type.Contains("I") && b.Warehouse != company_bodega) select b).ToList();
+                
+
+
+
+
+                //ESTADISTICA DE SALES ORDERS POR ESTADO DE DETALLES
+                decimal totalRutas = lstDetails.Count();
+                foreach (var rutait in lstSalesOrders)
+                {
+
+                    //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                    decimal finishedorCanceled = (from e in lstDetails where ((e.isvalidated == true) && e.ID_salesorder == rutait.ID_salesorder && !e.query1.Contains("DEL")) select e).Count();
+
+                    totalRutas = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesorder && !e.query1.Contains("DEL")) select e).Count();
+
+                    if (totalRutas != 0)
+                    {
+                        if (finishedorCanceled != 0)
+                        {
+
+                            rutait.query1 = (((Convert.ToDecimal(finishedorCanceled) / totalRutas) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            rutait.query1 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        rutait.query2 = "(" + finishedorCanceled + " / " + totalRutas + ")";
+
+                    }
+                    else
+                    {
+                        rutait.query1 = "0";
+                        rutait.query2 = "(0/ 0)";
+                    }
+                }
+                var consolidatedChildren = (from c in lstDetails
+                                            group c by new { c.ID_salesorder, c.ID_storagetype, c.Storage_type } into gcs
+
+                                            select new ConsolidatedChild()
+                                            {
+                                                ID_salesOrder = gcs.Key.ID_salesorder,
+                                                ID_storage = gcs.Key.ID_storagetype,
+                                                Storage = gcs.Key.Storage_type,
+                                                data1 = "",
+                                                data2 = "",
+                                                Picker = "",
+                                                delete=0
+                                            }).ToList();
+
+
+
+                var pickers = dlipro.C_PICKERS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListPickers = new ArrayList();
+                myArrListPickers.AddRange((from p in pickers
+                                           select new
+                                           {
+                                               id = p.Code,
+                                               text = p.Name.ToUpper().Replace("'", ""),
+                                           }).ToList());
+
+                ViewBag.pickers = JsonConvert.SerializeObject(myArrListPickers);
+
+                //ESTADISTICA DE DETALLE STORAGE TYPE EN SALES ORDERS
+                decimal totalDet = consolidatedChildren.Count();
+                var flag = 0;
+                int salesant = 0;
+                List<ConsolidatedChild> arrytodel = new List<ConsolidatedChild>();
+                foreach (var rutait in consolidatedChildren)
+                {
+                    if (rutait.ID_salesOrder == 302)
+                    {
+                        var h = 0;
+                    }
+                    if (salesant != rutait.ID_salesOrder)
+
+                    {
+                        flag = 0;
+                    }
+                    //NUEVO PARA UNIR COOLER Y FREEZER
+                    if (rutait.ID_storage == "COOLER" || rutait.ID_storage == "FREEZER")
+                    {
+                        if (salesant == rutait.ID_salesOrder && flag == 1)
+
+                        {
+                            flag = 1;
+                        }
+                        else
+                        {
+                            flag = 0;
+                        }
+                        if (flag == 0)
+                        {
+                            //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                            decimal finishedorCanceled2 = (from e in lstDetails where ((e.isvalidated == true) && e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).Count();
+
+                            totalRutas = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).Count();
+                            var eliminados = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).Count();
+
+                            if (eliminados > 0) {
+                                rutait.delete = 1;
+                            }
+
+                            if (totalRutas != 0)
+                            {
+                                if (finishedorCanceled2 != 0)
+                                {
+
+                                    rutait.data1 = (((Convert.ToDecimal(finishedorCanceled2) / totalRutas) * 100)).ToString();
+
+                                }
+
+                                else
+                                {
+
+                                    rutait.data1 = (Convert.ToDecimal(0)).ToString();
+                                }
+                                rutait.data2 = "(" + finishedorCanceled2 + " / " + totalRutas + ")";
+
+                                var dtl = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).FirstOrDefault();
+                                if (dtl != null)
+                                {
+                                    rutait.Picker = dtl.Picker_name;
+                                }
+                            }
+                            else
+                            {
+                                rutait.data1 = "0";
+                            }
+
+                            flag = 1;
+                            arrytodel.Add(rutait);
+                        }
+                        else
+                        {
+                            flag = 0;
+                        }
+
+
+                    }
+                    else
+                    {
+                        //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                        decimal finishedorCanceled2 = (from e in lstDetails where ((e.isvalidated == true) && e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).Count();
+
+                        totalRutas = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).Count();
+                        var eliminados = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).Count();
+
+                        if (eliminados > 0)
+                        {
+                            rutait.delete = 1;
+                        }
+                        if (totalRutas != 0)
+                        {
+                            if (finishedorCanceled2 != 0)
+                            {
+
+                                rutait.data1 = (((Convert.ToDecimal(finishedorCanceled2) / totalRutas) * 100)).ToString();
+
+                            }
+
+                            else
+                            {
+
+                                rutait.data1 = (Convert.ToDecimal(0)).ToString();
+                            }
+                            rutait.data2 = "(" + finishedorCanceled2 + " / " + totalRutas + ")";
+
+                            var dtl = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).FirstOrDefault();
+                            if (dtl != null)
+                            {
+                                rutait.Picker = dtl.Picker_name;
+                            }
+                        }
+                        else
+                        {
+                            rutait.data1 = "0";
+                        }
+                        arrytodel.Add(rutait);
+
+                    }
+
+                    salesant = rutait.ID_salesOrder;
+                }
+
+                ViewBag.lstSO = lstSalesOrders;
+
+
+
+
+                ViewBag.lstSO_children = arrytodel;
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
         public class RoutesInfo {
             public int ID_Route { get; set; }
             public string Route_name { get; set; }
@@ -961,7 +1440,20 @@ namespace LimenawebApp.Controllers
         {
             try
             {
-                var lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf).OrderByDescending(dc => dc.ID_Route).ToList();
+
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+
+                var lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf && dc.Warehouse==company_bodega).OrderByDescending(dc => dc.ID_Route).ToList();
 
                 List<Routes_calendar> rutaslst = new List<Routes_calendar>();
 
@@ -1159,10 +1651,13 @@ namespace LimenawebApp.Controllers
         {
             try
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+
                 var ID = Convert.ToInt32(id_route);
 
                 var route = dblim.Tb_PlanningSO.Where(a=> a.ID_Route==ID).Select(a=>a).ToList();
-                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+               
                 foreach (var item in route) {
                     item.isfinished = true;
                     if (activeuser != null) {
@@ -1186,25 +1681,91 @@ namespace LimenawebApp.Controllers
 
 
         }
+
+
+        public ActionResult transferItems(string id_route)
+        {
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+
+                List<int> TagIds = id_route.Split(',').Select(int.Parse).ToList();
+
+                var soedit = dblim.Tb_PlanningSO.Where(a => TagIds.Contains(a.ID_Route)).Select(a => a).ToList();
+                var so_list = soedit.Select(a => a.ID_salesorder).ToArray();
+
+                foreach (var so in soedit)
+                {
+                     so.Transferred= 1;
+                    dblim.Entry(so).State = EntityState.Modified;
+
+                }
+
+                var item_list = dblim.Tb_PlanningSO_details.Where(b => so_list.Contains(b.ID_salesorder) && b.Warehouse == company_bodega).ToList();
+
+                foreach (var item in item_list)
+                {
+                    item.isvalidated = false;
+                    item.Transferred = 1;
+                    item.QC_totalCount = item.QC_totalCount + 1;
+                    dblim.Entry(item).State = EntityState.Modified;
+
+                }
+
+                dblim.BulkSaveChanges();
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+
         public ActionResult GetSalesOrders(string id, DateTime date)
         {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
+
 
             int idr = Convert.ToInt32(id);
             //var salesOrders = new List<Tb_PlanningSO>();
             DateTime selDate = Convert.ToDateTime(date).AddDays(1);
             DateTime filterdate = DateTime.Today.AddDays(-31);
 
-            var tbplanningSO = (from obj in dblim.Tb_PlanningSO where(obj.SAP_docdate > filterdate) select obj).ToList();
+            var tbplanningSO = (from obj in dblim.Tb_PlanningSO where(obj.SAP_docdate > filterdate && obj.Warehouse==company_bodega) select obj).ToList();
 
 
-            var rt = (from a in dblim.Tb_Planning where (a.ID_Route == idr) select new { id=a.ID_Route, isfinished=a.isfinished}).ToList();
+            var rt = (from a in dblim.Tb_Planning where (a.ID_Route == idr && a.Warehouse==company_bodega) select new { id=a.ID_Route, isfinished=a.isfinished}).ToList();
             //Solo IDSO interno
-            var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr) select j.ID_salesorder).ToList();
+            var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr && j.Warehouse==company_bodega) select j.ID_salesorder).ToList();
 
        
 
             //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
-            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (solist.Contains(f.ID_salesorder)) select f).ToList();
+            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (solist.Contains(f.ID_salesorder) && f.Warehouse==company_bodega) select f).ToList();
 
             var totalCantEach = 0;
             var totalCantCases = 0;
@@ -1223,7 +1784,7 @@ namespace LimenawebApp.Controllers
 
                     foreach (var item in solist) {
                         //devolvemos ID externo
-                        var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder==item).Select(c => c.SAP_docnum).FirstOrDefault());
+                        var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder==item && j.Warehouse==company_bodega).Select(c => c.SAP_docnum).FirstOrDefault());
 
                         //Devolvemos todos los detalles(itemcode) de esa SO
                         var itemscode = detallesSo.Where(c=>c.ID_salesorder==item).Select(c => c.ItemCode).ToArray();
@@ -1257,7 +1818,7 @@ namespace LimenawebApp.Controllers
 
 
             //salesOrders = (from obj in dbcmk.VisitsM where (obj.ID_route == idr) select obj).ToList();
-            var lst = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr) select new { id = obj.ID_salesorder, NumSO=obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name , DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight= obj.Weight, Volume = obj.Volume, Printed= obj.Printed, Remarks = obj.Remarks, Order=obj.query3 }).OrderBy(c=>c.Order).ToArray();
+            var lst = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr && obj.Warehouse==company_bodega) select new { id = obj.ID_salesorder, NumSO=obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name , DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight= obj.Weight, Volume = obj.Volume, Printed= obj.Printed, Remarks = obj.Remarks, Order=obj.query3 }).OrderBy(c=>c.Order).ToArray();
             var lstArray = (from obj in lst select  obj.NumSO).ToArray();
             var totalextra = "";
             try
@@ -1310,40 +1871,24 @@ namespace LimenawebApp.Controllers
             }
             else {
 
-   
-                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-
-
-                    var company_bodega = "0";
-                    if (activeuser.ID_Company == 1)
-                    {
-                        company_bodega = "01";
-                    }
-                    else if (activeuser.ID_Company == 2)
-                    {
-                        company_bodega = "02";
-                    }
-
-                    var lstOpenSales = (from obj in dlipro.OpenSalesOrders where(obj.SODate > filterdate && obj.WareHouse== company_bodega) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount =obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where(obj.SODate > filterdate && obj.WareHouse== company_bodega) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount =obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
                 List<int> myCollection = new List<int>();
-
-
 
                 foreach (var saleOrder in lstOpenSales)
                 {
-                        
 
-                        decimal openO = Convert.ToDecimal(saleOrder.OpenAmount);
-                        
 
-                        var sapdoc = saleOrder.NumSO.ToString();
-                        var existe = (from a in tbplanningSO where (a.Amount == openO && a.SAP_docnum == sapdoc) select a).FirstOrDefault();
-                        if (existe != null)
-                        {
+                    decimal openO = Convert.ToDecimal(saleOrder.OpenAmount);
+
+
+                    var sapdoc = saleOrder.NumSO.ToString();
+                    var existe = (from a in tbplanningSO where (a.Amount == openO && a.SAP_docnum == sapdoc && a.Warehouse == company_bodega) select a).FirstOrDefault();
+                    if (existe != null)
+                    {
                         myCollection.Add(Convert.ToInt32(sapdoc));
                     }
 
-                   
+
                 }
 
                 lstOpenSales = (from a in lstOpenSales where (!myCollection.Contains(a.NumSO)) select a).ToArray();
@@ -1403,14 +1948,23 @@ namespace LimenawebApp.Controllers
     }
         public ActionResult GetSalesOrdersDetails(string id, string id_storage)
         {
-
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
             int idr = Convert.ToInt32(id);
             List<detailsSO> rt = new List<detailsSO>();
             
             if (id_storage == "COOLER" || id_storage == "FREEZER")
             {
                 rt = (from a in dblim.Tb_PlanningSO_details
-                      where (a.ID_salesorder == idr && a.Quantity > 0 && (a.ID_storagetype == "COOLER" || a.ID_storagetype == "FREEZER") && !a.type.Contains("I"))
+                      where (a.ID_salesorder == idr && a.Quantity > 0 && (a.ID_storagetype == "COOLER" || a.ID_storagetype == "FREEZER" && a.Warehouse==company_bodega) && !a.type.Contains("I"))
                       select new detailsSO
                       {
                           ID_detail = a.ID_detail,
@@ -1431,7 +1985,7 @@ namespace LimenawebApp.Controllers
             }
             else {
                 rt = (from a in dblim.Tb_PlanningSO_details
-                      where (a.ID_salesorder == idr && a.Quantity > 0 && a.ID_storagetype == id_storage && !a.type.Contains("I"))
+                      where (a.ID_salesorder == idr && a.Quantity > 0 && a.ID_storagetype == id_storage && !a.type.Contains("I") && a.Warehouse == company_bodega)
                       select new detailsSO
                       {
                           ID_detail = a.ID_detail,
@@ -1600,7 +2154,7 @@ namespace LimenawebApp.Controllers
                     newPlanning.DateCheckOut = DateTime.UtcNow;
                     newPlanning.ID_userValidate = 0;
                     //Nueva propiedad para bodega
-                    //newPlanning.WareHouse = company_bodega;
+                    newPlanning.Warehouse = company_bodega;
 
                     dblim.Tb_Planning.Add(newPlanning);
                     dblim.SaveChanges();
@@ -1616,7 +2170,7 @@ namespace LimenawebApp.Controllers
                     {
                         myCollection.Add(Convert.ToInt32(item));
                     }
-                    var salesOrders = (from a in dlipro.OpenSalesOrders where (a.DeliveryRoute == lstMasterName && !myCollection.Contains(a.NumSO) && a.SODate > filterdate && a.WareHouse ==company_bodega) select a).ToList();
+                    var salesOrders = (from a in dlipro.OpenSalesOrders where (a.DeliveryRoute == lstMasterName && !myCollection.Contains(a.NumSO) && a.SODate > filterdate) select a).ToList();
 
                     var avaSO = (from a in salesOrders select a.NumSO).ToArray();
 
@@ -1658,8 +2212,11 @@ namespace LimenawebApp.Controllers
                                         newSO.DateCheckIn = DateTime.UtcNow;
                                         newSO.DateCheckOut = DateTime.UtcNow;
                                         newSO.ID_userValidate = 0;
-
-
+                                        newSO.Warehouse = saleOrder.WareHouse;
+                                        newSO.Transferred = 0;
+                                        newSO.QC_count = Convert.ToInt32(saleOrder.NoWhs);
+                                        newSO.MensajeError = "";
+                                        newSO.Error = 0;
                                         if (saleOrder.Remarks == null) { newSO.Remarks = ""; } else { newSO.Remarks = saleOrder.Remarks; }
 
                                         dblim.Tb_PlanningSO.Add(newSO);
@@ -1707,6 +2264,17 @@ namespace LimenawebApp.Controllers
                                                 newDtl.type = dt.TreeType;
                                                 newDtl.parent = "";
                                                 newDtl.childrendefqty = 0;
+                                                newDtl.Transferred = 0;
+                                                newDtl.Warehouse = dt.Whs;
+                                                newDtl.QC_count = Convert.ToInt32(dt.NoWhs);
+                                                if (newSO.Warehouse == dt.Whs)
+                                                {
+                                                    newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                                }
+                                                else {
+                                                    newDtl.QC_totalCount = 1;
+                                                }
+                                               
                                                 lsttosave.Add(newDtl);
 
 
@@ -1755,6 +2323,17 @@ namespace LimenawebApp.Controllers
                                                             newDtlHijo.type = "I";
                                                             newDtlHijo.parent = dt.ItemCode;
                                                             newDtlHijo.childrendefqty = Convert.ToInt32(hijo.Quantity);
+                                                            newDtlHijo.Transferred = 0;
+                                                            newDtlHijo.Warehouse = dt.Whs;
+                                                            newDtlHijo.QC_count = Convert.ToInt32(dt.NoWhs);
+                                                            if (newSO.Warehouse == dt.Whs)
+                                                            {
+                                                                newDtlHijo.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                                            }
+                                                            else
+                                                            {
+                                                                newDtlHijo.QC_totalCount = 1;
+                                                            }
                                                             lsttosave.Add(newDtlHijo);
                                                             countLineNum++;
                                                         }
@@ -1796,7 +2375,7 @@ namespace LimenawebApp.Controllers
                     rt.truck = newPlanning.Truck_name;
                     rt.departure = newPlanning.Departure.ToShortTimeString();
                     if (newPlanning.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
-                    var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == newPlanning.ID_Route) select e);
+                    var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == newPlanning.ID_Route && e.Warehouse==company_bodega) select e);
                     if (sum != null && sum.Count() > 0)
                     {
                         rt.amount = sum.Select(c => c.Amount).Sum().ToString();
@@ -1881,7 +2460,16 @@ namespace LimenawebApp.Controllers
 
             try
             {
-
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
                 if (salesOrders == null)
                 {
                     var id = Convert.ToInt32(id_route);
@@ -1906,7 +2494,7 @@ namespace LimenawebApp.Controllers
                     if (salesOrders.Length > 0 || salesOrders != null)
                     {
                         var id = Convert.ToInt32(id_route);
-                        var soexist = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id) select f.SAP_docnum).ToArray();
+                        var soexist = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id ) select f.SAP_docnum).ToArray();
 
                         var fincoll = (from a in soexist where (!salesOrders.Contains(a)) select a).ToArray();
 
@@ -1980,7 +2568,12 @@ namespace LimenawebApp.Controllers
                                 newSO.DateCheckIn = DateTime.UtcNow;
                                 newSO.DateCheckOut = DateTime.UtcNow;
                                 newSO.ID_userValidate = 0;
-            
+                                newSO.Transferred = 0;
+                                newSO.Warehouse = saleOrder.WareHouse;
+                                newSO.MensajeError = "";
+                                newSO.Error = 0;
+                                newSO.QC_count = Convert.ToInt32(saleOrder.NoWhs);
+
                                 if (saleOrder.Remarks == null) { newSO.Remarks = ""; } else { newSO.Remarks = saleOrder.Remarks; }
                                 dblim.Tb_PlanningSO.Add(newSO);
                                 dblim.SaveChanges();
@@ -2026,6 +2619,25 @@ namespace LimenawebApp.Controllers
                                         newDtl.type = dt.TreeType;
                                         newDtl.parent = "";
                                         newDtl.childrendefqty = 0;
+                                        newDtl.Warehouse = dt.Whs;
+                                        newDtl.Transferred = 0;
+
+                                        //Evaluamos si se haran 2 conteos o 1
+                                        //02=Louisville, KY ----- WHS=01-Nashville, TN
+                                        //Se haran 2 conteos si la orden es solicitada en KY pero el detalle sale de TN
+
+
+                                        newDtl.QC_count = Convert.ToInt32(dt.NoWhs);
+                                        if (newSO.Warehouse == dt.Whs)
+                                        {
+                                            newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                        }
+                                        else
+                                        {
+                                            newDtl.QC_totalCount = 1;
+                                        }
+
+
                                         lsttosave.Add(newDtl);
                                         //dblim.Tb_PlanningSO_details.Add(newDtl);
 
@@ -2078,6 +2690,17 @@ namespace LimenawebApp.Controllers
                                                     newDtlHijo.type = "I";
                                                     newDtlHijo.parent = dt.ItemCode;
                                                     newDtlHijo.childrendefqty = Convert.ToInt32(hijo.Quantity);
+                                                    newDtlHijo.Warehouse = dt.Whs;
+                                                    newDtlHijo.QC_count = Convert.ToInt32(dt.NoWhs);
+                                                    if (newSO.Warehouse == dt.Whs)
+                                                    {
+                                                        newDtlHijo.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                                    }
+                                                    else
+                                                    {
+                                                        newDtlHijo.QC_totalCount = 1;
+                                                    }
+                                                    newDtlHijo.Transferred = 0;
                                                     lsttosave.Add(newDtlHijo);
                                                     countLineNum++;
                                                 }
@@ -2122,11 +2745,13 @@ namespace LimenawebApp.Controllers
        
             try
             {
+
+
                 if (salesOrders != null) {
                     if (salesOrders.Length > 0)
                     {
                         var id = Convert.ToInt32(id_route);
-                        var sodb = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id) select f);
+                        var sodb = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id ) select f);
 
                         var total = sodb.Count();
                         var count = 0;
@@ -2463,6 +3088,850 @@ namespace LimenawebApp.Controllers
             
      
         }
+
+        //public int lineNumber { get; set; }
+        //public string validated { get; set; }
+        //public string quantity { get; set; }
+        //public string uom { get; set; }
+        //public string ItemCode { get; set; }
+        //public string ItemName { get; set; }
+        //public string deleted { get; set; }
+        [HttpPost]
+        public ActionResult Save_SODetailsByStorage(string id, string storage, string idPicker, string pickername)
+        {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
+
+            string ttresult = "";
+            try
+            {
+
+                var idf = Convert.ToInt32(id);
+                List<MyObj> objects = new List<MyObj>();
+
+                if (storage == "COOLER")
+                {
+
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER"))
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "YES",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = a.query1
+                               }).ToList();
+                } else if (storage == "FREEZER") {
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER"))
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "YES",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = a.query1
+                               }).ToList();
+                }
+                else {
+
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage)
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "YES",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = a.query1
+                               }).ToList();
+                }
+
+
+
+
+                List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
+                List<Tb_PlanningSO_details> lsttodelete = new List<Tb_PlanningSO_details>();
+
+                IQueryable<Tb_PlanningSO_details> allDet;
+
+
+                if (storage == "COOLER")
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER")) select a);
+                } else if (storage == "FREEZER") {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER")) select a);
+                }
+                else {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage) select a);
+                }
+                    
+   
+                foreach (var items in objects)
+                {
+                    Tb_PlanningSO_details newDet = (from a in allDet where (a.Line_num == items.lineNumber && a.ItemCode == items.ItemCode) select a).FirstOrDefault();
+
+                    if (newDet.query2.Contains("3"))
+                    {//Es una bonificacion
+                     //var productonormal = dblim.Tb_PlanningSO_details.Where(a => a.ID_salesorder==idf && a.ItemCode == newDet.ItemCode && !a.query2.Contains("3")).FirstOrDefault();
+                     //if (productonormal != null) {
+                     //newDet.isvalidated = newDet.isvalidated;
+                     //newDet.query1 = productonormal.query1;
+                        newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                        if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                        if (items.deleted == "DEL")
+                        {
+                            newDet.query1 = "DEL";
+                            newDet.isvalidated = false;
+                            //Se agrego linea de comando para eliminar bonificaciones u otro tipo de producto
+
+                            //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1}", idf, items.ItemCode);
+
+
+
+
+                        }
+                        else { newDet.query1 = ""; }
+
+
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                        if (lstava != null)
+                        {
+                            newDet.UomCode = lstava.UomCode;
+                            newDet.UomEntry = lstava.UomEntry.ToString();
+                            newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                        }
+
+                        newDet.ID_picker = idPicker;
+                        newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        lsttosave.Add(newDet);
+                        //}
+
+
+                    }
+                    else
+                    {
+                        //newDet.ID_UOM = items.uom;
+                        //newDet.UOM = items.uom;
+                        if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                        if (items.deleted == "DEL")
+                        {
+                            newDet.query1 = "DEL";
+                            newDet.isvalidated = false;
+                            //Se agrego linea de comano para eliminar bonificaciones u otro tipo de producto
+                            dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                        }
+                        else { newDet.query1 = ""; }
+
+                        //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
+                        if (!newDet.query2.Contains("0"))
+                        {
+                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            {
+                                newDet.query1 = "DEL";
+                                //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                                if (newDet.type == "S")
+                                {
+                                    dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and parent={1}", idf, items.ItemCode);
+                                }
+
+                            }
+                        }
+
+
+                        if (items.quantity == "")
+                        {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                        else if (items.quantity == "0")
+                        {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                        else
+                        {
+
+                            newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                        }
+
+
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                        if (lstava != null)
+                        {
+                            newDet.UomCode = lstava.UomCode;
+                            newDet.UomEntry = lstava.UomEntry.ToString();
+                            newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                        }
+
+                        newDet.ID_picker = idPicker;
+                        newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        //Evaluamos si es kit para actualizar sus hijos
+                        if (newDet.type == "S")
+                        {
+                            //llamamos los hijos
+                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I") select b).ToList();
+                            if (hijos.Count > 0)
+                            {
+                                foreach (var item in hijos)
+                                {
+                                    item.query1 = newDet.query1;
+                                    item.isvalidated = newDet.isvalidated;
+                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.ID_picker = newDet.ID_picker;
+                                    item.Picker_name = newDet.Picker_name;
+                                    item.ID_userValidate = newDet.ID_userValidate;
+                                    item.DateCheckOut = newDet.DateCheckOut;
+                                }
+
+                                dblim.BulkUpdate(hijos);
+
+                            }
+                        }
+
+                        lsttosave.Add(newDet);
+                    }
+                    //Evaluamos si el producto se eliminio para actualizar todo despues
+                    if (items.deleted == "DEL")
+                    {
+                        lsttodelete.Add(newDet);
+                    }
+
+
+
+                }
+
+                dblim.BulkUpdate(lsttosave);
+
+                //Eliminamos por producto
+                try
+                {
+                    foreach (var itemdel in lsttodelete)
+                    {
+                        dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, itemdel.ItemCode);
+                    }
+                }
+                catch
+                {
+
+                }
+
+
+                ttresult = "SUCCESS";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+        [HttpPost]
+        public ActionResult Delete_SODetailsByStorage(string id, string storage, string idPicker, string pickername)
+        {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
+
+            string ttresult = "";
+            try
+            {
+
+                var idf = Convert.ToInt32(id);
+                List<MyObj> objects = new List<MyObj>();
+
+                if (storage == "COOLER")
+                {
+
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER"))
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "NO",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = "DEL"
+                               }).ToList();
+                }
+                else if (storage == "FREEZER")
+                {
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER"))
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "NO",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = "DEL"
+                               }).ToList();
+                }
+                else
+                {
+
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage)
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "NO",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = "DEL"
+                               }).ToList();
+                }
+
+
+
+
+                List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
+                List<Tb_PlanningSO_details> lsttodelete = new List<Tb_PlanningSO_details>();
+
+                IQueryable<Tb_PlanningSO_details> allDet;
+
+
+                if (storage == "COOLER")
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER")) select a);
+                }
+                else if (storage == "FREEZER")
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER")) select a);
+                }
+                else
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage) select a);
+                }
+
+
+                foreach (var items in objects)
+                {
+                    Tb_PlanningSO_details newDet = (from a in allDet where (a.Line_num == items.lineNumber && a.ItemCode == items.ItemCode) select a).FirstOrDefault();
+
+                    if (newDet.query2.Contains("3"))
+                    {//Es una bonificacion
+                     //var productonormal = dblim.Tb_PlanningSO_details.Where(a => a.ID_salesorder==idf && a.ItemCode == newDet.ItemCode && !a.query2.Contains("3")).FirstOrDefault();
+                     //if (productonormal != null) {
+                     //newDet.isvalidated = newDet.isvalidated;
+                     //newDet.query1 = productonormal.query1;
+                        newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                        if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                        if (items.deleted == "DEL")
+                        {
+                            newDet.query1 = "DEL";
+                            newDet.isvalidated = false;
+                            //Se agrego linea de comando para eliminar bonificaciones u otro tipo de producto
+
+                            //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1}", idf, items.ItemCode);
+
+
+
+
+                        }
+                        else { newDet.query1 = ""; }
+
+
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                        if (lstava != null)
+                        {
+                            newDet.UomCode = lstava.UomCode;
+                            newDet.UomEntry = lstava.UomEntry.ToString();
+                            newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                        }
+
+                        newDet.ID_picker = idPicker;
+                        newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        lsttosave.Add(newDet);
+                        //}
+
+
+                    }
+                    else
+                    {
+                        //newDet.ID_UOM = items.uom;
+                        //newDet.UOM = items.uom;
+                        if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                        if (items.deleted == "DEL")
+                        {
+                            newDet.query1 = "DEL";
+                            newDet.isvalidated = false;
+                            //Se agrego linea de comano para eliminar bonificaciones u otro tipo de producto
+                            dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                        }
+                        else { newDet.query1 = ""; }
+
+                        //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
+                        if (!newDet.query2.Contains("0"))
+                        {
+                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            {
+                                newDet.query1 = "DEL";
+                                //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                                if (newDet.type == "S")
+                                {
+                                    dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and parent={1}", idf, items.ItemCode);
+                                }
+
+                            }
+                        }
+
+
+                        if (items.quantity == "")
+                        {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                        else if (items.quantity == "0")
+                        {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                        else
+                        {
+
+                            newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                        }
+
+
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                        if (lstava != null)
+                        {
+                            newDet.UomCode = lstava.UomCode;
+                            newDet.UomEntry = lstava.UomEntry.ToString();
+                            newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                        }
+
+                        newDet.ID_picker = idPicker;
+                        newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        //Evaluamos si es kit para actualizar sus hijos
+                        if (newDet.type == "S")
+                        {
+                            //llamamos los hijos
+                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I") select b).ToList();
+                            if (hijos.Count > 0)
+                            {
+                                foreach (var item in hijos)
+                                {
+                                    item.query1 = newDet.query1;
+                                    item.isvalidated = newDet.isvalidated;
+                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.ID_picker = newDet.ID_picker;
+                                    item.Picker_name = newDet.Picker_name;
+                                    item.ID_userValidate = newDet.ID_userValidate;
+                                    item.DateCheckOut = newDet.DateCheckOut;
+                                }
+
+                                dblim.BulkUpdate(hijos);
+
+                            }
+                        }
+
+                        lsttosave.Add(newDet);
+                    }
+                    //Evaluamos si el producto se eliminio para actualizar todo despues
+                    if (items.deleted == "DEL")
+                    {
+                        lsttodelete.Add(newDet);
+                    }
+
+
+
+                }
+
+                dblim.BulkUpdate(lsttosave);
+
+                //Eliminamos por producto
+                try
+                {
+                    foreach (var itemdel in lsttodelete)
+                    {
+                        dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, itemdel.ItemCode);
+                    }
+                }
+                catch
+                {
+
+                }
+
+
+                ttresult = "SUCCESS";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
+        [HttpPost]
+        public ActionResult Restore_SODetailsByStorage(string id, string storage, string idPicker, string pickername)
+        {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
+
+            string ttresult = "";
+            try
+            {
+
+                var idf = Convert.ToInt32(id);
+                List<MyObj> objects = new List<MyObj>();
+
+                if (storage == "COOLER")
+                {
+
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER"))
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "NO",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = ""
+                               }).ToList();
+                }
+                else if (storage == "FREEZER")
+                {
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER"))
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "NO",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = ""
+                               }).ToList();
+                }
+                else
+                {
+
+                    objects = (from a in dblim.Tb_PlanningSO_details
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage)
+                               select new MyObj
+                               {
+                                   ItemCode = a.ItemCode,
+                                   ItemName = a.ItemName,
+                                   lineNumber = a.Line_num,
+                                   validated = "NO",
+                                   quantity = a.Quantity.ToString(),
+                                   uom = a.UomCode,
+                                   deleted = ""
+                               }).ToList();
+                }
+
+
+
+
+                List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
+                List<Tb_PlanningSO_details> lsttodelete = new List<Tb_PlanningSO_details>();
+
+                IQueryable<Tb_PlanningSO_details> allDet;
+
+
+                if (storage == "COOLER")
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER")) select a);
+                }
+                else if (storage == "FREEZER")
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER")) select a);
+                }
+                else
+                {
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage) select a);
+                }
+
+
+                foreach (var items in objects)
+                {
+                    Tb_PlanningSO_details newDet = (from a in allDet where (a.Line_num == items.lineNumber && a.ItemCode == items.ItemCode) select a).FirstOrDefault();
+
+                    if (newDet.query2.Contains("3"))
+                    {//Es una bonificacion
+                     //var productonormal = dblim.Tb_PlanningSO_details.Where(a => a.ID_salesorder==idf && a.ItemCode == newDet.ItemCode && !a.query2.Contains("3")).FirstOrDefault();
+                     //if (productonormal != null) {
+                     //newDet.isvalidated = newDet.isvalidated;
+                     //newDet.query1 = productonormal.query1;
+                        newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                        if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                        if (items.deleted == "DEL")
+                        {
+                            newDet.query1 = "DEL";
+                            newDet.isvalidated = false;
+                            //Se agrego linea de comando para eliminar bonificaciones u otro tipo de producto
+
+                            //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1}", idf, items.ItemCode);
+
+
+
+
+                        }
+                        else { newDet.query1 = ""; }
+
+
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                        if (lstava != null)
+                        {
+                            newDet.UomCode = lstava.UomCode;
+                            newDet.UomEntry = lstava.UomEntry.ToString();
+                            newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                        }
+
+                        newDet.ID_picker = idPicker;
+                        newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        lsttosave.Add(newDet);
+                        //}
+
+
+                    }
+                    else
+                    {
+                        //newDet.ID_UOM = items.uom;
+                        //newDet.UOM = items.uom;
+                        if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
+                        if (items.deleted == "DEL")
+                        {
+                            newDet.query1 = "DEL";
+                            newDet.isvalidated = false;
+                            //Se agrego linea de comano para eliminar bonificaciones u otro tipo de producto
+                            dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                        }
+                        else { newDet.query1 = ""; }
+
+                        //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
+                        if (!newDet.query2.Contains("0"))
+                        {
+                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            {
+                                newDet.query1 = "DEL";
+                                //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                                if (newDet.type == "S")
+                                {
+                                    dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and parent={1}", idf, items.ItemCode);
+                                }
+
+                            }
+                        }
+
+
+                        if (items.quantity == "")
+                        {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                        else if (items.quantity == "0")
+                        {
+                            newDet.Quantity = 0;
+                            newDet.query1 = "DEL";
+                        }
+                        else
+                        {
+
+                            newDet.Quantity = Convert.ToInt32(items.quantity);
+
+                        }
+
+
+
+                        var lstava = (from a in dlipro.OpenSalesOrders_DetailsUOM where (a.ItemCode == items.ItemCode && a.UomCode == items.uom) select a).FirstOrDefault();
+                        if (lstava != null)
+                        {
+                            newDet.UomCode = lstava.UomCode;
+                            newDet.UomEntry = lstava.UomEntry.ToString();
+                            newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
+                        }
+
+                        newDet.ID_picker = idPicker;
+                        newDet.Picker_name = pickername;
+
+
+                        if (activeuser != null)
+                        {
+                            newDet.ID_userValidate = activeuser.ID_User;
+                        }
+                        newDet.DateCheckOut = DateTime.UtcNow;
+
+                        //Evaluamos si es kit para actualizar sus hijos
+                        if (newDet.type == "S")
+                        {
+                            //llamamos los hijos
+                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I") select b).ToList();
+                            if (hijos.Count > 0)
+                            {
+                                foreach (var item in hijos)
+                                {
+                                    item.query1 = newDet.query1;
+                                    item.isvalidated = newDet.isvalidated;
+                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.ID_picker = newDet.ID_picker;
+                                    item.Picker_name = newDet.Picker_name;
+                                    item.ID_userValidate = newDet.ID_userValidate;
+                                    item.DateCheckOut = newDet.DateCheckOut;
+                                }
+
+                                dblim.BulkUpdate(hijos);
+
+                            }
+                        }
+
+                        lsttosave.Add(newDet);
+                    }
+                    //Evaluamos si el producto se eliminio para actualizar todo despues
+                    if (items.deleted == "DEL")
+                    {
+                        lsttodelete.Add(newDet);
+                    }
+
+
+
+                }
+
+                dblim.BulkUpdate(lsttosave);
+
+                //Eliminamos por producto
+                try
+                {
+                    foreach (var itemdel in lsttodelete)
+                    {
+                        dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, itemdel.ItemCode);
+                    }
+                }
+                catch
+                {
+
+                }
+
+
+                ttresult = "SUCCESS";
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+
+        }
+
+
         public ActionResult Print_Roadmap(int? id)
         {
             var header = (from b in dblim.Tb_Planning where (b.ID_Route == id) select b).FirstOrDefault();

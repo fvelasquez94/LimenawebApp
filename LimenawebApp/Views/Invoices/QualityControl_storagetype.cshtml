@@ -55,7 +55,7 @@ else if (so.isfinished == true && so.DocEntry == "")
                                                 <td style="padding: .25rem;">$@Convert.ToDecimal(so.Amount).ToString("n2")</td>
                                                 <td style="padding: .25rem;">
                                                     <div class="progress-title">
-                                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2</span>
+                                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")%</span>
                                                     </div>
                                                     <div class="progress" style="height: 2px;">
                                                         @if (Convert.ToDecimal(so.query1) < 100)
@@ -92,13 +92,19 @@ else
                                                     <td  style="padding: .15rem;"> </td>
                                                     <td  style="padding: .15rem;"></td>
                                                     <td style="padding: .15rem;">
+                                                 
                                                         @if (childso.Storage == "COOLER" || childso.Storage == "FREEZER")
                                                         {
                                                             @Html.Raw("(COOLER, FREEZER)");
                                                         }
                                                         else {
                                                             @childso.Storage
-                                                        }</td>
+                                                        }
+
+
+                                           
+                                                    
+                                                    </td>
                                                     <td  style="padding: .15rem;">
                                                        @if (childso.Picker == "") {
                                                            <label>PICKER: NOT ASSIGNED</label>
@@ -110,26 +116,35 @@ else
 
                                                     </td>
                                                  
-                                                    <td  style="padding: .15rem;">
-                                                        <div class="progress-title">
-                                                            <span id="forms_p2" class="">@Convert.ToDecimal(childso.data1).ToString("n2")% @childso.data2</span>
-                                                        </div>
-                                                        <div class="progress" style="height: 2px;">
-                                                            @if (Convert.ToDecimal(childso.data1) < 100)
-        {
+                                                    <td style="padding: .15rem;">
+                                                        @if (childso.delete == 1)
+    {
+                                                    <label class="badge text-warning">Deleted</label>
+}
+else
+{
+                                                    <div class="progress-title">
+                                                        <span id="forms_p2" class="">@Convert.ToDecimal(childso.data1).ToString("n2")% </span>
+                                                    </div>
+                                                    <div class="progress" style="height: 2px;">
+                                                        @if (Convert.ToDecimal(childso.data1) < 100)
+    {
                                                     <div class="progress-bar bg-warning" role="progressbar" style="width: @childso.data1%;" aria-valuemax="100"></div>
 }
 else
 {
                                                     <div class="progress-bar bg-success" role="progressbar" style="width: @childso.data1%;" aria-valuemax="100"></div>
 }
-                                                        </div>
+                                                    </div>
+}
+
+
                                                     </td>
                                                     <td  style="padding: .15rem;">
                                                         @if (so.isfinished == false)
                                                         {
                                                             
-                                                    <a href="#" class="btn btn-sm btn-outline-info btn-sm form-pill" data-saleso="@so.ID_salesorder" data-saledoc="@so.SAP_docnum" data-salestorage="@childso.ID_storage" data-picker="@childso.Picker" onclick="getSOdata(this)"><i class="fa fa-external-link"></i>View</a>
+                                                    <a href="#" class="btn btn-sm btn-outline-info btn-sm form-pill" data-saleso="@so.ID_salesorder" data-saledoc="@so.SAP_docnum" data-salestorage="@childso.ID_storage" data-picker="@childso.Picker" onclick="getSOdataByStorage(this)"><i class="fa fa-external-link"></i>View</a>
 }
 
                                                     </td>
@@ -155,7 +170,7 @@ else
 </div>
 
 <div class="modal fade" id="SOdetails" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog qcmodal modal-lg modalso">
+    <div class="modal-dialog modal-lg modalso">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="mySmallModalLabel">Sales Order Details  -  <span style="font-size:13px;font-weight:500;" id="docselnum"></span>  |  <span style="font-size:13px;font-weight:500;" id="storageselso"></span></h5>
@@ -174,27 +189,12 @@ else
                                     <div class="col s12 m4">
                                         <div class="col-12">
                                             <span style="font-size:10px;font-weight:500;">PICKER: *</span>
-                                            <select data-minimum-results-for-search="Infinity" id="pickerlst" class="form-control" style="width:40%; font-size:12px;" >
+                                            <select data-minimum-results-for-search="Infinity" id="pickerlst" class="form-control" style="width:100%; font-size:12px;" >
                                                 <option value="0">SELECT A PICKER..</option>
                                             </select>
-                                            <div class="float-right" id="savebtns">
-                                                <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-                                                <button type="button" onclick="saveData()" class="btn btn-primary">Save</button>
-                                            </div>
+   
                                                 </div>
-                                                @*<div class="col-12">
-                    <span style="font-size:10px;font-weight:500;">FILTER BY STORAGE TYPE:</span>
-                    <select id="officeFltr" class="form-control" style="width:50%">
 
-                    </select>
-
-                    <div class="float-right">
-                        <span style="font-size:13px;font-weight:500;" id="docselnum">FILTER BY STORAGE TYPE:</span><br />
-                        <span style="font-size:13px;font-weight:500;" class="text-success" id="valitems">FILTER BY STORAGE TYPE:</span>
-
-                        <label class="text-warning" id="delitems" style="display:none;"></label>
-                    </div>
-                </div>*@
                                         </div>
 
                                     </div>
@@ -202,6 +202,7 @@ else
                             <div class="card-body- pt-3 pb-4">
                                 <div class="table-responsive">
                                     <input type="text" id="selectSOd" value="" hidden/>
+                                    <input type="text" id="selectStoragetype" value="" hidden/>
 
                                     <table id="htmlgrid" class="table tableEdit table-striped table-condensed">
                                         <thead>
@@ -212,14 +213,18 @@ else
                                     </table>
                                 </div>
                             </div>
-                            <button id="showAll" class="btn btn-outline-light" style="color:black !important">Restore deleted products</button>
+                            <button onclick="restoreData_StorageType()" class="btn btn-outline-light" style="color:black !important">Restore Storage Type</button>
+                            <br />
+                            <button onclick="saveData_StorageType()" class="btn btn-primary" style="color:black !important">Validate Storage Type</button>
+                            <br />
+                            <br />
+                            <button onclick="deleteData_StorageType()" class="btn btn-outline-light" style="color:black !important">Delete Storage Type</button>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-                <button type="button" onclick="saveData()" class="btn btn-primary">Save</button>
 
             </div>
         </div>
