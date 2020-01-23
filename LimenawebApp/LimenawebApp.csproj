@@ -570,6 +570,12 @@
       <DependentUpon>Inventory_DSD.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Invoice Storage Type %28RR%29.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Invoice Storage Type %28RR%29.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Order_DSD.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -15250,6 +15256,10 @@
     <EmbeddedResource Include="Reports\Inventory_DSD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Inventory_DSD.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Invoice Storage Type %28RR%29.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Invoice Storage Type %28RR%29.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Order_DSD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

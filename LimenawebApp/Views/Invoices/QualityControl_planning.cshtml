@@ -192,24 +192,28 @@ else if (so.isfinished == true && so.Invoiced == false)
                                     <td>@so.Routeleader_name</td>
                                     <td>
                                         @if (so.transferred == 1)
-        {
-                                <label class="badge text-warning">Items were transferred</label>
-}
-else
-{
-                                <div class="progress-title">
-                                    <span id="forms_p1" class="">@Convert.ToDecimal(so.query4).ToString("n2")% @so.query5 Items</span>
-                                </div>
-                                <div class="progress" style="height: 2px;">
-                                    @if (Convert.ToDecimal(so.query4) < 100)
     {
-                                <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query4%;" aria-valuemax="100"></div>
+                                    <label class="badge text-warning">In Progress</label>
+}
+else if (so.transferred == 2)
+{
+                                    <label class="badge text-success">Items were transferred</label>
 }
 else
 {
-                                <div class="progress-bar bg-success" role="progressbar" style="width: @so.query4%;" aria-valuemax="100"></div>
+                                    <div class="progress-title">
+                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.query4).ToString("n2")% @so.query5 Items</span>
+                                    </div>
+                                    <div class="progress" style="height: 2px;">
+                                        @if (Convert.ToDecimal(so.query4) < 100)
+    {
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query4%;" aria-valuemax="100"></div>
 }
-                                </div>
+else
+{
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @so.query4%;" aria-valuemax="100"></div>
+}
+                                    </div>
 
 }
 
@@ -353,7 +357,7 @@ else
 }
                                     @if (so.isfinished == true && so.Invoiced == true)
     {
-                                <a href="#" onclick="PrintRoute(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>}
+                                <a href="#" onclick="PrintRouteWHS(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>}
 
 
                                     @if (Convert.ToDecimal(so.query1) >= 100 && so.query6 == 0)

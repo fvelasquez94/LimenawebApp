@@ -417,6 +417,11 @@
           <Property Name="DateCheckOut" Type="datetime" />
           <Property Name="ID_userValidate" Type="int" />
           <Property Name="Warehouse" Type="varchar" MaxLength="50" />
+          <Property Name="ID_truck_whs" Type="varchar" MaxLength="30" />
+          <Property Name="Truck_name_whs" Type="varchar" MaxLength="150" />
+          <Property Name="ID_driver_whs" Type="varchar" MaxLength="30" />
+          <Property Name="Driver_name_whs" Type="varchar" MaxLength="200" />
+          <Property Name="DatetoInvoice" Type="datetime" />
         </EntityType>
         <EntityType Name="Tb_Planning_extra">
           <Key>
@@ -1024,6 +1029,11 @@
           <Property Name="DateCheckOut" Type="DateTime" Precision="3" />
           <Property Name="ID_userValidate" Type="Int32" />
           <Property Name="Warehouse" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ID_truck_whs" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Truck_name_whs" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="ID_driver_whs" Type="String" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Driver_name_whs" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DatetoInvoice" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO">
           <Key>
@@ -1603,6 +1613,11 @@
           <EntitySetMapping Name="Tb_Planning">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_Planning">
               <MappingFragment StoreEntitySet="Tb_Planning">
+                <ScalarProperty Name="DatetoInvoice" ColumnName="DatetoInvoice" />
+                <ScalarProperty Name="Driver_name_whs" ColumnName="Driver_name_whs" />
+                <ScalarProperty Name="ID_driver_whs" ColumnName="ID_driver_whs" />
+                <ScalarProperty Name="Truck_name_whs" ColumnName="Truck_name_whs" />
+                <ScalarProperty Name="ID_truck_whs" ColumnName="ID_truck_whs" />
                 <ScalarProperty Name="Warehouse" ColumnName="Warehouse" />
                 <ScalarProperty Name="ID_userValidate" ColumnName="ID_userValidate" />
                 <ScalarProperty Name="DateCheckOut" ColumnName="DateCheckOut" />

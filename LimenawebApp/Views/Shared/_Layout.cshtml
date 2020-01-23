@@ -3381,6 +3381,16 @@ Configure tooltips globally
             return obj;
         });
 
+
+                var json2 = JSON.parse('@Html.Raw(ViewBag.driversOtros)')
+
+        var data2 = $.map(json2, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+
         $("#lstDriver").select2({
             placeholder: "Select...",
             data: data
@@ -3390,6 +3400,13 @@ Configure tooltips globally
             placeholder: "Select...",
             data: data
         });
+
+
+        $("#lstDriverOtraBodega").select2({
+            placeholder: "Select...",
+            data: data2
+        });
+
 
         json = JSON.parse('@Html.Raw(ViewBag.routeleaders)')
 
@@ -3411,13 +3428,19 @@ Configure tooltips globally
 
         });
 
-        json = JSON.parse('@Html.Raw(ViewBag.trucks)')
+        json = JSON.parse('@Html.Raw(ViewBag.trucks)');
         data = $.map(json, function (obj2) {
             obj2.id = obj2.id; // replace pk with your identifier
             obj2.text = obj2.text;
             return obj2;
         });
 
+        var json4 = JSON.parse('@Html.Raw(ViewBag.trucksOtros)');
+        var data4 = $.map(json4, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
         $("#lstTruck").select2({
             placeholder: "Select...",
             data: data
@@ -3427,6 +3450,12 @@ Configure tooltips globally
         $("#lstTruck2").select2({
             placeholder: "Select...",
             data: data
+
+        });
+
+        $("#lstTruckOtraBodega").select2({
+            placeholder: "Select...",
+            data: data4
 
         });
 
@@ -3451,6 +3480,7 @@ Configure tooltips globally
 
         document.getElementById("btneditr").addEventListener("click", editRoute, false);
         document.getElementById("finisheditbtn").addEventListener("click", SaveEditRoute, false);
+        document.getElementById("assignbtn").addEventListener("click", SaveAssignRoute, false);
         document.getElementById("newExtra").addEventListener("click", newExtra, false);
         document.getElementById("addExtra").addEventListener("click", addExtra, false);
 
@@ -3605,6 +3635,51 @@ Configure tooltips globally
                 });
 
         }
+
+        function SaveAssignRoute() {
+            var idroute = $("#selectedRouteOtraBodega").val();
+
+            var driverCode = $("#lstDriverOtraBodega").val();
+            var driverName = $("#lstDriverOtraBodega option:selected").text();
+            var truckCode = $("#lstTruckOtraBodega").val();
+            var truckName = $("#lstTruckOtraBodega option:selected").text();
+
+
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/AssignRoute',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: idroute,
+                        lstDriverCode: driverCode,
+                        lstDriverName: driverName,
+                        lstTruckCode: truckCode,
+                        lstTruckName: truckName
+
+                    }),
+                    success: function (result) {
+                        if (result == "Success") {
+                            toastr.success("Route saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+        }
+
 
     });
     </script>
@@ -4089,7 +4164,45 @@ Configure tooltips globally
                 }
             })
         }
+        function PrintRouteWHS(id_route) {
 
+            swal.fire({
+                title: 'Are you sure to print this route?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_routeWHS',
+                        type: 'POST',
+                        data: { 'id': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {                                   
+
+                                window.open('@Url.Action("ShowPDF", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
 
         function closeOrders(id_route) {
 

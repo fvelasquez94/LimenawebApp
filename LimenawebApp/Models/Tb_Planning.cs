@@ -40,6 +40,11 @@ namespace LimenawebApp.Models
         public System.DateTime DateCheckOut { get; set; }
         public int ID_userValidate { get; set; }
         public string Warehouse { get; set; }
+        public string ID_truck_whs { get; set; }
+        public string Truck_name_whs { get; set; }
+        public string ID_driver_whs { get; set; }
+        public string Driver_name_whs { get; set; }
+        public System.DateTime DatetoInvoice { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Tb_PlanningSO> Tb_PlanningSO { get; set; }

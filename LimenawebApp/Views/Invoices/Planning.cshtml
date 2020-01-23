@@ -21,7 +21,7 @@
                                         <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-outline-success">
                                             <i class="fa fa-truck"></i> New Route
                                         </a>
-                              
+
                                     </div>
                                 </div>
                             </div>
@@ -139,7 +139,7 @@
                                     </div>
                                 </div>
                                 <p class="card-description">
-                                    <h5 class="card-title">Departure</h5>
+                                    <h5 class="card-title">Delivery Route</h5>
                                 </p>
                                 <div class="row">
 
@@ -151,6 +151,21 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <p class="card-description">
+                                    <h5 class="card-title">Preparation Date</h5>
+                                </p>
+                                <div class="row">
+
+                                    <div class="col-md-12">
+                                        <div class="form-group row">
+                                            <div class="col-sm-12">
+                                                <input type="datetime-local" name="preparationdate" id="preparationdate" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <p class="card-description">
                                     <h5 class="card-title">Repeat</h5>
                                 </p>
@@ -348,6 +363,76 @@
     </div>
 </div>
 <!--CREATE USER DATA ENDS-->
+<!--EDIT DATA STARTS-->
+<div class="modal fade" id="editModal_KY" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Assign Driver and Truck</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <input id="selectedRouteOtraBodega" name="selectedRouteOtraBodega" type="text" hidden />
+
+
+                            <p class="card-description">
+                                <h5 class="card-title">Driver</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstDriverOtraBodega" id="lstDriverOtraBodega" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Truck</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstTruckOtraBodega" id="lstTruckOtraBodega" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="assignbtn">Save</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--MODAL LOUISVILLE DATA ENDS-->
 <!--MODAL SALES ORDERS-->
 <div id="modal_SO" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -469,14 +554,14 @@
                                 <a href="#" id="Sortbtn" class="btn btn-success mr-auto btn-sm">SORT</a>
 
                                 <div class="float-right" style="border-left:dashed; border-width:1px; margin-left:20px;margin-right:20px;">
-                                    <div  style="margin-left:10px;">
+                                    <div style="margin-left:10px;">
                                         <small id="Each">Each: </small><br />
                                         <small id="Case">Case: </small><br />
                                         <small id="Pack">Pack: </small><br />
                                         <small id="LBS">LBS: </small><br />
                                         <small id="totalEach">Total Cases: </small>
                                     </div>
-                            
+
 
 
                                 </div>
@@ -524,38 +609,36 @@
             <div class="modal-body">
 
                 <div class="col-12">
-                   
-                        <div class="row" style="border-style:none !important">
-                            <div class="col-8">
-                                <input type="text" id="addDescription" class="form-control" placeholder="Description">
-                            </div>
-                            <div class="col-3">
-       
-                                <input type="text" id="addValue" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" placeholder="Value($)">
-                            </div>
-                            <div class="col-1">
-                                <button class="btn btn-info" id="addExtra"  >+</button>
-                            </div>
+
+                    <div class="row" style="border-style:none !important">
+                        <div class="col-8">
+                            <input type="text" id="addDescription" class="form-control" placeholder="Description">
                         </div>
-                        <br /><br />
-                        <div class="row">
-                            <table class="table table-striped" id="tbExtras">
-                                <thead>
-                                    <tr>
-                                        <th>DESCRIPTION</th>
-                                        <th>VALUE($)</th>
-                                        <th>ACTIONS</th>
+                        <div class="col-3">
 
-                                    </tr>
-                                </thead>
-                                <tbody id="tbBodyExtras">
-
-                                </tbody>
-                            </table>
+                            <input type="text" id="addValue" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" placeholder="Value($)">
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-info" id="addExtra">+</button>
                         </div>
                     </div>
-                    
-               
+                    <br /><br />
+                    <div class="row">
+                        <table class="table table-striped" id="tbExtras">
+                            <thead>
+                                <tr>
+                                    <th>DESCRIPTION</th>
+                                    <th>VALUE($)</th>
+                                    <th>ACTIONS</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tbBodyExtras"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+
             </div>
 
 

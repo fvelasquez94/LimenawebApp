@@ -2114,36 +2114,16 @@ namespace LimenawebApp.Controllers
 
 
         [HttpPost]
-        public ActionResult UploadFiles(string id, string idvisita, string orientation)
+        public ActionResult UploadFiles(string id,string visitareal, string idvisita, string orientation)
         {
-            List<FormsM_details> detailsForm = Session["detailsForm"] as List<FormsM_details>;
-            int act = Convert.ToInt32(id);
-            if (detailsForm != null)
-            {
-
-            }
-            else
-            {
-                using (var dbs = new dbComerciaEntities())
-                {
-
-                    detailsForm = dbs.FormsM_details.Where(a => a.ID_visit == act).ToList();
-                }
-
-            }
-
             // Checking no of files injected in Request object  
             if (Request.Files.Count > 0)
             {
                 try
                 {
-                    //  Get all files from Request object  
                     HttpFileCollectionBase files = Request.Files;
                     for (int i = 0; i < files.Count; i++)
                     {
-                        //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
-                        //string filename = Path.GetFileName(Request.Files[i].FileName);  
-
                         HttpPostedFileBase file = files[i];
                         string fname;
 
@@ -2157,12 +2137,6 @@ namespace LimenawebApp.Controllers
                         {
                             fname = file.FileName;
                         }
-
-
-                        // Adding watermark to the image and saving it into the specified folder!!!!
-
-                        //Image image = Image.FromStream(file.InputStream, true, true);
-
 
                         Image TargetImg = Image.FromStream(file.InputStream, true, true);
                         try
@@ -2194,74 +2168,35 @@ namespace LimenawebApp.Controllers
 
                         }
                         //buscamos el id del detalle
-                        int idf = Convert.ToInt32(id);
+
+                        List<FormsM_details> detailsForm = Session["detailsForm"] as List<FormsM_details>;
+                        int iddetalle = Convert.ToInt32(id);
+                        int idvisitareal = Convert.ToInt32(visitareal);
+                        int idactividad = Convert.ToInt32(idvisita);
                         FormsM_details detail = new FormsM_details();
-                        FormsM_details detailBrand = new FormsM_details();
 
-                        try
+                        if (detailsForm != null)
                         {
-                            int idvisit = Convert.ToInt32(idvisita);
-                            detail = (from d in detailsForm where (d.idkey == idf && d.ID_visit == idvisit) select d).FirstOrDefault();
+                            detail = (from d in detailsForm where (d.idkey == iddetalle && d.ID_visit == idactividad) select d).FirstOrDefault();
                         }
-                        catch
+                        else
                         {
-                            var sqlQueryText = string.Format("SELECT * FROM FormsM_details WHERE query2 LIKE '{0}' and idkey='" + idf + "'", idvisita);
-                            detail = dbcmk.FormsM_details.SqlQuery(sqlQueryText).FirstOrDefault(); //returns 0 or more rows satisfying sql query
+                            using (var dbs = new dbComerciaEntities())
+                            {
+
+                                detail = dbs.FormsM_details.Where(a => a.ID_visit == idactividad && a.idkey == iddetalle).FirstOrDefault();
+                            }
 
                         }
-                        try
-                        {
-                            int idvisit2 = Convert.ToInt32(idvisita);
-                            detailBrand = (from d in detailsForm where (d.ID_visit == idvisit2 && d.ID_formresourcetype==13) select d).FirstOrDefault();
-                        }
-                        catch { }
 
                         var pathimg = detail.fsource;
 
                         DateTime time = DateTime.Now;
 
-                        var footer = (from a in dbcmk.ActivitiesM where (a.ID_activity == detail.ID_visit) select a).FirstOrDefault();
-
-                        var customer = "";
-                        var date = "";
-                        var activi = "";
-                        var store = "";
-                        var brand = "";
-                        if (detailBrand != null) {
-                            brand = detailBrand.fdescription;
-                        }
-
-                        if (footer != null)
-                        {
-                            var visit = (from a in dbcmk.VisitsM where (a.ID_visit == footer.ID_visit) select a).FirstOrDefault();
-                            if (visit != null)
-                            {
-                                store = visit.store + ", " + visit.address + ", " + visit.city + ", " + visit.state;
-                            }
-
-                            customer = footer.ID_customer + "-" + footer.Customer;
-                            date = visit.visit_date.ToShortDateString();
-                            activi = footer.ID_activity + "-" + footer.description;
-                        }
 
 
-                        using (Image watermark = Image.FromFile(Server.MapPath("~/Content/images/Logo_watermark.png")))
                         using (Graphics g = Graphics.FromImage(TargetImg))
                         {
-
-                            Image thumb = watermark.GetThumbnailImage((TargetImg.Width / 2), (TargetImg.Height / 3), null, IntPtr.Zero);
-
-                            var destX = (TargetImg.Width / 2 - thumb.Width / 2);
-                            var destY = (TargetImg.Height / 2 - thumb.Height / 2);
-
-                            g.DrawImage(watermark, new Rectangle(destX,
-                                        destY,
-                                        TargetImg.Width / 2,
-                                        TargetImg.Height / 4));
-
-
-                            // display a clone for demo purposes
-                            //pb2.Image = (Image)TargetImg.Clone();
                             Image imagenfinal = (Image)TargetImg.Clone();
 
                             int footerHeight = 35;
@@ -2272,18 +2207,12 @@ namespace LimenawebApp.Controllers
                             graphicImage.Clear(Color.White);
                             graphicImage.DrawImage(bitmapImg, new Point(0, 0));
                             graphicImage.DrawImage(bitmapComment, new Point(bitmapComment.Width, 0));
-                            graphicImage.DrawString((store + " | " + brand + " | " + date + " | " + activi), new Font("Arial", 19), new SolidBrush(Color.Black), 0, bitmapImg.Height + footerHeight / 6);
-
-
-
+                          
                             var path = Path.Combine(Server.MapPath("~/SharedContent/images/activities"), id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg");
 
 
                             var tam = file.ContentLength;
 
-                            //if (tam < 600000)
-                            //{
-                            //bitmapNewImage.Save(path, ImageFormat.Jpeg);
                             Image newimage;
                             //Cambiar tamano no calidad
                             if (orientation == "-1")
@@ -2304,38 +2233,19 @@ namespace LimenawebApp.Controllers
 
                         }
 
-
-                        //fname = Path.Combine(Server.MapPath("~/Content/images/ftp_demo"), fname);
-                        //file.SaveAs(fname);
-
-                        //Luego guardamos la url en la db
-                        //Forms_details detail = dbcmk.Forms_details.Find(Convert.ToInt32(id));  //se movio hacia arriba
                         detail.fsource = "~/SharedContent/images/activities/" + id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg";
 
                         dbcmk.Entry(detail).State = EntityState.Modified;
                         dbcmk.SaveChanges();
 
-                        if (System.IO.File.Exists(Server.MapPath(pathimg)))
-                        {
-                            try
-                            {
-                                System.IO.File.Delete(Server.MapPath(pathimg));
-                            }
-                            catch (System.IO.IOException e)
-                            {
-                                Console.WriteLine(e.Message);
-
-                            }
-                        }
+                        // Returns message that successfully uploaded  
+                       
                     }
-
-
-                    // Returns message that successfully uploaded  
                     return Json("File Uploaded Successfully!");
                 }
                 catch (Exception ex)
                 {
-                    return Json("Error occurred.");
+                    return Json("Error: " + ex.Message);
                 }
             }
             else
@@ -2737,6 +2647,239 @@ namespace LimenawebApp.Controllers
 
 
         }
+
+        //FUNCIONANDO 01/17/2020
+        //[HttpPost]
+        //public ActionResult UploadFiles(string id, string idvisita, string orientation)
+        //{
+        //    List<FormsM_details> detailsForm = Session["detailsForm"] as List<FormsM_details>;
+        //    int act = Convert.ToInt32(id);
+        //    if (detailsForm != null)
+        //    {
+
+        //    }
+        //    else
+        //    {
+        //        using (var dbs = new dbComerciaEntities())
+        //        {
+
+        //            detailsForm = dbs.FormsM_details.Where(a => a.ID_visit == act).ToList();
+        //        }
+
+        //    }
+
+        //    // Checking no of files injected in Request object  
+        //    if (Request.Files.Count > 0)
+        //    {
+        //        try
+        //        {
+        //            //  Get all files from Request object  
+        //            HttpFileCollectionBase files = Request.Files;
+        //            for (int i = 0; i < files.Count; i++)
+        //            {
+        //                //string path = AppDomain.CurrentDomain.BaseDirectory + "Uploads/";  
+        //                //string filename = Path.GetFileName(Request.Files[i].FileName);  
+
+        //                HttpPostedFileBase file = files[i];
+        //                string fname;
+
+        //                // Checking for Internet Explorer  
+        //                if (Request.Browser.Browser.ToUpper() == "IE" || Request.Browser.Browser.ToUpper() == "INTERNETEXPLORER")
+        //                {
+        //                    string[] testfiles = file.FileName.Split(new char[] { '\\' });
+        //                    fname = testfiles[testfiles.Length - 1];
+        //                }
+        //                else
+        //                {
+        //                    fname = file.FileName;
+        //                }
+
+
+        //                // Adding watermark to the image and saving it into the specified folder!!!!
+
+        //                //Image image = Image.FromStream(file.InputStream, true, true);
+
+
+        //                Image TargetImg = Image.FromStream(file.InputStream, true, true);
+        //                try
+        //                {
+        //                    int or = Convert.ToInt32(orientation);
+
+        //                    switch (or)
+        //                    {
+        //                        case 1: // landscape, do nothing
+        //                            break;
+
+        //                        case 8: // rotated 90 right
+        //                                // de-rotate:
+        //                            TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate270FlipNone);
+        //                            break;
+
+        //                        case 3: // bottoms up
+        //                            TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate180FlipNone);
+        //                            break;
+
+        //                        case 6: // rotated 90 left
+        //                            TargetImg.RotateFlip(rotateFlipType: RotateFlipType.Rotate90FlipNone);
+        //                            break;
+        //                    }
+
+        //                }
+        //                catch
+        //                {
+
+        //                }
+        //                //buscamos el id del detalle
+        //                int idf = Convert.ToInt32(id);
+        //                FormsM_details detail = new FormsM_details();
+        //                FormsM_details detailBrand = new FormsM_details();
+
+        //                try
+        //                {
+        //                    int idvisit = Convert.ToInt32(idvisita);
+        //                    detail = (from d in detailsForm where (d.idkey == idf && d.ID_visit == idvisit) select d).FirstOrDefault();
+        //                }
+        //                catch
+        //                {
+        //                    var sqlQueryText = string.Format("SELECT * FROM FormsM_details WHERE query2 LIKE '{0}' and idkey='" + idf + "'", idvisita);
+        //                    detail = dbcmk.FormsM_details.SqlQuery(sqlQueryText).FirstOrDefault(); //returns 0 or more rows satisfying sql query
+
+        //                }
+        //                try
+        //                {
+        //                    int idvisit2 = Convert.ToInt32(idvisita);
+        //                    detailBrand = (from d in detailsForm where (d.ID_visit == idvisit2 && d.ID_formresourcetype == 13) select d).FirstOrDefault();
+        //                }
+        //                catch { }
+
+        //                var pathimg = detail.fsource;
+
+        //                DateTime time = DateTime.Now;
+
+        //                var footer = (from a in dbcmk.ActivitiesM where (a.ID_activity == detail.ID_visit) select a).FirstOrDefault();
+
+        //                var customer = "";
+        //                var date = "";
+        //                var activi = "";
+        //                var store = "";
+        //                var brand = "";
+        //                if (detailBrand != null)
+        //                {
+        //                    brand = detailBrand.fdescription;
+        //                }
+
+        //                if (footer != null)
+        //                {
+        //                    var visit = (from a in dbcmk.VisitsM where (a.ID_visit == footer.ID_visit) select a).FirstOrDefault();
+        //                    if (visit != null)
+        //                    {
+        //                        store = visit.store + ", " + visit.address + ", " + visit.city + ", " + visit.state;
+        //                    }
+
+        //                    customer = footer.ID_customer + "-" + footer.Customer;
+        //                    date = visit.visit_date.ToShortDateString();
+        //                    activi = footer.ID_activity + "-" + footer.description;
+        //                }
+
+
+        //                using (Image watermark = Image.FromFile(Server.MapPath("~/Content/images/Logo_watermark.png")))
+        //                using (Graphics g = Graphics.FromImage(TargetImg))
+        //                {
+
+        //                    Image thumb = watermark.GetThumbnailImage((TargetImg.Width / 2), (TargetImg.Height / 3), null, IntPtr.Zero);
+
+        //                    var destX = (TargetImg.Width / 2 - thumb.Width / 2);
+        //                    var destY = (TargetImg.Height / 2 - thumb.Height / 2);
+
+        //                    g.DrawImage(watermark, new Rectangle(destX,
+        //                                destY,
+        //                                TargetImg.Width / 2,
+        //                                TargetImg.Height / 4));
+
+
+        //                    // display a clone for demo purposes
+        //                    //pb2.Image = (Image)TargetImg.Clone();
+        //                    Image imagenfinal = (Image)TargetImg.Clone();
+
+        //                    int footerHeight = 35;
+        //                    Bitmap bitmapImg = new Bitmap(imagenfinal);// Original Image
+        //                    Bitmap bitmapComment = new Bitmap(imagenfinal.Width, footerHeight);// Footer
+        //                    Bitmap bitmapNewImage = new Bitmap(imagenfinal.Width, imagenfinal.Height + footerHeight);//New Image
+        //                    Graphics graphicImage = Graphics.FromImage(bitmapNewImage);
+        //                    graphicImage.Clear(Color.White);
+        //                    graphicImage.DrawImage(bitmapImg, new Point(0, 0));
+        //                    graphicImage.DrawImage(bitmapComment, new Point(bitmapComment.Width, 0));
+        //                    graphicImage.DrawString((store + " | " + brand + " | " + date + " | " + activi), new Font("Arial", 19), new SolidBrush(Color.Black), 0, bitmapImg.Height + footerHeight / 6);
+
+
+
+        //                    var path = Path.Combine(Server.MapPath("~/SharedContent/images/activities"), id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg");
+
+
+        //                    var tam = file.ContentLength;
+
+        //                    //if (tam < 600000)
+        //                    //{
+        //                    //bitmapNewImage.Save(path, ImageFormat.Jpeg);
+        //                    Image newimage;
+        //                    //Cambiar tamano no calidad
+        //                    if (orientation == "-1")
+        //                    {
+        //                        newimage = ScaleImage(bitmapNewImage, 768, 1360);
+        //                    }
+        //                    else
+        //                    {
+        //                        newimage = ScaleImage(bitmapNewImage, 1360, 768);
+        //                    }
+        //                    newimage.Save(path, ImageFormat.Jpeg);
+
+
+        //                    bitmapImg.Dispose();
+        //                    bitmapComment.Dispose();
+        //                    bitmapNewImage.Dispose();
+
+
+        //                }
+
+
+        //                //fname = Path.Combine(Server.MapPath("~/Content/images/ftp_demo"), fname);
+        //                //file.SaveAs(fname);
+
+        //                //Luego guardamos la url en la db
+        //                //Forms_details detail = dbcmk.Forms_details.Find(Convert.ToInt32(id));  //se movio hacia arriba
+        //                detail.fsource = "~/SharedContent/images/activities/" + id + "_activity_" + detail.ID_visit + "_" + time.Minute + time.Second + ".jpg";
+
+        //                dbcmk.Entry(detail).State = EntityState.Modified;
+        //                dbcmk.SaveChanges();
+
+        //                if (System.IO.File.Exists(Server.MapPath(pathimg)))
+        //                {
+        //                    try
+        //                    {
+        //                        System.IO.File.Delete(Server.MapPath(pathimg));
+        //                    }
+        //                    catch (System.IO.IOException e)
+        //                    {
+        //                        Console.WriteLine(e.Message);
+
+        //                    }
+        //                }
+        //            }
+
+
+        //            // Returns message that successfully uploaded  
+        //            return Json("File Uploaded Successfully!");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            return Json("Error occurred.");
+        //        }
+        //    }
+        //    else
+        //    {
+        //        return Json("No files selected.");
+        //    }
+        //}
 
     }
 }

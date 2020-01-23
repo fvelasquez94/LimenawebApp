@@ -953,6 +953,11 @@
             $(this).attr('data-changeflag', '0');
             var idvisita = "";
             idvisita = document.getElementById('idvisita').value;
+
+
+            var idvisitareal = "";
+            idvisitareal = document.getElementById('idvisitaReal').value;
+
             //COMPRESIONAR IMAGEN
             var output_format = "jpg";
             //**************************
@@ -1005,8 +1010,9 @@
                             //    fileData.append(files[i].name, files[i]);
                             //}
                             // Adding one more key to FormData object
-                            fileData.append('id', ID);
-                            fileData.append('idvisita', idvisita);
+                            fileData.append('id', ID); //Detalle
+                            fileData.append('idvisita', idvisita); //Actividad
+                            fileData.append('visitareal', idvisitareal); //Visita
                             fileData.append('orientation', orientation);
                             //if true rotate to the right
 
@@ -1043,8 +1049,12 @@
 
                                     if (result == "File Uploaded Successfully!") {
 
-                                    } else if (result == "Error occurred.") {
-                                        alert("Error uploading photo. Try again");
+                                    } else if (result == "No files selected.") {
+                                        alert("No files detected, try again");
+                                        $('#divprogress_' + ID).width(0 + '%');
+                                        $('#divprogress_' + ID).html(0 + "%");
+                                    } else {
+                                        alert(result);
                                         $('#divprogress_' + ID).width(0 + '%');
                                         $('#divprogress_' + ID).html(0 + "%");
                                     }

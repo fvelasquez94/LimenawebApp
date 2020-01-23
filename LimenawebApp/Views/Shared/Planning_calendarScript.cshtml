@@ -13,7 +13,7 @@
     allEvents = @Html.Raw(ViewBag.calroutes);
     var flag = 0;
     var flagbtn = 0;
-
+    var warehouse = "@Html.Raw(ViewBag.warehousesel)";
     var nothinge = [];
     (function ($) {
         'use strict';
@@ -177,57 +177,175 @@
                     },
                    
                     eventRender: function (event, element) {
-                        if (event.isfinished == "Y") { element.find('.fc-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-title').html("<b>" + event.title + "</b>"); }
-                        
-                        element.find('.fc-title').append("<br/>Driver:");
-                        
-                        element.find('.fc-title').append("<br/>" + event.driver);
-                        element.find('.fc-title').append("<br/>Route Leader:");
-                        element.find('.fc-title').append("<br/>" + event.route_leader);
-                        element.find('.fc-title').append("<br/>Truck:");
-                        element.find('.fc-title').append("<br/>" + event.truck);
-                        element.find('.fc-title').append("<br/>Departure:");
-                        element.find('.fc-title').append("<br/>" + event.departure);
-                        element.find('.fc-title').append("<br/>Total Amount: ");
-                        element.find('.fc-title').append(formatter.format(event.amount));
-                        element.find('.fc-title').append("<br/>Total Orders: ");
-                        element.find('.fc-title').append("" + event.orderscount);
-                        element.find('.fc-title').append("<br/>Total Customers: ");
-                        element.find('.fc-title').append("" + event.customerscount);
-                        element.find('.fc-title').append("<br/>Total Extra: ");
-                        element.find('.fc-title').append("" + formatter.format(event.extra));
-                        element.find('.fc-title').append("<br/>Total Cases: ");
-                        element.find('.fc-title').append("" + formatterNoCurrency.format(event.AVGEach));
-
-                        /*For List view*/
-
-                        if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-list-item-title').html("<b>" + event.title + "</b>"); }
-
-                        element.find('.fc-list-item-title').append("<br/>Driver:");
-
-                        element.find('.fc-list-item-title').append("<br/>" + event.driver);
-                        element.find('.fc-list-item-title').append("<br/>Route Leader:");
-                        element.find('.fc-list-item-title').append("<br/>" + event.route_leader);
-                        element.find('.fc-list-item-title').append("<br/>Truck:");
-                        element.find('.fc-list-item-title').append("<br/>" + event.truck);
-                        element.find('.fc-list-item-title').append("<br/>Departure:");
-                        element.find('.fc-list-item-title').append("<br/>" + event.departure);
-                        element.find('.fc-list-item-title').append("<br/>Total Amount: ");
-                        element.find('.fc-list-item-title').append(formatter.format(event.amount));
-                        element.find('.fc-list-item-title').append("<br/>Total Orders: ");
-                        element.find('.fc-list-item-title').append("" + event.orderscount);
-                        element.find('.fc-list-item-title').append("<br/>Total Customers: ");
-                        element.find('.fc-list-item-title').append("" + event.customerscount);
-                        element.find('.fc-list-item-title').append("<br/>Total Extra: ");
-                        element.find('.fc-list-item-title').append("" + formatter.format(event.extra));
-                        element.find('.fc-list-item-title').append("<br/>Total Cases: ");
-                        element.find('.fc-list-item-title').append("" + formatterNoCurrency.format(event.AVGEach));
-
-                
-                        //element.prop('title', "HOLA PERRAS");
                        
 
+                        if (event.isfinished == "Y") {
 
+                            if (warehouse == "01") {
+                                if (event.Warehouse == "02") {
+                                    element.find('.fc-title').html("<i class='fa fa-truck text-dark'></i><i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>");
+                                } else {
+                                    element.find('.fc-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>");
+                                }
+                            } else {
+                                element.find('.fc-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>");
+                            }
+
+                         
+                        }
+                        else {
+
+
+                            if (warehouse == "01") {
+                                if (event.Warehouse == "02") {
+                                    element.find('.fc-title').html("<i class='fa fa-truck text-dark'></i><b>" + event.title + "</b>");
+                                } else {
+                                    element.find('.fc-title').html("<b>" + event.title + "</b>");
+                                }
+                            } else {
+                                element.find('.fc-title').html("<b>" + event.title + "</b>");
+                            }
+
+                            
+                        }
+
+
+                        if (warehouse == "01") {
+                            if (event.Warehouse == "02") {
+
+                                $(element).css("backgroundColor", "#fdfef6");
+                                element.find('.fc-title').append("<br/>Driver:");
+                                if (event.driver_WHS == "") {
+                                    element.find('.fc-title').append("<br/>" + "NOT ASSIGNED");
+                                } else {
+                                    element.find('.fc-title').append("<br/>" + event.driver_WHS);
+                                }
+
+
+                                element.find('.fc-title').append("<br/>Truck:");
+                                if (event.truck_WHS == "") {
+                                    element.find('.fc-title').append("<br/>" + "NOT ASSIGNED");
+                                } else {
+                                    element.find('.fc-title').append("<br/>" + event.truck_WHS);
+                                }
+                          
+                                element.find('.fc-title').append("<br/>Departure:");
+                                element.find('.fc-title').append("<br/>" + event.departure);
+
+
+                            } else {
+                                element.find('.fc-title').append("<br/>Driver:");
+
+                                element.find('.fc-title').append("<br/>" + event.driver);
+                                element.find('.fc-title').append("<br/>Route Leader:");
+                                element.find('.fc-title').append("<br/>" + event.route_leader);
+                                element.find('.fc-title').append("<br/>Truck:");
+                                element.find('.fc-title').append("<br/>" + event.truck);
+                                element.find('.fc-title').append("<br/>Departure:");
+                                element.find('.fc-title').append("<br/>" + event.departure);
+                                element.find('.fc-title').append("<br/>Total Amount: ");
+                                element.find('.fc-title').append(formatter.format(event.amount));
+                                element.find('.fc-title').append("<br/>Total Orders: ");
+                                element.find('.fc-title').append("" + event.orderscount);
+                                element.find('.fc-title').append("<br/>Total Customers: ");
+                                element.find('.fc-title').append("" + event.customerscount);
+                                element.find('.fc-title').append("<br/>Total Extra: ");
+                                element.find('.fc-title').append("" + formatter.format(event.extra));
+                                element.find('.fc-title').append("<br/>Total Cases: ");
+                                element.find('.fc-title').append("" + formatterNoCurrency.format(event.AVGEach));
+                            }
+                        } else {
+                            element.find('.fc-title').append("<br/>Driver:");
+
+                            element.find('.fc-title').append("<br/>" + event.driver);
+                            element.find('.fc-title').append("<br/>Route Leader:");
+                            element.find('.fc-title').append("<br/>" + event.route_leader);
+                            element.find('.fc-title').append("<br/>Truck:");
+                            element.find('.fc-title').append("<br/>" + event.truck);
+                            element.find('.fc-title').append("<br/>Departure:");
+                            element.find('.fc-title').append("<br/>" + event.departure);
+                            element.find('.fc-title').append("<br/>Total Amount: ");
+                            element.find('.fc-title').append(formatter.format(event.amount));
+                            element.find('.fc-title').append("<br/>Total Orders: ");
+                            element.find('.fc-title').append("" + event.orderscount);
+                            element.find('.fc-title').append("<br/>Total Customers: ");
+                            element.find('.fc-title').append("" + event.customerscount);
+                            element.find('.fc-title').append("<br/>Total Extra: ");
+                            element.find('.fc-title').append("" + formatter.format(event.extra));
+                            element.find('.fc-title').append("<br/>Total Cases: ");
+                            element.find('.fc-title').append("" + formatterNoCurrency.format(event.AVGEach));
+                        }
+
+                        if (warehouse == "01") {
+                            if (event.Warehouse == "02") {
+
+                                /*For List view*/
+
+                                if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-truck text-dark'></i><i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-list-item-title').html("<i class='fa fa-truck text-dark'></i><b>" + event.title + "</b>"); }
+
+                                element.find('.fc-list-item-title').append("<br/>Driver:");
+                                element.find('.fc-list-item-title').append("<br/>" + event.driver_WHS);
+                                element.find('.fc-list-item-title').append("<br/>Truck:");
+                                element.find('.fc-list-item-title').append("<br/>" + event.truck_WHS);
+                                element.find('.fc-list-item-title').append("<br/>Departure:");
+                                element.find('.fc-list-item-title').append("<br/>" + event.departure);
+
+
+
+                            } else {
+                                /*For List view*/
+
+                                if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-list-item-title').html("<b>" + event.title + "</b>"); }
+
+                                element.find('.fc-list-item-title').append("<br/>Driver:");
+
+                                element.find('.fc-list-item-title').append("<br/>" + event.driver);
+                                element.find('.fc-list-item-title').append("<br/>Route Leader:");
+                                element.find('.fc-list-item-title').append("<br/>" + event.route_leader);
+                                element.find('.fc-list-item-title').append("<br/>Truck:");
+                                element.find('.fc-list-item-title').append("<br/>" + event.truck);
+                                element.find('.fc-list-item-title').append("<br/>Departure:");
+                                element.find('.fc-list-item-title').append("<br/>" + event.departure);
+                                element.find('.fc-list-item-title').append("<br/>Total Amount: ");
+                                element.find('.fc-list-item-title').append(formatter.format(event.amount));
+                                element.find('.fc-list-item-title').append("<br/>Total Orders: ");
+                                element.find('.fc-list-item-title').append("" + event.orderscount);
+                                element.find('.fc-list-item-title').append("<br/>Total Customers: ");
+                                element.find('.fc-list-item-title').append("" + event.customerscount);
+                                element.find('.fc-list-item-title').append("<br/>Total Extra: ");
+                                element.find('.fc-list-item-title').append("" + formatter.format(event.extra));
+                                element.find('.fc-list-item-title').append("<br/>Total Cases: ");
+                                element.find('.fc-list-item-title').append("" + formatterNoCurrency.format(event.AVGEach));
+                            }
+                        } else {
+                            /*For List view*/
+
+                            if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-list-item-title').html("<b>" + event.title + "</b>"); }
+
+                            element.find('.fc-list-item-title').append("<br/>Driver:");
+
+                            element.find('.fc-list-item-title').append("<br/>" + event.driver);
+                            element.find('.fc-list-item-title').append("<br/>Route Leader:");
+                            element.find('.fc-list-item-title').append("<br/>" + event.route_leader);
+                            element.find('.fc-list-item-title').append("<br/>Truck:");
+                            element.find('.fc-list-item-title').append("<br/>" + event.truck);
+                            element.find('.fc-list-item-title').append("<br/>Departure:");
+                            element.find('.fc-list-item-title').append("<br/>" + event.departure);
+                            element.find('.fc-list-item-title').append("<br/>Total Amount: ");
+                            element.find('.fc-list-item-title').append(formatter.format(event.amount));
+                            element.find('.fc-list-item-title').append("<br/>Total Orders: ");
+                            element.find('.fc-list-item-title').append("" + event.orderscount);
+                            element.find('.fc-list-item-title').append("<br/>Total Customers: ");
+                            element.find('.fc-list-item-title').append("" + event.customerscount);
+                            element.find('.fc-list-item-title').append("<br/>Total Extra: ");
+                            element.find('.fc-list-item-title').append("" + formatter.format(event.extra));
+                            element.find('.fc-list-item-title').append("<br/>Total Cases: ");
+                            element.find('.fc-list-item-title').append("" + formatterNoCurrency.format(event.AVGEach));
+                        }
+
+
+
+                
                     },
                     eventAfterRender: function (event, element, view) {
                         //element.css("background", "#fff");
@@ -247,58 +365,121 @@
 
                     },
                     eventMouseover: function (calEvent, jsEvent) {
-                        var tooltip = '<div class="tooltipevent" style="width:200px;height:300px;font-size:10px;position:absolute;z-index:10001;">'+
-                        '<div class="col-xl-12 col-md-12">' +
-                            '<div class="card card-shadow mb-4">' +
-                            //    '<div class="card-header border-0">' +
-                            //        '<div class="custom-title-wrap bar-primary">' +
-                            //'<div class="custom-title" style="font-size:9px;">Total Each: ' + calEvent.AVGEach + '</div>' +
-                            //        '</div>' +
-                            //    '</div>' +
-                                '<div class="card-body">' +
+
+                        if (warehouse == "01") {
+                            if (calEvent.Warehouse == "02") {
+
+                            } else {
+                                var tooltip = '<div class="tooltipevent" style="width:200px;height:300px;font-size:10px;position:absolute;z-index:10001;">' +
+                                    '<div class="col-xl-12 col-md-12">' +
+                                    '<div class="card card-shadow mb-4">' +
+                                    //    '<div class="card-header border-0">' +
+                                    //        '<div class="custom-title-wrap bar-primary">' +
+                                    //'<div class="custom-title" style="font-size:9px;">Total Each: ' + calEvent.AVGEach + '</div>' +
+                                    //        '</div>' +
+                                    //    '</div>' +
+                                    '<div class="card-body">' +
                                     '<ul class="list-unstyled base-timeline">' +
-                                        '<li class="time-dot-primary">' +
-                                            '<div class="base-timeline-info">'+
-                                            'Each: ' + calEvent.totalEach +
-                                    '</div>'+
-                                        '</li>' +
+                                    '<li class="time-dot-primary">' +
+                                    '<div class="base-timeline-info">' +
+                                    'Each: ' + calEvent.totalEach +
+                                    '</div>' +
+                                    '</li>' +
 
-                            '<li class="time-dot-primary">' +
-                            '<div class="base-timeline-info">' +
-                                        'Case: ' + calEvent.totalCase +
-                        '</div>' +
-                            '</li>' +
+                                    '<li class="time-dot-primary">' +
+                                    '<div class="base-timeline-info">' +
+                                    'Case: ' + calEvent.totalCase +
+                                    '</div>' +
+                                    '</li>' +
 
-                            '<li class="time-dot-primary">' +
-                            '<div class="base-timeline-info">' +
-                            'Pack: ' + calEvent.totalPack + '' +
-                        '</div>' +
-                            '</li>' +
+                                    '<li class="time-dot-primary">' +
+                                    '<div class="base-timeline-info">' +
+                                    'Pack: ' + calEvent.totalPack + '' +
+                                    '</div>' +
+                                    '</li>' +
 
-                            '<li class="time-dot-primary">' +
-                            '<div class="base-timeline-info">' +
-                            'LBS: ' + calEvent.totalLbs + '' +
-                        '</div>' +
-                            '</li>' +
-                        '</ul>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '</div>';
-
-
+                                    '<li class="time-dot-primary">' +
+                                    '<div class="base-timeline-info">' +
+                                    'LBS: ' + calEvent.totalLbs + '' +
+                                    '</div>' +
+                                    '</li>' +
+                                    '</ul>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>';
 
 
-                        var $tooltip = $(tooltip).appendTo('body');
 
-                        $(this).mouseover(function (e) {
-                            $(this).css('z-index', 10000);
-                            $tooltip.fadeIn('500');
-                            $tooltip.fadeTo('10', 1.9);
-                        }).mousemove(function (e) {
-                            $tooltip.css('top', e.pageY + 10);
-                            $tooltip.css('left', e.pageX + 20);
-                        });
+
+                                var $tooltip = $(tooltip).appendTo('body');
+
+                                $(this).mouseover(function (e) {
+                                    $(this).css('z-index', 10000);
+                                    $tooltip.fadeIn('500');
+                                    $tooltip.fadeTo('10', 1.9);
+                                }).mousemove(function (e) {
+                                    $tooltip.css('top', e.pageY + 10);
+                                    $tooltip.css('left', e.pageX + 20);
+                                });
+                            }
+                        } else {
+                            var tooltip = '<div class="tooltipevent" style="width:200px;height:300px;font-size:10px;position:absolute;z-index:10001;">' +
+                                '<div class="col-xl-12 col-md-12">' +
+                                '<div class="card card-shadow mb-4">' +
+                                //    '<div class="card-header border-0">' +
+                                //        '<div class="custom-title-wrap bar-primary">' +
+                                //'<div class="custom-title" style="font-size:9px;">Total Each: ' + calEvent.AVGEach + '</div>' +
+                                //        '</div>' +
+                                //    '</div>' +
+                                '<div class="card-body">' +
+                                '<ul class="list-unstyled base-timeline">' +
+                                '<li class="time-dot-primary">' +
+                                '<div class="base-timeline-info">' +
+                                'Each: ' + calEvent.totalEach +
+                                '</div>' +
+                                '</li>' +
+
+                                '<li class="time-dot-primary">' +
+                                '<div class="base-timeline-info">' +
+                                'Case: ' + calEvent.totalCase +
+                                '</div>' +
+                                '</li>' +
+
+                                '<li class="time-dot-primary">' +
+                                '<div class="base-timeline-info">' +
+                                'Pack: ' + calEvent.totalPack + '' +
+                                '</div>' +
+                                '</li>' +
+
+                                '<li class="time-dot-primary">' +
+                                '<div class="base-timeline-info">' +
+                                'LBS: ' + calEvent.totalLbs + '' +
+                                '</div>' +
+                                '</li>' +
+                                '</ul>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>' +
+                                '</div>';
+
+
+
+
+                            var $tooltip = $(tooltip).appendTo('body');
+
+                            $(this).mouseover(function (e) {
+                                $(this).css('z-index', 10000);
+                                $tooltip.fadeIn('500');
+                                $tooltip.fadeTo('10', 1.9);
+                            }).mousemove(function (e) {
+                                $tooltip.css('top', e.pageY + 10);
+                                $tooltip.css('left', e.pageX + 20);
+                            });
+                        }
+
+
+
                     },
 
                     eventMouseout: function (calEvent, jsEvent) {
@@ -306,8 +487,37 @@
                         $('.tooltipevent').remove();
                     },
                     eventClick: function (calEvent, jsEvent, view) {
+                        var flwa = 0;
+                        if (warehouse == "01") {
+                            if (calEvent.Warehouse == "02") {
+                                flwa = 1;
+                            } else {
+                                flwa = 0;
+                            }
+                        } else {
+                            flwa = 0;
+                        }
 
-                        //Llamamos con AJAX
+                        if (flwa == 1) {
+                            if (calEvent.isfinished == "Y") {
+
+                            } else{
+                                var drivername = calEvent.driver_WHS;
+                                var truckname = calEvent.truck_WHS
+
+                                var id_route = calEvent.title.substr(0, calEvent.title.indexOf(' '));
+                                $("#selectedRouteOtraBodega").val(id_route);
+            
+                                $("#lstDriverOtraBodega option:contains(" + drivername + ")").attr("selected", true).trigger('change');
+                                $("#lstTruckOtraBodega option:contains(" + truckname + ")").attr("selected", true).trigger('change');
+                             
+
+
+                                $('#editModal_KY').modal('show');
+                            }
+
+                        } else {
+                            //Llamamos con AJAX
                       
                         if (flagbtn == 0) {
                             flagbtn = 1;
@@ -606,6 +816,8 @@
                                 }
                             });
                         }
+                        }
+                        
 
                
                         // change the border color just for fun
@@ -636,6 +848,7 @@
         var rleaderCode = $("#lstRLeader").val();
         var rleaderName = $("#lstRLeader option:selected").text();
         var departure = $("#departure").val();
+        var preparationdate = $("#preparationdate").val();
         console.log(departure);
         document.getElementById("loader").style.display = "block";
         $.ajax
@@ -654,7 +867,8 @@
                     lstTruckName: truckName,
                     lstRLeaderCode: rleaderCode,
                     lstRLeaderName: rleaderName,
-                    departure: departure
+                    departure: departure,
+                    preparationdate: preparationdate
                 }),
                 success: function (result) {
                     try {

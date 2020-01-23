@@ -41,6 +41,9 @@ namespace LimenawebApp.Controllers
             public string totalPack { get; set; }
             public string totalLbs { get; set; }
             public string AVGEach { get; set; }
+            public string Warehouse { get; set; }
+            public string driver_WHS { get; set; }
+            public string truck_WHS { get; set; }
         }
         public class orderSO
         {
@@ -152,7 +155,16 @@ namespace LimenawebApp.Controllers
                 ///////////////////////////////
                 List<Tb_Planning> rutaslst = new List<Tb_Planning>();
                 //Nuevo filtro por bodega
-                rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse==company_bodega) select a).ToList();
+
+                //si es limena podremos ver las rutas de otras pero minimizadas
+                if (company_bodega == "01")
+                {
+                    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate) select a).ToList();
+                }
+                else {
+                    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
+                }
+                
 
                 var rtids = rutaslst.Select(c => c.ID_Route).ToArray();
                 //Cargamos todos los datos maestros a utilizar
@@ -175,9 +187,11 @@ namespace LimenawebApp.Controllers
                     rt.route_leader = item.Routeleader_name.ToUpper();
                     rt.className = ".fc-event";
                     rt.driver = item.Driver_name.ToUpper();
+                    rt.driver_WHS = item.Driver_name_whs.ToUpper();
                     rt.truck = item.Truck_name;
+                    rt.truck_WHS = item.Truck_name_whs;
                     rt.departure = item.Departure.ToShortTimeString();
-
+                    rt.Warehouse = item.Warehouse;
                     try {
                         var extra = (from a in dblim.Tb_Planning_extra where (a.ID_Route == item.ID_Route) select a);
                         if (extra.Count() > 0) {
@@ -306,6 +320,23 @@ namespace LimenawebApp.Controllers
                                            }).ToList());
 
                 ViewBag.drivers = JsonConvert.SerializeObject(myArrListDrivers);
+
+
+
+                //DRIVERS OTRAS BODEGAS
+                var driversOTROS = dlipro.C_DRIVERS.Where(a => a.U_Whs != company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListDriversOTROS = new ArrayList();
+                myArrListDriversOTROS.AddRange((from p in driversOTROS
+                                                select new
+                                           {
+                                               id = p.Code,
+                                               text = p.Name.ToUpper().Replace("'", ""),
+                                           }).ToList());
+
+                ViewBag.driversOtros = JsonConvert.SerializeObject(myArrListDriversOTROS);
+
+
                 //LISTADO DE Routes Leader
                 var routeleader = dlipro.C_HELPERS.Where(a => a.U_Whs == company_bodega).ToList();
                 //Convertimos la lista a array
@@ -330,6 +361,19 @@ namespace LimenawebApp.Controllers
                                          }).ToList());
 
                 ViewBag.trucks = JsonConvert.SerializeObject(myArrListtruck);
+
+                var trucksOTRASBODEGAS = dlipro.C_TRUCKS.Where(a => a.U_Whs != company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListtruckOTRAS = new ArrayList();
+                myArrListtruckOTRAS.AddRange((from p in trucksOTRASBODEGAS
+                                         select new
+                                         {
+                                             id = p.Code,
+                                             text = p.Name.ToUpper().Replace("'", ""),
+                                         }).ToList());
+
+                ViewBag.trucksOtros = JsonConvert.SerializeObject(myArrListtruckOTRAS);
+
                 //LISTADO DE Rutas
                 var mainroutes = dlipro.C_DROUTE.Where(a => a.U_Whs == company_bodega).ToList();
                 //Convertimos la lista a array
@@ -344,7 +388,7 @@ namespace LimenawebApp.Controllers
                 ViewBag.mainroutes = JsonConvert.SerializeObject(myArrListmainroutes);
 
                 //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
-
+                ViewBag.warehousesel = company_bodega;
 
                 //FIN HEADER
                 return View();
@@ -651,10 +695,17 @@ namespace LimenawebApp.Controllers
                     //sabes si ya estan transferidas
                     if (company_bodega == "01")
                     {
-                        trans = SalesOrder.Where(a => a.Warehouse != company_bodega && a.Transferred >0 && a.ID_Route == rutait.ID_Route).Count();
+                        trans = SalesOrder.Where(a => a.Warehouse != company_bodega && a.Transferred ==1 && a.ID_Route == rutait.ID_Route).Count();
 
                         if (trans > 0) {
                             rutait.transferred = 1;
+                        }
+                        trans = 0;
+                        trans = SalesOrder.Where(a => a.Warehouse != company_bodega && a.Transferred == 2 && a.ID_Route == rutait.ID_Route).Count();
+
+                        if (trans > 0)
+                        {
+                            rutait.transferred = 2;
                         }
                     }
 
@@ -1242,7 +1293,7 @@ namespace LimenawebApp.Controllers
                             decimal finishedorCanceled2 = (from e in lstDetails where ((e.isvalidated == true) && e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).Count();
 
                             totalRutas = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).Count();
-                            var eliminados = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).Count();
+                            var eliminados = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER") && e.Transferred==2) select e).Count();
 
                             if (eliminados > 0) {
                                 rutait.delete = 1;
@@ -1291,7 +1342,7 @@ namespace LimenawebApp.Controllers
                         decimal finishedorCanceled2 = (from e in lstDetails where ((e.isvalidated == true) && e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).Count();
 
                         totalRutas = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).Count();
-                        var eliminados = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).Count();
+                        var eliminados = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage && e.Transferred == 2) select e).Count();
 
                         if (eliminados > 0)
                         {
@@ -1451,9 +1502,15 @@ namespace LimenawebApp.Controllers
                 {
                     company_bodega = "02";
                 }
-
-
-                var lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf && dc.Warehouse==company_bodega).OrderByDescending(dc => dc.ID_Route).ToList();
+                List<Tb_Planning> lstRoutes = new List<Tb_Planning>();
+                if (company_bodega == "01")
+                {
+                    lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf).OrderByDescending(dc => dc.ID_Route).ToList();
+                }
+                else {
+                    lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf && dc.Warehouse == company_bodega).OrderByDescending(dc => dc.ID_Route).ToList();
+                }
+                
 
                 List<Routes_calendar> rutaslst = new List<Routes_calendar>();
 
@@ -1483,6 +1540,7 @@ namespace LimenawebApp.Controllers
                     rt.driver = item.Driver_name.ToUpper();
                     rt.truck = item.Truck_name;
                     rt.departure = item.Departure.ToShortTimeString();
+                    rt.Warehouse = item.Warehouse;
                     if (item.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
 
 
@@ -1711,7 +1769,7 @@ namespace LimenawebApp.Controllers
 
                 }
 
-                var item_list = dblim.Tb_PlanningSO_details.Where(b => so_list.Contains(b.ID_salesorder) && b.Warehouse == company_bodega).ToList();
+                var item_list = dblim.Tb_PlanningSO_details.Where(b => so_list.Contains(b.ID_salesorder) && b.Warehouse == company_bodega && !b.query1.Contains("DEL")).ToList();
 
                 foreach (var item in item_list)
                 {
@@ -2090,7 +2148,32 @@ namespace LimenawebApp.Controllers
             }
 
         }
+        [HttpPost]
+        public JsonResult AssignRoute(string id, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName)
+        {
+            try
+            {
+                int rdf = Convert.ToInt32(id);
 
+                Tb_Planning tbpl = dblim.Tb_Planning.Find(rdf);
+
+                tbpl.ID_driver_whs = lstDriverCode;
+                tbpl.Driver_name_whs = lstDriverName;
+                tbpl.ID_truck_whs = lstTruckCode;
+                tbpl.Truck_name_whs = lstTruckName;
+
+                dblim.Entry(tbpl).State = EntityState.Modified;
+                dblim.SaveChanges();
+
+
+                return Json("Success", JsonRequestBehavior.AllowGet);
+            }
+            catch
+            {
+                return Json("Error", JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
 
         private dbLimenaEntities AddToContext(dbLimenaEntities context, Tb_PlanningSO_details entity, int count, int commitCount, bool recreateContext)
@@ -2110,7 +2193,7 @@ namespace LimenawebApp.Controllers
         }
 
 
-        public ActionResult CreateRoutePlanning(string routeName, string lstMasterCode, string lstMasterName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure)
+        public ActionResult CreateRoutePlanning(string routeName, string lstMasterCode, string lstMasterName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure, DateTime preparationdate)
         {
 
             try
@@ -2155,6 +2238,11 @@ namespace LimenawebApp.Controllers
                     newPlanning.ID_userValidate = 0;
                     //Nueva propiedad para bodega
                     newPlanning.Warehouse = company_bodega;
+                    newPlanning.ID_driver_whs = "";
+                    newPlanning.Driver_name_whs = "";
+                    newPlanning.ID_truck_whs = "";
+                    newPlanning.Truck_name_whs = "";
+                    newPlanning.DatetoInvoice = preparationdate;
 
                     dblim.Tb_Planning.Add(newPlanning);
                     dblim.SaveChanges();
@@ -3396,7 +3484,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER"))
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred==2)
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3411,7 +3499,7 @@ namespace LimenawebApp.Controllers
                 else if (storage == "FREEZER")
                 {
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER"))
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2)
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3427,7 +3515,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2)
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3451,15 +3539,15 @@ namespace LimenawebApp.Controllers
 
                 if (storage == "COOLER")
                 {
-                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER")) select a);
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred == 2) select a);
                 }
                 else if (storage == "FREEZER")
                 {
-                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER")) select a);
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2) select a);
                 }
                 else
                 {
-                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage) select a);
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2) select a);
                 }
 
 
@@ -3677,7 +3765,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER"))
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred == 2)
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3692,7 +3780,7 @@ namespace LimenawebApp.Controllers
                 else if (storage == "FREEZER")
                 {
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER"))
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2)
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3708,7 +3796,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2)
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3732,15 +3820,15 @@ namespace LimenawebApp.Controllers
 
                 if (storage == "COOLER")
                 {
-                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER")) select a);
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred == 2) select a);
                 }
                 else if (storage == "FREEZER")
                 {
-                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER")) select a);
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2) select a);
                 }
                 else
                 {
-                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage) select a);
+                    allDet = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == idf && !a.type.Contains("I") && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2) select a);
                 }
 
 
@@ -4019,6 +4107,71 @@ namespace LimenawebApp.Controllers
             Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
             stream.Seek(0, SeekOrigin.Begin);
             return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
+        }
+
+
+        public ActionResult ShowPDF(string activityname)
+        {
+            // retrieve byte array here
+            var report = TempData["Output"] as Stream;
+            if (report != null)
+            {
+                return File(report, System.Net.Mime.MediaTypeNames.Application.Pdf);
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+        }
+
+        public ActionResult Print_routeWHS(int id_route)
+        {
+
+            var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route) select a).Take(1).ToList();
+
+            var quemadosSO = new List<string>();
+            quemadosSO.Add("78492");
+            //quemadosSO.Add("78497");
+            if (so.Count > 0)
+            {
+                //Aca iria ciclo foreach
+                //Buscamos datos en la vista maestra de facturas
+                var sqlQueryText = dlipro.Database.ExecuteSqlCommand("exec sp_genericInvoice {0}", "78492");
+                
+
+
+                ReportDocument rd = new ReportDocument();
+
+                rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoice Storage Type (RR).rpt"));
+
+                rd.SetDataSource(so);
+
+
+                var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                Response.Buffer = false;
+                Response.ClearContent();
+                Response.ClearHeaders();
+
+
+                //PARA VISUALIZAR
+                Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                stream.Seek(0, SeekOrigin.Begin);
+
+                //Nueva descarga
+                TempData["Output"] = stream;
+
+                //return Json(urlcontent);
+                return Json("Success", JsonRequestBehavior.AllowGet);
+
+            }
+            else
+            {
+
+                return Json("Error", JsonRequestBehavior.AllowGet);
+
+            }
         }
 
     }
