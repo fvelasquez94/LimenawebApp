@@ -31,5 +31,6 @@ namespace LimenawebApp.Models
         public virtual DbSet<PurchaseData_product> PurchaseData_product { get; set; }
         public virtual DbSet<Transito_Final> Transito_Final { get; set; }
         public virtual DbSet<Purchase_dataHistory> Purchase_dataHistory { get; set; }
+        public virtual DbSet<PurchaseData_byReps> PurchaseData_byReps { get; set; }
     }
 }

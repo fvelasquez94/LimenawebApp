@@ -233,6 +233,7 @@
                     margin: 1.75rem auto !important;
                 }
             }
+
             @@media (min-width: 576px) {
                 .modalso {
                     margin: 1.75rem auto !important;
@@ -721,7 +722,7 @@ else
 
                 if (validar == 1) {
                     //Ajax
-                        if (grecaptcha.getResponse()) {
+                        //if (grecaptcha.getResponse()) {
                     $(window).scrollTop(0);
                     $.ajax({
                         url: '/Home/UpdateInformationNewCustomer',
@@ -735,8 +736,9 @@ else
                             //$("#modal_demoform_saving").modal('hide');
 
                             if (result == "File Uploaded Successfully!") {
+
+                                window.location.href = '@Url.Action("Enroll", "Home", new { token =1})';
                                 document.getElementById("loader").style.display = "none";
-                                  window.location.href = '@Url.Action("Enroll", "Home", new { token =1})';
                             } else {
                                 console.log(result);
                                 document.getElementById("loader").style.display = "none";
@@ -751,9 +753,9 @@ else
 
 
                     });
-    } else {
-        alert('Please confirm captcha to proceed')
-    }
+    //} else {
+    //    alert('Please confirm captcha to proceed')
+    //}
 
 
 
@@ -912,7 +914,7 @@ else
 
 
 
-    if (grecaptcha.getResponse()) {
+    //if (grecaptcha.getResponse()) {
                            //Ajax
                     $(window).scrollTop(0);
                     $.ajax({
@@ -927,12 +929,13 @@ else
                             //$("#modal_demoform_saving").modal('hide');
 
                             if (result == "File Uploaded Successfully!") {
+
+                                window.location.href = '@Url.Action("Enroll", "Home", new { token =1})';
                                 document.getElementById("loader").style.display = "none";
-                                  window.location.href = '@Url.Action("Enroll", "Home", new { token =1})';
                             } else {
                                 document.getElementById("loader").style.display = "none";
                                 console.log(result);
-                                
+
                             }
 
                         },
@@ -942,15 +945,16 @@ else
                                 //do something. Try again perhaps?
                             } else {
                                 alert('Error, try again');
+                                console.log(textStatus);
                             }
                             document.getElementById("loader").style.display = "none";
                         }
 
 
                     });
-    } else {
-        alert('Please confirm captcha to proceed')
-    }
+    //} else {
+    //    alert('Please confirm captcha to proceed')
+    //}
 
 
 
@@ -3404,7 +3408,7 @@ Configure tooltips globally
 
         $("#lstDriverOtraBodega").select2({
             placeholder: "Select...",
-            data: data2
+            data: data
         });
 
 
@@ -3455,7 +3459,7 @@ Configure tooltips globally
 
         $("#lstTruckOtraBodega").select2({
             placeholder: "Select...",
-            data: data4
+            data: data
 
         });
 
@@ -3567,7 +3571,12 @@ Configure tooltips globally
                             nowDate.setHours(nowDate.getHours() + 6);
                             var final = moment(nowDate).format();
 
+                            var nowDate2 = new Date(parseInt(route.DatetoInvoice.substr(6)));
+                            nowDate2.setHours(nowDate2.getHours() + 6);
+                            var final2 = moment(nowDate2).format();
+
                             $('#departure2').val(final.substring(0, final.length - 6));
+                            $('#preparationdate2').val(final2.substring(0, final2.length - 6));
 
 
                         }); //END EACH
@@ -3597,6 +3606,7 @@ Configure tooltips globally
             var rleaderCode = $("#lstRLeader2").val();
             var rleaderName = $("#lstRLeader2 option:selected").text();
             var departure = $("#departure2").val();
+            var preparationdate = $("#preparationdate2").val();
 
             document.getElementById("loader").style.display = "block";
             $.ajax
@@ -3614,7 +3624,8 @@ Configure tooltips globally
                         lstTruckName: truckName,
                         lstRLeaderCode: rleaderCode,
                         lstRLeaderName: rleaderName,
-                        departure: departure
+                        departure: departure,
+                        preparationdate: preparationdate,
                     }),
                     success: function (result) {
                         if (result == "Success") {
@@ -3727,7 +3738,7 @@ Configure tooltips globally
         //function sortTable() {
         //    var table, rows, i, x, y, shouldSwitch;
         //    table = document.getElementById("data_tableEditor2");
-          
+
         //    /*Make a loop that will continue until
         //    no switching has been done:*/
         //    while (switching) {
@@ -3757,15 +3768,15 @@ Configure tooltips globally
         //            switching = true;
         //        }
         //    }
-            
+
         //}
 
-    
+
 
 
     </script>
 
-    
+
 }
 @if (ViewBag.Title == "Distribuidora Limeña - Quality Control")
 {
@@ -4180,22 +4191,26 @@ Configure tooltips globally
                     $.ajax({
                         url: '/Invoices/Print_routeWHS',
                         type: 'POST',
-                        data: { 'id': id_route },
+                        data: { 'id_route': id_route },
                         cache: false,
                         global: false,
                         success: function (result) {
 
-                            if (result == "success") {                                   
+                            if (result == "Success") {
 
-                                window.open('@Url.Action("ShowPDF", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
-                            } else {
-                                alert("Something went wrong..");
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                            }
+
+                            else {
+                                alert(result);
                             }
 
 
                         },
                         error: function (request) {
-                            alert("Something went wrong..");
+                            alert("Error: something went wrong..");
 
                         }
                     });
@@ -4203,6 +4218,51 @@ Configure tooltips globally
                 }
             })
         }
+
+        function PrintDailyPayment(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to print the Daily Payment Report for this Route?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_WHSDailyPayment',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+
+                                window.open('@Url.Action("DailyPaymentCrossDock", "Invoices",new { activityname = "DailyPaymentCrossDock" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                            }
+
+                            else {
+                                alert(result);
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
 
         function closeOrders(id_route) {
 
@@ -6956,7 +7016,7 @@ Configure tooltips globally
                 //$.each($('input[type="file"]'), function () {
                 var ID = $(this).attr('id');
 
-               
+
 
                 //COPIAMOS LA IMG A UN IMG INPUT
                 var url = $(this).val();
@@ -7011,7 +7071,7 @@ Configure tooltips globally
                                 result_image.style.height = "300px";
                             }
                             // Create FormData object
-                           
+
                         }
                     }
                 };
@@ -7027,7 +7087,7 @@ Configure tooltips globally
 
         function addproduct() {
 
-
+            $("#btnagregarcreditosub").attr("disabled", true);
             var productId = $("#IDProd").val();
             var productName = $("#descriptionD").text();
             var $inputLoop = $("#units");
@@ -7052,10 +7112,13 @@ Configure tooltips globally
 
                 if (returnReason == 0) {
                     toastr.warning("Please, select a return reason", "Warning");
+                    $('#btnagregarcreditosub').attr("disabled", false);
                 } else if (idcustomer == 0) {
                     toastr.warning("Please, select a customer", "Warning");
+                    $('#btnagregarcreditosub').attr("disabled", false);
                 } else if (uomlst == 0) {
                     toastr.warning("Please, select an UOM", "Warning");
+                    $('#btnagregarcreditosub').attr("disabled", false);
                 }
 
                 else {
@@ -7085,6 +7148,7 @@ Configure tooltips globally
                         if (flagff == 1) {
                             toastr.warning("No file selected or image format invalid.", "Warning");
                             document.getElementById("loader").style.display = "none";
+                            $('#btnagregarcreditosub').attr("disabled", false);
                         } else {
 
 
@@ -7095,7 +7159,7 @@ Configure tooltips globally
                             var blob = dataURItoBlob(dataurl);
 
                             fileData.append("myFile", blob, "IMG.jpg");
-                                       
+
 
                             //IMAGEN 2
                             if ($("#90").get(0).files.length > 0) {
@@ -7109,115 +7173,118 @@ Configure tooltips globally
                             }
 
 
-                         
-                  
-                                            //Mandamos informacion adicional
-                                            fileData.append('ItemCode', productId);
-                                            fileData.append('ItemName', productName);          
-                                            fileData.append('IDRequest_reason', returnReason);
-                                            fileData.append('Request_reason', returnReasonName);
-                                            fileData.append('Quantity', Units);
-                                            fileData.append('idcustomer', idcustomer);
-                                            fileData.append('customerName', customerName);
-                                            fileData.append('comment', comment);
-                                            fileData.append('returnProduct', returnProduct);
-                                            fileData.append('returnProductName', returnProductName);
-                                            fileData.append('UoMCode', uomlst);
-                                            fileData.append('uomlstName', uomlstName);
 
 
-                                            $.ajax({
-                                                url: '/Commercial/RequestCreditProduct',
-                                                type: "POST",
-                                                contentType: false, // Not to set any content header
-                                                processData: false, // Not to process data
-                                                //async: true,
-                                                timeout: 80000,
-                                                data: fileData,
-                                                success: function (result) {
-                                                    //$("#modal_demoform_saving").modal('hide');
-                                                    
-                                                    if (result == "File Uploaded Successfully!") {
-
-                                                        $('#addProductModal').modal('hide');
-                                                        $("#returnReason").val('0').trigger("change");
-                                                        $("#returnProduct").val('0').trigger("change");
-                                                        $("#UOMlst").val('0').trigger("change");
-                                                        $("#units").val('1');
-                                                        $("#messagetext").val('');
-                                                        var drEvent = $('#45').dropify();
-                                                        drEvent = drEvent.data('dropify');
-                                                        drEvent.resetPreview();
-                                                        drEvent.clearElement();
-                                                        document.getElementById("loader").style.display = "none";
-
-                                                        var drEvent2 = $('#90').dropify(); //Picture 2
-                                                        drEvent2 = drEvent2.data('dropify');
-                                                        drEvent2.resetPreview();
-                                                        drEvent2.clearElement();
-                                                        toastr.success("Credit request sent", "Success");
-                                                        //window.location.reload(true);
-                                                    } else if (result == "No files selected.") {
+                            //Mandamos informacion adicional
+                            fileData.append('ItemCode', productId);
+                            fileData.append('ItemName', productName);
+                            fileData.append('IDRequest_reason', returnReason);
+                            fileData.append('Request_reason', returnReasonName);
+                            fileData.append('Quantity', Units);
+                            fileData.append('idcustomer', idcustomer);
+                            fileData.append('customerName', customerName);
+                            fileData.append('comment', comment);
+                            fileData.append('returnProduct', returnProduct);
+                            fileData.append('returnProductName', returnProductName);
+                            fileData.append('UoMCode', uomlst);
+                            fileData.append('uomlstName', uomlstName);
 
 
-                                                        var drEvent = $('#45').dropify();
-                                                        drEvent = drEvent.data('dropify');
-                                                        drEvent.resetPreview();
-                                                        drEvent.clearElement();
+                            $.ajax({
+                                url: '/Commercial/RequestCreditProduct',
+                                type: "POST",
+                                contentType: false, // Not to set any content header
+                                processData: false, // Not to process data
+                                //async: true,
+                                timeout: 80000,
+                                data: fileData,
+                                success: function (result) {
+                                    //$("#modal_demoform_saving").modal('hide');
 
-                                                        var drEvent2 = $('#90').dropify(); //Picture 2
-                                                        drEvent2 = drEvent2.data('dropify');
-                                                        drEvent2.resetPreview();
-                                                        drEvent2.clearElement();
-                                                      
-                                                        document.getElementById("loader").style.display = "none";
-                                                        toastr.warning("No file selected.", "Warning");
-                                                    }
+                                    if (result == "File Uploaded Successfully!") {
 
-                                                    else {
-                                                        $('#addProductModal').modal('hide');
-                                                        $("#returnReason").val('0').trigger("change");
-                                                        $("#returnProduct").val('0').trigger("change");
-                                                        $("#UOMlst").val('0').trigger("change");
-                                                        $("#units").val('1');
-                                                        $("#messagetext").val('');
-                                                        var drEvent = $('#45').dropify();
-                                                        drEvent = drEvent.data('dropify');
-                                                        drEvent.resetPreview();
-                                                        drEvent.clearElement();
+                                        $('#addProductModal').modal('hide');
+                                        $("#returnReason").val('0').trigger("change");
+                                        $("#returnProduct").val('0').trigger("change");
+                                        $("#UOMlst").val('0').trigger("change");
+                                        $("#units").val('1');
+                                        $("#messagetext").val('');
+                                        var drEvent = $('#45').dropify();
+                                        drEvent = drEvent.data('dropify');
+                                        drEvent.resetPreview();
+                                        drEvent.clearElement();
+                                        document.getElementById("loader").style.display = "none";
 
-                                                        var drEvent2 = $('#90').dropify(); //Picture 2
-                                                        drEvent2 = drEvent2.data('dropify');
-                                                        drEvent2.resetPreview();
-                                                        drEvent2.clearElement();
-                                                        document.getElementById("loader").style.display = "none";
-                                                        toastr.warning("Something went wrong.", "Warning");
-                                                    }
+                                        var drEvent2 = $('#90').dropify(); //Picture 2
+                                        drEvent2 = drEvent2.data('dropify');
+                                        drEvent2.resetPreview();
+                                        drEvent2.clearElement();
+                                        toastr.success("Credit request sent", "Success");
+                                        $('#btnagregarcreditosub').attr("disabled", false);
+                                        //window.location.reload(true);
+                                    } else if (result == "No files selected.") {
 
 
-                                                },
-                                                error: function (err) {
-                                                    $('#addProductModal').modal('hide');
-                                                    $("#returnReason").val('0').trigger("change");
-                                                    $("#returnProduct").val('0').trigger("change");
-                                                    $("#UOMlst").val('0').trigger("change");
-                                                    $("#units").val('1');
-                                                    var drEvent = $('#45').dropify();
-                                                    drEvent = drEvent.data('dropify');
-                                                    drEvent.resetPreview();
-                                                    drEvent.clearElement();
+                                        var drEvent = $('#45').dropify();
+                                        drEvent = drEvent.data('dropify');
+                                        drEvent.resetPreview();
+                                        drEvent.clearElement();
 
-                                                    var drEvent2 = $('#90').dropify(); //Picture 2
-                                                    drEvent2 = drEvent2.data('dropify');
-                                                    drEvent2.resetPreview();
-                                                    drEvent2.clearElement();
+                                        var drEvent2 = $('#90').dropify(); //Picture 2
+                                        drEvent2 = drEvent2.data('dropify');
+                                        drEvent2.resetPreview();
+                                        drEvent2.clearElement();
 
-                                                    //$("#modal_demoform_saving").modal('hide');
-                                                    //alert("An error is reported. Maximum request length exceeded");
-                                                    document.getElementById("loader").style.display = "none";
-                                                }
-                                            });
-                          
+                                        document.getElementById("loader").style.display = "none";
+                                        toastr.warning("No file selected.", "Warning");
+                                        $('#btnagregarcreditosub').attr("disabled", false);
+                                    }
+
+                                    else {
+                                        $('#addProductModal').modal('hide');
+                                        $("#returnReason").val('0').trigger("change");
+                                        $("#returnProduct").val('0').trigger("change");
+                                        $("#UOMlst").val('0').trigger("change");
+                                        $("#units").val('1');
+                                        $("#messagetext").val('');
+                                        var drEvent = $('#45').dropify();
+                                        drEvent = drEvent.data('dropify');
+                                        drEvent.resetPreview();
+                                        drEvent.clearElement();
+
+                                        var drEvent2 = $('#90').dropify(); //Picture 2
+                                        drEvent2 = drEvent2.data('dropify');
+                                        drEvent2.resetPreview();
+                                        drEvent2.clearElement();
+                                        document.getElementById("loader").style.display = "none";
+                                        toastr.warning("Something went wrong.", "Warning");
+                                        $('#btnagregarcreditosub').attr("disabled", false);
+                                    }
+
+
+                                },
+                                error: function (err) {
+                                    $('#addProductModal').modal('hide');
+                                    $("#returnReason").val('0').trigger("change");
+                                    $("#returnProduct").val('0').trigger("change");
+                                    $("#UOMlst").val('0').trigger("change");
+                                    $("#units").val('1');
+                                    var drEvent = $('#45').dropify();
+                                    drEvent = drEvent.data('dropify');
+                                    drEvent.resetPreview();
+                                    drEvent.clearElement();
+
+                                    var drEvent2 = $('#90').dropify(); //Picture 2
+                                    drEvent2 = drEvent2.data('dropify');
+                                    drEvent2.resetPreview();
+                                    drEvent2.clearElement();
+                                    $('#btnagregarcreditosub').attr("disabled", false);
+                                    //$("#modal_demoform_saving").modal('hide');
+                                    //alert("An error is reported. Maximum request length exceeded");
+                                    document.getElementById("loader").style.display = "none";
+                                }
+                            });
+
                         }
 
 
@@ -7236,6 +7303,7 @@ Configure tooltips globally
 
                     else {
                         alert("FormData is not supported.");
+                        $('#btnagregarcreditosub').attr("disabled", false);
                     }
 
 
@@ -9121,6 +9189,53 @@ Configure tooltips globally
 
 
 }
+
+@if (ViewBag.Title == "Distribuidora Limeña - Customer Contact Data")
+{
+    <script>
+
+        $('.selcustomerstatus').on('change', function () {
+            var id = this.value;
+            var customer = this.id;
+            
+
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Commercial/updatecustomerstatus',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: id,
+                        cardcode: customer 
+                    }),
+                    success: function (result) {
+
+                        if (result.Result == "SUCCESS") {
+                            $(this).closest("tr").css('background-color', 'white');
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+
+                        } else {
+                         
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+                   },
+                    error: function () {
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+        });
+    </script>
+}
+
+
+
 @if (ViewBag.Title == "Distribuidora Limeña - Prices Request Micro")
 {
     <script>

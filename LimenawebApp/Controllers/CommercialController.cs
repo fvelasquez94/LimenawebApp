@@ -242,6 +242,255 @@ namespace LimenawebApp.Controllers
 
         }
 
+        public class ContactsCustomers
+        {
+            public string CardCode { get; set; }
+            public string CardName { get; set; }
+            public int Total { get; set; }
+            public int Status { get; set; }
+            public string IsBuyer { get; set; }
+            public string StatusCustomer { get; set; }
+        }
+
+        public class ContactsCustomersByRep
+        {
+            public string CardCode { get; set; }
+            public string CardName { get; set; }
+            public int Total { get; set; }
+            public int Status { get; set; }
+            public string IsBuyer { get; set; }
+            public string slpCode { get; set; }
+            public string classification { get; set; }
+            public string statuscustomer { get; set; }
+        }
+
+        public ActionResult Customer_contactdata()
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Customer Contact Data";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "tasks_submenu2";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                //FIN HEADER
+
+                var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representative")).OrderBy(c => c.Name).ToList();
+                List<RepsSurveys> repsSurveys = new List<RepsSurveys>();
+                List<RepsSurveys> supervisors = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Supervisor")).Select(c => new RepsSurveys { idSAP = c.IDSAP, ID_User = c.ID_User, idSAPsupervisor = "", Lastname = c.Lastname, Name = c.Name, prop01 = "", prop02 = "" }).ToList();
+       
+                string[] usids;
+                string[] notinlist;
+                List<ContactsCustomers> lstcustomer = new List<ContactsCustomers>();
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor") || activeuser.Roles.Contains("Contacts"))
+                {
+                    isAdmin = 1;
+
+                    List<int> TagIds = new List<int>();
+
+                    if (activeuser.Roles.Contains("Sales Supervisor"))
+                    {
+                        TagIds = activeuser.prop02.Split(',').Select(int.Parse).ToList();
+
+                        repsSurveys = users.Where(h => TagIds.Contains(h.ID_User)).Select(h => new RepsSurveys { ID_User = h.ID_User, Lastname = h.Lastname, Name = h.Name, prop01 = "", prop02 = "", idSAP = h.IDSAP, idSAPsupervisor = h.prop01 }).ToList();
+                        usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+
+
+                        lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                       where (usids.Contains(a.id_SalesRep.ToString()) && a.id_Customer.StartsWith("C"))
+                                       select new ContactsCustomers
+                                       {
+                                           CardCode = a.id_Customer,
+                                           CardName = a.Customer,
+                                           Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer) select b).Count(),
+                                           Status = 1,
+                                           IsBuyer = a.IsBuyer,
+                                           StatusCustomer=a.StatusCustomer
+                                       }).ToList();
+
+                    }
+                    else
+                    {
+                        //repsSurveys = users.Select(h => new RepsSurveys { ID_User = h.ID_User, Lastname = h.Lastname, Name = h.Name, prop01 = "", prop02 = "", idSAP = h.IDSAP, idSAPsupervisor = h.prop01 }).ToList();
+                        //usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+
+
+                        lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                       where (a.id_Customer.StartsWith("C"))
+                                       select new ContactsCustomers
+                                       {
+                                           CardCode = a.id_Customer,
+                                           CardName = a.Customer,
+                                           Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer) select b).Count(),
+                                           Status = 1,
+                                           IsBuyer = a.IsBuyer,
+                                           StatusCustomer = a.StatusCustomer
+                                       }).ToList();
+                    }
+                }
+                else
+                {
+                    int? idre = Convert.ToInt32(activeuser.IDSAP);
+                    //repsSurveys = users.Where(a => a.ID_User == activeuser.ID_User).Select(h => new RepsSurveys { ID_User = h.ID_User, Lastname = h.Lastname, Name = h.Name, prop01 = "", prop02 = "", idSAP = h.IDSAP, idSAPsupervisor = h.prop01 }).ToList();
+                    //usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+                    lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                   where (a.id_SalesRep== idre && a.id_Customer.StartsWith("C"))
+                                   select new ContactsCustomers
+                                   {
+                                       CardCode = a.id_Customer,
+                                       CardName = a.Customer,
+                                       Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer) select b).Count(),
+                                       Status = 1,
+                                       IsBuyer = a.IsBuyer,
+                                       StatusCustomer = a.StatusCustomer
+                                   }).ToList();
+                }
+
+                return View(lstcustomer);
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+
+        public ActionResult Contacts_details(string id)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Customer Contact Data";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "tasks_submenu2";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                //FIN HEADER
+
+                 var contacts = (from a in dlipro.BI_Contact_Person
+                                   where (a.CardCode == id)
+                                   select a).ToList();
+
+                var contactsLocal = (from a in internadli.Tb_customerscontacts
+                                   where (a.CardCode == id)
+                                   select a).ToList();
+
+                ViewBag.idcustomer = id;
+                ViewBag.contactslocal = contactsLocal;
+                return View(contacts);
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+        public ActionResult Customersbcl(string id, string profile, string salesname)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+                //HEADER
+                //PAGINAS ACTIVAS
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Pepperi Online Customers List";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "tasks_submenu";
+                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+
+                var user = dblim.Sys_Users.Where(a => a.IDSAP == id && a.Roles.Contains("Sales Representative")).FirstOrDefault();
+                //FIN HEADER
+                List<ContactsCustomersByRep> lstcustomer = new List<ContactsCustomersByRep>();
+                if (profile == "NO CLASSIFICATION")
+                {
+                    lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                       where (a.id_SalesRep.ToString() == id && a.id_Customer.StartsWith("C") && a.Classification !="DIAMOND" && a.Classification != "GOLD" && a.Classification != "SILVER")
+                                       select new ContactsCustomersByRep
+                                       {
+                                           CardCode = a.id_Customer,
+                                           CardName = a.Customer,
+                                           Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer && b.Email !="" && b.Email !=null) select b).Count(),
+                                           Status = 1,
+                                           IsBuyer = a.IsBuyer,
+                                           slpCode = a.id_SalesRep.ToString(),
+                                           classification = a.Classification,
+                                           statuscustomer=a.StatusCustomer
+
+                                       }).ToList();
+                }
+                else {
+                    lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                   where (a.id_SalesRep.ToString() == id && a.id_Customer.StartsWith("C") && a.Classification == profile)
+                                   select new ContactsCustomersByRep
+                                   {
+                                       CardCode = a.id_Customer,
+                                       CardName = a.Customer,
+                                       Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer && b.Email != "" && b.Email != null) select b).Count(),
+                                       Status = 1,
+                                       IsBuyer = a.IsBuyer,
+                                       slpCode = a.id_SalesRep.ToString(),
+                                       classification = a.Classification,
+                                       statuscustomer = a.StatusCustomer
+
+                                   }).ToList();
+                }
+
+
+                ViewBag.profile = profile;
+                ViewBag.salesname = user.Name.ToUpper() + " " + user.Lastname.ToUpper();
+                return View(lstcustomer);
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
 
         public ActionResult Prices_request()
         {
@@ -268,13 +517,45 @@ namespace LimenawebApp.Controllers
                 //FIN HEADER
 
                 //Lista de productos con filtro de Pepperi, el dia 22/08/2019 se solicito eliminar el GOYA/PRE-SALE (114)
-                var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114) select new BI_Dim_ProductsUOM { id=a.id, Product=a.Product, Brand_Name=a.Brand_Name,id_subcategory=a.id_subcategory
-                                , subcategory_name=a.subcategory_name, id_category=a.id_category, category_name=a.category_name,Vendor =a.Vendor, LeadTime =a.LeadTime, BuyUnitMsr=a.BuyUnitMsr, NumInBuy=a.NumInBuy, Active=a.Active,
-                Blocked=a.Blocked,Pepperi=a.Pepperi, CatCommission=a.CatCommission,CommPerc=a.CommPerc, CodeBars=a.CodeBars, DSD=a.DSD, SRP=a.SRP,id_Vendor=a.id_Vendor, id_brand=a.id_brand, unitCost=a.unitCost,MinPorcent=a.MinPorcent,
-                MinPrice=a.MinPrice, item_name=a.item_name, Vendor_Name=a.Vendor,Bonificables=a.Bonificables, MinPercIndiv=a.MinPercIndiv,CantBonif=a.CantBonif, FactorBonif=a.FactorBonif, Credits=a.Credits,
-                lstuom= (from fd in dlipro.OpenSalesOrders_DetailsUOM where (fd.ItemCode == a.id) select new UomLstBIDIM { Units = fd.Units, UomCode = fd.UomCode }).ToList()
+                var products = (from a in dlipro.BI_Dim_Products
+                                where (a.Pepperi == "YES" && a.id_brand != 114)
+                                select new BI_Dim_ProductsUOM
+                                {
+                                    id = a.id,
+                                    Product = a.Product,
+                                    Brand_Name = a.Brand_Name,
+                                    id_subcategory = a.id_subcategory
+,
+                                    subcategory_name = a.subcategory_name,
+                                    id_category = a.id_category,
+                                    category_name = a.category_name,
+                                    Vendor = a.Vendor,
+                                    LeadTime = a.LeadTime,
+                                    BuyUnitMsr = a.BuyUnitMsr,
+                                    NumInBuy = a.NumInBuy,
+                                    Active = a.Active,
+                                    Blocked = a.Blocked,
+                                    Pepperi = a.Pepperi,
+                                    CatCommission = a.CatCommission,
+                                    CommPerc = a.CommPerc,
+                                    CodeBars = a.CodeBars,
+                                    DSD = a.DSD,
+                                    SRP = a.SRP,
+                                    id_Vendor = a.id_Vendor,
+                                    id_brand = a.id_brand,
+                                    unitCost = a.unitCost,
+                                    MinPorcent = a.MinPorcent,
+                                    MinPrice = a.MinPrice,
+                                    item_name = a.item_name,
+                                    Vendor_Name = a.Vendor,
+                                    Bonificables = a.Bonificables,
+                                    MinPercIndiv = a.MinPercIndiv,
+                                    CantBonif = a.CantBonif,
+                                    FactorBonif = a.FactorBonif,
+                                    Credits = a.Credits,
+                                    lstuom = (from fd in dlipro.OpenSalesOrders_DetailsUOM where (fd.ItemCode == a.id) select new UomLstBIDIM { Units = fd.Units, UomCode = fd.UomCode }).ToList()
 
-            });
+                                });
 
 
                 //foreach (var item in products)
@@ -298,7 +579,7 @@ namespace LimenawebApp.Controllers
                 var lstCategories = (from f in products select f.category_name).Distinct().OrderBy(c => c).ToList();
                 ViewBag.lstCategories = lstCategories;
 
-                var lstSubCategories = (from f in products select new MyObj_SubCat { id = f.id_subcategory, name = f.subcategory_name.Replace("'",""), category = f.category_name }).Distinct().OrderBy(c => c.name).ToList();
+                var lstSubCategories = (from f in products select new MyObj_SubCat { id = f.id_subcategory, name = f.subcategory_name.Replace("'", ""), category = f.category_name }).Distinct().OrderBy(c => c.name).ToList();
                 ViewBag.lstSubCategories = lstSubCategories;
 
 
@@ -313,7 +594,7 @@ namespace LimenawebApp.Controllers
                     var pedidos = (from g in dlipro.view_ordenesAbiertasDet
                                    join j in dlipro.OCRD on g.CardCode equals j.CardCode
                                    where (TagIds.Contains(g.SlpCode))
-                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status=0 }).Distinct().OrderBy(c => c.cardname).ToArray();
+                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0 }).Distinct().OrderBy(c => c.cardname).ToArray();
 
                     foreach (var item in pedidos)
                     {
@@ -324,26 +605,28 @@ namespace LimenawebApp.Controllers
                     var docnumArrayInt = pedidos.Select(c => c.docnum).ToArray();
 
                     var existenBonif = (from s in internadli.Tb_Bonificaciones
-                                        where (docnumArray.Contains(s.CodPedido) && s.OrderClosed==true)
+                                        where (docnumArray.Contains(s.CodPedido) && s.OrderClosed == true)
                                         select s.CodPedido
                                    ).Distinct().Cast<int>().ToArray();
 
                     var existenCambiosPrecio = (from w in internadli.Tb_Autorizaciones
-                                                where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed==true)
+                                                where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed == true)
                                                 select w.DocNum
                                    ).Distinct().Cast<int>().ToArray();
 
                     var pedidos2 = pedidos.Where(c => existenBonif.Contains(c.docnum)).ToArray();
-                   
 
-                    foreach (var item in pedidos2) {
+
+                    foreach (var item in pedidos2)
+                    {
                         var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
 
                         if (existe == null)
                         {
 
                         }
-                        else {
+                        else
+                        {
                             existe.status = 2;
                         }
                     }
@@ -372,7 +655,7 @@ namespace LimenawebApp.Controllers
                                    ).Distinct().Cast<int>().ToArray();
 
                     var pedidos3 = pedidos.Where(c => existenBonifOpen.Contains(c.docnum)).ToArray();
-                    
+
                     foreach (var item in pedidos3)
                     {
                         var existe = pedidos.Where(e => e.docnum == item.docnum).FirstOrDefault();
@@ -410,14 +693,16 @@ namespace LimenawebApp.Controllers
                                         }).ToList());
                     ViewBag.pedidos = JsonConvert.SerializeObject(myArrList);
                 }
-                else { //VENDEDORES
+                else
+                { //VENDEDORES
                     int slpcode = Convert.ToInt32(activeuser.IDSAP);
                     var pedidos = (from g in dlipro.view_ordenesAbiertasDet
                                    join j in dlipro.OCRD on g.CardCode equals j.CardCode
                                    where (g.SlpCode == slpcode)
-                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status=0 }).Distinct().OrderBy(c => c.cardname).ToArray();
+                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0 }).Distinct().OrderBy(c => c.cardname).ToArray();
 
-                    foreach (var item in pedidos) {
+                    foreach (var item in pedidos)
+                    {
                         item.cardname = item.cardname.Replace("'", "").Replace("\"", "").Replace(@"""", @"\""");
                     }
 
@@ -435,7 +720,7 @@ namespace LimenawebApp.Controllers
                                    ).Distinct().Cast<int>().ToArray();
 
                     var pedidos2 = pedidos.Where(c => existenBonif.Contains(c.docnum)).ToArray();
-                    
+
 
                     foreach (var item in pedidos2)
                     {
@@ -467,17 +752,17 @@ namespace LimenawebApp.Controllers
                     }
 
                     var existenBonifOpen = (from s in internadli.Tb_Bonificaciones
-                                        where (docnumArray.Contains(s.CodPedido) && s.OrderClosed == false)
-                                        select s.CodPedido
+                                            where (docnumArray.Contains(s.CodPedido) && s.OrderClosed == false)
+                                            select s.CodPedido
                ).Distinct().Cast<int>().ToArray();
 
                     var existenCambiosPrecioOpen = (from w in internadli.Tb_Autorizaciones
-                                                where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed == false)
-                                                select w.DocNum
+                                                    where (docnumArrayInt.Contains(w.DocNum) && w.OrderClosed == false)
+                                                    select w.DocNum
                                    ).Distinct().Cast<int>().ToArray();
 
                     var pedidos3 = pedidos.Where(c => existenBonifOpen.Contains(c.docnum)).ToArray();
-                    
+
 
                     foreach (var item in pedidos3)
                     {
@@ -522,6 +807,7 @@ namespace LimenawebApp.Controllers
 
 
                 return View(products);
+                //return RedirectToAction("Dashboard_sales", "Main", null);
             }
             else
             {
@@ -3039,6 +3325,53 @@ public ActionResult Prices_requestpdo(int docnum)
 
         }
 
+        public ActionResult updatecustomerstatus(string id, string cardcode)
+        {
+            try
+            {
+                int idstatus = Convert.ToInt32(id);
+
+                //Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                //if (activeuser != null)
+                //{
+                try
+                {
+                    var del = (from a in internadli.Tb_customerstatus where (a.CardCode == cardcode && a.DocEntry == "0") select a).ToList();
+                    if (del.Count > 0)
+                    {
+                        internadli.Tb_customerstatus.BulkDelete(del);
+                    }
+                }
+                catch {
+
+                }
+
+              
+                    Tb_customerstatus newtrans = new Tb_customerstatus();
+
+                        //Cambiamos estado de visita global
+                        newtrans.Active_customer = idstatus;
+                        newtrans.CardCode = cardcode;
+                        newtrans.Error = 0;
+                        newtrans.ErrorMsg = "";
+                        newtrans.DocEntry = "0";
+                internadli.Tb_customerstatus.Add(newtrans);
+                internadli.SaveChanges();
+
+
+                return Json(new { Result = "SUCCESS" });
+      
+            }
+            catch
+            {
+                return Json(new { Result = "Error" });
+            }
+
+
+
+        }
+
+
         //CHECK OUT
         public ActionResult Check_out(string ID_visit, string check_in, string lat, string lng)
         {
@@ -3973,6 +4306,137 @@ public ActionResult Prices_requestpdo(int docnum)
 
         }
 
+
+        public ActionResult SurveyFormC(int? id)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                var activity = (from v in dbcmk.Tasks where (v.ID_task == id) select v).FirstOrDefault();
+
+                FormsM formsM = dbcmk.FormsM.Find(activity.ID_formM);
+
+                //LISTADO DE CLIENTES
+                //VERIFICAMOS SI SELECCIONARON CLIENTE PREDEFINIDO
+
+                if (activity.Customer != "")
+                {
+                    var customers = (from b in dlipro.OCRD where (b.CardCode == activity.ID_Customer) select b).OrderBy(b => b.CardName).ToList();
+                    ViewBag.customers = customers.ToList();
+                }
+                else
+                {
+                    var customers = (from b in dlipro.OCRD where (b.CardType == "S" && b.CardName != null && b.CardName != "" && b.GroupCode == 102) select b).OrderBy(b => b.CardName).ToList();
+                    ViewBag.customers = customers.ToList();
+
+
+                }
+
+                var FormsMDet = (from a in dbcmk.FormsM_detailsTasks where (a.ID_visit == activity.ID_task && a.original == false) select a).ToList();
+
+                //NUEVO
+                //ID VISIT SE UTILIZA COMO RELACION
+                List<MyObj_tablapadre> listapadresActivities = (from item in FormsMDet
+                                                                where (item.parent == 0)
+                                                                select
+                                                                   new MyObj_tablapadre
+                                                                   {
+                                                                       ID_details = item.ID_details,
+                                                                       id_resource = item.ID_formresourcetype,
+                                                                       fsource = item.fsource,
+                                                                       fdescription = item.fdescription,
+                                                                       fvalue = item.fvalue,
+                                                                       fvalueDecimal = item.fvalueDecimal,
+                                                                       fvalueText = item.fvalueText,
+                                                                       ID_formM = item.ID_formM,
+                                                                       ID_visit = item.ID_visit,
+                                                                       original = item.original,
+                                                                       obj_order = item.obj_order,
+                                                                       obj_group = item.obj_group,
+                                                                       idkey = item.idkey,
+                                                                       parent = item.parent,
+                                                                       query1 = item.query1,
+                                                                       query2 = item.query2,
+                                                                       ID_empresa = item.ID_empresa
+                                                                   }
+                                      ).OrderBy(a => a.obj_order).ToList();
+
+                List<tablahijospadre> listahijasActivities = (from item in FormsMDet
+                                                              select new tablahijospadre
+                                                              {
+                                                                  ID_details = item.ID_details,
+                                                                  id_resource = item.ID_formresourcetype,
+                                                                  fsource = item.fsource,
+                                                                  fdescription = item.fdescription,
+                                                                  fvalue = item.fvalue,
+                                                                  fvalueDecimal = item.fvalueDecimal,
+                                                                  fvalueText = item.fvalueText,
+                                                                  ID_formM = item.ID_formM,
+                                                                  ID_visit = item.ID_visit,
+                                                                  original = item.original,
+                                                                  obj_order = item.obj_order,
+                                                                  obj_group = item.obj_group,
+                                                                  idkey = item.idkey,
+                                                                  parent = item.parent,
+                                                                  query1 = item.query1,
+                                                                  query2 = item.query2,
+                                                                  ID_empresa = item.ID_empresa
+
+                                                              }).OrderBy(a => a.obj_order).ToList();
+
+
+                List<MyObj_tablapadre> categoriasListActivities = ObtenerCategoriarJerarquiaByID(listapadresActivities, listahijasActivities);
+
+                ///
+                var showbuttondynamic = (from item in FormsMDet
+                                         where (item.ID_visit == activity.ID_task && item.ID_formresourcetype == 11)
+                                         select item).Count();
+
+                if (showbuttondynamic > 0)
+                {
+                    ViewBag.dinamicos = 1;
+                    var existproducts = (from item in FormsMDet
+                                         where (item.ID_visit == activity.ID_task && item.ID_formresourcetype == 3)
+                                         select item).Count();
+                    if (existproducts > 0)
+                    {
+                        ViewBag.mostrarboton = 0; //Lo ocultamos
+                    }
+                    else
+                    {
+                        ViewBag.mostrarboton = 1; //Lo mostramos
+                    }
+
+                }
+                else
+                {
+                    ViewBag.mostrarboton = 0;
+                    ViewBag.dinamicos = 0;
+                }
+                //Deserealizamos  los datos
+                JavaScriptSerializer js = new JavaScriptSerializer();
+                MyObj[] details = js.Deserialize<MyObj[]>(formsM.query2);
+
+                ViewBag.task = activity.ID_task;
+                ViewBag.idvisita = activity.ID_task;
+                ViewBag.details = categoriasListActivities;
+
+                ViewBag.detailssql = FormsMDet;
+
+                Session["detailsForm"] = FormsMDet;
+
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+            }
+
+
+        }
 
         public class MyObj_DSD
         {
@@ -5471,7 +5935,7 @@ public ActionResult Prices_requestpdo(int docnum)
                         usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
 
                         surveys = (from a in dbcmk.Tasks
-                                   where (TagIds.Contains(a.ID_userEnd))
+                                   where (TagIds.Contains(a.ID_userEnd) && a.ID_formM==45)
                                    select new SurveysTasks
                                    {
                                        ID_task = a.ID_task,
@@ -5509,7 +5973,8 @@ public ActionResult Prices_requestpdo(int docnum)
                         repsSurveys = users.Select(d => new RepsSurveys { ID_User = d.ID_User, Lastname = d.Lastname, Name = d.Name, prop01 = "", prop02 = "", idSAP = d.IDSAP, idSAPsupervisor = d.prop01 }).ToList();
                         usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
 
-                        surveys = (from a in dbcmk.Tasks   
+                        surveys = (from a in dbcmk.Tasks
+                                   where(a.ID_formM == 45) 
                                    select new SurveysTasks
                                    {
                                        ID_task = a.ID_task,
@@ -5554,7 +6019,7 @@ public ActionResult Prices_requestpdo(int docnum)
                     repsSurveys = users.Where(a=>a.ID_User==activeuser.ID_User).Select(d => new RepsSurveys { ID_User = d.ID_User, Lastname = d.Lastname, Name = d.Name, prop01 = "", prop02 = "", idSAP = d.IDSAP, idSAPsupervisor = d.prop01 }).ToList();
                     usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
                     surveys = (from a in dbcmk.Tasks
-                               where (a.ID_userEnd == activeuser.ID_User)
+                               where (a.ID_userEnd == activeuser.ID_User && a.ID_formM == 45)
                                select new SurveysTasks
                                {
                                    ID_task = a.ID_task,
@@ -5740,6 +6205,362 @@ public ActionResult Prices_requestpdo(int docnum)
                 ViewBag.repsSurveys = repsSurveys;
 
                 return View(surveys);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+        }
+
+
+        public ActionResult SurveysC(string fstartd, string fendd)
+        {
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            if (activeuser != null)
+            {
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Pepperi Online Customers List";
+                ViewBag.menunameid = "marketing_menu";
+                ViewBag.submenunameid = "tasks_submenu";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
+                ViewBag.lstAlerts = lstAlerts;
+
+                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //FIN HEADER
+
+                //SECCION DE FILTROS
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                //filtros de fecha (DIARIO)
+                //var sunday = DateTime.Today;
+                //var saturday = sunday.AddHours(23);
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representative")).OrderBy(c => c.Name).ToList();
+                List<RepsSurveys> repsSurveys = new List<RepsSurveys>();
+                List<RepsSurveys> repsSurveysTOSHOW = new List<RepsSurveys>();
+                List<RepsSurveys> supervisors = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Supervisor")).Select(c => new RepsSurveys { idSAP = c.IDSAP, ID_User = c.ID_User, idSAPsupervisor = "", Lastname = c.Lastname, Name = c.Name, prop01 = "", prop02 = "" }).ToList();
+
+                string[] usids;
+                string[] notinlist;
+                List<ContactsCustomersByRep> lstcustomer = new List<ContactsCustomersByRep>();
+                int isAdmin = 0;
+                if (activeuser.Roles.Contains("Super Admin") || activeuser.Roles.Contains("Sales Supervisor"))
+                {
+                    isAdmin = 1;
+
+                    List<int> TagIds = new List<int>();
+
+                    //if (activeuser.Roles.Contains("Sales Supervisor"))
+                    //{
+                    //    TagIds = activeuser.prop02.Split(',').Select(int.Parse).ToList();
+
+                    //    repsSurveys = users.Where(h => TagIds.Contains(h.ID_User)).Select(h => new RepsSurveys { ID_User = h.ID_User, Lastname = h.Lastname, Name = h.Name, prop01 = "", prop02 = "", idSAP = h.IDSAP, idSAPsupervisor = h.prop01 }).ToList();
+                    //    usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+
+
+                    //    lstcustomer = (from a in dlipro.BI_Dim_Customer
+                    //                   where (usids.Contains(a.id_SalesRep.ToString()) && a.id_Customer.StartsWith("C"))
+                    //                   select new ContactsCustomersByRep
+                    //                   {
+                    //                       CardCode = a.id_Customer,
+                    //                       CardName = a.Customer,
+                    //                       Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer) select b).Count(),
+                    //                       Status = 1,
+                    //                       IsBuyer = a.IsBuyer,
+                    //                       slpCode = a.id_SalesRep
+                    //                   }).ToList();
+
+                    //}
+                    //else
+                    //{
+                        repsSurveys = users.Select(h => new RepsSurveys { ID_User = h.ID_User, Lastname = h.Lastname, Name = h.Name, prop01 = "", prop02 = "", idSAP = h.IDSAP, idSAPsupervisor = h.prop01 }).ToList();
+                        usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+
+
+                        lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                       where (usids.Contains(a.id_SalesRep.ToString()) && a.id_Customer.StartsWith("C") && a.StatusCustomer =="1")
+                                       select new ContactsCustomersByRep
+                                       {
+                                           CardCode = a.id_Customer,
+                                           CardName = a.Customer,
+                                           Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer) select b).Count(),
+                                           Status = 1,
+                                           IsBuyer = a.IsBuyer,
+                                           slpCode = a.id_SalesRep.ToString(),
+                                           classification = a.Classification,
+                                           statuscustomer = a.StatusCustomer
+
+                                       }).ToList();
+                    //}
+                }
+                else
+                {
+                    int? idre = Convert.ToInt32(activeuser.IDSAP);
+                    repsSurveys = users.Where(a => a.ID_User == activeuser.ID_User).Select(h => new RepsSurveys { ID_User = h.ID_User, Lastname = h.Lastname, Name = h.Name, prop01 = "", prop02 = "", idSAP = h.IDSAP, idSAPsupervisor = h.prop01 }).ToList();
+                    usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+                    lstcustomer = (from a in dlipro.BI_Dim_Customer
+                                   where (usids.Contains(a.id_SalesRep.ToString()) && a.id_Customer.StartsWith("C") && a.StatusCustomer == "1")
+                                   select new ContactsCustomersByRep
+                                   {
+                                       CardCode = a.id_Customer,
+                                       CardName = a.Customer,
+                                       Total = (from b in dlipro.BI_Contact_Person where (b.CardCode == a.id_Customer) select b).Count(),
+                                       Status = 1,
+                                       IsBuyer = a.IsBuyer,
+                                       slpCode = a.id_SalesRep.ToString(),
+                                       classification=a.Classification,
+                                       statuscustomer = a.StatusCustomer
+                                   }).ToList();
+                }
+
+
+
+
+                //Calculos
+
+
+
+
+                List<RepsCustomersbyProfile> newlstbyprofile = new List<RepsCustomersbyProfile>();
+                RepsCustomersbyProfile diamond = new RepsCustomersbyProfile();
+                RepsCustomersbyProfile gold = new RepsCustomersbyProfile();
+                RepsCustomersbyProfile silver = new RepsCustomersbyProfile();
+                RepsCustomersbyProfile noclassification = new RepsCustomersbyProfile();
+                diamond.Profile = "DIAMOND";
+                diamond.prop01 = "";
+                diamond.prop02 = "";
+                gold.Profile = "GOLD";
+                gold.prop01 = "";
+                gold.prop02 = "";
+                silver.Profile = "SILVER";
+                silver.prop01 = "";
+                silver.prop02 = "";
+                noclassification.Profile = "NO CLASSIFICATION";
+                noclassification.prop01 = "";
+                noclassification.prop02 = "";
+                newlstbyprofile.Add(diamond);
+                newlstbyprofile.Add(gold);
+                newlstbyprofile.Add(silver);
+                newlstbyprofile.Add(noclassification);
+
+                foreach (var classification in newlstbyprofile) {
+
+                    decimal totalclientes = 0;
+                   
+                    decimal finishedorCanceled = 0;
+                    if (classification.Profile == "NO CLASSIFICATION")
+                    {
+                        totalclientes = lstcustomer.Where(d => d.classification != "DIAMOND" && d.classification != "GOLD" && d.classification != "SILVER").Count();
+                        finishedorCanceled = (from e in lstcustomer where (e.classification != "DIAMOND" && e.classification != "GOLD" && e.classification != "SILVER" && e.IsBuyer == "Y") select e).Count();
+                    }
+                    else {
+                        totalclientes = lstcustomer.Where(d => d.classification == classification.Profile).Count();
+                        finishedorCanceled = (from e in lstcustomer where (e.classification == classification.Profile && e.IsBuyer == "Y") select e).Count();
+                    }
+                
+
+                    if (totalclientes != 0)
+                    {
+                        if (finishedorCanceled != 0)
+                        {
+
+                            classification.prop01 = (((Convert.ToDecimal(finishedorCanceled) / totalclientes) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            classification.prop01 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        classification.prop02 = "(" + finishedorCanceled + " / " + totalclientes + ")";
+
+                    }
+                    else
+                    {
+                        classification.prop01 = "0";
+                        classification.prop02 = "(0/ 0)";
+                    }
+
+
+                }
+
+
+                foreach (var classification in newlstbyprofile)
+                {
+
+                    //ESTADISTICA DE SALES ORDERS POR ESTADO DE DETALLES
+
+                    foreach (var user in repsSurveys)
+                    {
+                        RepsSurveys nuevouser = new RepsSurveys();
+
+                        decimal totalclientes = 0;
+                        decimal finishedorCanceled = 0;
+                        nuevouser.classifications = classification.Profile;
+                        nuevouser.idSAP = user.idSAP;
+                        nuevouser.idSAPsupervisor = user.idSAPsupervisor;
+                        nuevouser.Name = user.Name;
+                        nuevouser.Lastname = user.Lastname;
+                        nuevouser.ID_User = user.ID_User;
+                        nuevouser.prop01 = "";
+                        nuevouser.prop02 = "";
+                        if (classification.Profile == "NO CLASSIFICATION")
+                        {
+                            totalclientes = lstcustomer.Where(d => d.slpCode == user.idSAP && d.classification != "DIAMOND" && d.classification != "GOLD" && d.classification != "SILVER").Count();
+                            finishedorCanceled = (from e in lstcustomer where (e.slpCode == user.idSAP && e.classification != "DIAMOND" && e.classification != "GOLD" && e.classification != "SILVER" && e.IsBuyer == "Y") select e).Count();
+                        }
+                        else
+                        {
+                            totalclientes = lstcustomer.Where(d => d.classification == classification.Profile && d.slpCode == user.idSAP).Count();
+                            finishedorCanceled = (from e in lstcustomer where (e.classification == classification.Profile && e.IsBuyer == "Y" && e.slpCode == user.idSAP) select e).Count();
+                        }
+
+
+
+
+                        if (totalclientes != 0)
+                        {
+                            if (finishedorCanceled != 0)
+                            {
+
+                                nuevouser.prop01 = (((Convert.ToDecimal(finishedorCanceled) / totalclientes) * 100)).ToString();
+
+                            }
+
+                            else
+                            {
+
+                                nuevouser.prop01 = (Convert.ToDecimal(0)).ToString();
+                            }
+                            nuevouser.prop02 = "(" + finishedorCanceled + " / " + totalclientes + ")";
+
+                        }
+                        else
+                        {
+                            nuevouser.prop01 = "0";
+                            nuevouser.prop02 = "(0/ 0)";
+                        }
+
+                        repsSurveysTOSHOW.Add(nuevouser);
+
+                    }
+
+
+                }
+
+
+
+
+
+                //ESTADISTICAS POR SUPERVISOR
+                foreach (var sup in supervisors)
+                {
+                    decimal totalfinalsup = 0;
+                    decimal totalfinishedorcanceledsup = 0;
+                    foreach (var user in repsSurveys.Where(c => c.idSAPsupervisor == sup.idSAP))
+                    {
+                        decimal totalclientes = lstcustomer.Where(d => d.slpCode == user.idSAP).Count();
+                   
+
+                        totalfinalsup += totalclientes;
+                        //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                        decimal finishedorCanceled = (from e in lstcustomer where (e.slpCode == user.idSAP && e.IsBuyer == "Y") select e).Count();
+
+                        totalfinishedorcanceledsup += finishedorCanceled;
+                    }
+
+
+                    if (totalfinalsup != 0)
+                    {
+                        if (totalfinishedorcanceledsup != 0)
+                        {
+
+                            sup.prop01 = (((Convert.ToDecimal(totalfinishedorcanceledsup) / totalfinalsup) * 100)).ToString();
+
+                        }
+
+                        else
+                        {
+
+                            sup.prop01 = (Convert.ToDecimal(0)).ToString();
+                        }
+                        sup.prop02 = "(" + totalfinishedorcanceledsup + " / " + totalfinalsup + ")";
+
+                    }
+                    else
+                    {
+                        sup.prop01 = "0";
+                        sup.prop02 = "(0/ 0)";
+                    }
+
+                }
+                ViewBag.supervisors = supervisors;
+                //Estadistica global
+                decimal totalcustom = lstcustomer.Count();
+                var prop01 = "";
+                var prop02 = "";
+
+                //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
+                decimal finishedorCanceledcustom = (from e in lstcustomer where (e.IsBuyer=="Y") select e).Count();
+
+                if (totalcustom != 0)
+                {
+                    if (finishedorCanceledcustom != 0)
+                    {
+
+                        prop01 = (((Convert.ToDecimal(finishedorCanceledcustom) / totalcustom) * 100)).ToString();
+
+                    }
+
+                    else
+                    {
+
+                        prop01 = (Convert.ToDecimal(0)).ToString();
+                    }
+                    prop02 = "(" + finishedorCanceledcustom + " / " + totalcustom + ")";
+
+                }
+                else
+                {
+                    prop01 = "0";
+                    prop02 = "(0/ 0)";
+                }
+
+
+
+                ViewBag.prop01 = prop01;
+                ViewBag.prop02 = prop02;
+
+
+                ViewBag.isadmin = isAdmin;
+
+                ViewBag.representatives = users;
+                ViewBag.newlstbyprofile = newlstbyprofile;
+                //ViewBag.newlstbyprofile = newlstbyprofile;
+                return View(repsSurveysTOSHOW);
 
             }
             else

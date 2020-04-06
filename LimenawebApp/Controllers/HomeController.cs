@@ -33,7 +33,8 @@ namespace LimenawebApp.Controllers
 
         public ActionResult Index()
         {
-            return View();
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
         public ActionResult test_webservice()
         {
@@ -94,7 +95,8 @@ namespace LimenawebApp.Controllers
         }
         public ActionResult Services()
         {
-            return View();
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
         [HttpPost]
         public ActionResult SendMessage(string Nombre, string Empresa, string email, string Mensaje)
@@ -132,58 +134,65 @@ namespace LimenawebApp.Controllers
 
         public ActionResult Brands()
         {
-            return View();
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
 
         public ActionResult AboutUs()
         {
-            return View();
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
         public ActionResult Contactus(int token=0)
         {
-            
-            ViewBag.showmessage = token;
-            return View();
+            //return View();
+            return RedirectToAction("Login", "Home");
+            //ViewBag.showmessage = token;
+ 
         }
 
         public ActionResult Enroll(int token = 0)
         {
 
-            var tipotamana = dlipro.UFD1.Where(c => c.TableID.Contains("OCRD") && c.FieldID == 50 && !c.Descr.Contains("Not Assigned")).ToList();
-            ViewBag.tamanostienda = tipotamana;
-            ViewBag.showmessage = token;
-            var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representative")).OrderBy(c => c.Name).ToList();
-            ViewBag.lstreps = users;
-            return View();
+            //var tipotamana = dlipro.UFD1.Where(c => c.TableID.Contains("OCRD") && c.FieldID == 50 && !c.Descr.Contains("Not Assigned")).ToList();
+            //ViewBag.tamanostienda = tipotamana;
+            //ViewBag.showmessage = token;
+            //var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representative")).OrderBy(c => c.Name).ToList();
+            //ViewBag.lstreps = users;
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
         public ActionResult Enroll_edit(int token = 0, int request=0)
         {
 
-            var tipotamana = dlipro.UFD1.Where(c => c.TableID.Contains("OCRD") && c.FieldID == 50 && !c.Descr.Contains("Not Assigned")).ToList();
-            ViewBag.tamanostienda = tipotamana;
-            ViewBag.showmessage = token;
+            //var tipotamana = dlipro.UFD1.Where(c => c.TableID.Contains("OCRD") && c.FieldID == 50 && !c.Descr.Contains("Not Assigned")).ToList();
+            //ViewBag.tamanostienda = tipotamana;
+            //ViewBag.showmessage = token;
 
-            var requestdetails = (from a in dblim.Tb_NewCustomers where (a.ID_customer == request) select a).FirstOrDefault();
-            ViewBag.idcustomer = request;
-            return View(requestdetails);
+            //var requestdetails = (from a in dblim.Tb_NewCustomers where (a.ID_customer == request) select a).FirstOrDefault();
+            //ViewBag.idcustomer = request;
+            //return View(requestdetails);
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
 
         public ActionResult UnderConstruction()
         {
-            return View();
+            //return View();
+            return RedirectToAction("Login", "Home");
         }
         public ActionResult Login(bool access =true, int? logpage=0)
         {
             if (access == false) {
                 if (logpage == 0)
                 {
-                    TempData["advertencia"] = "Session expired.";
+                    TempData["advertencia"] = "Expired Session.";
                 }
                 else if (logpage == 1)
                 {
                     TempData["advertencia"] = "Wrong email or password.";
                 }
-               
+
             }
 
             HttpCookie aCookieCorreo = Request.Cookies["correo"];
@@ -224,7 +233,41 @@ namespace LimenawebApp.Controllers
                 {
                     if (Request.Cookies["correo"] != null)
                     {
-                        //COMO YA EXISTE NO NECESITAMOS RECREARLA
+                        if (Request.Cookies["correo"] != null)
+                        {
+                            var c = new HttpCookie("correo");
+                            c.Expires = DateTime.Now.AddDays(-1);
+                            Response.Cookies.Add(c);
+                        }
+                        if (Request.Cookies["pass"] != null)
+                        {
+                            var c = new HttpCookie("pass");
+                            c.Expires = DateTime.Now.AddDays(-1);
+                            Response.Cookies.Add(c);
+                        }
+                        if (Request.Cookies["rememberme"] != null)
+                        {
+                            var c = new HttpCookie("rememberme");
+                            c.Expires = DateTime.Now.AddDays(-1);
+                            Response.Cookies.Add(c);
+                        }
+
+                        HttpCookie aCookie = new HttpCookie("correo");
+                        aCookie.Value = activeuser.Email.ToString();
+                        aCookie.Expires = DateTime.Now.AddMonths(3);
+
+                        HttpCookie aCookie2 = new HttpCookie("pass");
+                        aCookie2.Value = activeuser.Password.ToString();
+                        aCookie2.Expires = DateTime.Now.AddMonths(3);
+
+                        HttpCookie aCookie3 = new HttpCookie("rememberme");
+                        aCookie3.Value = "1";
+                        aCookie3.Expires = DateTime.Now.AddMonths(3);
+
+
+                        Response.Cookies.Add(aCookie);
+                        Response.Cookies.Add(aCookie2);
+                        Response.Cookies.Add(aCookie3);
                     }
                     else
                     {
@@ -246,36 +289,58 @@ namespace LimenawebApp.Controllers
                         Response.Cookies.Add(aCookie3);
                     }
                 }
+                else
+                {
+                    if (Request.Cookies["correo"] != null)
+                    {
+                        var c = new HttpCookie("correo");
+                        c.Expires = DateTime.Now.AddDays(-1);
+                        Response.Cookies.Add(c);
+                    }
+                    if (Request.Cookies["pass"] != null)
+                    {
+                        var c = new HttpCookie("pass");
+                        c.Expires = DateTime.Now.AddDays(-1);
+                        Response.Cookies.Add(c);
+                    }
+                    if (Request.Cookies["rememberme"] != null)
+                    {
+                        var c = new HttpCookie("rememberme");
+                        c.Expires = DateTime.Now.AddDays(-1);
+                        Response.Cookies.Add(c);
+                    }
 
-                    ////Save log
-                    //Sys_LogCon newLog = new Sys_LogCon();
-                    //try
-                    //{
-                    //    newLog.ID_Company = activeuser.ID_Company;
-                    //    newLog.ID_User = activeuser.ID_User;
-                    //    newLog.date = Convert.ToDateTime(date);
+                }
 
-                    //    newLog.City = "";
-                    //    newLog.Country_Code = "";
-                    //    newLog.Country_Name = "";
-                    //    newLog.Continent_Name = "";
-                    //    newLog.Region_Code = "";
-                    //    newLog.Region_Name = "";
-                    //    newLog.IP = "";
-                    //    newLog.TypeH = "";
-                    //    newLog.Hostname = "";
-                    //    newLog.Lat = "";
-                    //    newLog.Long = "";
+                ////Save log
+                //Sys_LogCon newLog = new Sys_LogCon();
+                //try
+                //{
+                //    newLog.ID_Company = activeuser.ID_Company;
+                //    newLog.ID_User = activeuser.ID_User;
+                //    newLog.date = Convert.ToDateTime(date);
 
-                    //    dblim.Sys_LogCon.Add(newLog);
-                    //    dblim.SaveChanges();
-                    //}
-                    //catch {
+                //    newLog.City = "";
+                //    newLog.Country_Code = "";
+                //    newLog.Country_Name = "";
+                //    newLog.Continent_Name = "";
+                //    newLog.Region_Code = "";
+                //    newLog.Region_Name = "";
+                //    newLog.IP = "";
+                //    newLog.TypeH = "";
+                //    newLog.Hostname = "";
+                //    newLog.Lat = "";
+                //    newLog.Long = "";
 
-                    //}
+                //    dblim.Sys_LogCon.Add(newLog);
+                //    dblim.SaveChanges();
+                //}
+                //catch {
+
+                //}
 
 
-                    if (activeuser.Departments.Contains("Sales")) {
+                if (activeuser.Departments.Contains("Sales")) {
                     return RedirectToAction("Dashboard_sales", "Main", null);
                 }
                 else if (activeuser.Departments.Contains("DSD"))
@@ -351,7 +416,7 @@ namespace LimenawebApp.Controllers
             if (token == true)
             {
                 ViewData["msgnotexist"] = "";
-                ViewBag.msg = "Your password has been reset successfully! Your new password has been sent to your email address.";
+                ViewBag.msg = "Your password has been changed successfully! Your new password has been sent to your email address.";
             }
             else {
                 if (email == true)
@@ -374,7 +439,7 @@ namespace LimenawebApp.Controllers
             Sys_Users User = (from a in dblim.Sys_Users where (a.Email == email) select a).FirstOrDefault();
             if (User != null)
             {
-                User.Password = "dli2019";
+                User.Password = "dli2020";
                 dblim.Entry(User).State = EntityState.Modified;
                 dblim.SaveChanges();
 
@@ -495,8 +560,8 @@ namespace LimenawebApp.Controllers
                             newCustomer.url_imageTAXCERT = "~/SharedContent/images/enroll/" + TAXID + "_1" + ".jpg";
                         }
                         else {
-                            path = Path.Combine(Server.MapPath("~/SharedContent/images/enroll"), TAXCERTNUM + "_2" + ".jpg");
-                            newCustomer.url_imageTAXCERNUM= "~/SharedContent/images/enroll/" + TAXCERTNUM + "_2" + ".jpg";
+                            path = Path.Combine(Server.MapPath("~/SharedContent/images/enroll"), TAXCERTNUM + "_" + time.ToShortDateString() + "_2" + ".jpg");
+                            newCustomer.url_imageTAXCERNUM= "~/SharedContent/images/enroll/" + TAXCERTNUM + "_" + time.ToShortDateString() + "_2" + ".jpg";
                         }
                             
                         bitmapImg.Save(path, ImageFormat.Jpeg);

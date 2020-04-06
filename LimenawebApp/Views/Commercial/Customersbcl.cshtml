@@ -1,0 +1,103 @@
+﻿@model List<LimenawebApp.Controllers.CommercialController.ContactsCustomersByRep>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Customer Contact Data";
+}
+
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-success">
+                                <div class="custom-title">Customers: @ViewBag.profile <label> - </label> @ViewBag.salesname</div>
+                                <a href="@Url.Action("SurveysC", "Commercial")" class="btn btn-outline-info btn-sm">Back</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                            <div class="table-responsive">
+                                <table id="data_tableEditor2" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>CARDCODE</th>
+                                            <th>CUSTOMER</th>
+                                            <th>TOTAL CONTACTS</th>
+                                            <th>PEPPERI STATUS</th>
+                                            <th>CUSTOMER STATUS</th>
+                                           
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var customer in Model)
+                                        {
+                                            <tr>
+                                                <td>@customer.CardCode</td>
+                                                <td>@customer.CardName</td>
+                                                <td>@customer.Total</td>
+                                                <td>
+                                                    @if (customer.IsBuyer == "Y")
+                                                    {
+                                                        <label class="badge badge-success">Online Account</label>
+                                                    }
+                                                    else
+                                                    {
+                                                        <label class="badge badge-warning">No Account</label>
+                                                    }
+                                                </td>
+                                                                                             <td>
+                                                    @if (customer.statuscustomer == "1")
+                                                    {
+                                                        <label class="badge badge-success">Active Customer</label>
+                                                    }
+                                                    else if (customer.statuscustomer == "2")
+                                                    {
+                                                        <label class="badge badge-warning">Closed Store</label>
+                                                    }
+                                                                                                                                      else if (customer.statuscustomer == "3")
+                                                    {
+                                                        <label class="badge badge-warning">Unvisited</label>
+                                                    }
+                                                                                         else if (customer.statuscustomer == "4")
+                                                    {
+                                                        <label class="badge badge-warning">Not Assigned</label>
+                                                    }
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+
+                                </table>
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+<script>
+    window.onload = function () {
+        $('#data_tableEditor2').DataTable({
+            dom: 'lBfrtip',
+            select: true,
+
+            "order": [[3, "desc"]]
+        });
+    }
+
+</script>

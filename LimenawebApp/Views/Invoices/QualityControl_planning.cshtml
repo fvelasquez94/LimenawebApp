@@ -109,7 +109,11 @@ else
                                     <a href="@Url.Action("QualityControl", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>View</a>
                                     @if (so.isfinished == true && so.Invoiced == true)
         {
-                            <a href="#" onclick="PrintRoute(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>}
+                            <a href="#" onclick="PrintRoute(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>
+                            <a href="@Url.Action("Print_DPCD", "Invoices", new { id_route=so.ID_Route})" target="_blank" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Daily Payment CD</a>
+                            @*<a href="#" onclick="PrintDailyPayment(so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Daily Payment CD</a>*@
+
+                                    }
 
 
                                     @if (Convert.ToDecimal(so.query1) >= 100)
@@ -221,20 +225,33 @@ else
 
                                     </td>
                                     <td>
+                                        @if (so.transferred == 1)
+                                        {
+                              
+                                        }
+                                        else if (so.transferred == 2)
+                                        {
+                               
+                                        }
+                                        else {
                                         <a href="@Url.Action("QualityControl", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>View</a>
+                                        }
+
+
+                                        
                                         @if (so.isfinished == true && so.Invoiced == true)
-        {
-        }
+    {
+    }
 
 
                                         @if (Convert.ToDecimal(so.query4) >= 100)
-        {
+    {
 
 
 
 
 
-        }
+    }
 
                                     </td>
                                 </tr>
@@ -301,11 +318,12 @@ else if (so.isfinished == true && so.Invoiced == false)
                                     <div class="progress-title">
                                         @if (ViewBag.existendeOtraBodega > 0)
     {
-                                    <span id="forms_p1" class="">100%</span>
+
+                                    <span id="forms_p1" class="">@Convert.ToDecimal(so.query4).ToString("n2")% @so.query5 Items</span>
 }
 else
 {
-                                    <span id="forms_p1" class="">@Convert.ToDecimal(so.query4).ToString("n2")% @so.query5 Items</span>
+                                    <span id="forms_p1" class="">100%</span>
 }
                                     </div>
                                     <div class="progress" style="height: 2px;">
@@ -313,11 +331,12 @@ else
     {
         if (ViewBag.existendeOtraBodega > 0)
         {
-                                    <div class="progress-bar bg-success" role="progressbar" style="width:100%;" aria-valuemax="100"></div>
+                                    
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query4%;" aria-valuemax="100"></div>
 }
 else
 {
-                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query4%;" aria-valuemax="100"></div>
+                                    <div class="progress-bar bg-success" role="progressbar" style="width:100%;" aria-valuemax="100"></div>
 }
 
 }
@@ -351,13 +370,15 @@ else
                                 </td>
                                 <td>
                                     <a href="@Url.Action("QualityControl", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>View</a>
-                                    @if (ViewBag.existendeOtraBodega > 0)
+                                    @if (ViewBag.existendeOtraBodega == 0)
     {
                                 <a href="@Url.Action("QualityControl_storagetype", "Invoices", new { id = so.ID_Route })" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-external-link"></i>Check Items</a>
 }
                                     @if (so.isfinished == true && so.Invoiced == true)
     {
-                                <a href="#" onclick="PrintRouteWHS(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>}
+                                <a href="#" onclick="PrintRouteWHS(@so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>
+                                <a href="@Url.Action("Print_DPCD", "Invoices", new { id_route=so.ID_Route})" target="_blank" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Daily Payment CD</a>
+}
 
 
                                     @if (Convert.ToDecimal(so.query1) >= 100 && so.query6 == 0)

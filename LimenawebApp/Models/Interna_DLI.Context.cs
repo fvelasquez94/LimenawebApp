@@ -29,5 +29,7 @@ namespace LimenawebApp.Models
         public virtual DbSet<Tb_ConfigBolsa> Tb_ConfigBolsa { get; set; }
         public virtual DbSet<Tb_Autorizaciones> Tb_Autorizaciones { get; set; }
         public virtual DbSet<Tb_Bonificaciones> Tb_Bonificaciones { get; set; }
+        public virtual DbSet<Tb_customerscontacts> Tb_customerscontacts { get; set; }
+        public virtual DbSet<Tb_customerstatus> Tb_customerstatus { get; set; }
     }
 }

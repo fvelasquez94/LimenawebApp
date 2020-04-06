@@ -18,5 +18,6 @@ namespace LimenawebApp.Models
         public string Slp_Name { get; set; }
         public int CatCommission { get; set; }
         public Nullable<short> U_id_Supervisor { get; set; }
+        public string Email { get; set; }
     }
 }

@@ -9,6 +9,8 @@
         <EntityTypeShape EntityType="Interna_DLIModel.Tb_ConfigBolsa" Width="1.5" PointX="0.75" PointY="6.75" />
         <EntityTypeShape EntityType="Interna_DLIModel.Tb_Autorizaciones" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="Interna_DLIModel.Tb_Bonificaciones" Width="1.5" PointX="3.75" PointY="4.75" />
+        <EntityTypeShape EntityType="Interna_DLIModel.Tb_customerscontacts" Width="1.5" PointX="6.375" PointY="4.75" />
+        <EntityTypeShape EntityType="Interna_DLIModel.Tb_customerstatus" Width="1.5" PointX="7.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

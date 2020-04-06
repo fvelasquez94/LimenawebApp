@@ -43,7 +43,7 @@
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <h1 class="dt-page__title">Purchase Agents Forecast</h1>
+                         
                                 <!-- Page Header -->
                                 <!-- Back -->
                                 <!-- /back -->
@@ -58,7 +58,7 @@
                                     <div class="col-md-6">
                                         <!-- Back -->
                                         <a href="@Url.Action("Final_forecast", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
-                                            <span class="display-6 align-middle ml-1 float-right">Results</span> <i class="icon icon-arrow-right icon-fw icon-1x float-right"></i>
+                                            <span class="display-6 align-middle ml-1 float-right">Products Forecast</span> <i class="icon icon-arrow-right icon-fw icon-1x float-right"></i>
                                         </a>
                                         <!-- /back -->
                                     </div>
@@ -77,7 +77,7 @@
                                                 <div class="custom-title">
                                                     <!-- Text Area -->
 
-
+                                                    <h1 class="dt-page__title">Purchase Agents Forecast</h1>
 
 
                                                 </div>
@@ -105,22 +105,35 @@
                                                     <tfoot>
                                                     </tfoot>
                                                     <tbody>
+                                                        @if (Model.Count == 1)
+    {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+}
                                                         @foreach (var item in Model)
-                                                        {
+    {
 
-                                                            <tr>
-                                                                <th>@item.ItemCode</th>
-                                                                <td>@item.Description</td>
-                                                                <td>Forecast</td>
-                                                                <td data-periodo="f1" data-description="@item.Description" data-year="@item.Forecast1_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u><br>Initial forecast: @item.Forecast1_source1 <br>Saved forecast: -">@item.Forecast1_source2</td>
-                                                                <td data-periodo="f2" data-description="@item.Description"  data-year="@item.Forecast2_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u><br>Initial forecast: @item.Forecast2_source1 <br>Saved forecast: -">@item.Forecast2_source2</td>
-                                                                <td data-periodo="f3" data-description="@item.Description"  data-year="@item.Forecast3_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u><br>Initial forecast: @item.Forecast3_source1 <br>Saved forecast: -">@item.Forecast3_source2</td>
-                                                                <td data-periodo="f4" data-description="@item.Description"  data-year="@item.Forecast4_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u><br>Initial forecast: @item.Forecast4_source1 <br>Saved forecast: -">@item.Forecast4_source2</td>
-                                                                <td data-periodo="f5" data-description="@item.Description"  data-year="@item.Forecast5_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u><br>Initial forecast: @item.Forecast5_source1 <br>Saved forecast: -">@item.Forecast5_source2</td>
-                                                            </tr>
+                                                    <tr>
+                                                        <th>@item.ItemCode</th>
+                                                        <td>@item.Description</td>
+                                                        <td>Forecast</td>
+                                                        <td data-periodo="f1" data-description="@item.Description" data-year="@item.Forecast1_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u><br>Baseline: @Math.Round(Convert.ToDouble(item.Baseline1), 0, MidpointRounding.ToEven) <br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast1_source1), 0, MidpointRounding.ToEven) <br>Last saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast1_source2), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-periodo="f2" data-description="@item.Description" data-year="@item.Forecast2_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u><br>Baseline: @Math.Round(Convert.ToDouble(item.Baseline2), 0, MidpointRounding.ToEven)<br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast2_source1), 0, MidpointRounding.ToEven) <br>Last saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast2_source2), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-periodo="f3" data-description="@item.Description" data-year="@item.Forecast3_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u><br>Baseline: @Math.Round(Convert.ToDouble(item.Baseline3), 0, MidpointRounding.ToEven)<br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast3_source1), 0, MidpointRounding.ToEven) <br>Last saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast3_source2), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-periodo="f4" data-description="@item.Description" data-year="@item.Forecast4_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u><br>Baseline: @Math.Round(Convert.ToDouble(item.Baseline4), 0, MidpointRounding.ToEven)<br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast4_source1), 0, MidpointRounding.ToEven) <br>Last saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast4_source2), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-periodo="f5" data-description="@item.Description" data-year="@item.Forecast5_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u><br>Baseline: @Math.Round(Convert.ToDouble(item.Baseline5), 0, MidpointRounding.ToEven)<br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast5_source1), 0, MidpointRounding.ToEven) <br>Last saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast5_source2), 0, MidpointRounding.ToEven)</td>
+                                                    </tr>
 
 
-                                                        }
+}
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -184,7 +197,7 @@
             var description = $(event.element).data("description")
             var iddatad = '@ViewBag.iddata';
          
-            if (newval == "") { newval = 0;}
+            if (newval == "" || isNaN(newval)) { newval = 0;}
          
                 $.ajax
                     ({

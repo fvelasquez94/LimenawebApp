@@ -1,4 +1,7 @@
 ﻿using CrystalDecisions.CrystalReports.Engine;
+using CrystalDecisions.Shared;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 using LimenawebApp.Models;
 using Newtonsoft.Json;
 using System;
@@ -102,7 +105,21 @@ namespace LimenawebApp.Controllers
 
             }
         }
-
+        private List<DateTime> GetDateRange(DateTime StartingDate, DateTime EndingDate)
+        {
+            if (StartingDate > EndingDate)
+            {
+                return null;
+            }
+            List<DateTime> rv = new List<DateTime>();
+            DateTime tmpDate = StartingDate;
+            do
+            {
+                rv.Add(tmpDate);
+                tmpDate = tmpDate.AddDays(1);
+            } while (tmpDate <= EndingDate);
+            return rv;
+        }
 
         public ActionResult Planning()
         {
@@ -159,7 +176,19 @@ namespace LimenawebApp.Controllers
                 //si es limena podremos ver las rutas de otras pero minimizadas
                 if (company_bodega == "01")
                 {
-                    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate) select a).ToList();
+                    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
+                    //verificamos si hay rutas maestras deKY
+
+                    foreach (DateTime date in GetDateRange(filtrostartdate, filtroenddate))
+                    {
+                        var date23h = date.AddHours(23);
+
+                        var existeMasterRoute= (from a in dblim.Tb_Planning where ((a.Departure >= date && a.Departure <=date23h) && a.Warehouse != company_bodega) select a).Take(1).ToList();
+                        if (existeMasterRoute.Count > 0) {
+                            rutaslst.AddRange(existeMasterRoute);
+                        }
+                    }
+                    //
                 }
                 else {
                     rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
@@ -513,7 +542,7 @@ namespace LimenawebApp.Controllers
 
                 IEnumerable<OpenSalesOrders> SalesOrder;
                 //SalesOrder = (from b in dlipro.OpenSalesOrders select b).Take(10);
-                SalesOrder = (from b in dlipro.OpenSalesOrders where (b.SODate >= filtrostartdate && b.SODate <= filtroenddate && b.WareHouse==company_bodega) select b);
+                SalesOrder = (from b in dlipro.OpenSalesOrders where (b.SODate >= filtrostartdate && b.SODate <= filtroenddate) select b);
 
                 return View(SalesOrder);
 
@@ -677,7 +706,7 @@ namespace LimenawebApp.Controllers
                     //DATOS EN OTRA BODEGA
                     decimal finishedorCanceled_bodega = 0;
 
-                    var existendeOtraBodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count == e.QC_totalCount && e.Warehouse != company_bodega) select e).Count();
+                    var existendeOtraBodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count != e.QC_totalCount && e.Warehouse != company_bodega) select e).Count();
                     ViewBag.existendeOtraBodega = existendeOtraBodega;
 
                     var existemibodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.type.Contains("I") && e.Warehouse == company_bodega) select e).Count();
@@ -788,21 +817,21 @@ namespace LimenawebApp.Controllers
                         
                    
                 }
-                //Verificamos si rutas estan finalizadas en bodega distinta
+                //Verificamos si rutas estan finalizadas en bodega distinta(eliminado)
+                //Se verificara si todas las rutas cumplen el porcentaje de finalizacion
                 var mostrarbilloflading = 0;
                 var rutas="";
                 if (company_bodega == "01") {
-                    var lstotrabod = lstPlanning.Where(a => a.Warehouse != company_bodega).ToList();
+                    var lstotrabod = lstPlanning.Where(a => a.Warehouse != company_bodega && a.transferred==0).ToList();
                     rutas = String.Join(",", lstotrabod.Select(o => o.ID_Route.ToString()).ToArray());
 
                     foreach (var subruta in lstotrabod) {
+                        mostrarbilloflading = 0;
                         if (Convert.ToDecimal(subruta.query4) >= 100)
                         {
                             mostrarbilloflading = 1;
                         }
-                        else {
-                            mostrarbilloflading = 0;
-                        }
+        
                     }
                 }
                 ViewBag.rutasids = rutas;
@@ -948,6 +977,8 @@ namespace LimenawebApp.Controllers
                 else
                 {
                     lstDetails = (from b in dblim.Tb_PlanningSO_details where (Arry.Contains(b.ID_salesorder) && b.Quantity > 0 && !b.type.Contains("I") && b.Warehouse == company_bodega) select b).ToList();
+
+
                 }
 
 
@@ -1001,7 +1032,7 @@ namespace LimenawebApp.Controllers
 
 
 
-                var pickers = dlipro.C_PICKERS.Where(a => a.U_Whs == company_bodega).ToList();
+                var pickers = dlipro.C_PICKERS.Where(a => a.U_Whs == company_bodega && a.U_Active=="Y").ToList();
                 //Convertimos la lista a array
                 ArrayList myArrListPickers = new ArrayList();
                 myArrListPickers.AddRange((from p in pickers
@@ -1178,7 +1209,7 @@ namespace LimenawebApp.Controllers
                 List<Tb_PlanningSO> lstSalesOrders = new List<Tb_PlanningSO>();
 
 
-                    lstSalesOrders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id) select a).OrderBy(a => a.Customer_name).ThenBy(a => a.ID_customer).ToList();
+                    lstSalesOrders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id && a.QC_count >1) select a).OrderBy(a => a.Customer_name).ThenBy(a => a.ID_customer).ToList();
                 
 
 
@@ -1247,7 +1278,7 @@ namespace LimenawebApp.Controllers
 
 
 
-                var pickers = dlipro.C_PICKERS.Where(a => a.U_Whs == company_bodega).ToList();
+                var pickers = dlipro.C_PICKERS.Where(a => a.U_Whs == company_bodega && a.U_Active == "Y").ToList();
                 //Convertimos la lista a array
                 ArrayList myArrListPickers = new ArrayList();
                 myArrListPickers.AddRange((from p in pickers
@@ -1318,7 +1349,7 @@ namespace LimenawebApp.Controllers
                                 var dtl = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && (e.ID_storagetype == "COOLER" || e.ID_storagetype == "FREEZER")) select e).FirstOrDefault();
                                 if (dtl != null)
                                 {
-                                    rutait.Picker = dtl.Picker_name;
+                                    rutait.Picker = dtl.Picker_nameWHS;
                                 }
                             }
                             else
@@ -1367,7 +1398,7 @@ namespace LimenawebApp.Controllers
                             var dtl = (from e in lstDetails where (e.ID_salesorder == rutait.ID_salesOrder && !e.query1.Contains("DEL") && e.ID_storagetype == rutait.ID_storage) select e).FirstOrDefault();
                             if (dtl != null)
                             {
-                                rutait.Picker = dtl.Picker_name;
+                                rutait.Picker = dtl.Picker_nameWHS;
                             }
                         }
                         else
@@ -1414,7 +1445,9 @@ namespace LimenawebApp.Controllers
             public string query2 { get; set; }
             public decimal query3 { get; set; }
             public System.DateTime Date { get; set; }
+            public System.DateTime DatetoInvoice { get; set; }
             public bool Invoiced { get; set; }
+        
         }
 
         public ActionResult GetRouteData(string id)
@@ -1434,14 +1467,16 @@ namespace LimenawebApp.Controllers
                                      Routeleader_name = a.Routeleader_name,
                                      ID_truck = a.ID_truck,
                                      Truck_name = a.Truck_name,
-                                     Departure =  a.Departure,
+                                     Departure = a.Departure,
                                      isfinished = a.isfinished,
                                      ID_SAPRoute = a.ID_SAPRoute,
                                      query1 = a.query1,
                                      query2 = a.query2,
                                      query3 = a.query3,
                                      Date = a.Date,
-                                     Invoiced = a.Invoiced
+                                     Invoiced = a.Invoiced,
+                                     DatetoInvoice = a.DatetoInvoice
+                               
                                  });
 
 
@@ -1506,6 +1541,14 @@ namespace LimenawebApp.Controllers
                 if (company_bodega == "01")
                 {
                     lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf).OrderByDescending(dc => dc.ID_Route).ToList();
+                    foreach (DateTime date in GetDateRange(startf, endf))
+                    {
+                        var existeMasterRoute = (from a in dblim.Tb_Planning where (a.Departure == date && a.Warehouse != company_bodega) select a).Take(1).ToList();
+                        if (existeMasterRoute.Count > 0)
+                        {
+                            lstRoutes.AddRange(existeMasterRoute);
+                        }
+                    }
                 }
                 else {
                     lstRoutes = dblim.Tb_Planning.Where(dc => dc.Departure >= startf && dc.Departure <= endf && dc.Warehouse == company_bodega).OrderByDescending(dc => dc.ID_Route).ToList();
@@ -1759,7 +1802,7 @@ namespace LimenawebApp.Controllers
 
                 List<int> TagIds = id_route.Split(',').Select(int.Parse).ToList();
 
-                var soedit = dblim.Tb_PlanningSO.Where(a => TagIds.Contains(a.ID_Route)).Select(a => a).ToList();
+                var soedit = dblim.Tb_PlanningSO.Where(a => TagIds.Contains(a.ID_Route) && a.Transferred==0 && a.QC_count>1).Select(a => a).ToList();
                 var so_list = soedit.Select(a => a.ID_salesorder).ToArray();
 
                 foreach (var so in soedit)
@@ -1816,7 +1859,9 @@ namespace LimenawebApp.Controllers
             var tbplanningSO = (from obj in dblim.Tb_PlanningSO where(obj.SAP_docdate > filterdate && obj.Warehouse==company_bodega) select obj).ToList();
 
 
-            var rt = (from a in dblim.Tb_Planning where (a.ID_Route == idr && a.Warehouse==company_bodega) select new { id=a.ID_Route, isfinished=a.isfinished}).ToList();
+            var rt = (from a in dblim.Tb_Planning where (a.ID_Route == idr && a.Warehouse==company_bodega) select new { id=a.ID_Route, isfinished=a.isfinished,
+                transf = (from c in dblim.Tb_PlanningSO where (c.ID_Route == idr && c.Transferred > 0) select c).Count()
+            }).ToList();
             //Solo IDSO interno
             var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr && j.Warehouse==company_bodega) select j.ID_salesorder).ToList();
 
@@ -1899,7 +1944,7 @@ namespace LimenawebApp.Controllers
             }
 
 
-            if (rt[0].isfinished == true)
+            if (rt[0].isfinished == true || rt[0].transf>0)
             {
                 var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.NumSO==11938023) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
                 //estaesbuenasinfiltro//var lstOpenSales = (from obj in dlipro.OpenSalesOrders select new OpenSO { NumSO=obj.NumSO,CardCode = obj.CardCode, CustomerName = obj.CustomerName , DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed= obj.Printed }).ToArray();
@@ -1990,7 +2035,7 @@ namespace LimenawebApp.Controllers
             public int ID_detail { get; set; }
             public int Line_num { get; set; }
             public string Bin_loc { get; set; }
-            public int Quantity { get; set; }
+            public decimal Quantity { get; set; }
             public string UomCode { get; set; }
             public string UomEntry { get; set; }
             public string ItemCode { get; set; }
@@ -2021,8 +2066,11 @@ namespace LimenawebApp.Controllers
             
             if (id_storage == "COOLER" || id_storage == "FREEZER")
             {
+
+
+
                 rt = (from a in dblim.Tb_PlanningSO_details
-                      where (a.ID_salesorder == idr && a.Quantity > 0 && (a.ID_storagetype == "COOLER" || a.ID_storagetype == "FREEZER" && a.Warehouse==company_bodega) && !a.type.Contains("I"))
+                      where (a.ID_salesorder == idr && a.Quantity > 0 && (a.ID_storagetype == "COOLER" || a.ID_storagetype == "FREEZER") && a.Warehouse == company_bodega && !a.type.Contains("I"))
                       select new detailsSO
                       {
                           ID_detail = a.ID_detail,
@@ -2121,7 +2169,7 @@ namespace LimenawebApp.Controllers
         }
 
         [HttpPost]
-        public JsonResult EditRoute(string id, string routeName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure)
+        public JsonResult EditRoute(string id, string routeName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure, DateTime preparationdate)
         {
             try
             {
@@ -2136,7 +2184,7 @@ namespace LimenawebApp.Controllers
                 tbpl.ID_routeleader = lstRLeaderCode;
                 tbpl.Routeleader_name = lstRLeaderName;
                 tbpl.Departure = departure;
-
+                tbpl.DatetoInvoice = preparationdate;
                 dblim.Entry(tbpl).State = EntityState.Modified;
                 dblim.SaveChanges();
 
@@ -2157,13 +2205,22 @@ namespace LimenawebApp.Controllers
 
                 Tb_Planning tbpl = dblim.Tb_Planning.Find(rdf);
 
-                tbpl.ID_driver_whs = lstDriverCode;
-                tbpl.Driver_name_whs = lstDriverName;
-                tbpl.ID_truck_whs = lstTruckCode;
-                tbpl.Truck_name_whs = lstTruckName;
 
-                dblim.Entry(tbpl).State = EntityState.Modified;
-                dblim.SaveChanges();
+                var route = dblim.Tb_Planning.Where(a => a.ID_Route == tbpl.ID_Route).FirstOrDefault();
+                var fecharuta = route.Departure;
+
+                var fecharuta23 = fecharuta.AddHours(23);
+
+                var rutasenfecha = dblim.Tb_Planning.Where(a => (a.Departure>=fecharuta && a.Departure<=fecharuta23) && a.Warehouse=="02").ToList();
+
+                foreach (var item in rutasenfecha) {
+                    item.ID_driver_whs = lstDriverCode;
+                    item.Driver_name_whs = lstDriverName;
+                    item.ID_truck_whs = lstTruckCode;
+                    item.Truck_name_whs = lstTruckName;
+                }
+
+                dblim.BulkUpdate(rutasenfecha);
 
 
                 return Json("Success", JsonRequestBehavior.AllowGet);
@@ -2324,7 +2381,7 @@ namespace LimenawebApp.Controllers
                                                 newDtl.Line_num = dt.LineNum;
                                                 if (dt.U_BinLocation == null) { newDtl.Bin_loc = ""; } else { newDtl.Bin_loc = dt.U_BinLocation; }
 
-                                                newDtl.Quantity = Convert.ToInt32(dt.Quantity);
+                                                newDtl.Quantity = Convert.ToDecimal(dt.Quantity);
                                                 if (dt.UomEntry == null) { newDtl.UomEntry = ""; } else { newDtl.UomEntry = dt.UomEntry.ToString(); }
                                                 if (dt.UomCode == null) { newDtl.UomCode = ""; } else { newDtl.UomCode = dt.UomCode; }
 
@@ -2344,6 +2401,8 @@ namespace LimenawebApp.Controllers
                                                 newDtl.query2 = dt.CambioPrecio.ToString();
                                                 newDtl.ID_picker = "";
                                                 newDtl.Picker_name = "";
+                                                newDtl.ID_pickerWHS = "";
+                                                newDtl.Picker_nameWHS = "";
                                                 newDtl.DateCheckIn = DateTime.UtcNow;
                                                 newDtl.DateCheckOut = DateTime.UtcNow;
                                                 newDtl.ID_userValidate = 0;
@@ -2357,7 +2416,7 @@ namespace LimenawebApp.Controllers
                                                 newDtl.QC_count = Convert.ToInt32(dt.NoWhs);
                                                 if (newSO.Warehouse == dt.Whs)
                                                 {
-                                                    newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                                    newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs);
                                                 }
                                                 else {
                                                     newDtl.QC_totalCount = 1;
@@ -2382,7 +2441,7 @@ namespace LimenawebApp.Controllers
                                                             newDtlHijo.Line_num = countLineNum;
                                                             if (dt.U_BinLocation == null) { newDtlHijo.Bin_loc = ""; } else { newDtlHijo.Bin_loc = dt.U_BinLocation; }
 
-                                                            Convert.ToInt32(hijo.Quantity);
+                                                            newDtlHijo.Quantity = Convert.ToInt32(hijo.Quantity);
 
                                                             if (dt.UomEntry == null) { newDtlHijo.UomEntry = ""; } else { newDtlHijo.UomEntry = dt.UomEntry.ToString(); }
                                                             if (dt.UomCode == null) { newDtlHijo.UomCode = ""; } else { newDtlHijo.UomCode = dt.UomCode; }
@@ -2403,6 +2462,8 @@ namespace LimenawebApp.Controllers
                                                             newDtlHijo.query2 = "";
                                                             newDtlHijo.ID_picker = "";
                                                             newDtlHijo.Picker_name = "";
+                                                            newDtlHijo.ID_pickerWHS = "";
+                                                            newDtlHijo.Picker_nameWHS = "";
                                                             newDtlHijo.DateCheckIn = DateTime.UtcNow;
                                                             newDtlHijo.DateCheckOut = DateTime.UtcNow;
                                                             newDtlHijo.ID_userValidate = 0;
@@ -2416,7 +2477,7 @@ namespace LimenawebApp.Controllers
                                                             newDtlHijo.QC_count = Convert.ToInt32(dt.NoWhs);
                                                             if (newSO.Warehouse == dt.Whs)
                                                             {
-                                                                newDtlHijo.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                                                newDtlHijo.QC_totalCount = Convert.ToInt32(dt.NoWhs);
                                                             }
                                                             else
                                                             {
@@ -2678,7 +2739,7 @@ namespace LimenawebApp.Controllers
                                         newDtl.Line_num = dt.LineNum;
                                         if (dt.U_BinLocation == null) { newDtl.Bin_loc = ""; } else { newDtl.Bin_loc = dt.U_BinLocation; }
 
-                                        newDtl.Quantity = Convert.ToInt32(dt.Quantity);
+                                        newDtl.Quantity = Convert.ToDecimal(dt.Quantity);
                                         if (dt.UomEntry == null) { newDtl.UomEntry = ""; } else { newDtl.UomEntry = dt.UomEntry.ToString(); }
                                         if (dt.UomCode == null) { newDtl.UomCode = ""; } else { newDtl.UomCode = dt.UomCode; }
 
@@ -2699,6 +2760,8 @@ namespace LimenawebApp.Controllers
                                         newDtl.query2 = dt.CambioPrecio.ToString();
                                         newDtl.ID_picker = "";
                                         newDtl.Picker_name = "";
+                                        newDtl.ID_pickerWHS = "";
+                                        newDtl.Picker_nameWHS = "";
                                         newDtl.DateCheckIn = DateTime.UtcNow;
                                         newDtl.DateCheckOut = DateTime.UtcNow;
                                         newDtl.ID_userValidate = 0;
@@ -2718,7 +2781,7 @@ namespace LimenawebApp.Controllers
                                         newDtl.QC_count = Convert.ToInt32(dt.NoWhs);
                                         if (newSO.Warehouse == dt.Whs)
                                         {
-                                            newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                            newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs);
                                         }
                                         else
                                         {
@@ -2749,7 +2812,7 @@ namespace LimenawebApp.Controllers
                                                     newDtlHijo.Line_num = countLineNum;
                                                     if (dt.U_BinLocation == null) { newDtlHijo.Bin_loc = ""; } else { newDtlHijo.Bin_loc = dt.U_BinLocation; }
 
-                                                    newDtlHijo.Quantity = Convert.ToInt32(hijo.Quantity);
+                                                    newDtlHijo.Quantity = Convert.ToDecimal(hijo.Quantity);
 
                                                     if (dt.UomEntry == null) { newDtlHijo.UomEntry = ""; } else { newDtlHijo.UomEntry = dt.UomEntry.ToString(); }
                                                     if (dt.UomCode == null) { newDtlHijo.UomCode = ""; } else { newDtlHijo.UomCode = dt.UomCode; }
@@ -2770,6 +2833,8 @@ namespace LimenawebApp.Controllers
                                                     newDtlHijo.query2 = "";
                                                     newDtlHijo.ID_picker = "";
                                                     newDtlHijo.Picker_name = "";
+                                                    newDtlHijo.ID_pickerWHS = "";
+                                                    newDtlHijo.Picker_nameWHS = "";
                                                     newDtlHijo.DateCheckIn = DateTime.UtcNow;
                                                     newDtlHijo.DateCheckOut = DateTime.UtcNow;
                                                     newDtlHijo.ID_userValidate = 0;
@@ -3009,7 +3074,7 @@ namespace LimenawebApp.Controllers
                         //if (productonormal != null) {
                             //newDet.isvalidated = newDet.isvalidated;
                             //newDet.query1 = productonormal.query1;
-                            newDet.Quantity = Convert.ToInt32(items.quantity);
+                            newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                             if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
                             if (items.deleted == "DEL") {
@@ -3063,17 +3128,24 @@ namespace LimenawebApp.Controllers
                         //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
                         if (!newDet.query2.Contains("0"))
                         {
-                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            if (newDet.UomCode.Contains("LBS"))
                             {
-                                newDet.query1 = "DEL";
-                                //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
-
-                                if (newDet.type == "S")
-                                {
-                                    dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and parent={1}", idf, items.ItemCode);
-                                }
 
                             }
+                            else {
+                                if (Convert.ToDecimal(items.quantity) < newDet.Quantity)
+                                {
+                                    newDet.query1 = "DEL";
+                                    //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
+
+                                    if (newDet.type == "S")
+                                    {
+                                        dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and parent={1}", idf, items.ItemCode);
+                                    }
+
+                                }
+                            }
+
                         }
 
                       
@@ -3089,7 +3161,7 @@ namespace LimenawebApp.Controllers
                         }
                             else {
 
-                                newDet.Quantity = Convert.ToInt32(items.quantity);
+                                newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                             }
                        
@@ -3124,11 +3196,13 @@ namespace LimenawebApp.Controllers
                                 {
                                     item.query1 = newDet.query1;
                                     item.isvalidated = newDet.isvalidated;
-                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.Quantity = Convert.ToDecimal(newDet.Quantity * item.childrendefqty);
                                     item.ID_picker = newDet.ID_picker;
                                     item.Picker_name = newDet.Picker_name;
                                     item.ID_userValidate = newDet.ID_userValidate;
                                     item.DateCheckOut = newDet.DateCheckOut;
+                                    item.QC_totalCount = newDet.QC_totalCount;
+                                    item.Transferred = newDet.Transferred;
                                 }
 
                                 dblim.BulkUpdate(hijos);
@@ -3210,7 +3284,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER"))
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3223,7 +3297,7 @@ namespace LimenawebApp.Controllers
                                }).ToList();
                 } else if (storage == "FREEZER") {
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER"))
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3238,7 +3312,7 @@ namespace LimenawebApp.Controllers
                 else {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3281,7 +3355,7 @@ namespace LimenawebApp.Controllers
                      //if (productonormal != null) {
                      //newDet.isvalidated = newDet.isvalidated;
                      //newDet.query1 = productonormal.query1;
-                        newDet.Quantity = Convert.ToInt32(items.quantity);
+                        newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                         if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
                         if (items.deleted == "DEL")
@@ -3308,8 +3382,8 @@ namespace LimenawebApp.Controllers
                             newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
                         }
 
-                        newDet.ID_picker = idPicker;
-                        newDet.Picker_name = pickername;
+                        newDet.ID_pickerWHS = idPicker;
+                        newDet.Picker_nameWHS = pickername;
 
 
                         if (activeuser != null)
@@ -3341,7 +3415,12 @@ namespace LimenawebApp.Controllers
                         //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
                         if (!newDet.query2.Contains("0"))
                         {
-                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            if (newDet.UomCode.Contains("LBS"))
+                            {
+
+                            }
+                            else {
+                            if (Convert.ToDecimal(items.quantity) < newDet.Quantity)
                             {
                                 newDet.query1 = "DEL";
                                 //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
@@ -3352,6 +3431,8 @@ namespace LimenawebApp.Controllers
                                 }
 
                             }
+                            }
+
                         }
 
 
@@ -3368,7 +3449,7 @@ namespace LimenawebApp.Controllers
                         else
                         {
 
-                            newDet.Quantity = Convert.ToInt32(items.quantity);
+                            newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                         }
 
@@ -3382,8 +3463,8 @@ namespace LimenawebApp.Controllers
                             newDet.NumPerMsr = Convert.ToDecimal(lstava.Units);
                         }
 
-                        newDet.ID_picker = idPicker;
-                        newDet.Picker_name = pickername;
+                        newDet.ID_pickerWHS = idPicker;
+                        newDet.Picker_nameWHS = pickername;
 
 
                         if (activeuser != null)
@@ -3403,11 +3484,13 @@ namespace LimenawebApp.Controllers
                                 {
                                     item.query1 = newDet.query1;
                                     item.isvalidated = newDet.isvalidated;
-                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.Quantity = Convert.ToDecimal(newDet.Quantity * item.childrendefqty);
                                     item.ID_picker = newDet.ID_picker;
                                     item.Picker_name = newDet.Picker_name;
                                     item.ID_userValidate = newDet.ID_userValidate;
                                     item.DateCheckOut = newDet.DateCheckOut;
+                                    item.QC_totalCount = newDet.QC_totalCount;
+                                    item.Transferred = newDet.Transferred;
                                 }
 
                                 dblim.BulkUpdate(hijos);
@@ -3484,7 +3567,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred==2)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred==2 && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3499,7 +3582,7 @@ namespace LimenawebApp.Controllers
                 else if (storage == "FREEZER")
                 {
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2 && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3515,7 +3598,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2 && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3561,7 +3644,7 @@ namespace LimenawebApp.Controllers
                      //if (productonormal != null) {
                      //newDet.isvalidated = newDet.isvalidated;
                      //newDet.query1 = productonormal.query1;
-                        newDet.Quantity = Convert.ToInt32(items.quantity);
+                        newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                         if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
                         if (items.deleted == "DEL")
@@ -3621,7 +3704,12 @@ namespace LimenawebApp.Controllers
                         //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
                         if (!newDet.query2.Contains("0"))
                         {
-                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            if (newDet.UomCode.Contains("LBS"))
+                            {
+
+                            }
+                            else {
+                            if (Convert.ToDecimal(items.quantity) < newDet.Quantity)
                             {
                                 newDet.query1 = "DEL";
                                 //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
@@ -3632,6 +3720,8 @@ namespace LimenawebApp.Controllers
                                 }
 
                             }
+                            }
+
                         }
 
 
@@ -3648,7 +3738,7 @@ namespace LimenawebApp.Controllers
                         else
                         {
 
-                            newDet.Quantity = Convert.ToInt32(items.quantity);
+                            newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                         }
 
@@ -3683,11 +3773,13 @@ namespace LimenawebApp.Controllers
                                 {
                                     item.query1 = newDet.query1;
                                     item.isvalidated = newDet.isvalidated;
-                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.Quantity = Convert.ToDecimal(newDet.Quantity * item.childrendefqty);
                                     item.ID_picker = newDet.ID_picker;
                                     item.Picker_name = newDet.Picker_name;
                                     item.ID_userValidate = newDet.ID_userValidate;
                                     item.DateCheckOut = newDet.DateCheckOut;
+                                    item.QC_totalCount = newDet.QC_totalCount;
+                                    item.Transferred = newDet.Transferred;
                                 }
 
                                 dblim.BulkUpdate(hijos);
@@ -3765,7 +3857,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred == 2)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "FREEZER") && a.Transferred == 2 && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3780,7 +3872,7 @@ namespace LimenawebApp.Controllers
                 else if (storage == "FREEZER")
                 {
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && (a.ID_storagetype == storage || a.ID_storagetype == "COOLER") && a.Transferred == 2 && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3796,7 +3888,7 @@ namespace LimenawebApp.Controllers
                 {
 
                     objects = (from a in dblim.Tb_PlanningSO_details
-                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2)
+                               where (a.ID_salesorder == idf && a.Warehouse != company_bodega && a.ID_storagetype == storage && a.Transferred == 2 && !a.type.Contains("I"))
                                select new MyObj
                                {
                                    ItemCode = a.ItemCode,
@@ -3842,7 +3934,7 @@ namespace LimenawebApp.Controllers
                      //if (productonormal != null) {
                      //newDet.isvalidated = newDet.isvalidated;
                      //newDet.query1 = productonormal.query1;
-                        newDet.Quantity = Convert.ToInt32(items.quantity);
+                        newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                         if (items.validated == "YES") { newDet.isvalidated = true; } else { newDet.isvalidated = false; }
                         if (items.deleted == "DEL")
@@ -3902,7 +3994,12 @@ namespace LimenawebApp.Controllers
                         //Evaluamos si la cantidad es menor a lo que colocaron, si es asi mandar propiedad DEL
                         if (!newDet.query2.Contains("0"))
                         {
-                            if (Convert.ToInt32(items.quantity) < newDet.Quantity)
+                            if (newDet.UomCode.Contains("LBS"))
+                            {
+                                //No se evalua ya que la cantidad puede tender a fallar por los decimales
+                            }
+                            else {
+                            if (Convert.ToDecimal(items.quantity) < newDet.Quantity)
                             {
                                 newDet.query1 = "DEL";
                                 //dblim.Database.ExecuteSqlCommand("update Tb_PlanningSO_details set query1='DEL' where ID_salesorder={0} and ItemCode={1} and Quantity > 0", idf, items.ItemCode);
@@ -3913,6 +4010,8 @@ namespace LimenawebApp.Controllers
                                 }
 
                             }
+                            }
+
                         }
 
 
@@ -3929,7 +4028,7 @@ namespace LimenawebApp.Controllers
                         else
                         {
 
-                            newDet.Quantity = Convert.ToInt32(items.quantity);
+                            newDet.Quantity = Convert.ToDecimal(items.quantity);
 
                         }
 
@@ -3964,11 +4063,13 @@ namespace LimenawebApp.Controllers
                                 {
                                     item.query1 = newDet.query1;
                                     item.isvalidated = newDet.isvalidated;
-                                    item.Quantity = Convert.ToInt32(newDet.Quantity * item.childrendefqty);
+                                    item.Quantity = Convert.ToDecimal(newDet.Quantity * item.childrendefqty);
                                     item.ID_picker = newDet.ID_picker;
                                     item.Picker_name = newDet.Picker_name;
                                     item.ID_userValidate = newDet.ID_userValidate;
                                     item.DateCheckOut = newDet.DateCheckOut;
+                                    item.QC_totalCount = newDet.QC_totalCount;
+                                    item.Transferred = newDet.Transferred;
                                 }
 
                                 dblim.BulkUpdate(hijos);
@@ -4110,12 +4211,40 @@ namespace LimenawebApp.Controllers
         }
 
 
-        public ActionResult ShowPDF(string activityname)
+        public ActionResult Route_WHSInvoices(string activityname)
         {
             // retrieve byte array here
-            var report = TempData["Output"] as Stream;
+            List<byte[]> myStream =  TempData["Output"] as List<byte[]>;
+            //var filePathOriginal = Server.MapPath("/Reports/pdf");
+            //var path2 = Path.Combine(filePathOriginal, "Route_WHSInvoices.pdf");
+
+            var report = concatAndAddContent(myStream);
             if (report != null)
             {
+
+                //Con eso se descarga
+                //Response.AddHeader("Content-Disposition", "attachment; filename=" + "Route_WHSInvoices.pdf");
+                return File(report, System.Net.Mime.MediaTypeNames.Application.Pdf);
+            }
+            else
+            {
+                return new EmptyResult();
+            }
+        }
+
+        public ActionResult DailyPaymentCrossDock(string activityname)
+        {
+            // retrieve byte array here
+            List<byte[]> myStream =  TempData["Output"] as List<byte[]>;
+            //var filePathOriginal = Server.MapPath("/Reports/pdf");
+            //var path2 = Path.Combine(filePathOriginal, "Route_WHSInvoices.pdf");
+
+            var report = concatAndAddContent(myStream);
+            if (report != null)
+            {
+
+                //Con eso se descarga
+                //Response.AddHeader("Content-Disposition", "attachment; filename=" + "Route_WHSInvoices.pdf");
                 return File(report, System.Net.Mime.MediaTypeNames.Application.Pdf);
             }
             else
@@ -4126,52 +4255,324 @@ namespace LimenawebApp.Controllers
 
         public ActionResult Print_routeWHS(int id_route)
         {
-
-            var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route) select a).Take(1).ToList();
-
-            var quemadosSO = new List<string>();
-            quemadosSO.Add("78492");
-            //quemadosSO.Add("78497");
-            if (so.Count > 0)
+            try
             {
-                //Aca iria ciclo foreach
-                //Buscamos datos en la vista maestra de facturas
-                var sqlQueryText = dlipro.Database.ExecuteSqlCommand("exec sp_genericInvoice {0}", "78492");
-                
+                var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route && a.DocEntry !="--") select a).ToList();
+
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so.Count > 0)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+                    foreach (var item in so)
+                    {
+                        //Buscamos datos en la vista maestra de facturas
+                        var sqlQueryText = dlipro.sp_genericInvoice(item.DocEntry.ToString()).ToList();
+                        foreach (var iteminterno in sqlQueryText)
+                        {
+                            iteminterno.UomCode = "";
+                        }
+
+                        ReportDocument rd = new ReportDocument();
+
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoice Storage Type (RR).rpt"));
+
+                        rd.SetDataSource(sqlQueryText);
+                        //rd.DataSourceConnections.Clear();
+                  
+                        //ConnectionInfo connectInfo = new ConnectionInfo()
+                        //{
+                        //    //ServerName = ".",
+                        //    //DatabaseName = "DLI_PRO",
+                        //    //UserID = "sa",
+                        //    //Password = "sa123"         
+                        //    ServerName = "192.168.1.14",
+                        //    DatabaseName = "PEPPERI_TEST",
+                        //    UserID = "sa",
+                        //    Password = "DiLimen@2018"
+                        //};
+                        //rd.SetDatabaseLogon("sa", "DiLimen@2018", "192.168.1.14", "PEPPERI_TEST");
+                        //foreach (Table tbl in rd.Database.Tables)
+                        //{
+                        //    tbl.LogOnInfo.ConnectionInfo = connectInfo;
+                        //    tbl.ApplyLogOnInfo(tbl.LogOnInfo);
+                        //}
+
+                        //var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                        Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        listafinal.Add(getBytes);
+                        ms.Dispose();
+                        //var path2 = Path.Combine(filePathOriginal, id_route + "Route_WHSInvoices.pdf");
 
 
-                ReportDocument rd = new ReportDocument();
+                        //rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, path2);
 
-                rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoice Storage Type (RR).rpt"));
+                        //var ms1 = new MemoryStream(getBytes);
+                        //ms1.Position = 0;
+                        //copy.AddDocument(new PdfReader(ms1));
+                        //ms1.Dispose();
 
-                rd.SetDataSource(so);
+                        //PARA VISUALIZAR
+                        //Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        //Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        //stream.Seek(0, SeekOrigin.Begin);
+
+                        //stream.Position = 0;
+                        //copy.AddDocument(new PdfReader(stream));
+                        //stream.Dispose();
+                    }
+
+     
 
 
-                var filePathOriginal = Server.MapPath("/Reports/pdf");
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
 
-                Response.Buffer = false;
-                Response.ClearContent();
-                Response.ClearHeaders();
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
 
+                }
+                else
+                {
 
-                //PARA VISUALIZAR
-                Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
-                Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
-                stream.Seek(0, SeekOrigin.Begin);
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
 
-                //Nueva descarga
-                TempData["Output"] = stream;
-
+                }
+            }
+            catch (Exception ex) {
                 //return Json(urlcontent);
-                return Json("Success", JsonRequestBehavior.AllowGet);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
 
+        }
+
+
+
+        public ActionResult Print_WHSDailyPayment(int id_route)
+        {
+            try
+            {
+                var so = (from a in dblim.Tb_Planning where (a.ID_Route == id_route) select a).FirstOrDefault();
+
+                
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so !=null)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+
+                    //Buscamos datos en la vista maestra de facturas
+                    var dateshor = so.Departure.ToShortDateString();
+                        var sqlQueryText = dlipro.sp_genericDailyPaymentsCrossDock(so.ID_truck, dateshor).ToList();
+
+                    foreach (var item in sqlQueryText) {
+                        if (item.RouteLeader == null) { item.RouteLeader = ""; }
+                        if (item.Driver == null) { item.Driver = ""; }
+                    }
+                        ReportDocument rd = new ReportDocument();
+
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Daily Payments Add Copies - Whs 01 & 02.rpt"));
+
+                    rd.SetDataSource(sqlQueryText);
+                    
+                    rd.SetParameterValue("Date", so.Departure.ToShortDateString());
+                    rd.SetParameterValue("Truck", so.ID_truck);
+
+
+                    Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=DailyPaymentCrossDock.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        //listafinal.Add(getBytes);
+                        ms.Dispose();
+
+
+
+
+
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
+
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //return Json(urlcontent);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+
+        public ActionResult Print_DPCD(int id_route)
+        {
+            var so = (from a in dblim.Tb_Planning where (a.ID_Route == id_route) select a).FirstOrDefault();
+
+            if (so !=null)
+            {
+                var dateshor = so.Departure.ToShortDateString();
+                var sqlQueryText = dlipro.sp_genericDailyPaymentsCrossDock(so.ID_truck, dateshor).ToList();
+
+
+
+                if (sqlQueryText.Count > 0)
+                {
+
+
+                    foreach (var item in sqlQueryText)
+                    {
+                        if (item.RouteLeader == null) { item.RouteLeader = ""; }
+                        if (item.Driver == null) { item.Driver = ""; }
+                    }
+
+
+
+                    ReportDocument rd = new ReportDocument();
+
+                    rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Daily Payments Add Copies - Whs 01 & 02.rpt"));
+
+
+                    
+                    rd.SetDataSource(sqlQueryText);
+                    rd.Database.Tables[0].SetDataSource(sqlQueryText);
+
+                    var filePathOriginal = Server.MapPath("/Reports/pdfReports");
+
+                    Response.Buffer = false;
+
+                    Response.ClearContent();
+
+                    Response.ClearHeaders();
+
+
+                    //PARA VISUALIZAR
+                    Response.AppendHeader("Content-Disposition", "inline; filename=" + "DailyPaymentCrossDock.pdf; ");
+
+                   
+                    rd.SetParameterValue("Date", so.Departure);
+                    rd.SetParameterValue("Truck", so.ID_truck);
+                    rd.SetParameterValue("DRoute", so.Route_name);
+                    rd.SetParameterValue("IDrouteazure", so.ID_Route);
+                    rd.SetParameterValue("DateString", so.Departure.ToShortDateString());
+
+                    Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+
+                    stream.Seek(0, SeekOrigin.Begin);
+
+
+
+                    return File(stream, System.Net.Mime.MediaTypeNames.Application.Pdf);
+
+                }
+                else
+                {
+                    TempData["advertencia"] = "No details found.";
+                    return RedirectToAction("QualityControl_planning", "Invoices", null);
+                }
             }
             else
             {
-
-                return Json("Error", JsonRequestBehavior.AllowGet);
-
+                TempData["advertencia"] = "No data found.";
+                return RedirectToAction("QualityControl_planning", "Invoices", null);
             }
+        }
+
+
+
+        public static byte[] ReadFully(Stream input)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                input.CopyTo(ms);
+                return ms.ToArray();
+            }
+        }
+
+        
+
+private static Byte[] ConvertList(List<Byte[]> list)
+    {
+        List<Byte> tmpList = new List<byte>();
+        foreach (Byte[] byteArray in list)
+            foreach (Byte singleByte in byteArray)
+                tmpList.Add(singleByte);
+        return tmpList.ToArray();
+    }
+
+        public static byte[] concatAndAddContent(List<byte[]> pdf)
+        {
+            byte[] all;
+
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Document doc = new Document();
+
+                PdfWriter writer = PdfWriter.GetInstance(doc, ms);
+
+                doc.SetPageSize(PageSize.LETTER);
+                doc.Open();
+                PdfContentByte cb = writer.DirectContent;
+                PdfImportedPage page;
+
+                PdfReader reader;
+                foreach (byte[] p in pdf)
+                {
+                    reader = new PdfReader(p);
+                    int pages = reader.NumberOfPages;
+
+                    // loop over document pages
+                    for (int i = 1; i <= pages; i++)
+                    {
+                        doc.SetPageSize(PageSize.LETTER);
+                        doc.NewPage();
+                        page = writer.GetImportedPage(reader, i);
+                        cb.AddTemplate(page, 0, 0);
+                    }
+                }
+
+                doc.Close();
+                all = ms.GetBuffer();
+                ms.Flush();
+                ms.Dispose();
+            }
+
+            return all;
         }
 
     }

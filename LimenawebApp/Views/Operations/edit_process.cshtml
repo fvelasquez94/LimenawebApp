@@ -96,7 +96,7 @@
                                                         <a href="javascript:void(0)" class="dt-module-side-nav__link" data-toggle="mdrawer"
                                                            data-target="#drawer-initialforecast">
                                                             <i class="icon icon-courses icon-fw icon-lg"></i>
-                                                            <span class="dt-module-side-nav__text">Initial Forecast</span>
+                                                            <span class="dt-module-side-nav__text">Purchase Tool Forecast</span>
                                                         </a>
                                                     </li>
                                                     <li class="dt-module-side-nav__item">
@@ -187,7 +187,7 @@
 
                                                 <!-- Title -->
                                                 <div class="mx-auto text-center">
-                                                    <h3 class="dt-module__title">Process flow for: @Model.ItemCode</h3>
+                                                    <h3 class="dt-module__title">@Model.ItemCode</h3>
                                                     <h6>@Model.Description</h6>
                                                     <i class="icon icon-horizontal-more icon-xl"></i>
                                                 </div>
@@ -206,7 +206,7 @@
                                                         <!-- Text Area -->
                                                         <div class="form-group d-flex">
                                                             <i class="icon icon-forms-advanced mt-2 mr-1"></i>
-                                                            <textarea class="form-control border-0 shadow-none bg-focus"
+                                                            <textarea class="form-control border-0 shadow-none bg-focus" id="commentsproduct"
                                                                       rows="2"
                                                                       placeholder="Product Comments">@Model.Comments</textarea>
                                                         </div>
@@ -251,11 +251,11 @@
                                                                 {
                                                                     <tr style="font-weight:bold;">
                                                                         <td>TOTAL (Sales Budget)</td>
-                                                                        <td>@item.p1.ToString("0.##")</td>
-                                                                        <td>@item.p2.ToString("0.##")</td>
-                                                                        <td>@item.p3.ToString("0.##")</td>
-                                                                        <td>@item.p4.ToString("0.##")</td>
-                                                                        <td>@item.p5.ToString("0.##")</td>
+                                                                        <td class="finalcolp1">@Math.Round(Convert.ToDouble(item.p1), 0, MidpointRounding.ToEven)</td>
+                                                                        <td class="finalcolp2">@Math.Round(Convert.ToDouble(item.p2), 0, MidpointRounding.ToEven)</td>
+                                                                        <td class="finalcolp3">@Math.Round(Convert.ToDouble(item.p3), 0, MidpointRounding.ToEven)</td>
+                                                                        <td class="finalcolp4">@Math.Round(Convert.ToDouble(item.p4), 0, MidpointRounding.ToEven)</td>
+                                                                        <td class="finalcolp5">@Math.Round(Convert.ToDouble(item.p5), 0, MidpointRounding.ToEven)</td>
 
 
 
@@ -266,11 +266,11 @@
                                                                 {
                                                                     <tr>
                                                                         <td>@item.SalesRep</td>
-                                                                        <td class="editMe">@item.p1.ToString("0.##")</td>
-                                                                        <td class="editMe">@item.p2.ToString("0.##")</td>
-                                                                        <td class="editMe">@item.p3.ToString("0.##")</td>
-                                                                        <td class="editMe">@item.p4.ToString("0.##")</td>
-                                                                        <td class="editMe">@item.p5.ToString("0.##")</td>
+                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp1">@Math.Round(Convert.ToDouble(item.p1), 0, MidpointRounding.ToEven)</td>
+                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp2">@Math.Round(Convert.ToDouble(item.p2), 0, MidpointRounding.ToEven)</td>
+                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp3">@Math.Round(Convert.ToDouble(item.p3), 0, MidpointRounding.ToEven)</td>
+                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp4">@Math.Round(Convert.ToDouble(item.p4), 0, MidpointRounding.ToEven)</td>
+                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp5">@Math.Round(Convert.ToDouble(item.p5), 0, MidpointRounding.ToEven)</td>
 
 
 
@@ -281,7 +281,7 @@
 
                                                         </tbody>
                                                     </table>
-
+                                                    <button class="btn btn-danger btn-sm " onclick="saveTotalSB()">Save Sales Budget</button>
                                                 </div>
                                                 <!-- /module content inner -->
 
@@ -351,7 +351,7 @@
                                                         <div class="dt-action-content">
 
                                                             <div class="dt-notification fade" id="drawer-initialforecast">
-                                                                <h4>Initial Forecast</h4>
+                                                                <h4>Purchase tool Forecast</h4>
                                                                 <h5 class="card-subtitle mb-0">Source: MatrizCompras Database</h5><br />
 
                                                                 <table id="data_sales" class="table" style="width:100%; font-family: 'Open Sans' !important">
@@ -378,19 +378,19 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td>BASELINE</td>
-                                                                            <td>@Model.Baseline1</td>
-                                                                            <td>@Model.Baseline2</td>
-                                                                            <td>@Model.Baseline3</td>
-                                                                            <td>@Model.Baseline4</td>
-                                                                            <td>@Model.Baseline5</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline1), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline2), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline3), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline4), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline5), 0, MidpointRounding.ToEven)</td>
                                                                         </tr>
                                                                         <tr>
                                                                             <td>FORECAST</td>
-                                                                            <td>@Model.Forecast1_source1</td>
-                                                                            <td>@Model.Forecast2_source1</td>
-                                                                            <td>@Model.Forecast3_source1</td>
-                                                                            <td>@Model.Forecast4_source1</td>
-                                                                            <td>@Model.Forecast5_source1</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast1_source1), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast2_source1), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast3_source1), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast4_source1), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast5_source1), 0, MidpointRounding.ToEven)</td>
                                                                         </tr>
                                                                     </tbody>
 
@@ -426,11 +426,11 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <td>FORECAST</td>
-                                                                            <td>@Model.Forecast1_source2</td>
-                                                                            <td>@Model.Forecast2_source2</td>
-                                                                            <td>@Model.Forecast3_source2</td>
-                                                                            <td>@Model.Forecast4_source2</td>
-                                                                            <td>@Model.Forecast5_source2</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast1_source2), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast2_source2), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast3_source2), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast4_source2), 0, MidpointRounding.ToEven)</td>
+                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast5_source2), 0, MidpointRounding.ToEven)</td>
                                                                         </tr>
                                                                     </tbody>
 
@@ -468,7 +468,7 @@
                                                                                     <td style="font-size:11px;"></td>
                                                                                     <td style="font-size:11px;"></td>
 
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C}", item.AVG)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N}", item.AVG)</td>
                                                                                     <td style="font-size:11px;">@String.Format("{0:N}", item.PCT)</td>
                                                                                 </tr>
                                                                             }
@@ -476,15 +476,15 @@
                                                                             {
                                                                                 <tr>
                                                                                     <td style="font-size:11px;">@item.SalesRep</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C0}", item.p1)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C0}", item.p2)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C0}", item.p3)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C0}", item.p4)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C0}", item.p5)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C0}", item.p6)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p1)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p2)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p3)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p4)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p5)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p6)</td>
 
-                                                                                    <td style="font-size:11px;">@String.Format("{0:C}", item.AVG)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N}", item.PCT)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.AVG)</td>
+                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.PCT)</td>
                                                                                 </tr>
                                                                             }
 
@@ -557,16 +557,279 @@
             simpleEditor.SetEditableClass("editMe");
 
             $('#salesforecast').on("cell:edited", function (event) {
-                console.log(`'${event.oldValue}' changed to '${event.newValue}'`);
+          
+                var classsel = "";
+                var classselFinal = "";
 
-                event.element.style.backgroundColor = "#ffeea5";
+
+                var periodo = ""
+            var itemcode = '@Model.ItemCode';
+            var description = '@Model.Description';
+            var iddatad = '@ViewBag.iddata';
+                var rep = $(event.element).data("salesrep")
+
+                if (event.element.classList.contains("colp1")) { 
+                    classsel = ".colp1";
+                    classselFinal = ".finalcolp1";
+                    periodo = "f1";
+                } else if (event.element.classList.contains("colp2")) {
+                    classsel = ".colp2";
+                    classselFinal = ".finalcolp2";
+                    periodo = "f2";
+                } else if (event.element.classList.contains("colp3")) {
+                     classsel = ".colp3";
+                    classselFinal = ".finalcolp3";
+                    periodo = "f3";
+                } else if (event.element.classList.contains("colp4")) {
+                    classsel = ".colp4";
+                    classselFinal = ".finalcolp4";
+                    periodo = "f4";
+                } else if (event.element.classList.contains("colp5")) {
+                    classsel = ".colp5";
+                    classselFinal = ".finalcolp5";
+                    periodo = "f5";
+                }
+
+                
+
+                //verificamos si es numero 
+                var esnumero = 0.0;
+                try {
+                    esnumero = parseFloat(event.newValue);
+
+                    if (isNaN(esnumero)) {
+                        esnumero = 0.0;
+                        event.element.style.backgroundColor = "#ffeea5";
+                        event.element.innerHTML = "0";
+                     
+                        var suma = 0.0;
+                        //Foreach
+                        $.each($(classsel), function () {
+                            suma = parseFloat($(this).text()) + suma;
+                        });
+                        //suma  colp1
+                        $(classselFinal).css("background-color", "#ffeea5")
+                        $(classselFinal).text(suma.toFixed(2));
+
+
+
+                    } else {
+                        event.element.innerHTML = esnumero.toFixed(2);
+                        console.log(`'${event.oldValue}' changed to '${event.newValue}'`);
+
+                        event.element.style.backgroundColor = "#ffeea5";
+
+                        var suma = 0.0;
+                        //Foreach
+                        $.each($(classsel), function () {
+                            suma = parseFloat($(this).text()) + suma;
+                        });
+                        //suma  colp1
+                        $(classselFinal).css("background-color", "#ffeea5")
+                        $(classselFinal).text(suma.toFixed(2));
+
+
+
+                        $.ajax
+                            ({
+                                url: '/Operations/Save_productforecast',
+                                type: 'POST',
+                                data: { 'itemcode': itemcode, 'description': description, 'periodo': periodo, 'newval': suma, 'iddata': iddatad, 'rep': rep, 'valbyrep': esnumero },
+                                success: function (result) {
+                                    if (result == "SUCCESS") {
+                                        var toast = swal.mixin({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+
+                                        toast({
+                                            type: 'success',
+                                            title: 'Data saved successfully.'
+                                        });
+
+
+                                    } else {
+                                        var toast = swal.mixin({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+
+                                        toast({
+                                            type: 'info',
+                                            title: 'Something went wrong, try again'
+                                        });
+
+                                        $(classselFinal).css("background-color", "red")
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                },
+                            });
+
+                    }
+
+
+                } catch{
+                    esnumero = 0.0;
+                    event.element.style.backgroundColor = "#fff";
+                    event.element.innerHTML = "0";
+                    $(".finalcolp1").text("Error");
+                }
+                 
+
+
+
+
             });
 
-          
+
+
+
+            $('#commentsproduct').blur(function () {
+                var comment = $.trim($("#commentsproduct").val());
+                var iddatad = '@ViewBag.iddata';
+                var product = '@Model.ItemCode';
+            if (comment != "") {
+                // Guardamos si no viene vacio
+                $.ajax
+                    ({
+                        url: '/Operations/Save_productCommentMatriz',
+                        type: 'POST',
+                        data: { 'comment': comment, 'iddata': iddatad, 'product': product },
+                        success: function (result) {
+                            if (result == "SUCCESS") {
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'success',
+                                    title: 'Data saved successfully.'
+                                });
+
+
+                            } else {
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'info',
+                                    title: 'Something went wrong, try again'
+                                });
+                            }
+
+
+                        },
+                        error: function () {
+
+                        },
+                    });
+            }
+        });
+
+
+
+
 
 
         });
+                   function saveTotalSB(){
 
+            var itemcode = '@Model.ItemCode';
+            var description = '@Model.Description';
+            var iddatad = '@ViewBag.iddata';
+  
+               var sumap1 = 0.0;
+               var sumap2 = 0.0;
+               var sumap3 = 0.0;
+               var sumap4 = 0.0;
+               var sumap5 = 0.0;
+                try {
+
+                        //Foreach
+
+                    $.each($(".colp1"), function () {
+                        sumap1 = parseFloat($(this).text()) + sumap1;
+                    });
+
+                    $.each($(".colp2"), function () {
+                        sumap2 = parseFloat($(this).text()) + sumap2;
+                    });
+                    $.each($(".colp3"), function () {
+                        sumap3 = parseFloat($(this).text()) + sumap3;
+                    });
+                    $.each($(".colp4"), function () {
+                        sumap4 = parseFloat($(this).text()) + sumap4;
+                    });
+                    $.each($(".colp5"), function () {
+                        sumap5 = parseFloat($(this).text()) + sumap5;
+                    });
+
+                        $.ajax
+                            ({
+                                url: '/Operations/Save_SalesBudget',
+                                type: 'POST',
+                                data: { 'itemcode': itemcode, 'description': description, 'iddata': iddatad, 'newvalp1': sumap1, 'newvalp2': sumap2, 'newvalp3': sumap3, 'newvalp4': sumap4, 'newvalp5': sumap5   },
+                                success: function (result) {
+                                    if (result == "SUCCESS") {
+                                        var toast = swal.mixin({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+
+                                        toast({
+                                            type: 'success',
+                                            title: 'Data saved successfully.'
+                                        });
+
+
+                                    } else {
+                                        var toast = swal.mixin({
+                                            toast: true,
+                                            position: 'top-end',
+                                            showConfirmButton: false,
+                                            timer: 3000
+                                        });
+
+                                        toast({
+                                            type: 'info',
+                                            title: 'Something went wrong, try again'
+                                        });
+
+                                       
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                },
+                            });
+
+                    
+
+
+                } catch{
+
+                }
+                 
+            }
 
             //var editor;
             //$(document).ready(function () {

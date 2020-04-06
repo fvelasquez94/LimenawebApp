@@ -39,16 +39,18 @@
                                             <tr class="treegrid-@Html.Raw(so.ID_salesorder)" style="background-color: rgba(0, 0, 0, .02);">
                                                 <td style="padding: .25rem;">
                                                     @so.SAP_docnum
-                                                    @if (so.isfinished == true && so.DocEntry != "")
-    {<small class="text-success">(Invoiced)</small>
-              }
+                                                    @if (so.isfinished == true && so.DocEntry != "" && so.DocEntry != "--")
+                                                    {<small class="text-success">(Invoiced)</small>
+                                                    }
 
 
-else if (so.isfinished == true && so.DocEntry == "")
-{
+                                                    else if (so.isfinished == true && so.DocEntry == "")
+                                                    {
                                                 <small class="text-success">(Closed)</small>
-}
-                                                </td>
+                                                    }
+                                                    else if (so.isfinished == true && so.DocEntry != "--") {
+                                                          <small class="text-danger">(Canceled)</small>
+                                                    }</td>
                                                 <td style="padding: .25rem;">@Convert.ToDateTime(so.SAP_docdate).ToShortDateString()</td>
                                                 <td style="padding: .25rem;">@so.ID_customer - @so.Customer_name</td>
                                                 @*<td style="padding: .25rem;">@so.Rep_name</td>*@

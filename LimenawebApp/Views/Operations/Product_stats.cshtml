@@ -1,4 +1,4 @@
-﻿@model  List<LimenawebApp.Controllers.OperationsController.salesHistory_product>
+﻿@model  List<LimenawebApp.Controllers.OperationsController.salesHistory>
 @{
     ViewBag.Title = "Distribuidora Limeña - Purchase Data";
     Layout = null;
@@ -195,7 +195,7 @@
                     valueAxis.renderer.grid.template.disabled = true;
                 }
 
-                createAxisAndSeries("a2018", "2018", false, "circle");
+                createAxisAndSeries("a2018", "2018", true, "circle");
                 createAxisAndSeries("a2019", "2019", true, "triangle");
                 createAxisAndSeries("a2020", "FCST 2020", true, "rectangle");
 

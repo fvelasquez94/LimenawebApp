@@ -685,43 +685,43 @@
             var flag = true;
 
 
-            //$.each($('input.form-control[type = "text"]'), function () {
-            //    if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
+            $.each($('input.form-control[type = "text"]'), function () {
+                if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
 
-            //        if ($(this).val() == "" || $(this).val() == null) {
-            //            flag = false;
-            //            $(this).addClass("border-danger");
-            //        }
-            //        else {
-            //            $(this).removeClass("border-danger");
-            //        }
+                    if ($(this).val() == "" || $(this).val() == null) {
+                        flag = false;
+                        $(this).addClass("border-danger");
+                    }
+                    else {
+                        $(this).removeClass("border-danger");
+                    }
 
-            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
-            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
-            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-            //        } else {
-            //            //Evaluamos para validacion ya que chequearon al padre
-            //            if ($(this).val() == "" || $(this).val() == null) {
-            //                flag = false;
-            //                $(this).addClass("border-danger");
-            //            } else {
-            //                $(this).removeClass("border-danger");
-            //            }
-            //        }
-            //    } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
-            //        if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
-            //            //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
-            //        } else {
-            //            //Evaluamos para validacion ya que chequearon al padre
-            //            if ($(this).val() == "" || $(this).val() == null) {
-            //                flag = false;
-            //                $(this).addClass("border-danger");
-            //            } else {
-            //                $(this).removeClass("border-danger");
-            //            }
-            //        }
-            //    }
-            //});
+                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-radio") {
+                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'radio']:checked").length <= 0) {
+                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+                    } else {
+                        //Evaluamos para validacion ya que chequearon al padre
+                        if ($(this).val() == "" || $(this).val() == null) {
+                            flag = false;
+                            $(this).addClass("border-danger");
+                        } else {
+                            $(this).removeClass("border-danger");
+                        }
+                    }
+                } else if ($(this).parent().closest('.parentdiv').prev().attr('class') == "form-check") {
+                    if ($(this).parent().closest('.parentdiv').prev().find("input.form-check-input[type = 'checkbox']:checked").length <= 0) {
+                        //Entonces no lo evaluamos para validacion ya que no han chequeado al parent
+                    } else {
+                        //Evaluamos para validacion ya que chequearon al padre
+                        if ($(this).val() == "" || $(this).val() == null) {
+                            flag = false;
+                            $(this).addClass("border-danger");
+                        } else {
+                            $(this).removeClass("border-danger");
+                        }
+                    }
+                }
+            });
 
             //$.each($('input.form-control[type = "number"]'), function () {
             //    if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
@@ -872,7 +872,7 @@
             },
             success: function (result) {
 
-                 var url = '@Url.Action("Surveys", "Commercial", null)';
+                 var url = '@Url.Action("SurveysC", "Commercial", null)';
                 document.getElementById("loader").style.display = "none";
                     window.location.href = url;
 
@@ -1201,7 +1201,7 @@
             },
             success: function (result) {
 
-                 var url = '@Url.Action("Surveys", "Commercial", null)';
+                 var url = '@Url.Action("SurveysC", "Commercial", null)';
                 document.getElementById("loader").style.display = "none";
                     window.location.href = url;
 
@@ -1235,7 +1235,7 @@
             },
             success: function (result) {
 
-                 var url = '@Url.Action("Surveys", "Commercial", null )';
+                 var url = '@Url.Action("SurveysC", "Commercial", null )';
                 document.getElementById("loader").style.display = "none";
                     window.location.href = url;
 

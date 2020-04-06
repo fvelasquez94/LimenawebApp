@@ -40,5 +40,7 @@ namespace LimenawebApp.Models
         public string ZipCode { get; set; }
         public string PymntGroup { get; set; }
         public string Warehouses { get; set; }
+        public string IsBuyer { get; set; }
+        public string StatusCustomer { get; set; }
     }
 }

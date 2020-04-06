@@ -278,7 +278,7 @@
                 var data2;
 
                 data2 = Array();
-
+         
                 $.each($('#lstCategory option:selected'), function () {
 
                     search.push($(this).val());
@@ -288,7 +288,7 @@
 
                 search = search.join('|');
 
-                table.column(5).search(search, true, false).draw();
+                table.column(6).search(search, true, false).draw();
 
                 var select = $("#lstSubCategory");
 
@@ -297,10 +297,10 @@
 
                 table.rows({ search: 'applied' }).data().unique().sort().each(function (value, index) {
 
-                    data2.push(value[5]);
+                    data2.push(value[6]);
 
                 });
-
+            
                 data2 = sort_unique(data2);
 
                 $.each(data2, function (key, value) {
@@ -316,6 +316,15 @@
             });
 
 
+            function sort_unique(arr) {
+
+                return arr.sort().filter(function (el, i, a) {
+
+                    return (i == a.indexOf(el));
+
+                });
+
+            }
 
             $('#lstSubCategory').on('change', function () {
 

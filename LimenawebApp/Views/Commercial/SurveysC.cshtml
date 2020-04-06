@@ -1,0 +1,178 @@
+﻿@model List<LimenawebApp.Models.RepsSurveys>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Survey";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title">Customers Contact Data</div>
+                                @*<p><button onclick="sortTable()">Sort</button></p>*@
+                                <div>
+                                    <div class="progress-title">
+                                        <span id="forms_p1" class=""><a href="javascript:void(0);" onclick="showAll()">Total Customers</a> : @Convert.ToDecimal(ViewBag.prop01).ToString("n2")% @ViewBag.prop02</span>
+                                    </div>
+                                    <div class="progress" style="height: 2px;">
+                                        @if (Convert.ToDecimal(ViewBag.prop01) < 100)
+                {
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: @ViewBag.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @ViewBag.prop01%;" aria-valuemax="100"></div>
+}
+                                    </div>
+                                </div>
+
+                                @if (ViewBag.isadmin == 1)
+        {
+                        <div>
+                            @foreach (var sup in ViewBag.supervisors)
+    {
+                        <div class="progress-title">
+                            <span id="forms_p1" class=""><a href="javascript:void(0);">@sup.Name @sup.Lastname</a> : @Convert.ToDecimal(sup.prop01).ToString("n2")% @sup.prop02</span>
+                        </div>
+                        <div class="progress" style="height: 2px;">
+                            @if (Convert.ToDecimal(sup.prop01) < 100)
+    {
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: @sup.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @sup.prop01%;" aria-valuemax="100"></div>
+}
+                        </div>
+}
+
+                        </div>
+}
+                                <div class=" widget-action-link">
+
+
+
+                                </div>
+
+                            </div>
+                      
+                        </div>
+                        <div class="card-body- pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor2" class="table" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            @*<th scope="col">IDSUP</th>*@
+                                            <th scope="col" hidden>CARDCODE</th>
+                                            <th scope="col" hidden>CARDCODE</th>
+                                            <th scope="col">SALES REPRESENTATIVE</th>
+                                            <th scope="col">CLASSIFICATION</th>
+                                            <th scope="col">PEPPERI STATUS</th>
+                                            <th scope="col">ACTIONS</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var so in ViewBag.newlstbyprofile)
+            {
+
+                            <tr class="treegrid-@so.Profile rowtohide suprows" style="background-color: rgba(0, 0, 0, .02);">
+                                @*<td style="padding: .25rem;">so.idSAPsupervisor</td>*@
+
+                                <td style="padding: .25rem;" hidden></td>
+                                <td style="padding: .25rem;" hidden></td>
+                                <td style="padding: .25rem;"></td>
+                                <td style="padding: .25rem;">@so.Profile</td>
+
+
+
+                                <td style="padding: .25rem;">
+                                    <div class="progress-title">
+                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.prop01).ToString("n2")% @so.prop02</span>
+                                    </div>
+                                    <div class="progress" style="height: 2px;">
+                                        @if (Convert.ToDecimal(so.prop01) < 100)
+            {
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: @so.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @so.prop01%;" aria-valuemax="100"></div>
+}
+                                    </div>
+                                </td>
+                                <td style="padding: .25rem;"></td>
+                            </tr>
+foreach (var item in Model.Where(c => c.classifications.Contains(so.Profile) && c.prop02 != "(0/ 0)"))
+{
+
+                            <tr class="treegrid-parent-@so.Profile rowtohide">
+                                @*<td style="padding: .25rem;">so.idSAPsupervisor</td>*@
+                                <td hidden></td>
+                                <tdhidden></tdhidden>
+                                <td>
+                                    <div class="flex">
+
+                                        <div class="item-except text-muted text-sm h-1x">
+                                            @item.Name  @item.Lastname
+                                        </div>
+
+                                    </div>
+                                </td>
+                                <td></td>
+
+                                <td>
+                                    <div class="progress-title">
+                                        <span id="forms_p1" class="">@Convert.ToDecimal(item.prop01).ToString("n2")% @item.prop02</span>
+                                    </div>
+                                    <div class="progress" style="height: 2px;">
+                                        @if (Convert.ToDecimal(item.prop01) < 100)
+            {
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: @item.prop01%;" aria-valuemax="100"></div>
+}
+else
+{
+                            <div class="progress-bar bg-success" role="progressbar" style="width: @item.prop01%;" aria-valuemax="100"></div>
+}
+                                    </div>
+
+                                </td>
+
+                                <td style="padding: .25rem;">
+
+                                    <a href="@Url.Action("Customersbcl", "Commercial", new { id = item.idSAP, profile=item.classifications })" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>View Customers</a>
+
+
+                                </td>
+
+                            </tr>
+
+
+
+}
+
+
+}
+
+                                    </tbody>
+                                </table>
+                                
+                            </div>
+                            <label class="badge badge-warning" style="margin-left:10px;">Showing Only Active Customers</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>

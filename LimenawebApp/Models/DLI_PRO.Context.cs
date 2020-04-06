@@ -12,6 +12,8 @@ namespace LimenawebApp.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class DLI_PROEntities : DbContext
     {
@@ -51,5 +53,28 @@ namespace LimenawebApp.Models
         public virtual DbSet<OITT> OITT { get; set; }
         public virtual DbSet<PlanningUoMInfo> PlanningUoMInfo { get; set; }
         public virtual DbSet<OBIN> OBIN { get; set; }
+        public virtual DbSet<BI_Contact_Person> BI_Contact_Person { get; set; }
+    
+        public virtual ObjectResult<sp_genericInvoice_Result> sp_genericInvoice(string dockey)
+        {
+            var dockeyParameter = dockey != null ?
+                new ObjectParameter("dockey", dockey) :
+                new ObjectParameter("dockey", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_genericInvoice_Result>("sp_genericInvoice", dockeyParameter);
+        }
+    
+        public virtual ObjectResult<sp_genericDailyPaymentsCrossDock_Result> sp_genericDailyPaymentsCrossDock(string truck, string date)
+        {
+            var truckParameter = truck != null ?
+                new ObjectParameter("Truck", truck) :
+                new ObjectParameter("Truck", typeof(string));
+    
+            var dateParameter = date != null ?
+                new ObjectParameter("Date", date) :
+                new ObjectParameter("Date", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_genericDailyPaymentsCrossDock_Result>("sp_genericDailyPaymentsCrossDock", truckParameter, dateParameter);
+        }
     }
 }

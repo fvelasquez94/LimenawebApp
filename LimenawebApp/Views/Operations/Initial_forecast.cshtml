@@ -43,7 +43,7 @@
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <h1 class="dt-page__title">Initial Forecast</h1>
+                                
                                 <!-- Page Header -->
                              <div class="row">
                                  <div class="col-md-6">
@@ -74,7 +74,8 @@
                                         <div class="card-header">
                                             <div class="custom-title-wrap bar-success">
                                                 <div class="custom-title">
-
+                                  
+                                                    <h1 class="dt-page__title">Purchase Tool Forecast</h1>
                                                 </div>
                                             </div>
 
@@ -103,14 +104,14 @@
                                                         @foreach (var item in Model)
     {
 
-                                                        <tr> <th rowspan="2">@item.ItemCode</th> <td>@item.Description</td><td align="left">BaseLine</td> <td>@item.Baseline1</td> 
-                                                        <td>@item.Baseline2</td><td>@item.Baseline3</td> <td>@item.Baseline4</td><td>@item.Baseline5</td></tr>
+                                                        <tr> <th rowspan="2">@item.ItemCode</th> <td>@item.Description</td><td align="left">BaseLine</td> <td>@Math.Round(Convert.ToDouble(item.Baseline1),0,MidpointRounding.ToEven)</td> 
+                                                                                                                                                          <td>@Math.Round(Convert.ToDouble(item.Baseline2), 0, MidpointRounding.ToEven)</td><td>@Math.Round(Convert.ToDouble(item.Baseline3), 0, MidpointRounding.ToEven)</td> <td>@Math.Round(Convert.ToDouble(item.Baseline4), 0, MidpointRounding.ToEven)</td><td>@Math.Round(Convert.ToDouble(item.Baseline5), 0, MidpointRounding.ToEven)</td></tr>
                                                         <tr><th></th> <td align="left">Forecast</td> 
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u>">@item.Forecast1_source1</label></td>
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u>">@item.Forecast2_source1</label></td> 
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u>">@item.Forecast3_source1</label></td> 
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u>">@item.Forecast4_source1</label></td>
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u>">@item.Forecast5_source1</label></td>
+                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast1_source1), 0, MidpointRounding.ToEven)</label></td>
+                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast2_source1), 0, MidpointRounding.ToEven)</label></td> 
+                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast3_source1), 0, MidpointRounding.ToEven)</label></td> 
+                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast4_source1), 0, MidpointRounding.ToEven)</label></td>
+                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast5_source1), 0, MidpointRounding.ToEven)</label></td>
                                                         </tr>
 
                                                     

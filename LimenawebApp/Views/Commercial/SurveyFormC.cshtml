@@ -1,0 +1,1519 @@
+﻿@{
+    Layout = null;
+    ViewBag.Title = "Distribuidora Limeña - Activity";
+
+}
+@helper OrderedListRetail(IList<LimenawebApp.Controllers.CommercialController.MyObj_tablapadre> parentList, int parent = 0)
+    {
+
+
+
+        foreach (var objeto in parentList)
+        {
+            if (objeto.id_resource == 95)
+            {
+
+                <div class="custom-title-wrap bar-info">
+                    <div class="custom-title"><h4 class="text-secondary" style="text-align:center;">@objeto.fvalueText</h4></div>
+                </div>
+            }
+            <!--PARA IMAGENES -->
+            if (objeto.id_resource == 5)
+            {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <p class="control-label col-md-10">@objeto.fdescription</p>
+                            <div class="col-md-12">
+                                @if (objeto.fsource != "")
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                                }
+                                else
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                }
+                            </div>
+                        </div>
+                    </div><br />
+
+                
+
+
+
+            }
+            <!--PARA PRODUCTOS -->
+            if (objeto.id_resource == 3)
+            {
+
+
+                <div class="tr">
+
+                    <div class="td accordion-xs-toggle"><small>@objeto.fdescription</small><div class="icondiv">&nbsp;</div><div class="icondivdollar" style="margin-left:2px;"></div></div>
+                    @if (objeto.children != null)
+                    {
+                        <div class="accordion-xs-collapse">
+
+                            <div class="inner">
+
+                                @OrderedListRetail(objeto.children, objeto.idkey)
+                            </div>
+                        </div>
+                    }
+
+                </div>
+
+            }
+
+
+            <!--CHECK SELECCION MULTIPLE -->
+            if (objeto.id_resource == 16)
+            {
+                if (objeto.parent != 0)
+                {
+                    <div class="td">
+                        <div class="form-check">
+
+                            <label class="form-check-label">
+                                @if (objeto.fdescription == "Disponible")
+    {
+                            if (objeto.fvalue == 0)
+{
+                            <input type="checkbox" class="form-check-input disponible" name="@("radio_" + objeto.parent)" id="@objeto.idkey">
+                            <span style="margin-left:20px !important;">@objeto.fdescription</span>
+                            <i class="input-helper"></i>
+}
+else
+{
+                            <input type="checkbox" class="form-check-input disponible" name="@("radio_" + objeto.parent)" id="@objeto.idkey" checked>
+                            <span style="margin-left:20px !important;">@objeto.fdescription</span>
+                            <i class="input-helper"></i>
+}
+}
+else if (objeto.fdescription == "No Disponible")
+{
+                            if (objeto.fvalue == 0)
+{
+                            <input type="checkbox" class="form-check-input nodisponible" name="@("radio_" + objeto.parent)" id="@objeto.idkey">
+                            <span style="margin-left:20px !important;">@objeto.fdescription</span>
+                            <i class="input-helper"></i>
+}
+else
+{
+                            <input type="checkbox" class="form-check-input nodisponible" name="@("radio_" + objeto.parent)" id="@objeto.idkey" checked>
+                            <span style="margin-left:20px !important;">@objeto.fdescription</span>
+                            <i class="input-helper"></i>
+}
+
+}
+
+                            </label>
+                        </div>
+                    </div><br />
+                }
+
+
+            }
+
+
+
+            <!--PARA INPUT NUMBER -->
+            if (objeto.id_resource == 18)
+            {
+                if (objeto.parent != 0)
+                {
+                    <div class="td">
+                        <div class="form-group">
+                            @if (objeto.fvalueDecimal > 0)
+                            {
+                                <input type="number" onClick="selectTest(this.id);" id="@objeto.idkey" class="form-control form-control-sm audit" value="@objeto.fvalueDecimal" />
+                            }
+                            else
+                            {
+                                <input type="number" onClick="selectTest(this.id);" id="@objeto.idkey" class="form-control form-control-sm audit" value="0" />
+                            }
+                            @objeto.fdescription
+
+                        </div>
+                    </div>
+                }
+
+
+            }
+
+
+            <!--PARA INPUT NUMBER (CURRENCY)-->
+            if (objeto.id_resource == 21)
+            {
+                if (objeto.parent != 0)
+                {
+                    <div class="td">
+                        <div class="form-group">
+                            <label>@objeto.fdescription</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                @if (objeto.fvalueDecimal > 0)
+                                {
+                                    if (objeto.fdescription == "Precio sugerido")
+                                    {
+                                        <input type="number" onClick="selectTest(this.id);" id="@objeto.idkey" class="form-control preciosugerido" value="@objeto.fvalueDecimal" disabled />
+                                    }
+                                    else
+                                    {
+                                        <input type="number" onClick="selectTest(this.id);" id="@objeto.idkey" class="form-control audit" value="@objeto.fvalueDecimal" />
+                                    }
+
+                                }
+                                else
+                                {
+                                    if (objeto.fdescription == "Precio sugerido")
+                                    {
+                                        <input type="number" onClick="selectTest(this.id);" id="@objeto.idkey" class="form-control preciosugerido" value="0" disabled />}
+                                    else
+                                    {
+                                        <input type="number" onClick="selectTest(this.id);" id="@objeto.idkey" class="form-control audit" value="0" />
+                                    }
+
+                                }
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+            <!--PARA INPUT TEXT -->
+            if (objeto.id_resource == 6)
+            {
+                if (objeto.parent != 0)
+                {
+                    <div class="td">
+                        <div class="form-group">
+
+                            <div class="col-md-12">
+                                <input type="text" id="@objeto.idkey" value="@objeto.fsource" class="form-control" />
+
+
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+
+        }
+}
+
+
+
+@helper OrderedList(IList<LimenawebApp.Controllers.CommercialController.MyObj_tablapadre> parentList, int parent = 0)
+    {
+        int barcodec = 0;
+
+        int countbar = parentList.Where(x => x.id_resource == 28).Count();
+        foreach (var objeto in parentList)
+        {
+
+
+            <!--PARA TITULOS -->
+            if (objeto.id_resource == 1)
+            {
+                <div class="custom-title-wrap bar-turquoise">
+                    <div class="custom-title"><h4 class="text-secondary" style="text-align:center;">@objeto.fsource</h4></div>
+                </div>
+            }
+
+            <!--PARA PRODUCTOS DINAMICOS-->
+            if (objeto.id_resource == 11)
+            {
+
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10">@objeto.fdescription</p>
+                            <div class="col-md-12">
+                                @if (ViewBag.mostrarboton == 0)
+                                {
+                                    <input type="button" onClick="cargarproductos(this.id)" value="Load products" class="btn btn-primary form-control" id="@objeto.idkey" hidden />
+
+                                    <div class="divtable accordion-xs">
+                                        <div class="tr headings">
+                                            <div class="th">Producto</div>
+                                            <div class="th">Disponibilidad</div>
+                                            <div class="th">Precio tienda</div>
+                                            <div class="th">Precio sugerido</div>
+                                        </div>
+                                        @OrderedListRetail(ViewBag.details)
+                                    </div>
+
+
+
+
+
+
+                                }
+                                else
+                                {
+                                    <input type="button" disabled onClick="cargarproductos(this.id)" value="Load products" class="btn btn-primary form-control btloadprod" id="@objeto.idkey" />
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA CATEGORIES-->
+            if (objeto.id_resource == 30)
+            {
+                <div class="card" style="border:none !important; display:none">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select id="cat_list" class="form-control" name="@objeto.idkey" onchange="getSubcategories()" style="width:100%" disabled>
+                                    <option value="0">Seleccione una categoria</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA SUBCATEGORIA-->
+            if (objeto.id_resource == 31)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select id="subcat_list" class="form-control" name="@objeto.idkey" onchange="getBrands()" style="width:100%" disabled>
+                                    <option value="0">Seleccione una subcategoria</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+
+            <!--PARA SUBTITULOS -->
+            if (objeto.id_resource == 8)
+            {
+                if (objeto.children.Count > 0)
+                {
+                    if (objeto.children[0].id_resource == 19)
+                    {
+                        <div class="card" style="border:none !important;">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <p class="control-label">@objeto.fsource</p>
+                                    <!--VERIFICAMOS SI TIENE HIJOS-->
+                                    <div class="parentdiv flexRadio">
+                                        @OrderedList(objeto.children, objeto.idkey)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="card" style="border:none !important;">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <p class="control-label">@objeto.fsource</p>
+                                    <!--VERIFICAMOS SI TIENE HIJOS-->
+                                    <div class="parentdiv">
+                                        @OrderedList(objeto.children, objeto.idkey)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="row">
+                        <div class="col-md-12 grid-margin">
+                            <hr />
+                            <h6 style="text-align:center;">@objeto.fsource</h6>
+                            <hr />
+                        </div>
+                    </div>
+                }
+
+
+            }
+
+
+
+            <!--PARA PRODUCTOS -->
+            if (objeto.id_resource == 3)
+            {
+                if (ViewBag.dinamicos == 0)
+                {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <div class="form-group">
+                                <p class="control-label col-md-10">@objeto.fdescription (*)</p>
+                                <div class="col-md-12">
+                                    <input type="number" onClick="this.select();" min="0" inputmode="numeric" pattern="[0-9]*" value="@objeto.fvalue" class="form-control number" id="@objeto.idkey" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            }
+
+            <!--PARA MUESTRAS -->
+            if (objeto.id_resource == 4)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10">@objeto.fdescription (*)</p>
+                            <div class="col-md-12">
+                                <input type="number" onClick="this.select();" min="0" inputmode="numeric" pattern="[0-9]*" value="@objeto.fvalue" class="form-control number" id="@objeto.idkey" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <!--PARA GIFT -->
+            if (objeto.id_resource == 10)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10">@objeto.fdescription (*)</p>
+                            <div class="col-md-12">
+                                <input type="number" min="0" inputmode="numeric" pattern="[0-9]*" value="@objeto.fvalue" class="form-control number" id="@objeto.idkey" required />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+            <!--RADIO SELECCION UNICA -->
+            if (objeto.id_resource == 19)
+            {
+                if (objeto.parent != 0)
+                {
+
+                    <div class="form-radio hRadio col-6">
+                        <label class="form-check-label">
+                            @if (objeto.fvalue == 0)
+                            {
+
+                                <input type="radio" class="form-check-input mgr mgr-success rad" name="@("radio_" + objeto.parent)" id="@objeto.idkey" value="@objeto.fsource" />
+                            }
+                            else
+                            {
+                                <input type="radio" class="form-check-input mgr mgr-success rad" name="@("radio_" + objeto.parent)" id="@objeto.idkey" value="@objeto.fsource" checked />
+                            }
+                            @objeto.fsource
+                        </label>
+                    </div>
+                    if (objeto.children.Count > 0)
+                    {
+                        <div class="parentdiv fRadio col-12">
+                            @if (objeto.fvalue == 0)
+                            {
+                                <div class="@("childdivradio_" + objeto.parent)" id="@("radiodiv_" + objeto.idkey)" style="display:none;">
+                                    <hr />
+                                    @OrderedList(objeto.children, objeto.idkey)
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="@("childdivradio_" + objeto.parent)" id="@("radiodiv_" + objeto.idkey)">
+                                    <hr />
+                                    @OrderedList(objeto.children, objeto.idkey)
+                                </div>
+                            }
+                        </div>
+                    }
+
+
+                }
+                else
+                {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <div class="form-group">
+                                <div class="form-radio">
+                                    <label class="form-check-label">
+                                        @if (objeto.fvalue == 0)
+                                        {
+                                            <input type="radio" class="form-check-input mgr mgr-success rad" name="@("radio_" + parent)" id="@objeto.idkey" value="@objeto.fsource">
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" class="form-check-input mgr mgr-success rad" name="@("radio_" + parent)" id="@objeto.idkey" value="@objeto.fsource" checked>
+                                        }
+                                        @objeto.fsource
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            <!--CHECK SELECCION MULTIPLE -->
+            if (objeto.id_resource == 16)
+            {
+                if (objeto.parent != 0)
+                {
+                    <div class="form-check">
+                        <label class="form-check-label">
+                            @if (objeto.fvalue == 0)
+                            {
+                                <input type="checkbox" class="form-check-input chk" name="@("radio_" + objeto.parent)" id="@objeto.idkey">
+                            }
+                            else
+                            {
+                                <input type="checkbox" class="form-check-input chk" name="@("radio_" + objeto.parent)" id="@objeto.idkey" checked>
+                            }
+                            @objeto.fsource
+                        </label>
+                    </div>
+
+                    if (objeto.children.Count > 0)
+                    {
+                        <div class="col-md-12 parentdiv">
+                            @if (objeto.fvalue == 0)
+                            {
+                                <div class="@("childdivradio_" + objeto.parent)" id="@("radiodiv_" + objeto.idkey)" style="display:none;">
+                                    <hr />
+                                    @OrderedList(objeto.children, objeto.idkey)
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="@("childdivradio_" + objeto.parent)" id="@("radiodiv_" + objeto.idkey)">
+                                    <hr />
+                                    @OrderedList(objeto.children, objeto.idkey)
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <!--card-body-->
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <label class="form-check-label">
+                                        @if (objeto.fvalue == 0)
+                                        {
+                                            <input type="checkbox" class="form-check-input chk" id="@objeto.idkey">
+                                        }
+                                        else
+                                        {
+                                            <input type="checkbox" class="form-check-input chk" id="@objeto.idkey" checked>
+                                        }
+                                        @objeto.fsource
+                                    </label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+
+            <!--PARA BARDCODE SCANNER -->
+            if (objeto.id_resource == 28)
+            {
+                if (barcodec == 0)
+                {
+                    barcodec += 1;
+                    <div class="card" style="border:none !important;">
+
+                        <div class="" id="barcodecontainer">
+                            <div class="form-group codec original">
+
+                                <div class="col-md-12">
+                                    <div class="input-outer">
+                                        <div class="clear">X</div>
+
+                                        <div class="input-group">
+                                            <input id="scanner_input_@objeto.idkey" style="font-size:11px;" class="form-control code" placeholder="Click the button to scan..." value="@objeto.fsource" disabled type="text" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info codebtn" type="button" data-toggle="modal" id="@objeto.idkey" data-target="#livestream_scanner">
+                                                    <i class="fa fa-barcode"></i>
+                                                </button>
+                                            </span>
+                                        </div><!-- /input-group -->
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        @if (barcodec == countbar)
+                        {
+                            <button class="btn btn-sm btn-outline-success" id="copyContainer" onClick="nuevoBarcode(this.id)">ADD NEW +</button>
+                        }
+
+                    </div>
+
+
+                }
+                else
+                {
+                    barcodec += 1;
+                    <div class="card" style="border:none !important;">
+                        <div class="" id="barcodecontainer">
+                            <div class="form-group codec">
+
+                                <div class="col-md-12">
+                                    <div class="input-outer">
+                                        <div class="clear">X</div>
+
+                                        <div class="input-group">
+                                            <input id="scanner_input_@objeto.idkey" style="font-size:11px;" class="form-control code" placeholder="Click the button to scan..." value="@objeto.fsource" disabled type="text" />
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info codebtn" type="button" data-toggle="modal" id="@objeto.idkey" data-target="#livestream_scanner">
+                                                    <i class="fa fa-barcode"></i>
+                                                </button>
+                                            </span>
+                                        </div><!-- /input-group -->
+                                    </div>
+
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                        @if (barcodec == countbar)
+                        {
+                            <button class="btn btn-sm btn-outline-success" id="copyContainer" onClick="nuevoBarcode(this.id)">ADD NEW +</button>
+                        }
+                    </div>
+                }
+
+
+            }
+            <!--PARA IMAGENES DE REFERENCIA -->
+            if (objeto.id_resource == 29)
+            {
+
+
+                <div class="card" style="border:none !important; display:none">
+                    <div class="">
+                        <p class="control-label col-md-10">@objeto.fdescription</p>
+                        <div class="col-md-12">
+
+                            <img class="form-control imgref1" id="@objeto.idkey">
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+            }
+            <!--PARA IMAGENES -->
+            if (objeto.id_resource == 5 && objeto.obj_group == 0)
+            {
+                if (objeto.parent != 0)
+                {
+
+
+                    <p class="control-label col-md-10">@objeto.fdescription</p>
+                    <div class="col-md-12">
+                        @if (objeto.fsource != "")
+                        {
+                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
+                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                        }
+                        else
+                        {
+                            <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
+                            <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                            <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                        }
+                    </div>
+
+
+                }
+                else
+                {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <p class="control-label col-md-10">@objeto.fdescription</p>
+                            <div class="col-md-12">
+                                @if (objeto.fsource != "")
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-default-file="@Url.Content(objeto.fsource)" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" alt="your image" hidden />
+                                }
+                                else
+                                {
+                                    <input type="file" data-changeflag="0" class="dropifyIMG" id="@objeto.idkey" data-max-file-size-preview="15M">
+                                    <img id="@("img_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                    <img id="@("resultimg_" + objeto.idkey)" src="#" alt="your image" hidden />
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                }
+
+
+
+            }
+
+            <!--PARA INPUT TEXT -->
+            if (objeto.id_resource == 6)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            @if (objeto.fvalue == 0)
+                            {
+                                <p class="control-label col-md-10">@objeto.fdescription (*)</p>
+                            }
+                            else if (objeto.fvalue == 1)
+                            {
+                                <p class="control-label col-md-10">Flavor - @objeto.fdescription (*)</p>
+                            }
+                            else if (objeto.fvalue == 2)
+                            {
+                                <p class="control-label col-md-10">Quality - @objeto.fdescription (*)</p>
+                            }
+                            else if (objeto.fvalue == 3)
+                            {
+                                <p class="control-label col-md-10">Price - @objeto.fdescription (*)</p>
+                            }
+                            else if (objeto.fvalue == 4)
+                            {
+                                <p class="control-label col-md-10">Packing - @objeto.fdescription (*)</p>
+                            }
+                            else if (objeto.fvalue == 5)
+                            {
+                                <p class="control-label col-md-10">Free - @objeto.fdescription (*)</p>
+                            }
+                                <div class="col-md-12">
+                                    @*<textarea id="@objeto.idkey" class="form-control" onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))'>@objeto.fsource</textarea>*@
+                                    <input type="text" id="@objeto.idkey" value="@objeto.fsource" class="form-control" />
+                                </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA DATE -->
+            if (objeto.id_resource == 22)
+            {
+                if (objeto.parent != 0)
+                {
+
+                    <div class="form-group">
+                        <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                        <div class="col-md-12">
+                            @if (objeto.fvalueText == "")
+                            {
+                                <input type="date" id="@objeto.idkey" name="@objeto.idkey" class="form-control" value="@objeto.fvalueText" />
+                            }
+                            else
+                            {
+                                <input type="date" id="@objeto.idkey" name="@objeto.idkey" class="form-control" value="@Convert.ToDateTime(objeto.fvalueText).ToString("yyyy-MM-dd")" />
+                            }
+
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <div class="form-group">
+                                <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                                <div class="col-md-12">
+                                    @if (objeto.fvalueText == "")
+                                    {
+                                        <input type="date" id="@objeto.idkey" name="@objeto.idkey" class="form-control" value="@objeto.fvalueText" />
+                                    }
+                                    else
+                                    {
+                                        <input type="date" id="@objeto.idkey" name="@objeto.idkey" class="form-control" value="@Convert.ToDateTime(objeto.fvalueText).ToString("yyyy-MM-dd")" />
+                                    }
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            }
+
+
+            <!--PARA INPUT NUMBER -->
+            if (objeto.id_resource == 18)
+            {
+                if (objeto.parent != 0)
+                {
+
+                    <div class="form-group">
+                        <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                        <div class="col-md-12">
+                            <input type="number" id="@objeto.idkey" name="@objeto.idkey" class="form-control number" value="@objeto.fvalueDecimal" />
+
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="card" style="border:none !important;">
+                        <div class="">
+                            <div class="form-group">
+                                <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                                <div class="col-md-12">
+                                    <input type="number" id="@objeto.idkey" name="@objeto.idkey" class="form-control number" value="@objeto.fvalueDecimal" />
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            }            
+        <!--PARA TIME RANGE -->
+            if (objeto.id_resource == 38)
+            {
+                if (objeto.parent != 0)
+                {
+
+                    <div class="form-group divrangecontrol" style="border:none !important;visibility:hidden">
+                        <p class="control-label col-md-10 labeltimerange"> @objeto.fsource (*)</p>
+                        <div class="col-md-12">
+                         
+                            <input type="text" class="form-control timerangecontrol" id="@objeto.idkey" value="@objeto.fvalueText" name="@objeto.idkey" required="">
+                        </div>
+                    </div>
+
+                }
+                else
+                {
+                    <div class="card divrangecontrol" style="border:none !important;visibility:hidden">
+                        <div class="">
+                            <div class="form-group">
+                                <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                                <div class="col-md-12">
+                                 
+                                    <input type="text" class="form-control timerangecontrol" id="@objeto.idkey" value="@objeto.fvalueText" name="@objeto.idkey" required="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+
+            }
+            <!--PARA INPUT NUMBER (CURRENCY)-->
+            if (objeto.id_resource == 21)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <input type="number" id="@objeto.idkey" name="@objeto.idkey" class="form-control currency number" value="@objeto.fvalueDecimal" />
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA CUSTOMERS -->
+            if (objeto.id_resource == 12)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select id="customer_list" class="form-control" name="@objeto.idkey" style="width:100%" onChange='getCategories()'>
+                                    @if (ViewBag.customers.Count == 1)
+                                    {
+                                        <option value="@ViewBag.customers[0].CardCode" selected>@ViewBag.customers[0].CardCode - @ViewBag.customers[0].CardName</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="0">Seleccione un cliente</option>
+                                        foreach (var itemCustomer in ViewBag.customers)
+                                        {
+                                            if (objeto.fvalueText == itemCustomer.CardCode)
+                                            {
+                                                <option value="@itemCustomer.CardCode" selected>@itemCustomer.CardCode - @itemCustomer.CardName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@itemCustomer.CardCode">@itemCustomer.CardCode - @itemCustomer.CardName</option>
+                                            }
+
+
+                                        }
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA BRANDS-->
+            if (objeto.id_resource == 13)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select id="brands_list" class="form-control" name="@objeto.idkey" style="width:100%" onChange='getProductslineorRefimg()' disabled>
+                                    <option value="0">Seleccione una marca</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA PRODUCT LINE -->
+            if (objeto.id_resource == 14)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select id="productline_list" name="@objeto.idkey" class="form-control" style="width:100%">
+                                    <option value="0">Seleccione un linea de producto</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA SELECT GENERAL -->
+            if (objeto.id_resource == 17)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select id="@objeto.idkey" name="@objeto.idkey" class="form-control" style="width:100%">
+                                    <option value="0">Select an item</option>
+                                    @if (objeto.children.Count > 0)
+                                    {
+                                        @OrderedList(objeto.children, objeto.idkey)
+                                    }
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA ITEMS DE SELECT GENERAL -->
+            if (objeto.id_resource == 20)
+            {
+                IList<LimenawebApp.Models.FormsM_details> mainlist = ViewBag.detailssql;
+
+                var idparent = mainlist.Where(c => c.idkey == objeto.parent).FirstOrDefault();
+
+                if (idparent != null)
+                {
+                    if (idparent.ID_formresourcetype == 17)
+                    {
+                        if (idparent.fvalueText == objeto.idkey.ToString())
+                        {
+                            <option value="@objeto.idkey" selected>@objeto.fsource</option>
+                        }
+                        else
+                        {
+                            <option value="@objeto.idkey">@objeto.fsource</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option value="@objeto.idkey">@objeto.fsource</option>
+
+                }
+
+
+
+
+            }
+
+            <!--PARA BRAND COMPETITORS -->
+            if (objeto.id_resource == 15)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="">
+                        <div class="form-group">
+                            <p class="control-label col-md-10"> @objeto.fsource (*)</p>
+                            <div class="col-md-12">
+                                <select class="form-control" id="brandcompetitors_list" name="@objeto.idkey" style="width:100%">
+                                    <option value="0">Seleccione competidor de la marca</option>
+                                </select>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            }
+            <!--PARA FIRMA ELECTRONICA -->
+            if (objeto.id_resource == 9)
+            {
+                <div class="card" style="border:none !important;">
+                    <div class="card-body">
+                        <p class="control-label col-md-12">@objeto.fdescription</p>
+
+                        <!-- Content -->
+
+
+                        <canvas style="margin-left:20px;" id="sig-canvas" class="@("canvas_" + objeto.idkey)" data-id="@objeto.idkey" ontouchmove="event.preventDefault();">
+                            Get a better browser, bro.
+                        </canvas>
+
+                        <script type="text/javascript">
+
+                                var canvas = document.getElementsByClassName("@("canvas_" + objeto.idkey)");
+                                //var canvas = document.getElementById("sig-canvas");
+                                var context = canvas[0].getContext("2d");
+
+// load image from data url
+
+var imageObj = new Image();
+
+imageObj.onload = function () {
+
+    context.drawImage(this, 0, 0);
+
+};
+
+imageObj.src = "@objeto.fsource";
+
+
+                        </script>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <button class="btn btn-primary" id="sig-submitBtn" hidden>Submit Signature</button>
+                                <a href="#" class="btn btn-default" id="sig-clearBtn" onclick="return false">Clear</a>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+
+
+
+
+            }
+
+        }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>Distribuidora Limena - @ViewBag.Title</title>
+    @Html.Partial("~/Views/Shared/Style_main.cshtml")
+
+    <style>
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .divtable .tr {
+            overflow: hidden;
+            clear: both;
+            border-top: 2px solid #dfdfdf;
+        }
+
+        .divtable .th,
+        .divtable .td {
+            padding: 5px 10px;
+            float: left;
+        }
+
+        .divtable .th {
+            font-weight: bold;
+        }
+
+
+        @@media (max-width: 1767px) {
+
+            .accordion-xs .headings {
+                display: none;
+            }
+
+            .accordion-xs .tr {
+                border-bottom-color: #dfdfdf;
+            }
+
+            .accordion-xs .th,
+            .accordion-xs .td {
+                float: none;
+                width: auto;
+                padding: 0;
+            }
+
+            .accordion-xs .accordion-xs-toggle {
+                background-color: white;
+                color: #000;
+                padding: 10px;
+                cursor: pointer;
+            }
+
+                .accordion-xs .accordion-xs-toggle:hover {
+                    background-color: #efedea;
+                }
+
+                .accordion-xs .accordion-xs-toggle:after {
+                    content: '\2b';
+                    float: right;
+                }
+
+                .accordion-xs .accordion-xs-toggle.collapsed:after {
+                    content: '\2212';
+                }
+
+            .accordion-xs-collapse .inner {
+                padding: 10px;
+            }
+
+            .accordion-xs-collapse .td:before {
+                font-weight: bold;
+            }
+
+            .accordion-xs-collapse .lastname:before {
+                content: 'Last Name: ';
+            }
+
+            .accordion-xs-collapse .username:before {
+                content: 'Username: ';
+            }
+
+            .accordion-xs .accordion-xs-toggle:after {
+                position: relative;
+                top: 1px;
+                display: inline-block;
+                font-family: 'Glyphicons Halflings';
+                font-style: normal;
+                font-weight: 300;
+                line-height: 1;
+                -webkit-font-smoothing: antialiased;
+            }
+        }
+
+
+        #rightss {
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+
+        #sig-canvas {
+            width: 200px;
+            height: 150px;
+            border-style: dashed;
+            border-radius: 0.50px;
+            border-color: lightgray;
+        }
+
+        .currency {
+        }
+
+        .currency-symbol {
+            position: absolute;
+            padding: 7px 4px 0px;
+            font-size: 13px;
+        }
+
+        .currency-symbolv2 {
+            position: absolute;
+            padding: 1px 4px 0px;
+            font-size: 12px;
+        }
+
+        #loading {
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            text-align: center;
+        }
+
+        #loading-content {
+            margin-top: 20%;
+        }
+
+        .hide {
+            display: none;
+        }
+
+
+        /*DATATABLES*/
+        table {
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+            table tr {
+                padding: .35em;
+            }
+
+            table th, table td {
+                padding: .625em;
+                text-align: left;
+            }
+
+            table th {
+                font-size: .9em;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+            }
+
+            table td {
+                font-size: .3em;
+            }
+        /**/
+        @@media screen and (max-width: 2000px) {
+
+            table td {
+                font-size: .9em;
+            }
+        }
+
+        @@media screen and (max-width: 850px) {
+            table th {
+                font-size: .8em;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+            }
+
+            table td {
+                font-size: .7em;
+            }
+        }
+
+        /**/
+        /**/
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+        }
+
+        /* Might want to wrap a span around your checkbox text */
+        .checkboxtext {
+            /* Checkbox text */
+            font-size: 110%;
+            display: inline;
+        }
+
+        @@media screen and (max-width: 400px) {
+
+            table {
+                border: 0;
+            }
+
+                table thead {
+                    display: none;
+                }
+
+                table tr {
+                    border-bottom: 3px solid #ddd;
+                    display: block;
+                    margin-bottom: .625em;
+                }
+
+                table td {
+                    border-bottom: 1px solid #ddd;
+                    display: block;
+                    font-size: .8em;
+                    text-align: left;
+                }
+
+                    table td:before {
+                        content: attr(data-label);
+                        float: left;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+
+                    table td:last-child {
+                        border-bottom: 0;
+                    }
+        }
+        /**/
+        /*END DATATABLES*/
+
+    </style>
+</head>
+<body class="fixed-nav top-nav">
+    <div id="loader" class="vertical-centered-box">
+        <div class="content">
+            <div class="loader-circle"></div>
+            <div class="loader-line-mask one">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-mask two">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-mask three">
+                <div class="loader-line"></div>
+            </div>
+            <div class="loader-line-mask four">
+                <div class="loader-line"></div>
+            </div>
+        </div>
+    </div>
+    <!--header-->
+    <nav class="navbar navbar-expand-lg fixed-top navbar-light" id="mainNav">
+        <div class="box-container">
+            <!--brand name for responsive-->
+            <a class="navbar-brand navbar-brand-responsive" href="#">
+                <img class="pr-3 float-left" src="~/Content/appcontent/assets/img/ico.png" srcset="/Content/appcontent/assets/img/ico.png 2x" alt="" />
+                <div class="float-left">
+                    <div>Limeña</div>
+                    <span class="page-direction f12 weight300">
+                        <span>Commercial</span>
+
+                        <i class="fa fa-angle-right"></i>
+                        <span>Marketing Activities</span>
+
+                    </span>
+                </div>
+            </a>
+            <!--/brand name for responsive-->
+            <!--responsive navigation list toggle-->
+            
+            <!--/responsive nav notification toggle-->
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <!--brand name-->
+                <a class="navbar-brand navbar-hide-responsive" href="#">
+                    <img class="pr-3 float-left" src="~/Content/appcontent/assets/img/ico.png" srcset="/Content/appcontent/assets/img/ico.png 2x" alt="" />
+                    <div class="float-left">
+                        <div>Distribuidora Limeña</div>
+                        <span class="page-direction f12 weight300">
+                            <span>Commercial</span>
+                            <i class="fa fa-angle-right"></i>
+                            <span>Marketing Activities</span>
+
+                        </span>
+                    </div>
+                </a>
+                <!--/brand name-->
+            </div>
+        </div>
+    </nav>
+    <!--/header-->
+    <!--main content wrapper-->
+    <div class="content-wrapper">
+        <!--/creative states-->
+        <div class="box-container">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="form-group">
+                        <div class="col-md-offset-2 col-md-10 text-right">
+                            <div class="float-left">
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="text" id="idvisita" hidden value="@ViewBag.idvisita" />
+                <!--sales monitor-->
+    
+                <div class="row">
+  
+                    <div class="col-12">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+
+
+
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-12 grid-margin">
+
+                                        @OrderedList(ViewBag.details)
+
+                                    </div><br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10 text-right">
+                        @if (ViewBag.mostrarboton == 0)
+            {
+                <input type="submit" value="Save" class="btn btn-success" id="save_activity" style="height:90px; width:130px" />
+}
+
+                        <input type="submit" value="Finish activity" class="btn btn-danger" id="finish_activity" style="display:none; height:90px; width:130px" />
+                        <!--<a href="Url.Action("Index", "Demos")" class="btn btn-default">Back</a>-->
+                    </div>
+                </div>
+
+            </div>
+            <!-- content-wrapper ends -->
+            <!-- partial:../../partials/_footer.html -->
+            <!-- partial -->
+        </div>
+        <!-- main-panel ends -->
+    </div>
+    <!-- page-body-wrapper ends -->
+    @Html.Partial("~/Views/Shared/Footer_main.cshtml")
+
+    <div class="modal" id="livestream_scanner">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+
+                </div>
+                <div class="modal-body" style="position: static">
+                    <div id="interactive" class="viewport"></div>
+                    <div class="error"></div>
+                </div>
+                <div class="modal-footer">
+                    @*<label class="btn btn-default pull-left">
+                            <i class="fa fa-camera"></i> Use camera app
+                            <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden" />
+                        </label>*@
+                    <button type="button" id="vertbtn" class="btn btn-default" data-dismiss="modal">Rotate</button>
+                    <button type="button" id="closebtn" class="btn btn-primary" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</body>
+@Html.Partial("~/Views/Shared/Scripts_main.cshtml")
+@Html.Partial("~/Views/Shared/SurveysScripts.cshtml")
+
+
+
+</html>
+
+<script>
+
+
+    $(document).on('click', '.clear', function () {
+        var $input = $(this).closest(".input-outer").find('input.code');
+        $input.val('');
+
+        var idsel = $($input).attr('id');
+        idsel = idsel.substring(14);
+
+        try {
+            document.getElementById("loader").style.display = "none";
+            var idvisita = "";
+            idvisita = document.getElementById('idvisita').value;
+            //GUARDAMOS OBJETOS
+            var objects = [];
+            //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
+
+            objects.push({
+                id: idsel,
+                value: "",
+                text: ""
+            });
+
+            $.ajax({
+                url: '/FormsActions/Save_activityByitemSurvey',
+                type: 'POST',
+                data: { 'id': idvisita, 'objects': objects },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        document.getElementById("loader").style.display = "none";
+
+                    } else {
+                        document.getElementById("loader").style.display = "none";
+
+
+                    }
+
+
+                },
+                error: function (request) {
+                    document.getElementById("loader").style.display = "none";
+
+
+
+                }
+            });
+        } catch{ }
+
+        //$(this).closest(".codec").find('input.codebar').val('');
+    });
+
+
+
+
+</script>

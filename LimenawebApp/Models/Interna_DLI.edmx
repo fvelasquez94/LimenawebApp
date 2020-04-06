@@ -92,6 +92,35 @@
           <Property Name="prop01" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="ID_userSAP" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Tb_customerscontacts">
+          <Key>
+            <PropertyRef Name="ID_contact" />
+          </Key>
+          <Property Name="ID_contact" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CardCode" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="LastName" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Telephone" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Email" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Position" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Error" Type="int" Nullable="false" />
+          <Property Name="ErrorMessage" Type="varchar(max)" Nullable="false" />
+          <Property Name="DocEntry" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IDSAP" Type="int" Nullable="false" />
+          <Property Name="Accion" Type="int" Nullable="false" />
+          <Property Name="creationdate" Type="datetime" />
+        </EntityType>
+        <EntityType Name="Tb_customerstatus">
+          <Key>
+            <PropertyRef Name="ID_transaction" />
+          </Key>
+          <Property Name="ID_transaction" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CardCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Active_customer" Type="int" Nullable="false" />
+          <Property Name="DocEntry" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Error" Type="int" Nullable="false" />
+          <Property Name="ErrorMsg" Type="varchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="Tb_MaestroPorcentajes">
           <Key>
             <PropertyRef Name="ID_detail" />
@@ -112,6 +141,8 @@
           <EntitySet Name="Tb_Autorizaciones" EntityType="Self.Tb_Autorizaciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Bonificaciones" EntityType="Self.Tb_Bonificaciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_ConfigBolsa" EntityType="Self.Tb_ConfigBolsa" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_customerscontacts" EntityType="Self.Tb_customerscontacts" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_customerstatus" EntityType="Self.Tb_customerstatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_MaestroPorcentajes" EntityType="Self.Tb_MaestroPorcentajes" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -139,6 +170,8 @@
           <EntitySet Name="Tb_ConfigBolsa" EntityType="Interna_DLIModel.Tb_ConfigBolsa" />
           <EntitySet Name="Tb_Autorizaciones" EntityType="Interna_DLIModel.Tb_Autorizaciones" />
           <EntitySet Name="Tb_Bonificaciones" EntityType="Interna_DLIModel.Tb_Bonificaciones" />
+          <EntitySet Name="Tb_customerscontacts" EntityType="Interna_DLIModel.Tb_customerscontacts" />
+          <EntitySet Name="Tb_customerstatus" EntityType="Interna_DLIModel.Tb_customerstatus" />
         </EntityContainer>
         <EntityType Name="Tb_ConfigBolsa">
           <Key>
@@ -226,6 +259,35 @@
           <Property Name="DeletedSAP" Type="Int32" />
           <Property Name="Error" Type="Int32" />
           <Property Name="MensajeError" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_customerscontacts">
+          <Key>
+            <PropertyRef Name="ID_contact" />
+          </Key>
+          <Property Name="ID_contact" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CardCode" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="LastName" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Telephone" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Position" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Error" Type="Int32" Nullable="false" />
+          <Property Name="ErrorMessage" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DocEntry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IDSAP" Type="Int32" Nullable="false" />
+          <Property Name="Accion" Type="Int32" Nullable="false" />
+          <Property Name="creationdate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="Tb_customerstatus">
+          <Key>
+            <PropertyRef Name="ID_transaction" />
+          </Key>
+          <Property Name="ID_transaction" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CardCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Active_customer" Type="Int32" Nullable="false" />
+          <Property Name="DocEntry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Error" Type="Int32" Nullable="false" />
+          <Property Name="ErrorMsg" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -337,6 +399,37 @@
                 <ScalarProperty Name="CodCliente" ColumnName="CodCliente" />
                 <ScalarProperty Name="CodPedido" ColumnName="CodPedido" />
                 <ScalarProperty Name="ID_bonificacion" ColumnName="ID_bonificacion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_customerscontacts">
+            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_customerscontacts">
+              <MappingFragment StoreEntitySet="Tb_customerscontacts">
+                <ScalarProperty Name="creationdate" ColumnName="creationdate" />
+                <ScalarProperty Name="Accion" ColumnName="Accion" />
+                <ScalarProperty Name="IDSAP" ColumnName="IDSAP" />
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Telephone" ColumnName="Telephone" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="ID_contact" ColumnName="ID_contact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_customerstatus">
+            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_customerstatus">
+              <MappingFragment StoreEntitySet="Tb_customerstatus">
+                <ScalarProperty Name="ErrorMsg" ColumnName="ErrorMsg" />
+                <ScalarProperty Name="Error" ColumnName="Error" />
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="Active_customer" ColumnName="Active_customer" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="ID_transaction" ColumnName="ID_transaction" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

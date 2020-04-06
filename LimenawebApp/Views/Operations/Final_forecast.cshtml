@@ -43,7 +43,7 @@
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <h1 class="dt-page__title">Final Forecast</h1>
+                                <h1 class="dt-page__title">Products Forecast</h1>
                                 <!-- Page Header -->
                                 <!-- Back -->
                                 <!-- /back -->
@@ -57,8 +57,8 @@
                                     </div>
                                     <div class="col-md-6">
                                         <!-- Back -->
-                                        <a href="@Url.Action("Final_forecast", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
-                                            <span class="display-6 align-middle ml-1 float-right">Results</span> <i class="icon icon-arrow-right icon-fw icon-1x float-right"></i>
+                                        <a href="@Url.Action("SaveandExit", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
+                                            <span class="display-6 align-middle ml-1 float-right">Save and Exit</span> <i class="icon icon-arrow-right icon-fw icon-1x float-right"></i>
                                         </a>
                                         <!-- /back -->
                                     </div>
@@ -106,23 +106,37 @@
                                                     <tfoot>
                                                     </tfoot>
                                                     <tbody>
+                                                        @if (Model.Count == 1)
+    {
+                                                    <tr>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                        <td></td>
+                                                    </tr>
+}
                                                         @foreach (var item in Model)
-                                                        {
+    {
 
-                                                        <tr>
-                                                            <th>@item.ItemCode</th>
-                                                            <td>@item.Description</td>
-                                                            <td>Forecast</td>
-                                                            <td   data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u><br>Initial forecast: @item.Forecast1_source1 <br>Agents forecast: @item.Forecast1_source2  <br>Saved forecast: -">@item.Forecast1_source3</td>
-                                                            <td   data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u><br>Initial forecast: @item.Forecast2_source1 <br>Agents forecast: @item.Forecast2_source2 <br>Saved forecast: -">@item.Forecast2_source3</td>
-                                                            <td   data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u><br>Initial forecast: @item.Forecast3_source1 <br>Agents forecast: @item.Forecast3_source2 <br>Saved forecast: -">@item.Forecast3_source3</td>
-                                                            <td  data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u><br>Initial forecast: @item.Forecast4_source1 <br>Agents forecast: @item.Forecast4_source2 <br>Saved forecast: -">@item.Forecast4_source3</td>
-                                                            <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u><br>Initial forecast: @item.Forecast5_source1 <br>Agents forecast: @item.Forecast5_source2 <br>Saved forecast: -">@item.Forecast5_source3</td>
-                                                            <td><a href="@Url.Action("edit_process", "Operations", new { data=ViewBag.iddata, ItemCode=item.ItemCode})" class="btn btn-primary">Sales Data</a></td>
-                                                        </tr>
+                                                    <tr>
+                                                        <th>@item.ItemCode</th>
+                                                        <td>@item.Description</td>
+                                                        <td>Forecast</td>
+                                                        <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u><br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast1_source1), 0, MidpointRounding.ToEven) <br>Agents forecast: @Math.Round(Convert.ToDouble(item.Forecast1_source2), 0, MidpointRounding.ToEven)  <br>Last Saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast1_source3), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u><br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast2_source1), 0, MidpointRounding.ToEven)<br>Agents forecast: @Math.Round(Convert.ToDouble(item.Forecast2_source2), 0, MidpointRounding.ToEven) <br>Last Saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast2_source3), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u><br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast3_source1), 0, MidpointRounding.ToEven) <br>Agents forecast: @Math.Round(Convert.ToDouble(item.Forecast3_source2), 0, MidpointRounding.ToEven) <br>Last Saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast3_source3), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u><br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast4_source1), 0, MidpointRounding.ToEven) <br>Agents forecast: @Math.Round(Convert.ToDouble(item.Forecast4_source2), 0, MidpointRounding.ToEven) <br>Last Saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast4_source3), 0, MidpointRounding.ToEven)</td>
+                                                        <td data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u><br>Purchase tool forecast: @Math.Round(Convert.ToDouble(item.Forecast5_source1), 0, MidpointRounding.ToEven)<br>Agents forecast: @Math.Round(Convert.ToDouble(item.Forecast5_source2), 0, MidpointRounding.ToEven) <br>Last Saved forecast: -">@Math.Round(Convert.ToDouble(item.Forecast5_source3), 0, MidpointRounding.ToEven)</td>
+                                                        <td><a href="@Url.Action("edit_process", "Operations", new { data=ViewBag.iddata, ItemCode=item.ItemCode})" class="btn btn-primary">Sales Budget</a></td>
+                                                    </tr>
 
 
-                                                        }
+}
                                                     </tbody>
                                                 </table>
                                             </div>

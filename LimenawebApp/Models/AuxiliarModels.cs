@@ -210,8 +210,18 @@ namespace LimenawebApp.Models
         public string prop02 { get; set; }
         public string idSAP { get; set; }
         public string idSAPsupervisor{ get; set; }
+        public string classifications{ get; set; }
 
     }
+
+    public class RepsCustomersbyProfile
+    {
+        public string Profile { get; set; }
+        public string prop01 { get; set; }
+        public string prop02 { get; set; }
+
+    }
+
 
     public class QualityControl_SO {
         public int ID_Route { get; set; }

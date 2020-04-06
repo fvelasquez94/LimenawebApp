@@ -69,6 +69,9 @@
     <Reference Include="FastMember, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.1.3.0\lib\net45\FastMember.dll</HintPath>
     </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.1, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13.1\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.8.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
@@ -201,8 +204,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.35.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.35\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.61.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.61\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -262,6 +265,9 @@
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\AuxiliarModels.cs" />
+    <Compile Include="Models\BI_Contact_Person.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\BI_Dim_Customer.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -431,6 +437,9 @@
     <Compile Include="Models\PlanningUoMInfo.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\PurchaseData_byReps.cs">
+      <DependentUpon>dbMatrizCompras.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\PurchaseData_product.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
@@ -456,6 +465,12 @@
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\SalesRep.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_genericDailyPaymentsCrossDock_Result.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_genericInvoice_Result.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Supervisor.cs">
@@ -493,6 +508,12 @@
     </Compile>
     <Compile Include="Models\Tb_CreditsRequest.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_customerscontacts.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_customerstatus.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_InventoryDetailsTRDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -564,6 +585,18 @@
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\Daily Payments Add Copies - Whs 01 &amp; 02.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Daily Payments Add Copies - Whs 01 &amp; 02.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\DailyPayment Cross Dock.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DailyPayment Cross Dock.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Inventory_DSD.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -627,6 +660,7 @@
     <Content Include="Content\appcontent\assets\img\badge\newspaper.png" />
     <Content Include="Content\appcontent\assets\img\badge\tags.png" />
     <Content Include="Content\appcontent\assets\img\completed-task.png" />
+    <Content Include="Content\appcontent\assets\img\iconpepperi.png" />
     <Content Include="Content\appcontent\assets\js\countrystatecity.js" />
     <Content Include="Content\appcontent\assets\js\dropify.js" />
     <Content Include="Content\appcontent\assets\js\dropify.min.js" />
@@ -15224,6 +15258,12 @@
     <Content Include="Views\Operations\Product_stats.cshtml" />
     <Content Include="Views\Main\Dashboard_ExternalApps.cshtml" />
     <Content Include="Views\Invoices\QualityControl_storagetype.cshtml" />
+    <Content Include="Views\Commercial\SurveysC.cshtml" />
+    <Content Include="Views\Commercial\SurveyFormC.cshtml" />
+    <Content Include="Views\Commercial\Customer_contactdata.cshtml" />
+    <Content Include="Views\Commercial\Contacts_details.cshtml" />
+    <Content Include="Views\Commercial\SurveysC - Copy.cshtml" />
+    <Content Include="Views\Commercial\Customersbcl.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -15253,6 +15293,14 @@
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\Daily Payments Add Copies - Whs 01 &amp; 02.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Daily Payments Add Copies - Whs 01 &amp; 02.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\DailyPayment Cross Dock.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DailyPayment Cross Dock.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Inventory_DSD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Inventory_DSD.cs</LastGenOutput>

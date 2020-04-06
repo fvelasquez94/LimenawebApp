@@ -31,6 +31,7 @@
         <EntityTypeShape EntityType="DLI_PROModel.OITT" Width="1.5" PointX="15.375" PointY="0.75" />
         <EntityTypeShape EntityType="DLI_PROModel.PlanningUoMInfo" Width="1.5" PointX="15.375" PointY="7.75" />
         <EntityTypeShape EntityType="DLI_PROModel.OBIN" Width="1.5" PointX="15.375" PointY="12.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.BI_Contact_Person" Width="1.5" PointX="17.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

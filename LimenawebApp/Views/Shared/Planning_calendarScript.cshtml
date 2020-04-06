@@ -183,7 +183,7 @@
 
                             if (warehouse == "01") {
                                 if (event.Warehouse == "02") {
-                                    element.find('.fc-title').html("<i class='fa fa-truck text-dark'></i><i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>");
+                                    element.find('.fc-title').html("<i class='fa fa-truck text-dark'></i><i class='fa fa-check-circle text-success'></i><b>" + "ROUTE TO LOUISVILLE, KY" + "</b>");
                                 } else {
                                     element.find('.fc-title').html("<i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>");
                                 }
@@ -198,7 +198,7 @@
 
                             if (warehouse == "01") {
                                 if (event.Warehouse == "02") {
-                                    element.find('.fc-title').html("<i class='fa fa-truck text-dark'></i><b>" + event.title + "</b>");
+                                    element.find('.fc-title').html("<i class='fa fa-truck text-dark'></i><b>" + "ROUTE TO LOUISVILLE, KY" + "</b>");
                                 } else {
                                     element.find('.fc-title').html("<b>" + event.title + "</b>");
                                 }
@@ -229,8 +229,6 @@
                                     element.find('.fc-title').append("<br/>" + event.truck_WHS);
                                 }
                           
-                                element.find('.fc-title').append("<br/>Departure:");
-                                element.find('.fc-title').append("<br/>" + event.departure);
 
 
                             } else {
@@ -281,14 +279,13 @@
 
                                 /*For List view*/
 
-                                if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-truck text-dark'></i><i class='fa fa-check-circle text-success'></i><b>" + event.title + "</b>"); } else { element.find('.fc-list-item-title').html("<i class='fa fa-truck text-dark'></i><b>" + event.title + "</b>"); }
+                                if (event.isfinished == "Y") { element.find('.fc-list-item-title').html("<i class='fa fa-truck text-dark'></i><i class='fa fa-check-circle text-success'></i><b>" + "ROUTE TO LOUISVILLE, KY" + "</b>"); } else { element.find('.fc-list-item-title').html("<i class='fa fa-truck text-dark'></i><b>" + "ROUTE TO LOUISVILLE, KY" + "</b>"); }
 
                                 element.find('.fc-list-item-title').append("<br/>Driver:");
                                 element.find('.fc-list-item-title').append("<br/>" + event.driver_WHS);
                                 element.find('.fc-list-item-title').append("<br/>Truck:");
                                 element.find('.fc-list-item-title').append("<br/>" + event.truck_WHS);
-                                element.find('.fc-list-item-title').append("<br/>Departure:");
-                                element.find('.fc-list-item-title').append("<br/>" + event.departure);
+
 
 
 
@@ -507,9 +504,14 @@
 
                                 var id_route = calEvent.title.substr(0, calEvent.title.indexOf(' '));
                                 $("#selectedRouteOtraBodega").val(id_route);
-            
-                                $("#lstDriverOtraBodega option:contains(" + drivername + ")").attr("selected", true).trigger('change');
-                                $("#lstTruckOtraBodega option:contains(" + truckname + ")").attr("selected", true).trigger('change');
+
+                                if (drivername != "") {
+                                    $("#lstDriverOtraBodega option:contains(" + drivername + ")").attr("selected", true).trigger('change');
+                                }
+                                if (truckname != "") {
+                                    $("#lstTruckOtraBodega option:contains(" + truckname + ")").attr("selected", true).trigger('change');
+                                }
+                                
                              
 
 
@@ -645,8 +647,9 @@
 
                                     var conf1 = 0;
                                     $.each($.parseJSON(result.result6), function (i, conf) {
-                                        if (conf.isfinished == true) {
+                                        if (conf.isfinished == true || conf.transf>0) {
                                             conf1 = 1;
+                                            alert("Esta ruta ya fue cerrada o cuenta con transferencias de productos");
                                         }
                                     });
 

@@ -17,7 +17,7 @@ namespace LimenawebApp.Models
         public int ID_detail { get; set; }
         public int Line_num { get; set; }
         public string Bin_loc { get; set; }
-        public int Quantity { get; set; }
+        public decimal Quantity { get; set; }
         public string UomCode { get; set; }
         public string UomEntry { get; set; }
         public decimal NumPerMsr { get; set; }
@@ -48,5 +48,7 @@ namespace LimenawebApp.Models
         public int QC_count { get; set; }
         public int QC_totalCount { get; set; }
         public int Transferred { get; set; }
+        public string ID_pickerWHS { get; set; }
+        public string Picker_nameWHS { get; set; }
     }
 }

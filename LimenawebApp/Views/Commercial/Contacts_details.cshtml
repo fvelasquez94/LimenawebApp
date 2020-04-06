@@ -1,0 +1,347 @@
+﻿@model List<LimenawebApp.Models.BI_Contact_Person>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Contact Data";
+}
+
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-success">
+                                <div class="custom-title">Customers Contact Data: @ViewBag.idcustomer</div>
+                                <a href="@Url.Action("Customer_contactdata", "Commercial")" class="btn btn-outline-info btn-sm">Back</a>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <a href="javascrit:void(0);" class="btn btn-success btn-sm" data-toggle="modal" data-target="#createModal">Add new</a>
+                            <div class="table-responsive">
+                                <table id="data_tableEditor2" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>FIRST NAME</th>
+                                            <th>LAST NAME</th>
+                                            <th>TEL</th>
+                                            <th>EMAIL</th>
+                                            <th>POSITION</th>
+                                            <th>STATUS</th>
+                                            <th>ACTIONS</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var contact in Model)
+                                        {
+                                            <tr>
+                                                <td>@contact.Id_Contact</td>
+                                                <td>@contact.FirstName</td>
+                                                <td>@contact.LastName</td>
+                                                <td>@contact.Tel1</td>
+                                                <td>@contact.Email</td>
+                                                <td>@contact.Position</td>
+                                                <td>@if (contact.IsBuyer == "true")
+                                                {
+                                                    <label class="badge badge-success">Online</label>
+                                                }
+                                                else {
+                                                    <label class="badge badge-warning">Offline</label>
+                                                }</td>
+                                                <td>
+                                                    <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#editModal" data-idcon="@contact.Id_Contact" data-name="@contact.FirstName" data-lastname="@contact.LastName" data-tel="@contact.Tel1" data-email="@contact.Email" data-position="@contact.Position">Edit</button>
+                                                    <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#deleteModal" data-idcon="@contact.Id_Contact" data-name="@contact.FirstName" data-lastname="@contact.LastName" data-tel="@contact.Tel1" data-email="@contact.Email" data-position="@contact.Position">Delete</button>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                                                                
+                                        @foreach (var contact in ViewBag.contactslocal)
+                                        {
+                                            if (contact.DocEntry == "") {
+                                        <tr>
+                                                <td>-</td>
+                                                <td>@contact.Name</td>
+                                                <td>@contact.LastName</td>
+                                                <td>@contact.Telephone</td>
+                                                <td>@contact.Email</td>
+                                                <td>@contact.Position</td>
+                                                <td>
+                                                    <label class="badge badge-warning">Waiting SAP to update</label>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                            }
+    
+                                        }
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+
+                                </table>
+
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<!--CRESTE USER DATA STARTS-->
+<div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("CreateContact", "Management", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "btnadd.disabled = true; return true;" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-file-cloud"></i> Add new contact</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <p class="card-description">
+                        <h4 class="card-title">Contact information</h4>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" id="name" name="name" class="form-control" placeholder="First Name" required />
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="lastname" name="lastname" class="form-control" placeholder="Last Name" required />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-5">
+                            <input type="text" id="tel" name="tel" class="form-control" placeholder="Telephone" required />
+                        </div>
+                        <div class="col-md-7">
+                            <select class="form-control" id="position" name="position" required>
+                                <option value="">Select Contact Position</option>
+                                <option value="Alternative Contact">Alternative Contact</option>
+                                <option value="Buyer">Buyer</option>
+                                <option value="Main Contact">Main Contact</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Owner">Owner</option>
+                            </select>
+                            
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="email" id="email" name="email" class="form-control" placeholder="Email" required />
+                        </div>
+
+                    </div>
+                    <input type="text" id="idcustomer" name="idcustomer" value="@ViewBag.idcustomer" hidden/>
+
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btnadd" name="btnadd">Add new</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("EditContact", "Management", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "btnedit.disabled = true; return true;" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-file-cloud"></i> Edit contact</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+
+                    <p class="card-description">
+                        <h4 class="card-title">Contact information</h4>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" id="nameED" name="nameED" class="form-control" placeholder="First Name" required />
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="lastnameED" name="lastnameED" class="form-control" placeholder="Last Name" required />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-5">
+                            <input type="text" id="telED" name="telED" class="form-control" placeholder="Telephone" required />
+                        </div>
+                        <div class="col-md-7">
+                       
+                            <select class="form-control" id="positionED" name="positionED" required>
+                                <option value="">Select Contact Position</option>
+                                <option value="Alternative Contact">Alternative Contact</option>
+                                <option value="Buyer">Buyer</option>
+                                <option value="Main Contact">Main Contact</option>
+                                <option value="Manager">Manager</option>
+                                <option value="Owner">Owner</option>
+                            </select>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="email" id="emailED" name="emailED" class="form-control" placeholder="Email" required />
+                        </div>
+
+                    </div>
+                    <input type="text" id="idcustomerED" name="idcustomerED" value="@ViewBag.idcustomer" hidden/>
+                    <input type="text" id="idsapcontactED" name="idsapcontactED" value="0" hidden/>
+
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btnedit" name="btnedit">Save</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--CREATE DEMO DATA ENDS-->
+
+<div class="modal fade" id="deleteModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("DeleteContact", "Management", FormMethod.Post, new { enctype = "multipart/form-data", onsubmit = "btndel.disabled = true; return true;" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-file-cloud"></i> Delete contact</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="display:none">
+
+
+                    <p class="card-description">
+                        <h4 class="card-title">Contact information</h4>
+                    </p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" id="nameDEL" name="nameDEL" class="form-control" placeholder="First Name"  />
+                        </div>
+                        <div class="col-md-6">
+                            <input type="text" id="lastnameDEL" name="lastnameDEL" class="form-control" placeholder="Last Name"  />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-5">
+                            <input type="text" id="telDEL" name="telDEL" class="form-control" placeholder="Telephone"  />
+                        </div>
+                        <div class="col-md-7">
+                            <input type="text" id="positionDEL" name="positionDEL" class="form-control" placeholder="Position"  />
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-12">
+                            <input type="text" id="emailDEL" name="emailDEL" class="form-control" placeholder="Email"  />
+                        </div>
+
+                    </div>
+              
+
+
+
+                </div>
+                      <input type="text" id="idcustomerDEL" name="idcustomerDEL" value="@ViewBag.idcustomer" hidden/>
+                    <input type="text" id="idsapcontactDEL" name="idsapcontactDEL" value="0" hidden/>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success" id="btndel" name="btndel">DELETE</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+<!--CREATE DEMO DATA ENDS-->
+
+<script>
+    window.onload = function () {
+        $('#data_tableEditor2').DataTable({
+            dom: 'Bfrtip',
+            select: true
+        });
+
+
+        (function ($) {
+            'use strict';
+            $('#deleteModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);// Button that triggered the modal
+                var ID = button.data("idcon");// Extract info from data-* attributes
+                var name = button.data("name");
+                var lastname = button.data("lastname");
+                var email = button.data("email");
+                var tel = button.data("tel");
+                var position = button.data("position");
+      
+                $("#nameDEL").val(name);
+                $("#lastnameDEL").val(lastname);
+                $("#telDEL").val(tel);
+                $("#positionDEL").val(position);
+                $("#emailDEL").val(email);
+                $("#idsapcontactDEL").val(ID);
+
+            })
+        })(jQuery);
+
+
+        (function ($) {
+            'use strict';
+            $('#editModal').on('show.bs.modal', function (event) {
+                var button = $(event.relatedTarget);// Button that triggered the modal
+                var ID = button.data("idcon");// Extract info from data-* attributes
+                var name = button.data("name");
+                var lastname = button.data("lastname");
+                var email = button.data("email");
+                var tel = button.data("tel");
+                var position = button.data("position");
+
+                $("#nameED").val(name);
+                $("#lastnameED").val(lastname);
+                $("#telED").val(tel);
+                //$("#positionED").val(position);
+                $("#emailED").val(email);
+                $("#idsapcontactED").val(ID);
+
+            })
+        })(jQuery);
+    }
+
+</script>
+

@@ -90,6 +90,22 @@ warning 6002: The table/view 'MatrizCompras.dbo.Matriz_Formato' does not have a 
           <Property Name="ID_user" Type="int" Nullable="false" />
           <Property Name="Username" Type="varchar" MaxLength="500" Nullable="false" />
         </EntityType>
+        <EntityType Name="PurchaseData_byReps">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ItemCode" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Description" Type="varchar(max)" Nullable="false" />
+          <Property Name="ID_purchaseData" Type="int" Nullable="false" />
+          <Property Name="Forecast1_source2" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Forecast2_source2" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Forecast3_source2" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Forecast4_source2" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Forecast5_source2" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="ID_user" Type="int" Nullable="false" />
+          <Property Name="Last_update" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="PurchaseData_product">
           <Key>
             <PropertyRef Name="ID_detail" />
@@ -259,6 +275,7 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
         <EntityContainer Name="MatrizComprasModelStoreContainer">
           <EntitySet Name="Purchase_catalog" EntityType="Self.Purchase_catalog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Purchase_dataHistory" EntityType="Self.Purchase_dataHistory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PurchaseData_byReps" EntityType="Self.PurchaseData_byReps" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PurchaseData_product" EntityType="Self.PurchaseData_product" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Transito_Final" EntityType="Self.Transito_Final" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Matriz_Formato" EntityType="Self.Matriz_Formato" store:Type="Tables" store:Schema="dbo">
@@ -422,6 +439,7 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <EntitySet Name="PurchaseData_product" EntityType="MatrizComprasModel.PurchaseData_product" />
           <EntitySet Name="Transito_Final" EntityType="MatrizComprasModel.Transito_Final" />
           <EntitySet Name="Purchase_dataHistory" EntityType="MatrizComprasModel.Purchase_dataHistory" />
+          <EntitySet Name="PurchaseData_byReps" EntityType="MatrizComprasModel.PurchaseData_byReps" />
         </EntityContainer>
         <EntityType Name="Purchase_catalog">
           <Key>
@@ -580,6 +598,22 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <Property Name="source" Type="Int32" Nullable="false" />
           <Property Name="ID_user" Type="Int32" Nullable="false" />
           <Property Name="Username" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="PurchaseData_byReps">
+          <Key>
+            <PropertyRef Name="ID_detail" />
+          </Key>
+          <Property Name="ID_detail" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ItemCode" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="ID_purchaseData" Type="Int32" Nullable="false" />
+          <Property Name="Forecast1_source2" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Forecast2_source2" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Forecast3_source2" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Forecast4_source2" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Forecast5_source2" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="ID_user" Type="Int32" Nullable="false" />
+          <Property Name="Last_update" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -789,6 +823,23 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
                 <ScalarProperty Name="year" ColumnName="year" />
                 <ScalarProperty Name="periodo" ColumnName="periodo" />
                 <ScalarProperty Name="newValue" ColumnName="newValue" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="PurchaseData_byReps">
+            <EntityTypeMapping TypeName="MatrizComprasModel.PurchaseData_byReps">
+              <MappingFragment StoreEntitySet="PurchaseData_byReps">
+                <ScalarProperty Name="Last_update" ColumnName="Last_update" />
+                <ScalarProperty Name="ID_user" ColumnName="ID_user" />
+                <ScalarProperty Name="Forecast5_source2" ColumnName="Forecast5_source2" />
+                <ScalarProperty Name="Forecast4_source2" ColumnName="Forecast4_source2" />
+                <ScalarProperty Name="Forecast3_source2" ColumnName="Forecast3_source2" />
+                <ScalarProperty Name="Forecast2_source2" ColumnName="Forecast2_source2" />
+                <ScalarProperty Name="Forecast1_source2" ColumnName="Forecast1_source2" />
+                <ScalarProperty Name="ID_purchaseData" ColumnName="ID_purchaseData" />
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />

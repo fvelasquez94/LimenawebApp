@@ -176,7 +176,10 @@
                                                     <td style="font-size:11px;">@item.Brands</td>
                                                     <td>
                                                         <a href="@Url.Action("Initial_forecast", "Operations", new { iddata = item.ID_purchaseData })" class="btn btn-sm btn-primary">Edit</a>
-                                                        <a href="@Url.Action("PurchaseData_Export", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-success">Export</a>
+                                                        @if (item.query2 == "1") {
+                                                        <a href="@Url.Action("PurchaseData_ForecastExport", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-success">Export</a>
+                                                        }
+                                                        
                                                         <a href="#" id="@item.ID_purchaseData" class="btn btn-sm btn-danger delbtn">Del</a>
                                                     </td>
                                                 </tr>

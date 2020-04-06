@@ -129,11 +129,11 @@ namespace LimenawebApp.Controllers
                         //StoreServices
                         //Se utiilizara para enviar imagenes
                         
-                        var imgName1 = user.url_imageTAXCERT.Substring(30);
+                        var imgName1 = user.url_imageTAXCERT.Substring(19);
                         var imgName2 = "";
                         try
                         {
-                            imgName2 = user.url_imageTAXCERNUM.Substring(30);
+                            imgName2 = user.url_imageTAXCERNUM.Substring(19);
                         }
                         catch {
                             imgName2 = "";
@@ -384,13 +384,13 @@ namespace LimenawebApp.Controllers
                 if (activeuser.Roles.Contains("Super Admin"))
                 {
                     isAdmin = 1;
-                    lstCustomers = (from a in dblim.Tb_NewCustomers select a).ToList();
+                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.FirstName !="") select a).ToList();
                 }
                 else
                 {
                     isAdmin = 0;
                     var strid = Convert.ToInt32(activeuser.IDSAP);
-                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.Supervisor==strid) select a).ToList();
+                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.Supervisor==strid && a.FirstName != "") select a).ToList();
                 }
 
              
@@ -585,6 +585,8 @@ namespace LimenawebApp.Controllers
             }
 
         }
+
+
 
         public JsonResult EditUser(string id,string name, string lastname, string email, string password, string telephone, string position, string departments, string roles, string reps)
         {
@@ -1021,8 +1023,8 @@ namespace LimenawebApp.Controllers
                 //1 - Inventario
                 //2 - Survey
                 nuevaActividad.ID_taskType = 2;
-                nuevaActividad.TaskType = "Survey";
-                nuevaActividad.Task_description = "THANKS GIVING SURVEY";
+                nuevaActividad.TaskType = "UPDATE DATA FORM";
+                nuevaActividad.Task_description = "PEPPERI ONLINE CUSTOMER";
 
                 var usuario = (from a in dblim.Sys_Users where (a.ID_User == idrepint) select a).FirstOrDefault();
 
@@ -1060,21 +1062,170 @@ namespace LimenawebApp.Controllers
                 
                 dbcmk.BulkInsert(targetList);
 
-                TempData["exito"] = "Survey created successfully.";
+                TempData["exito"] = "Form created successfully.";
 
 
-                return RedirectToAction("SurveyForm", "Commercial", new { id= nuevaActividad.ID_task});
+                return RedirectToAction("SurveyFormC", "Commercial", new { id= nuevaActividad.ID_task});
             }
             catch (Exception ex)
             {
                 TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
-                return RedirectToAction("Surveys", "Commercial", null);
+                return RedirectToAction("SurveysC", "Commercial", null);
             }
 
 
 
 
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult CreateContact(string name, string lastname, string tel, string email, string position, string idcustomer)
+        {
+            try
+            {
+                var existe = 0;
+                var contacts = (from a in dlipro.BI_Contact_Person
+                                where (a.Email==email)
+                                select a).Count();
+
+                if (contacts > 0) { existe = 1; }
+
+                var contactsLocal = (from a in internadli.Tb_customerscontacts
+                                     where (a.Email == email)
+                                     select a).Count();
+
+                if (contactsLocal > 0) { existe = 1; }
+
+                if (existe == 0)
+                {
+                    Tb_customerscontacts newcontact = new Tb_customerscontacts();
+                    newcontact.Name = name.ToUpper();
+                    newcontact.LastName = lastname.ToUpper();
+                    newcontact.Telephone = tel;
+                    newcontact.Email = email.ToUpper();
+                    newcontact.Position = position.ToUpper();
+                    newcontact.Error = 0;
+                    newcontact.ErrorMessage = "";
+                    newcontact.DocEntry = "";
+
+                    newcontact.IDSAP = 0;
+                    newcontact.CardCode = idcustomer;
+                    newcontact.Accion = 1;
+                    newcontact.creationdate = DateTime.UtcNow;
+                    internadli.Tb_customerscontacts.Add(newcontact);
+                    internadli.SaveChanges();
+
+                    TempData["exito"] = "Contact created successfully.";
+                    return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomer });
+                }
+                else {
+
+                    TempData["advertencia"] = "This email is already registered.";
+                    return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomer });
+                }
+
+            }
+            catch (Exception ex)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
+                return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomer });
+            }
+
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult EditContact(string nameED, string lastnameED, string telED, string emailED, string positionED, string idcustomerED, string idsapcontactED)
+        {
+            try
+            {
+                int idsapexiste = Convert.ToInt32(idsapcontactED);
+
+                var existe = internadli.Tb_customerscontacts.Where(a => a.IDSAP==idsapexiste).FirstOrDefault();
+                if (existe == null)
+                {
+                 
+                }
+                else {
+
+                    internadli.Tb_customerscontacts.Remove(existe);
+                    internadli.SaveChanges();
+                }
+                Tb_customerscontacts newcontact = new Tb_customerscontacts();
+
+                newcontact.Name = nameED.ToUpper();
+                newcontact.LastName = lastnameED.ToUpper();
+                newcontact.Telephone = telED;
+                newcontact.Email = emailED.ToUpper();
+                newcontact.Position = positionED.ToUpper();
+                newcontact.Error = 0;
+                newcontact.ErrorMessage = "";
+                newcontact.DocEntry = "";
+                newcontact.creationdate = DateTime.UtcNow;
+                newcontact.CardCode = idcustomerED;
+                newcontact.IDSAP = Convert.ToInt32(idsapcontactED);
+                    newcontact.Accion = 2;
+
+                internadli.Tb_customerscontacts.Add(newcontact);
+                internadli.SaveChanges();
+                TempData["exito"] = "Contact saved successfully.";
+                return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomerED });
+            }
+            catch (Exception ex)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
+                return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomerED });
+            }
+
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteContact(string nameDEL, string lastnameDEL, string telDEL, string emailDEL, string positionDEL, string idcustomerDEL, string idsapcontactDEL)
+        {
+            try
+            {
+                int idsapexiste = Convert.ToInt32(idsapcontactDEL);
+
+                var existe = internadli.Tb_customerscontacts.Where(a => a.IDSAP == idsapexiste).FirstOrDefault();
+                if (existe == null)
+                {
+
+                }
+                else
+                {
+
+                    internadli.Tb_customerscontacts.Remove(existe);
+                    internadli.SaveChanges();
+                }
+                Tb_customerscontacts newcontact = new Tb_customerscontacts();
+
+                newcontact.Name = nameDEL.ToUpper();
+                newcontact.LastName = lastnameDEL.ToUpper();
+                newcontact.Telephone = telDEL;
+                newcontact.Email = emailDEL.ToUpper();
+                newcontact.Position = positionDEL.ToUpper();
+                newcontact.Error = 0;
+                newcontact.ErrorMessage = "";
+                newcontact.creationdate = DateTime.UtcNow;
+                newcontact.DocEntry = "";
+                newcontact.CardCode = idcustomerDEL;
+                newcontact.IDSAP = Convert.ToInt32(idsapcontactDEL);
+                newcontact.Accion = 3;
+                internadli.Tb_customerscontacts.Add(newcontact);
+                internadli.SaveChanges();
+
+                TempData["exito"] = "Contact deleted successfully.";
+                return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomerDEL });
+            }
+            catch (Exception ex)
+            {
+                TempData["advertencia"] = "Something wrong happened, try again." + ex.Message;
+                return RedirectToAction("Contacts_details", "Commercial", new { id = idcustomerDEL });
+            }
+
+        }
+
 
         public ActionResult DeleteTask(int id)
         {

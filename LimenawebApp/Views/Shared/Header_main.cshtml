@@ -154,16 +154,22 @@
                         @*<a id="markact_submenu" class="dropdown-item" href="@Url.Action("Marketing_activities", "Commercial")">Marketing Activities</a>*@
                         @*<a id="markact_submenu" class="dropdown-item" href="#">Marketing Activities</a>*@
                         <a style="display:none" id="routes_submenu" class="dropdown-item" href="@Url.Action("Routes", "Commercial")">Marketing Activities</a>
-                        <a style="display:none" id="tasks_submenu" class="dropdown-item" href="@Url.Action("Surveys", "Commercial")">Surveys</a>
+                       
+                        <a style="display:none" id="tasks_submenu2" class="dropdown-item" href="@Url.Action("Customer_contactdata", "Commercial")">Customers Contact Data</a>
                         @*<a id="routes_submenu" class="dropdown-item" href="#">Routes</a>*@
                         <a style="display:none" id="drop1" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu">Reports</a>
+
                         <ul class="collapse" id="multi_menu" data-parent="#accordion">
-                            <li>
-                                <a href="@Url.Action("Reports_RC", "Reports")" id="rep1_submenu" class="dropdown-item">Daily Routes Summary</a>
-                            </li>
                             <li>
                                 <a href="@Url.Action("ActivitiesReport", "Commercial")" id="rep2_submenu" class="dropdown-item">Activities Report</a>
                             </li>
+                            <li>
+                                <a style="display:none" id="tasks_submenu" class="dropdown-item" href="@Url.Action("SurveysC", "Commercial")">Customers Contact Data Stats</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("Reports_RC", "Reports")" id="rep1_submenu" class="dropdown-item">Daily Routes Summary</a>
+                            </li>
+
                         </ul>
                         <a id="drop2" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu2">Sales Support</a>
                         <ul class="collapse" id="multi_menu2" data-parent="#accordion">
