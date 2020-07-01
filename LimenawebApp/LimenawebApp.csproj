@@ -133,6 +133,9 @@
     <Reference Include="Recaptcha.Web, Version=2.1.0.0, Culture=neutral, PublicKeyToken=171a6ec5fa4b1644, processorArchitecture=MSIL">
       <HintPath>..\packages\RecaptchaNet.2.1.0\lib\net451\Recaptcha.Web.dll</HintPath>
     </Reference>
+    <Reference Include="RestSharp, Version=106.11.4.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.106.11.4\lib\net452\RestSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -204,8 +207,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.61.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.61\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.79.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.79\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -235,8 +238,11 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\API\Cls_Creditmemos.cs" />
+    <Compile Include="Controllers\API\Cls_Returnreasons.cs" />
     <Compile Include="Controllers\clsGeneral.cs" />
     <Compile Include="Controllers\DSDController.cs" />
+    <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\FormsActionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
@@ -245,8 +251,15 @@
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\CommercialController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
+    <Compile Include="Controllers\Purchases\OTBController.cs" />
+    <Compile Include="Controllers\Purchases\PurchasesController.cs" />
+    <Compile Include="Controllers\Purchases\SOPController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\Session\Cls_API.cs" />
+    <Compile Include="Controllers\Session\Cls_cookies.cs" />
+    <Compile Include="Controllers\Session\Cls_session.cs" />
     <Compile Include="Controllers\Utils.cs" />
+    <Compile Include="Controllers\Warehouse\WarehouseController.cs" />
     <Compile Include="Controllers\WebService.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -274,6 +287,7 @@
     <Compile Include="Models\BI_Dim_Products.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Creditmemos_api\Mdl_Creditmemos.cs" />
     <Compile Include="Models\C_DRIVERS.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -389,6 +403,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Invoices_api\Mdl_Invoices.cs" />
     <Compile Include="Models\Inv_Projects.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
@@ -461,6 +476,7 @@
       <DependentUpon>Reports.xsd</DependentUpon>
     </Compile>
     <Compile Include="Models\ResumeSO_DSD.cs" />
+    <Compile Include="Models\Returnreasons_api\Mdl_Returnreaons.cs" />
     <Compile Include="Models\RoutesM.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
@@ -1705,6 +1721,170 @@
     <Content Include="Content\appcontent\assets\vendor\weather-icons\css\weather-icons.css" />
     <Content Include="Content\appcontent\assets\vendor\weather-icons\css\weather-icons.min.css" />
     <Content Include="Content\appcontent\assets\vendor\weather-icons\font\weathericons-regular-webfont.svg" />
+    <Content Include="Content\assets\css\app.css" />
+    <Content Include="Content\assets\css\app.rtl.css" />
+    <Content Include="Content\assets\css\choose.css" />
+    <Content Include="Content\assets\css\choose.rtl.css" />
+    <Content Include="Content\assets\css\vendor-dropzone.css" />
+    <Content Include="Content\assets\css\vendor-dropzone.rtl.css" />
+    <Content Include="Content\assets\css\vendor-flatpickr-airbnb.css" />
+    <Content Include="Content\assets\css\vendor-flatpickr-airbnb.rtl.css" />
+    <Content Include="Content\assets\css\vendor-flatpickr.css" />
+    <Content Include="Content\assets\css\vendor-flatpickr.rtl.css" />
+    <Content Include="Content\assets\css\vendor-fontawesome-free.css" />
+    <Content Include="Content\assets\css\vendor-fontawesome-free.rtl.css" />
+    <Content Include="Content\assets\css\vendor-ion-rangeslider.css" />
+    <Content Include="Content\assets\css\vendor-ion-rangeslider.rtl.css" />
+    <Content Include="Content\assets\css\vendor-material-icons.css" />
+    <Content Include="Content\assets\css\vendor-material-icons.rtl.css" />
+    <Content Include="Content\assets\css\vendor-quill.css" />
+    <Content Include="Content\assets\css\vendor-quill.rtl.css" />
+    <Content Include="Content\assets\css\vendor-select2.css" />
+    <Content Include="Content\assets\css\vendor-select2.rtl.css" />
+    <Content Include="Content\assets\data\vector-maps\gdp-data.js" />
+    <Content Include="Content\assets\data\vector-maps\mall-map.js" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-brands-400.svg" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-regular-400.svg" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-solid-900.svg" />
+    <Content Include="Content\assets\images\256_daniel-gaffey-1060698-unsplash.jpg" />
+    <Content Include="Content\assets\images\256_jeremy-banks-798787-unsplash.jpg" />
+    <Content Include="Content\assets\images\256_joao-silas-636453-unsplash.jpg" />
+    <Content Include="Content\assets\images\256_luke-porter-261779-unsplash.jpg" />
+    <Content Include="Content\assets\images\256_michael-dam-258165-unsplash.jpg" />
+    <Content Include="Content\assets\images\256_rsz_1andy-lee-642320-unsplash.jpg" />
+    <Content Include="Content\assets\images\256_s-a-r-a-h-s-h-a-r-p-764291-unsplash.jpg" />
+    <Content Include="Content\assets\images\account-add-photo.svg" />
+    <Content Include="Content\assets\images\avatar\blue.svg" />
+    <Content Include="Content\assets\images\avatar\demi.png" />
+    <Content Include="Content\assets\images\avatar\green.svg" />
+    <Content Include="Content\assets\images\choose\demo1.png" />
+    <Content Include="Content\assets\images\choose\demo2.png" />
+    <Content Include="Content\assets\images\choose\demo3.png" />
+    <Content Include="Content\assets\images\choose\demo4.png" />
+    <Content Include="Content\assets\images\choose\demo5.png" />
+    <Content Include="Content\assets\images\choose\demo6.png" />
+    <Content Include="Content\assets\images\choose\demo7.png" />
+    <Content Include="Content\assets\images\choose\demo8.png" />
+    <Content Include="Content\assets\images\choose\header.png" />
+    <Content Include="Content\assets\images\dashboard\authorizations.jpg" />
+    <Content Include="Content\assets\images\dashboard\credits.jpg" />
+    <Content Include="Content\assets\images\dashboard\customercare.png" />
+    <Content Include="Content\assets\images\dashboard\marketingact.jpg" />
+    <Content Include="Content\assets\images\dashboard\paymentfinance.jpg" />
+    <Content Include="Content\assets\images\dashboard\paymentfinance.png" />
+    <Content Include="Content\assets\images\dashboard\planning.jpg" />
+    <Content Include="Content\assets\images\dashboard\pricerequest.png" />
+    <Content Include="Content\assets\images\dashboard\pricerequest2.png" />
+    <Content Include="Content\assets\images\dashboard\pricerequest3.png" />
+    <Content Include="Content\assets\images\dashboard\qc.jpg" />
+    <Content Include="Content\assets\images\dashboard\qualitycontrol1.jpg" />
+    <Content Include="Content\assets\images\dashboard\routes.jpg" />
+    <Content Include="Content\assets\images\dashboard\routes2.jpg" />
+    <Content Include="Content\assets\images\digital-product.png" />
+    <Content Include="Content\assets\images\fontted-logo-blue.svg" />
+    <Content Include="Content\assets\images\frontted-logo-white.svg" />
+    <Content Include="Content\assets\images\login\alexandre-godreau-431553-unsplash.jpg" />
+    <Content Include="Content\assets\images\logos\paypal.svg" />
+    <Content Include="Content\assets\images\marker\blue.png" />
+    <Content Include="Content\assets\images\stack-logo-blue.svg" />
+    <Content Include="Content\assets\images\stack-logo-white.svg" />
+    <Content Include="Content\assets\images\stories\256_rsz_clem-onojeghuo-193397-unsplash.jpg" />
+    <Content Include="Content\assets\images\stories\256_rsz_dex-ezekiel-761373-unsplash.jpg" />
+    <Content Include="Content\assets\images\stories\256_rsz_euan-carmichael-666378-unsplash.jpg" />
+    <Content Include="Content\assets\images\stories\256_rsz_jared-rice-388260-unsplash.jpg" />
+    <Content Include="Content\assets\images\stories\256_rsz_rhema-kallianpur-275251-unsplash.jpg" />
+    <Content Include="Content\assets\js\app-icons.js" />
+    <Content Include="Content\assets\js\app-settings.js" />
+    <Content Include="Content\assets\js\app.js" />
+    <Content Include="Content\assets\js\chartjs-rounded-bar.js" />
+    <Content Include="Content\assets\js\charts.js" />
+    <Content Include="Content\assets\js\check-selected-row.js" />
+    <Content Include="Content\assets\js\daterangepicker.js" />
+    <Content Include="Content\assets\js\dragula.js" />
+    <Content Include="Content\assets\js\dropdown-dismissable.js" />
+    <Content Include="Content\assets\js\dropdown.js" />
+    <Content Include="Content\assets\js\dropzone.js" />
+    <Content Include="Content\assets\js\flatpickr.js" />
+    <Content Include="Content\assets\js\fullcalendar.js" />
+    <Content Include="Content\assets\js\ion-rangeslider.js" />
+    <Content Include="Content\assets\js\list.js" />
+    <Content Include="Content\assets\js\page.analytics.js" />
+    <Content Include="Content\assets\js\page.dashboard.js" />
+    <Content Include="Content\assets\js\page.staff.js" />
+    <Content Include="Content\assets\js\page.ui-charts.js" />
+    <Content Include="Content\assets\js\page.ui-vector-maps.js" />
+    <Content Include="Content\assets\js\preloader.js" />
+    <Content Include="Content\assets\js\quill.js" />
+    <Content Include="Content\assets\js\select2.js" />
+    <Content Include="Content\assets\js\settings.js" />
+    <Content Include="Content\assets\js\sidebar-mini.js" />
+    <Content Include="Content\assets\js\sidebar.js" />
+    <Content Include="Content\assets\js\stack-app-settings-mixin.js" />
+    <Content Include="Content\assets\js\toastr.js" />
+    <Content Include="Content\assets\js\toggle-check-all.js" />
+    <Content Include="Content\assets\js\vector-maps.js" />
+    <Content Include="Content\assets\vendor\bootstrap.min.js" />
+    <Content Include="Content\assets\vendor\Chart.min.js" />
+    <Content Include="Content\assets\vendor\daterangepicker.css" />
+    <Content Include="Content\assets\vendor\daterangepicker.js" />
+    <Content Include="Content\assets\vendor\dom-factory.js" />
+    <Content Include="Content\assets\vendor\dragula\dragula.min.css" />
+    <Content Include="Content\assets\vendor\dragula\dragula.min.js" />
+    <Content Include="Content\assets\vendor\dropzone.min.js" />
+    <Content Include="Content\assets\vendor\flatpickr\airbnb.css" />
+    <Content Include="Content\assets\vendor\flatpickr\flatpickr.min.css" />
+    <Content Include="Content\assets\vendor\flatpickr\flatpickr.min.js" />
+    <Content Include="Content\assets\vendor\fullcalendar\fullcalendar.min.css" />
+    <Content Include="Content\assets\vendor\fullcalendar\fullcalendar.min.js" />
+    <Content Include="Content\assets\vendor\ion.rangeSlider.min.js" />
+    <Content Include="Content\assets\vendor\jquery-ui.min.js" />
+    <Content Include="Content\assets\vendor\jquery.mask.min.js" />
+    <Content Include="Content\assets\vendor\jquery.min.js" />
+    <Content Include="Content\assets\vendor\jqvmap\jquery.vmap.min.js" />
+    <Content Include="Content\assets\vendor\jqvmap\jqvmap.min.css" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\continents\jquery.vmap.africa.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\continents\jquery.vmap.asia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\continents\jquery.vmap.australia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\continents\jquery.vmap.europe.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\continents\jquery.vmap.north-america.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\continents\jquery.vmap.south-america.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.algeria.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.argentina.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.brazil.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.canada.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.croatia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.europe.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.france.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.germany.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.greece.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.indonesia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.iran.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.iraq.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.new_regions_france.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.russia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.serbia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.tunisia.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.turkey.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.ukraine.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.usa.counties.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.usa.districts.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.usa.js" />
+    <Content Include="Content\assets\vendor\jqvmap\maps\jquery.vmap.world.js" />
+    <Content Include="Content\assets\vendor\list.min.js" />
+    <Content Include="Content\assets\vendor\material-design-kit.js" />
+    <Content Include="Content\assets\vendor\moment-range.js" />
+    <Content Include="Content\assets\vendor\moment.min.js" />
+    <Content Include="Content\assets\vendor\popper.min.js" />
+    <Content Include="Content\assets\vendor\quill.min.js" />
+    <Content Include="Content\assets\vendor\select2\select2.min.css" />
+    <Content Include="Content\assets\vendor\select2\select2.min.js" />
+    <Content Include="Content\assets\vendor\simplebar.min.css" />
+    <Content Include="Content\assets\vendor\simplebar.min.js" />
+    <Content Include="Content\assets\vendor\steps\jquery.steps.js" />
+    <Content Include="Content\assets\vendor\steps\jquery.steps.min.js" />
+    <Content Include="Content\assets\vendor\toastr.min.css" />
+    <Content Include="Content\assets\vendor\toastr.min.js" />
+    <Content Include="Content\assets\vendor\vue.min.js" />
     <Content Include="Content\images\Logo_watermark.png" />
     <Content Include="Content\landingpage\css\dlimena.webflow.css" />
     <Content Include="Content\landingpage\css\ionicons.css" />
@@ -15121,6 +15301,28 @@
     <Content Include="Content\main\vendors\gaxon-icon\fonts\gaxondrift.eot" />
     <Content Include="Content\main\vendors\gaxon-icon\fonts\gaxondrift.ttf" />
     <Content Include="Content\main\vendors\gaxon-icon\fonts\gaxondrift.woff" />
+    <Content Include="Content\assets\.DS_Store" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-brands-400.eot" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-brands-400.ttf" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-brands-400.woff" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-brands-400.woff2" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-regular-400.eot" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-regular-400.ttf" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-regular-400.woff" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-regular-400.woff2" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-solid-900.eot" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-solid-900.ttf" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-solid-900.woff" />
+    <Content Include="Content\assets\fonts\fontawesome-free\fa-solid-900.woff2" />
+    <Content Include="Content\assets\fonts\material-icons\MaterialIcons-Regular.eot" />
+    <Content Include="Content\assets\fonts\material-icons\MaterialIcons-Regular.ijmap" />
+    <Content Include="Content\assets\fonts\material-icons\MaterialIcons-Regular.ttf" />
+    <Content Include="Content\assets\fonts\material-icons\MaterialIcons-Regular.woff" />
+    <Content Include="Content\assets\fonts\material-icons\MaterialIcons-Regular.woff2" />
+    <Content Include="Content\assets\images\.DS_Store" />
+    <Content Include="Content\assets\images\choose\.DS_Store" />
+    <Content Include="Content\assets\vendor\bootstrap.min.js.map" />
+    <Content Include="Content\assets\vendor\popper.min.js.map" />
     <None Include="Models\Reports.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -15262,8 +15464,36 @@
     <Content Include="Views\Commercial\SurveyFormC.cshtml" />
     <Content Include="Views\Commercial\Customer_contactdata.cshtml" />
     <Content Include="Views\Commercial\Contacts_details.cshtml" />
-    <Content Include="Views\Commercial\SurveysC - Copy.cshtml" />
     <Content Include="Views\Commercial\Customersbcl.cshtml" />
+    <Content Include="Views\Commercial\SurveysCbyRep.cshtml" />
+    <Content Include="Views\Shared\_NewLayout.cshtml" />
+    <Content Include="Views\Operations\new_purchaseData - Copy.cshtml" />
+    <Content Include="Views\Shared\Scripts_newpurchasedata.cshtml" />
+    <Content Include="Views\Shared\Scripts_editpurchasedata.cshtml" />
+    <Content Include="Views\Emails\email_notificationEnrollSharepoint.cshtml" />
+    <Content Include="Views\Shared\Scripts_productCatalog.cshtml" />
+    <Content Include="Views\Shared\Scripts_newData.cshtml" />
+    <Content Include="Views\Shared\_LayoutMain.cshtml" />
+    <Content Include="Views\Finance\Authorizations.cshtml" />
+    <Content Include="Views\Main\Dashboard.cshtml" />
+    <Content Include="Views\Finance\ReceivePayment.cshtml" />
+    <Content Include="Views\Shared\New_design\Head.cshtml" />
+    <Content Include="Views\Shared\New_design\Header.cshtml" />
+    <Content Include="Views\Shared\New_design\Sidebar.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts.cshtml" />
+    <Content Include="Views\Shared\New_design\Menus\Finance.cshtml" />
+    <Content Include="Views\Warehouse\ReceiveCredits.cshtml" />
+    <Content Include="Views\Shared\New_design\Menus\Warehouse.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\Authorizations.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\ReceivePayment.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\ReceiveCredits.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\ReceiveCreditsScript.cshtml" />
+    <Content Include="Views\Warehouse\ReceivedCredits.cshtml" />
+    <Content Include="Views\Shared\New_design\Menus\Purchases.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\MenuScript.cshtml" />
+    <Content Include="Views\SOP\SOP.cshtml" />
+    <Content Include="Views\SOP\SOP_create.cshtml" />
+    <Content Include="Views\Purchases\ProductCatalog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -15274,6 +15504,7 @@
     <Folder Include="Content\images\temp_sign\" />
     <Folder Include="Reports\pdf\" />
     <Folder Include="Views\FormsActions\" />
+    <Folder Include="Views\OTB\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

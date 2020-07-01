@@ -1,0 +1,22 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="page__header page__header-nav">
+    <div class="container-fluid page__container">
+        <div class="navbar navbar-secondary navbar-light navbar-expand-sm p-0">
+            <button class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="#navbarsExample03" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-collapse collapse" id="navbarsExample03">
+                <ul class="nav navbar-nav">
+                    @if (ViewData["Page"].ToString() == "OTB") { <li class="nav-item active"><a href="@Url.Action("OTB","OTB")" class="nav-link">OTB</a></li> }else{  <li class="nav-item"><a href="@Url.Action("OTB","OTB")" class="nav-link">OTB</a></li>}
+                    @if (ViewData["Page"].ToString() == "Product_catalog") { <li class="nav-item active"><a href="@Url.Action("Productcatalog","Purchases")" class="nav-link">Product Catalog</a></li> }else{  <li class="nav-item"><a href="@Url.Action("Productcatalog","Purchases")" class="nav-link">Product Catalog</a></li>}
+                    @if (ViewData["Page"].ToString() == "SOP") { <li class="nav-item active"><a href="@Url.Action("SOP","SOP")" class="nav-link">S&OP</a></li> }else{  <li class="nav-item"><a href="@Url.Action("SOP","SOP")" class="nav-link">S&OP</a></li>}
+
+            </div>
+        </div>
+    </div>
+</div>

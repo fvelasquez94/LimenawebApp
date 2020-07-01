@@ -1,0 +1,76 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+        $(document).ready(function () {
+
+
+            var table = $('#data_tableEditor2').DataTable({
+                paging: false,
+                searching: true,
+                fixedHeader: true,
+                //scrollY: "900px",
+                //scrollX: true,
+                //scrollCollapse: true,
+                drawCallback: function (settings) {
+                    var api = this.api();
+
+                    $('.editable', api.table().body())
+                        .editable()
+                        .off('hidden')
+                        .on('hidden', function (e, reason) {
+                            if (reason === 'save') {
+                                $(this).closest('tr').find('.savebtn').show();
+                                //$(this).closest('td').attr('data-order', $(this).text());
+                                table.row($(this).closest('tr')).invalidate().draw(false);
+                            }
+                        });
+                }
+            });
+
+
+            $('textarea.editComentarios').on('blur', function (e) {
+                $(this).closest('tr').find('.savebtn').show();
+            });
+
+            $('a.savebtn').on('click', function (e) {
+                $(this).hide();
+                var product = $(this).closest('tr').find('.editProduct').text();
+                var factorn = $(this).closest('tr').find('.editFactorN').text();
+                var factorq = $(this).closest('tr').find('.editFactorQ').text();
+                var politica = $(this).closest('tr').find('.editPolitica').text();
+                var factorunidad = $(this).closest('tr').find('.editFactorUC').text();
+                var costo = $(this).closest('tr').find('.editCosto').text();
+                var comentarios = $(this).closest('tr').find('textarea.editComentarios').val();
+
+                $.ajax
+                    ({
+                        url: '/Operations/Save_ItemCatalog',
+                        type: 'POST',
+                        data: { 'product': product.trim(), 'factorn': factorn, 'factorq': factorq, 'factoru': factorunidad, 'politica': politica, 'costo': costo, 'comentarios': comentarios },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+
+                                toastr.success("Data saved successfully.", "Success");
+
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong, please check the data.", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+
+            });
+
+        });
+</script>

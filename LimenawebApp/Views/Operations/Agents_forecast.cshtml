@@ -1,45 +1,9 @@
 ﻿@model List<LimenawebApp.Models.PurchaseData_product>
 @{
     ViewBag.Title = "Distribuidora Limeña - Purchase Data";
-    Layout = null;
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    @Html.Partial("~/Views/Shared/temp_head.cshtml")
-</head>
-<body>
-
-    <!-- Loader -->
-    <div class="dt-loader-container">
-        <div class="dt-loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-            </svg>
-        </div>
-    </div>
-    <!-- /loader -->
-    <!-- Root -->
-    <div class="dt-root">
-        <div class="dt-root__inner">
-
-            <!-- Header -->
-            @Html.Partial("~/Views/Shared/temp_header.cshtml")
-            <!-- /header -->
-            <!-- Site Main -->
-            <main class="dt-main">
-                <!-- Sidebar -->
-                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
-                <!-- /sidebar -->
-                <!-- Custom Container -->
-                <div class="dt-container">
-
-                    <!-- Site Content Wrapper -->
-                    <div class="dt-content-wrapper">
-
-                        <!-- Site Content -->
-                        <div class="dt-content">
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
@@ -150,108 +114,36 @@
                                           placeholder="Comments">@ViewBag.comment</textarea>
                             </div>
 
-                        </div>
-                        <!-- /site content -->
 
-                    </div>
-                    <!-- /site content wrapper -->
-
-                </div>
-                <!-- /custom Container -->
-
-            </main>
-            <!-- /main -->
-            <!-- Footer -->
-            <footer class="dt-footer">
-                <div class="dt-container">
-                    Copyright Distribuidora Limena © 2019
-                </div>
-            </footer>
-            <!-- /footer -->
-
-        </div>
-    </div>
-    <!-- /root -->
-    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
-
-</body>
-</html>
 
 <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>
 <script>
-    $(document).ready(function () {
-        //Basic editor
+    window.onload = function () {
 
-    
-        var simpleEditor = new SimpleTableCellEditor("data_table2");
+            //Basic editor
 
-        simpleEditor.SetEditableClass("editMe");
 
-        $('#data_table2').on("cell:edited", function (event) {
-            //console.log(event.oldValue + "changed to " + event.newValue);
-            event.element.style.backgroundColor = "#ffeea5";
+            var simpleEditor = new SimpleTableCellEditor("data_table2");
 
-            var newval = event.newValue;
-            var periodo = $(event.element).data("periodo")
-            var itemcode = $(event.element).data("itemcode")
-            var description = $(event.element).data("description")
-            var iddatad = '@ViewBag.iddata';
-         
-            if (newval == "" || isNaN(newval)) { newval = 0;}
-         
+            simpleEditor.SetEditableClass("editMe");
+
+            $('#data_table2').on("cell:edited", function (event) {
+                //console.log(event.oldValue + "changed to " + event.newValue);
+                event.element.style.backgroundColor = "#ffeea5";
+
+                var newval = event.newValue;
+                var periodo = $(event.element).data("periodo")
+                var itemcode = $(event.element).data("itemcode")
+                var description = $(event.element).data("description")
+                var iddatad = '@ViewBag.iddata';
+
+                if (newval == "" || isNaN(newval)) { newval = 0; }
+
                 $.ajax
                     ({
                         url: '/Operations/Save_agentforecast',
                         type: 'POST',
                         data: { 'itemcode': itemcode, 'description': description, 'periodo': periodo, 'newval': newval, 'iddata': iddatad },
-                        success: function (result) {
-                                    if (result == "SUCCESS") {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
-
-                                        toast({
-                                            type: 'success',
-                                            title: 'Data saved successfully.'
-                                        });
-
-
-                                    } else {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
-
-                                        toast({
-                                            type: 'info',
-                                            title: 'Something went wrong, try again'
-                                        });
-                                    }
-            
-
-                                },
-                                error: function () {
-                                 
-                                },
-                            });
-            
-        });
-
-        $('#commentagent').blur(function () {
-            var comment = $.trim($("#commentagent").val());
-            var iddatad = '@ViewBag.iddata';
-            if (comment != "") {
-                // Guardamos si no viene vacio
-                $.ajax
-                    ({
-                        url: '/Operations/Save_dataComment',
-                        type: 'POST',
-                        data: { 'comment': comment, 'iddata': iddatad },
                         success: function (result) {
                             if (result == "SUCCESS") {
                                 var toast = swal.mixin({
@@ -287,9 +179,56 @@
 
                         },
                     });
-            }
-        });
-   
-    });
 
+            });
+
+            $('#commentagent').blur(function () {
+                var comment = $.trim($("#commentagent").val());
+                var iddatad = '@ViewBag.iddata';
+                if (comment != "") {
+                    // Guardamos si no viene vacio
+                    $.ajax
+                        ({
+                            url: '/Operations/Save_dataComment',
+                            type: 'POST',
+                            data: { 'comment': comment, 'iddata': iddatad },
+                            success: function (result) {
+                                if (result == "SUCCESS") {
+                                    var toast = swal.mixin({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+
+                                    toast({
+                                        type: 'success',
+                                        title: 'Data saved successfully.'
+                                    });
+
+
+                                } else {
+                                    var toast = swal.mixin({
+                                        toast: true,
+                                        position: 'top-end',
+                                        showConfirmButton: false,
+                                        timer: 3000
+                                    });
+
+                                    toast({
+                                        type: 'info',
+                                        title: 'Something went wrong, try again'
+                                    });
+                                }
+
+
+                            },
+                            error: function () {
+
+                            },
+                        });
+                }
+            });
+
+    }
 </script>

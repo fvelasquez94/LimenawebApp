@@ -25,5 +25,7 @@ namespace LimenawebApp.Models
         public decimal Forecast5_source2 { get; set; }
         public int ID_user { get; set; }
         public System.DateTime Last_update { get; set; }
+        public string Period { get; set; }
+        public string Year { get; set; }
     }
 }

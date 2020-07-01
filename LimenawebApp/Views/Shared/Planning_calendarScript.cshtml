@@ -852,58 +852,62 @@
         var rleaderName = $("#lstRLeader option:selected").text();
         var departure = $("#departure").val();
         var preparationdate = $("#preparationdate").val();
-        console.log(departure);
-        document.getElementById("loader").style.display = "block";
-        $.ajax
-            ({
-                url: '/Invoices/CreateRoutePlanning',
-                type: 'POST',
-                datatype: 'application/json',
-                contentType: 'application/json',
-                data: JSON.stringify({
-                    routeName: routename,
-                    lstMasterCode: mainrouteCode,
-                    lstMasterName: mainrouteName,
-                    lstDriverCode: driverCode,
-                    lstDriverName: driverName,
-                    lstTruckCode: truckCode,
-                    lstTruckName: truckName,
-                    lstRLeaderCode: rleaderCode,
-                    lstRLeaderName: rleaderName,
-                    departure: departure,
-                    preparationdate: preparationdate
-                }),
-                success: function (result) {
-                    try {
-                        console.log(result);
 
-                        $.each($.parseJSON(result), function (i, events) {
-                            var event = events;
+        if (mainrouteCode == 0) {
+            toastr.warning("Select a valid Route", "Warning");
+        } else {
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/CreateRoutePlanning',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        routeName: routename,
+                        lstMasterCode: mainrouteCode,
+                        lstMasterName: mainrouteName,
+                        lstDriverCode: driverCode,
+                        lstDriverName: driverName,
+                        lstTruckCode: truckCode,
+                        lstTruckName: truckName,
+                        lstRLeaderCode: rleaderCode,
+                        lstRLeaderName: rleaderName,
+                        departure: departure,
+                        preparationdate: preparationdate
+                    }),
+                    success: function (result) {
+                        try {
+                            console.log(result);
 
-                            $('#calendar').fullCalendar('renderEvent', event, true);
+                            $.each($.parseJSON(result), function (i, events) {
+                                var event = events;
 
+                                $('#calendar').fullCalendar('renderEvent', event, true);
+
+                            }
+
+                            ) //END EACH
+                            toastr.success("Route created successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            $("#routeName").val('');
+                            $("#lstMaster").val('0').trigger('change');
+                            $("#lstDriver").val('0').trigger('change');
+                            $("#lstTruck").val('0').trigger('change');
+                            $("#lstRLeader").val('0').trigger('change');
+                            $('#createModal').modal('hide');
+                        } catch{
+                            window.location.reload(true);
                         }
 
-                        ) //END EACH
-                        toastr.success("Route created successfully.", "Success");
-                        document.getElementById("loader").style.display = "none";
-                        $("#routeName").val('');
-                        $("#lstMaster").val('0').trigger('change');
-                        $("#lstDriver").val('0').trigger('change');
-                        $("#lstTruck").val('0').trigger('change');
-                        $("#lstRLeader").val('0').trigger('change');
-                        $('#createModal').modal('hide');
-                    }catch{
-                        window.location.reload(true);
-                    }
+                    },
+                    error: function () {
 
-                },
-                error: function () {
-                    
-                    toastr.warning("Something went wrong..", "Warning");
-                    document.getElementById("loader").style.display = "none";
-                },
-            });
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+        }
 
     }
 

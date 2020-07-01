@@ -1,156 +1,442 @@
 ﻿@model List<LimenawebApp.Models.PurchaseData_product>
 @{
     ViewBag.Title = "Distribuidora Limeña - Purchase Data";
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    List<LimenawebApp.Controllers.OperationsController.pronostico> lstpronosticos = ViewBag.lstpronostico;
 }
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    @Html.Partial("~/Views/Shared/temp_head.cshtml")
-</head>
-<body>
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Purchases</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">S&OP</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Initial Forecast</h1>
+            </div>
 
-    <!-- Loader -->
-    <div class="dt-loader-container">
-        <div class="dt-loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-            </svg>
         </div>
     </div>
-    <!-- /loader -->
-    <!-- Root -->
-    <div class="dt-root">
-        <div class="dt-root__inner">
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Purchases.cshtml")
+<!-- Page Header -->
+<div class="container-fluid page__container">
+    <!-- Page Header -->
+    <div class="row" style="margin-bottom:20px">
+        <div class="col-md-6">
+            <!-- Back -->
+            <!-- /back -->
+        </div>
+        <div class="col-md-6">
+            <!-- Back -->
 
-            <!-- Header -->
-            @Html.Partial("~/Views/Shared/temp_header.cshtml")
-            <!-- /header -->
-            <!-- Site Main -->
-            <main class="dt-main">
-                <!-- Sidebar -->
-                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
-                <!-- /sidebar -->
-                <!-- Custom Container -->
-                <div class="dt-container">
+            <a href="@Url.Action("Final_forecast", "Operations", new { iddata=ViewBag.iddata})" class="btn btn-warning float-right">
+                <i class="material-icons mr-1">launch</i> Next Forecast
+            </a>
+            <!-- /back -->
+        </div>
+    </div>
 
-                    <!-- Site Content Wrapper -->
-                    <div class="dt-content-wrapper">
-
-                        <!-- Site Content -->
-                        <div class="dt-content">
-
-                            <!-- Page Header -->
-                            <div class="dt-page__header">
-                                
-                                <!-- Page Header -->
-                             <div class="row">
-                                 <div class="col-md-6">
-                                     <!-- Back -->
-                                     <a href="@Url.Action("Purchase_data", "Operations")" class="text-dark">
-                                         <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Back</span>
-                                     </a>
-                                     <!-- /back -->
-                                 </div>
-                                 <div class="col-md-6">
-                                     <!-- Back -->
-                                     <a href="@Url.Action("Agents_forecast", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
-                                         <span class="display-6 align-middle ml-1 float-right">Purchase Agents Forecast</span> <i class="icon icon-arrow-right icon-fw icon-1x float-right"></i>
-                                     </a>
-                                     <!-- /back -->
-                                 </div>
-                             </div>
-                   
-                              
-                            </div>
-                            <!-- /page header -->
-                            <!--main content wrapper-->
+    <div class="form-group">
+        <label>Comments:</label><br />
+        <textarea id="commentagent" class="form-control border-0 shadow-none bg-focus"
+                  rows="2"
+                  placeholder="Comments">@ViewBag.comment</textarea>
+    </div>
 
 
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="card card-shadow">
-                                        <div class="card-header">
-                                            <div class="custom-title-wrap bar-success">
-                                                <div class="custom-title">
-                                  
-                                                    <h1 class="dt-page__title">Purchase Tool Forecast</h1>
-                                                </div>
-                                            </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
 
-                                        </div>
+                <div class="card-header card-header-tabs-basic nav" role="tablist">
+                    <a href="#activity_all" class="active" data-toggle="tab" role="tab" aria-controls="activity_all" aria-selected="true">Forecast</a>
+                    <a href="#activity_purchases" data-toggle="tab" role="tab" aria-selected="false">History</a>
+                </div>
+                <div class="card-body tab-content">
+                    <div class="tab-pane active show fade" id="activity_all">
+                        <div class="card-header">
+                            <div class="custom-title-wrap bar-success">
+                                <div class="custom-title">
+                                    <label>*En la siguiente tabla, se muestran los pronosticos suavizados por la herramienta de compras. Si desea cambiar su valor, debe editar el pronostico de Agentes (click sobre el valor a editar).</label>
 
-                                        <div class="card-body- pt-3 pb-4">
-                                            <div class="table-responsive">
-                                                <table id="data_table2" class="table table-custom" cellspacing="0">
-                                                    <thead>
-                                                        <tr>
-
-                                                            <th scope="col">ITEMCODE</th>
-                                                            <th scope="col">ITEM</th>
-                                                            <th scope="col"></th>
-                                                            <th scope="col">1</th>
-                                                            <th scope="col">2</th>
-                                                            <th scope="col">3</th>
-                                                            <th scope="col">4</th>
-                                                            <th scope="col">5</th>
-                               
-                                                        </tr>
-                                                    </thead>
-                                                    <tfoot>
-                                                    </tfoot>
-                                                    <tbody>
-                                                        @foreach (var item in Model)
-    {
-
-                                                        <tr> <th rowspan="2">@item.ItemCode</th> <td>@item.Description</td><td align="left">BaseLine</td> <td>@Math.Round(Convert.ToDouble(item.Baseline1),0,MidpointRounding.ToEven)</td> 
-                                                                                                                                                          <td>@Math.Round(Convert.ToDouble(item.Baseline2), 0, MidpointRounding.ToEven)</td><td>@Math.Round(Convert.ToDouble(item.Baseline3), 0, MidpointRounding.ToEven)</td> <td>@Math.Round(Convert.ToDouble(item.Baseline4), 0, MidpointRounding.ToEven)</td><td>@Math.Round(Convert.ToDouble(item.Baseline5), 0, MidpointRounding.ToEven)</td></tr>
-                                                        <tr><th></th> <td align="left">Forecast</td> 
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast1_source1), 0, MidpointRounding.ToEven)</label></td>
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast2_source1), 0, MidpointRounding.ToEven)</label></td> 
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast3_source1), 0, MidpointRounding.ToEven)</label></td> 
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast4_source1), 0, MidpointRounding.ToEven)</label></td>
-                                                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast5_source1), 0, MidpointRounding.ToEven)</label></td>
-                                                        </tr>
-
-                                                    
-}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
 
-                            <!-- /grid item -->
-       
-
                         </div>
-                        <!-- /site content -->
+                        <div class="table-responsive">
+                            <table id="data_table2" class="table table-custom" cellspacing="0">
+                                <thead>
+                                    <tr>
 
+                                        <th scope="col">ITEMCODE</th>
+                                        <th scope="col">ITEM</th>
+                                        <th scope="col"></th>
+                                        <th scope="col">1</th>
+                                        <th scope="col">2</th>
+                                        <th scope="col">3</th>
+                                        <th scope="col">4</th>
+                                        <th scope="col">5</th>
+
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                </tfoot>
+                                <tbody>
+                                    @foreach (var item in Model)
+                {
+
+                    <tr>
+                        <th rowspan="2">@item.ItemCode</th>
+                        <td>@item.Description</td>
+                        <td align="left">BaseLine</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Baseline1), 0, MidpointRounding.ToEven)</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Baseline2), 0, MidpointRounding.ToEven)</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Baseline3), 0, MidpointRounding.ToEven)</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Baseline4), 0, MidpointRounding.ToEven)</td>
+                        <td>@Math.Round(Convert.ToDouble(item.Baseline5), 0, MidpointRounding.ToEven)</td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <td align="left">Purchase Tool Forecast</td>
+                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast1_source1_period</em> - <u>@item.Forecast1_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast1_source1), 0, MidpointRounding.ToEven)</label></td>
+                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast2_source1_period</em> - <u>@item.Forecast2_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast2_source1), 0, MidpointRounding.ToEven)</label></td>
+                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast3_source1_period</em> - <u>@item.Forecast3_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast3_source1), 0, MidpointRounding.ToEven)</label></td>
+                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast4_source1_period</em> - <u>@item.Forecast4_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast4_source1), 0, MidpointRounding.ToEven)</label></td>
+                        <td><label data-toggle="tooltip" data-html="true" title="<em>@item.Forecast5_source1_period</em> - <u>@item.Forecast5_source1_year</u>">@Math.Round(Convert.ToDouble(item.Forecast5_source1), 0, MidpointRounding.ToEven)</label></td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <td align="left">Agents Forecast</td>
+                        <td data-periodo="f1" data-description="@item.Description" data-year="@item.Forecast1_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="Last saved forecast: - ">@Math.Round(Convert.ToDouble(item.Forecast1_source2), 0, MidpointRounding.ToEven)</td>
+                        <td data-periodo="f2" data-description="@item.Description" data-year="@item.Forecast2_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="Last saved forecast: - ">@Math.Round(Convert.ToDouble(item.Forecast2_source2), 0, MidpointRounding.ToEven)</td>
+                        <td data-periodo="f3" data-description="@item.Description" data-year="@item.Forecast3_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="Last saved forecast: - ">@Math.Round(Convert.ToDouble(item.Forecast3_source2), 0, MidpointRounding.ToEven)</td>
+                        <td data-periodo="f4" data-description="@item.Description" data-year="@item.Forecast4_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="Last saved forecast: - ">@Math.Round(Convert.ToDouble(item.Forecast4_source2), 0, MidpointRounding.ToEven)</td>
+                        <td data-periodo="f5" data-description="@item.Description" data-year="@item.Forecast5_source1_year" data-itemcode="@item.ItemCode" class="editMe" data-toggle="tooltip" data-html="true" title="Last saved forecast: - ">@Math.Round(Convert.ToDouble(item.Forecast5_source2), 0, MidpointRounding.ToEven)</td>
+                    </tr>
+
+
+}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <!-- /site content wrapper -->
 
+                    <div class="tab-pane" id="activity_purchases">
+                    
+                        <table class="table table-bordered mb-0">
+                            <thead>
+                                <tr style="border:1px solid #ddd">
+                                    <td rowspan="4" style="text-align:center"><br /><br />PRODUCTS LIST</td>
+                                    <td colspan="7" style="text-align:center">PERIODOS ANTERIORES<br /></td>
+                                    <td colspan="2" style="text-align:center">
+                                        PERIODO ACTUAL<br />
+                                    </td>
+
+                                </tr>
+                                <tr style="border:1px solid #ddd">
+
+                                    <th style="text-align:center">-5</th>
+                                    <th style="text-align:center">-4</th>
+                                    <th style="text-align:center">-3</th>
+                                    <th style="text-align:center">-2</th>
+                                    <th colspan="3" style="text-align:center">-1</th>
+                                    <th colspan="2" style="text-align:center">
+                                        @if (lstpronosticos.Count > 0)
+                                        {<label>@lstpronosticos[0].actualperiod</label>}
+                                    </th>
+
+                                </tr>
+                                <tr style="border:1px solid #ddd">
+
+                                    <th colspan="5" style="text-align:center">SALES HISTORY</th>
+                                    <th colspan="2" style="text-align:center">S&OP</th>
+                                    <th colspan="2" style="text-align:center">S&OP</th>
+                                </tr>
+                                <tr style="border:1px solid #ddd">
+
+                                    <th colspan="6" style="text-align:center">CANTIDAD EN CAJAS</th>
+                                    <th style="text-align:center">ACERTIVIDAD</th>
+                                    <th style="text-align:center">CANT. CAJAS</th>
+                                    <th colspan="2" style="text-align:center">COMPARACION</th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in lstpronosticos)
+                                {
+                                    <tr>
+
+
+                                        <td>@item.itemcode - @item.itemname</td>
+                                        <td style="text-align:center"><label id="lastforecastSHlabel">@Math.Round(Convert.ToDouble(item.lastsalesHistory5), 0, MidpointRounding.ToEven)</label></td>
+                                        <td style="text-align:center"><label id="lastforecastSHlabel">@Math.Round(Convert.ToDouble(item.lastsalesHistory4), 0, MidpointRounding.ToEven)</label></td>
+                                        <td style="text-align:center"><label id="lastforecastSHlabel">@Math.Round(Convert.ToDouble(item.lastsalesHistory3), 0, MidpointRounding.ToEven)</label></td>
+                                        <td style="text-align:center"><label id="lastforecastSHlabel">@Math.Round(Convert.ToDouble(item.lastsalesHistory2), 0, MidpointRounding.ToEven)</label></td>
+                                        <td style="text-align:center"><label id="lastforecastSHlabel">@Math.Round(Convert.ToDouble(item.lastsalesHistory), 0, MidpointRounding.ToEven)</label></td>
+
+                                        <td style="text-align:center"><label id="lastsavedforecastlabel">@Math.Round(Convert.ToDouble(item.lastsavedforecast), 0, MidpointRounding.ToEven)</label></td>
+                                        <td style="text-align:center" id="acertividadcol">
+                                            @if (item.lastsavedforecast == 0 || item.lastsalesHistory == 0)
+                                            {<label>N/A</label> }
+                                            else
+                                            {
+
+                                                if (item.lastsavedforecast > item.lastsalesHistory && item.lastsavedforecast != item.lastsalesHistory)
+                                                { //Valores positivos
+                                                    var resultado = ((item.lastsavedforecast - item.lastsalesHistory) / item.lastsalesHistory) * 10;
+
+                                                    if (resultado > 0 && resultado < 6)
+                                                    {
+                                                        <span class="badge badge-circle badge-success">@Math.Round(Convert.ToDouble(resultado), 0, MidpointRounding.ToEven) %</span>
+                                                    }
+                                                    if (resultado > 5 && resultado < 11)
+                                                    {
+                                                        <span class="badge badge-circle badge-warning">@Math.Round(Convert.ToDouble(resultado), 0, MidpointRounding.ToEven) %</span>
+                                                    }
+                                                    if (resultado > 10)
+                                                    {
+                                                        <span class="badge badge-circle badge-danger">@Math.Round(Convert.ToDouble(resultado), 0, MidpointRounding.ToEven) %</span>
+                                                    }
+
+
+                                                }
+                                                else if (item.lastsavedforecast == item.lastsalesHistory)
+                                                {
+                                                    <span class="badge badge-circle badge-success">0%</span>
+                                                }
+
+                                                else
+                                                {//valores negativos
+
+                                                    var resultado = ((item.lastsalesHistory - item.lastsavedforecast) / item.lastsavedforecast) * 10;
+
+                                                    if (resultado > 0 && resultado < 6)
+                                                    {
+                                                        <span class="badge badge-circle badge-success">@Math.Round(Convert.ToDouble(resultado), 0, MidpointRounding.ToEven) %</span>
+                                                    }
+                                                    if (resultado > 5 && resultado < 11)
+                                                    {
+                                                        <span class="badge badge-circle badge-warning">@Math.Round(Convert.ToDouble(resultado), 0, MidpointRounding.ToEven) %</span>
+                                                    }
+                                                    if (resultado > 10)
+                                                    {
+                                                        <span class="badge badge-circle badge-danger">@Math.Round(Convert.ToDouble(resultado), 0, MidpointRounding.ToEven) %</span>
+                                                    }
+                                                }
+
+                                            }
+                                        </td>
+                                        <td style="text-align:center"><label id="actualforecastlabel">@Math.Round(Convert.ToDouble(item.actualforecast), 0, MidpointRounding.ToEven)</label></td>
+                                        <td style="text-align:center">
+                                            @{var comp = Convert.ToInt32(item.actualforecast - item.lastsavedforecast);
+                                                if (comp > 0)
+                                                {
+                                                    <label>+ @comp</label> }
+                                                else
+                                                {<label> @comp</label> }
+
+                                            }
+
+                                        </td>
+
+
+                                    </tr>}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <!-- /custom Container -->
-
-            </main>
-            <!-- /main -->
-            <!-- Footer -->
-            <footer class="dt-footer">
-                <div class="dt-container">
-                    Copyright Distribuidora Limena © 2019
-                </div>
-            </footer>
-            <!-- /footer -->
-
+            </div>
         </div>
+        
     </div>
-    <!-- /root -->
-    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
 
-</body>
-</html>
 
+    </div>
+
+
+    <!--main content wrapper-->
+    <!-- /grid item -->
+
+
+
+
+
+
+    <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>
+    <script>
+    window.onload = function () {
+
+            //Basic editor
+
+
+            var simpleEditor = new SimpleTableCellEditor("data_table2");
+
+            simpleEditor.SetEditableClass("editMe");
+
+            $('#data_table2').on("cell:edited", function (event) {
+                //console.log(event.oldValue + "changed to " + event.newValue);
+                event.element.style.backgroundColor = "#ffeea5";
+
+                var newval = event.newValue;
+                var periodo = $(event.element).data("periodo")
+                var itemcode = $(event.element).data("itemcode")
+                var description = $(event.element).data("description")
+                var iddatad = '@ViewBag.iddata';
+
+                if (newval == "" || isNaN(newval)) { newval = 0; }
+
+                $.ajax
+                    ({
+                        url: '/Operations/Save_agentforecast',
+                        type: 'POST',
+                        data: { 'itemcode': itemcode, 'description': description, 'periodo': periodo, 'newval': newval, 'iddata': iddatad },
+                        success: function (result) {
+                            if (result == "SUCCESS") {
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'success',
+                                    title: 'Data saved successfully.'
+                                });
+
+
+                            } else {
+                                var toast = swal.mixin({
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timer: 3000
+                                });
+
+                                toast({
+                                    type: 'info',
+                                    title: 'Something went wrong, try again'
+                                });
+                            }
+
+
+                        },
+                        error: function () {
+
+                        },
+                    });
+
+            });
+
+            $('#commentagent').blur(function () {
+                var comment = $.trim($("#commentagent").val());
+                var iddatad = '@ViewBag.iddata';
+                if (comment != "") {
+                    // Guardamos si no viene vacio
+                    $.ajax
+                        ({
+                            url: '/Operations/Save_dataComment',
+                            type: 'POST',
+                            data: { 'comment': comment, 'iddata': iddatad },
+                            success: function (result) {
+                                if (result == "SUCCESS") {
+                                    toastr.success('Data saved successfully');
+
+
+                                } else {
+                                    toastr.success('Something went wrong, try again');
+                                }
+
+
+                            },
+                            error: function () {
+
+                            },
+                        });
+                }
+            });
+
+    }
+    </script>
+    <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>
+    <script>
+    window.onload = function () {
+
+            //Basic editor
+
+
+            var simpleEditor = new SimpleTableCellEditor("data_table2");
+
+            simpleEditor.SetEditableClass("editMe");
+
+            $('#data_table2').on("cell:edited", function (event) {
+                //console.log(event.oldValue + "changed to " + event.newValue);
+                event.element.style.backgroundColor = "#ffeea5";
+
+                var newval = event.newValue;
+                var periodo = $(event.element).data("periodo")
+                var itemcode = $(event.element).data("itemcode")
+                var description = $(event.element).data("description")
+                var iddatad = '@ViewBag.iddata';
+
+                if (newval == "" || isNaN(newval)) { newval = 0; }
+
+                $.ajax
+                    ({
+                        url: '/Operations/Save_agentforecast',
+                        type: 'POST',
+                        data: { 'itemcode': itemcode, 'description': description, 'periodo': periodo, 'newval': newval, 'iddata': iddatad },
+                        success: function (result) {
+                            if (result == "SUCCESS") {
+                                toastr.success('Data saved successfully');
+
+
+                            } else {
+                                toastr.success('Something went wrong, try again');
+                            }
+
+
+                        },
+                        error: function () {
+
+                        },
+                    });
+
+            });
+
+            $('#commentagent').blur(function () {
+                var comment = $.trim($("#commentagent").val());
+                var iddatad = '@ViewBag.iddata';
+                if (comment != "") {
+                    // Guardamos si no viene vacio
+                    $.ajax
+                        ({
+                            url: '/Operations/Save_dataComment',
+                            type: 'POST',
+                            data: { 'comment': comment, 'iddata': iddatad },
+                            success: function (result) {
+                                if (result == "SUCCESS") {
+                                    toastr.success('Data saved successfully');
+
+
+                                } else {
+                                    toastr.success('Something went wrong, try again');
+                                }
+
+
+                            },
+                            error: function () {
+
+                            },
+                        });
+                }
+            });
+
+    }
+    </script>

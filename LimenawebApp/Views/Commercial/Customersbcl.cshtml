@@ -14,7 +14,13 @@
                         <div class="card-header border-0">
                             <div class="custom-title-wrap bar-success">
                                 <div class="custom-title">Customers: @ViewBag.profile <label> - </label> @ViewBag.salesname</div>
+                                @if (ViewBag.module == "byrep")
+                                {
+                                <a href="@Url.Action("SurveysCbyRep", "Commercial")" class="btn btn-outline-info btn-sm">Back</a>
+                                }
+                                else {
                                 <a href="@Url.Action("SurveysC", "Commercial")" class="btn btn-outline-info btn-sm">Back</a>
+                                }
                             </div>
                         </div>
                         <div class="card-body">

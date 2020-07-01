@@ -1,0 +1,75 @@
+﻿@model IEnumerable<LimenawebApp.Models.Purchase_catalog>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Product Catalog";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Purchases</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Product Catalog</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Product Catalog</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Purchases.cshtml")
+<!-- Page Header -->
+<div class="container-fluid page__container">
+
+    <div class="card card-form d-flex flex-column flex-sm-row" style="font-size:12px;line-height:1.5;">
+        <div class="table-responsive">
+            <table id="data_tableEditor2" class="table" cellspacing="0">
+                <thead>
+                    <tr>
+
+                        <th>CODIGO EN SAP</th>
+                        <th>DESCRIPCION</th>
+                        <th>VENDOR</th>
+                        <th>FACTOR DE COMPRA</th>
+                        <th hidden>FACTOR DE COMPRA (QUIEBRE)</th>
+                        <th>FACTOR UNIDAD DE COMPRA</th>
+                        <th hidden>POLITICA DE COBERTURA</th>
+                        <th>COSTO</th>
+                        <th style="width:300px">COMENTARIOS</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tbody>
+                    @foreach (var data in Model)
+                    {
+                        <tr>
+                            <td style="padding: .25rem;" class="editProduct">
+                                @data.ProductCode
+                            </td>
+                            <td style="padding: .25rem;">@data.ProductName</td>
+                            <td style="padding: .25rem;">@data.Vendor_Name</td>
+                            <td class="editable editFactorN" style="padding: .25rem;">@data.FactorCompra</td>
+                            <td hidden class=" editFactorQ" style="padding: .25rem;">@data.FactorCompra_quiebre</td>
+                            <td class="editable editFactorUC" style="padding: .25rem;">@data.FactorUnidadCompra</td>
+                            <td hidden class=" editPolitica">@data.Politica_cobertura</td>
+                            <td class="editable editCosto">@data.Costo</td>
+                            <td style="padding: .25rem;"><textarea style="width:300px" class="editComentarios">@data.Comentarios</textarea> </td>
+                            <td style="padding: .25rem;"><a href="JavaScript:Void(0);" class="btn btn-sm btn-outline-success btn-sm form-pill savebtn" style="display:none;">Save</a> </td>
+                        </tr>
+
+
+                    }
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+   
+ </div>
+

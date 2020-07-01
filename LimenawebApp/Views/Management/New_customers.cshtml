@@ -30,17 +30,18 @@
                                     <thead>
                                         <tr>
                                             <th>CardName</th>
-                                            <th>TAX ID</th>
-                                            <th>TAX CERT NUM</th>
+
                                             <th>Name</th>
                                             <th>Telephone</th>
-                                            <th>Email</th>
-                                            <th>Country</th>
+                                            <th>Email</th> 
                                             <th>State</th>
+                                            <th>Sales Rep</th>
                                             <th>TAX ID</th>
+                                            <th>IMAGE</th>
                                             <th>TAX CERT NUM</th>
+                                            <th>IMAGE</th>
                                             <th>Actions</th>
-                                            <th>URL</th>
+                                            @*<th>URL</th>*@
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -49,74 +50,83 @@
                                     <tbody>
                                         @foreach (var user in Model)
                                         {
-                                            <tr>
-                                                <td>@user.CardName</td>
-                                                <td>@user.TAXID</td>
-                                                <td>@user.TAXCERTNUM</td>
-                                                <td>@user.FirstName @user.LastName</td>
-                                                <td>@user.Tel1</td>
-                                                <td>@user.E_MailL</td>
-                                                <td>@user.Country</td>
-                                                <td>@user.State</td>
-                                                <td>
-                                                    @if (user.url_imageTAXCERT == "" || user.url_imageTAXCERT == null)
-                                                    {
+                                        <tr>
+                                            <td>@user.CardName</td>
 
-                                                    }
-                                                    else {
-                                                    <img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXID_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERT)" alt="" />
-                                                    }
-                                                    
-                                                </td>
-                                                <td>
-                                                
-                                                                                                    
-                                                    @if (user.url_imageTAXCERNUM == "" || user.url_imageTAXCERNUM == null)
-                                                    {
-
-                                                    }
-                                                    else {
-<img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXCERT_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERNUM)" alt=""  />
-                                                    }
-                                                </td>
-                                                <td>
-                                                    @if (user.OnSharepoint == false)
-    {
-        if (user.status == 0)
+                                            <td>@user.FirstName @user.LastName</td>
+                                            <td>@user.Tel1</td>
+                                            <td>@user.E_MailL</td>
+                                   
+                                            <td>@user.State</td>
+                                            <td>@if (user.emailRep == "")
+                                            { <label>NA</label>}
+                                            else { <label>@user.emailRep</label>}</td>
+                                            <td>@user.TAXID</td>
+                                         
+                                            <td>
+                                                @if (user.url_imageTAXCERT == "" || user.url_imageTAXCERT == null)
         {
-                                                <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
-                                                @*<a href="javascript:void(0)" onclick="requestEdit(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Request Edit" onClick="this.disabled=true;"><i class="fa fa-edit"></i></a>*@
-                                                <a href="javascript:void(0)" onclick="deleteRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+
+        }
+        else
+        {
+                                        <img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXID_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERT)" alt="" />
 }
-        if (user.status == 1)
+
+                                            </td>
+                                               <td>@user.TAXCERTNUM</td>
+                                            <td>
+
+
+                                                @if (user.url_imageTAXCERNUM == "" || user.url_imageTAXCERNUM == null)
         {
-                                              <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
-                                                
-        }
-
-        if (user.status == 3)
-        {<label class="badge badge-warning">Waiting for customer</label>
-                                                        <a href="javascript:void(0)" onclick="deleteRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
 
         }
+        else
+        {
+                                        <img class="myImg" style="width:40px;height:40px;" onclick="showFullImage(this.id)" id="imgTAXCERT_@user.ID_customer" src="@Url.Content(user.url_imageTAXCERNUM)" alt="" />
+}
+                                            </td>
+                                            <td>
+                                                @if (user.OnSharepoint == false)
+        {
+            if (user.status == 0)
+            {
+                                        <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
+                                        @*<a href="javascript:void(0)" onclick="requestEdit(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Request Edit" onClick="this.disabled=true;"><i class="fa fa-edit"></i></a>*@
+                                        <a href="javascript:void(0)" onclick="deleteRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+}
+if (user.status == 1)
+{
+                                        <a href="javascript:void(0)" onclick="approveRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Approve" onClick="this.disabled=true;"><i class="fa fa-upload"></i></a>
+
+}
+
+if (user.status == 3)
+{<label class="badge badge-warning">Waiting for customer</label>
+                                        <a href="javascript:void(0)" onclick="deleteRequest(@user.ID_customer)" class="btn btn-dark btn-sm form-pill text-light" title="Delete"><i class="fa fa-trash-o"></i></a>
+
+}
 }
 else
 {
-                                                <label class="badge badge-success">On Sharepoint</label>
+                                        <label class="badge badge-success">On Sharepoint</label>
 }
 
 
 
-                                                </td>
-                                                <td>
-                                                    @if (user.urlsharepoint == "")
-                                                    {
-                                                <label class="badge badge-light">...</label>
-                                                    }
-                                                    else {
-                                                <a href="@user.urlsharepoint" target="_blank"><label class="badge badge-light">Go to Sharepoint</label></a>
-                                                    }</td>
-                                            </tr>
+                                            </td>
+                                            @*<td>
+                                                @if (user.urlsharepoint == "")
+        {
+                                        <label class="badge badge-light">...</label>
+}
+else
+{
+                                        <a href="@user.urlsharepoint" target="_blank"><label class="badge badge-light">Go to Sharepoint</label></a>
+}
+                                            </td>*@
+                                        </tr>
 
                                         }
 

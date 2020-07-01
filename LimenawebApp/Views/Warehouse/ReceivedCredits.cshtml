@@ -1,0 +1,150 @@
+﻿@model List<LimenawebApp.Models.Creditmemos_api.Creditmemos_api>
+@{
+    ViewBag.Title = "ReceiveCredits";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+
+    DateTime fecha = new DateTime(2000,01,01);
+    var ruta = "";
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Warehouse</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Receive a Credit</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Receive a Credit</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Warehouse.cshtml")
+
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_name">Search</label>
+                        <input id="filter_name" type="text" class="form-control" placeholder="Enter keyword">
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_buckets">Routes</label><br>
+                        <select id="filter_buckets" class="custom-select" style="width: 150px;">
+                            <option value="all">Any</option>
+                            <option value="S000474">ID - Route Name</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_assigned">Driver</label><br>
+                        <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                            <option value="all">Any</option>
+                            <option value="1">Driver 1</option>
+                            <option value="2">Driver 2</option>
+                            <option value="3">Driver 3</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-auto">
+                    <div class="form-group" style="width: 200px;">
+                        <label for="filter_date">Daterange</label>
+                        <input id="filter_date" type="text" class="form-control" placeholder="Range example" data-toggle="daterangepicker" data-daterangepicker-start-date="@Convert.ToDateTime(ViewBag.filtrofechastart).ToString("yyyy/MM/dd")" data-daterangepicker-end-date="@Convert.ToDateTime(ViewBag.filtrofechaend).ToString("yyyy/MM/dd")">
+                    </div>
+                </div>
+                @*<div class="col-sm-auto">
+                    <div class="form-group">
+
+                        <div class="custom-control custom-checkbox mt-sm-2">
+                            <button id="click_filterMain" class="btn btn-primary">Apply Filters</button>
+                        </div>
+                    </div>
+                </div>*@
+            </div>
+        </div>
+
+    </div>
+
+
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            if (fecha != item.docDate)
+            {
+                fecha = item.docDate;
+                <div class="separator">@fecha.ToLongDateString()</div>
+
+            }
+
+            if (ruta != item.id_Delivery)
+            {
+                ruta = item.id_Delivery;
+                <p class="text-dark-gray d-flex align-items-center mt-3">
+                    <i class="material-icons icon-muted mr-2">local_shipping</i>
+                    <strong>@item.id_Delivery - @item.deliveryRoute</strong>
+                </p>
+
+            }
+
+            <div class="row align-items-center projects-item mb-1">
+
+                <div class="col-sm">
+                    <div class="card m-0">
+                        <div class="px-4 py-3">
+                            <div class="row align-items-center">
+                                <div class="col" style="min-width: 300px">
+                                    <div class="d-flex align-items-center">
+                                        <a style="text-decoration: none;cursor:default;" href="#" class="text-body"><strong class="text-15pt mr-2">@item.cardCode - @item.cardName</strong></a>
+                                        <span class="badge badge-success">FINISHED</span>
+                                    </div>
+                                    <div class="d-flex align-items-center">
+                                        <small class="mr-2">Truck: @item.truck </small> 
+                                    </div>
+                                </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <i class="material-icons icon-muted icon-20pt mr-2">receipt</i>
+                                    <a style="text-decoration: none;cursor:default;" href="#" class="text-body">#@item.docEntryInv</a>
+                                </div>
+                                <div class="col-auto d-flex align-items-center">
+                                    <i class="material-icons icon-muted icon-20pt mr-2">account_circle</i>
+                                    <a style="text-decoration: none;cursor:default;" href="#" class="text-body">@item.driver</a>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        }
+
+    }
+    else
+    {
+        <div>
+            <label>No data to show</label>
+        </div>
+    }
+
+
+
+
+
+
+</div>

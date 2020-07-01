@@ -1,44 +1,20 @@
 ﻿@{
     ViewBag.Title = "Distribuidora Limeña - New Purchase Data";
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
 }
 
-<!--main content wrapper-->
-<div class="content-wrapper">
-
-        <div class="container-fluid">
+            <!-- Page Header -->
+                            <div class="dt-page__header">
+                                <nav class="mb-0 breadcrumb">
+                                    <a href="javascript:void(0)" class="breadcrumb-item">Operations</a>
+                                    <span class="active breadcrumb-item">OTB Tool</span>
+                                </nav>
+                            </div>
 
             <div class="row">
                 <div class="col-xl-12">
                     <div class="card card-shadow mb-4">
-                        <div class="card-header border-0">
-                            <div class="custom-title-wrap bar-primary">
-                                <div class="custom-title">Data list</div>
-                                <a href="@Url.Action("Purchase_data", "Operations")" class="btn btn-outline-info btn-sm">Back</a>
-                                <div class=" widget-action-link">
-                                    <a onclick="savePurchaseData()" class="btn btn-outline-success">Save Data</a>
 
-                                </div>
-                                <div class="form-row">
-                                    <div class="col-3">
-                                        Category:
-                                        <select id="lstCategory" class="form-control" multiple="multiple"></select>
-                                    </div>
-                                    <div class="col-3">
-                                        Subcategory:
-                                        <select id="lstSubCategory" class="form-control" multiple="multiple"></select>
-                                    </div>
-                                    <div class="col-3">
-                                        Brand:
-                                        <select id="lstBrands" class="form-control" multiple="multiple"></select>
-                                    </div>
-                                    <div class="col-3">
-                                        Vendor:
-                                        <select id="lstProvider" class="form-control" multiple="multiple"></select>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
 
                         <div class="card-body pt-3 pb-4" style="font-size:12px;line-height:1.5;">
                             <div class="table-responsive">
@@ -122,26 +98,22 @@
                                     </thead>
                                     <tfoot>
                                     </tfoot>
-                                    <tbody id="maintbbo">
-
-
-                                    </tbody>
+                                    <tbody id="maintbbo"></tbody>
 
                                 </table>
-                               
+
                                 <span class="badge badge-info form-pill px-3 py-1" style="background-color:aliceblue !important">&nbsp;&nbsp;</span> Right click to show information
-                           
-                                    
-                                </div>
+
+
                             </div>
+                        </div>
+                        <br />
+                        <a onclick="savePurchaseData()" class="btn btn-primary btn-sm" style="color:#fff">Save Data</a>
+
                     </div>
                 </div>
             </div>
-        </div>
 
-
-
-</div>
 
 <menu id="html5menu" style="display:none" class="showcase">
     <table class="table tb_editor">

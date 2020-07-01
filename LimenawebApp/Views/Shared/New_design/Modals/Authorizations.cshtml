@@ -1,0 +1,44 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div id="modal-authorizations" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card card-form">
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 card-body">
+                            <p><strong class="headings-color">Authorizations Details</strong></p>
+                            <p>
+
+                                <small class="mr-2">ID - Customer's Name</small><br />
+                                <small class="mr-2">Route's Name</small><br />
+                                <small class="mr-2">Driver's Name</small><br />
+
+                            </p>
+                        </div>
+                        <div class="col-lg-8 card-form__body card-body">
+                            <label>Reason:</label>
+                            <p>
+                                No recibir pago de cuentas por cobrar<br />
+                            </p>
+                            <label>Comments by Driver:</label>
+                            <p> El cliente no puede pagar el dia de hoy pero lo pagara manana cuando pase el vendedor</p>
+                            <hr />
+                            <label>Comments by Finance Department:</label>
+                            <textarea class="form-control"></textarea>
+                            <br /><br />
+                            <button type="submit" class="btn btn-success">Approve</button>
+                            <button type="submit" class="btn btn-danger">Deny</button>
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- // END .modal-body -->
+
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->

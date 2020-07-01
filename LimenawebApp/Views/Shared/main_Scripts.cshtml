@@ -44,6 +44,31 @@
 <script type="text/javascript" src="~/Content/appcontent/assets/vendor/calendarrangepicker/js/daterangepicker.min.js"></script>
 
 
+@if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data" || ViewBag.Title == "Distribuidora Limeña - Edit Purchase Data")
+{
+
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/Editor_tables/editablegrid.js"></script>
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/Editor_tables/editablegrid_charts.js"></script>
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/Editor_tables/editablegrid_editors.js"></script>
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/Editor_tables/editablegrid_renderers.js"></script>
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/Editor_tables/editablegrid_utils.js"></script>
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/Editor_tables/editablegrid_validators.js"></script>
+
+    <script type="text/javascript" src="~/Content/appcontent/assets/vendor/jstreegrid/jquery.treegrid.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/2.7.1/jquery.ui.position.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/3.2.6/js/dataTables.fixedColumns.min.js"></script>
+
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Product Catalog")
+{
+    <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.js"></script>
+    <script src="https://cdn.datatables.net/r/bs-3.3.5/dt-1.10.9/datatables.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/js/bootstrap-editable.min.js"></script>
+}
+
 
 <!--FOR MENU-->
 <script>
@@ -77,11 +102,11 @@
                     $("#quickAccess_salesreps2").show();
                 }
 
-           
+
                     if (elementrol == "Cognos") {
                         $("#quickAccess_cognos").show();
                     }
-          
+
 
                 if (elementrol == "Sales Supervisor") {
                     document.getElementById("routes_submenu").style.display = "block";

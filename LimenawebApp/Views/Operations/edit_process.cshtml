@@ -1,555 +1,331 @@
 ﻿@model LimenawebApp.Models.PurchaseData_product
 @{
     ViewBag.Title = "Distribuidora Limeña - New Data";
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
 
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Purchases</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">S&OP</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Sales Budget</h1>
+            </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    @Html.Partial("~/Views/Shared/temp_head.cshtml")
-    <style>
-
-            table.vertical tr {
-                display: block;
-                float: left;
-                width:15%;
-            }
-
-            table.vertical th, table.vertical td {
-                display: block;
-            }
-    </style>
-
-</head>
-<body>
-
-    <!-- Loader -->
-    <div class="dt-loader-container">
-        <div class="dt-loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-            </svg>
         </div>
     </div>
-    <!-- /loader -->
-    <!-- Root -->
-    <div class="dt-root">
-        <div class="dt-root__inner">
-
-            <!-- Header -->
-            @Html.Partial("~/Views/Shared/temp_header.cshtml")
-            <!-- /header -->
-            <!-- Site Main -->
-            <main class="dt-main">
-                <!-- Sidebar -->
-                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
-                <!-- /sidebar -->
-                <!-- Custom Container -->
-                <div class="dt-container">
-
-                    <!-- Site Content Wrapper -->
-                    <div class="dt-content-wrapper">
-
-                        <!-- Site Content -->
-                        <div class="dt-content">
-
-                            <!-- Page Header -->
-                            <div class="dt-page__header">
-                                <!-- Back -->
-                                <a href="@Url.Action("Final_forecast", "Operations", new { iddata=ViewBag.iddata})" class="text-dark">
-                                    <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Back</span>
-                                </a>
-                                <!-- /back -->
-                            </div><br />
-                            <!-- /page header -->
-                            <!-- Grid Item -->
-                            <div class="row">
-
-                                <!-- Grid Item -->
-                                <div class="col-xl-12">
-
-                                    <!-- Module -->
-                                    <div class="dt-module">
-
-                                        <!-- Module Sidebar -->
-                                        <div class="dt-module__sidebar">
-
-
-                                            <!-- /sidebar header -->
-                                            <!-- Sidebar Menu -->
-                                            <div class="dt-module__sidebar-content pt-md-7 ps-custom-scrollbar">
-
-                                                <!-- Sidebar Navigation -->
-                                                <ul class="dt-module-side-nav">
-
-                                                    <!-- Menu Header -->
-                                                    <li class="dt-module-side-nav__header">
-                                                        <span class="dt-module-side-nav__text">QUICK MENU</span>
-                                                    </li>
-                                                    <!-- /menu header -->
-                                                    <!-- Menu Item -->
-
-                                                    <li class="dt-module-side-nav__item">
-                                                        <a href="javascript:void(0)" class="dt-module-side-nav__link" data-toggle="mdrawer"
-                                                           data-target="#drawer-initialforecast">
-                                                            <i class="icon icon-courses icon-fw icon-lg"></i>
-                                                            <span class="dt-module-side-nav__text">Purchase Tool Forecast</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="dt-module-side-nav__item">
-                                                        <a href="javascript:void(0)" class="dt-module-side-nav__link" data-toggle="mdrawer"
-                                                           data-target="#drawer-agentsforecast">
-                                                            <i class="icon icon-customer icon-fw icon-lg"></i>
-                                                            <span class="dt-module-side-nav__text">Agents Forecast</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="dt-module-side-nav__item">
-                                                        <a href="javascript:void(0)" class="dt-module-side-nav__link" data-toggle="mdrawer"
-                                                           data-target="#drawer-search-bar">
-                                                            <i class="icon icon-price-list icon-fw icon-lg"></i>
-                                                            <span class="dt-module-side-nav__text">Sales History</span>
-                                                        </a>
-                                                    </li>
-                                     
-                                                    <!-- /menu item -->
-                                                    <!-- Menu Item -->
-                                                    @*<li class="dt-module-side-nav__item">
-            <a href="javascript:void(0)" class="dt-module-side-nav__link">
-                <i class="icon icon-users icon-fw icon-lg"></i>
-                <span class="dt-module-side-nav__text">Sales Reviews</span>
-            </a>
-        </li>*@
-                                                    <!-- /menu item -->
-                                                    <!-- Menu Header -->
-                                                    <li class="dt-module-side-nav__header">
-                                                        <span class="dt-module-side-nav__text">OTHER</span>
-                                                    </li>
-                                                    <!-- /menu header -->
-                                                    <!-- Menu Item -->
-                                                    <li class="dt-module-side-nav__item">
-                                                        <a href="@Url.Action("Product_stats","Operations", new { ItemCode= Model.ItemCode, data=ViewBag.iddata})" class="dt-module-side-nav__link">
-                                                            <span class="dt-module-side-nav__text">Sales stats</span>
-                                                        </a>
-                                                    </li>
-                                                    <li class="dt-module-side-nav__item">
-                                                        <a style="pointer-events: none;color:lightgray" href="javascript:void(0)" class="dt-module-side-nav__link">
-                                                            <span class="dt-module-side-nav__text">Print Resume</span>
-                                                        </a>
-                                                    </li>
-                                                    <!-- /menu item -->
-
-
-                                                </ul>
-                                                <!-- /sidebar navigation -->
-                                                <!-- Contacts -->
-                                                <div class="dt-contacts contacts-list">
-
-
-                                                </div>
-                                                <!-- contacts -->
-
-                                            </div>
-                                            <!-- /sidebar Menu -->
-                                            <!-- Sidebar Header -->
-                                            <div class="dt-module__sidebar-header">
-
-                                                <!-- App Quick Menu -->
-                                                <div class="quick-menu-list">
-
-                                                    <!-- Search Box -->
-                                                    <!-- /search box -->
-
-
-                                                    <a href="javascript:void(0)" class="quick-menu d-md-none" data-toggle="mdrawer"
-                                                       data-target="#drawer-search-bar">
-                                                        <i class="icon icon-price-list"></i>
-                                                    </a>
-
-                                                    <!-- Dropdown -->
-                                                    <!-- /dropdown -->
-                                                    <a href="javascript:void(0)" class="quick-menu d-md-none"
-                                                       data-toggle="msidebar-content"><i class="icon icon-menu"></i></a>
-                                                </div>
-                                                <!-- /app quick menu -->
-
-                                            </div>
-                                        </div>
-                                        <!-- /module sidebar -->
-                                        <!-- Module Container -->
-                                        <div class="dt-module__container">
-
-                                            <!-- Module Header -->
-                                            <div class="dt-module__header">
-
-
-                                                <!-- Title -->
-                                                <div class="mx-auto text-center">
-                                                    <h3 class="dt-module__title">@Model.ItemCode</h3>
-                                                    <h6>@Model.Description</h6>
-                                                    <i class="icon icon-horizontal-more icon-xl"></i>
-                                                </div>
-                                                <!-- Title -->
-
-                                            </div>
-                                            <!-- /module header -->
-                                            <!-- Module Content -->
-                                            <div class="dt-module__content ps-custom-scrollbar">
-
-                                                <!-- Module Content Inner -->
-                                                <div class="dt-module__content-inner">
-
-                                                    <form>
-
-                                                        <!-- Text Area -->
-                                                        <div class="form-group d-flex">
-                                                            <i class="icon icon-forms-advanced mt-2 mr-1"></i>
-                                                            <textarea class="form-control border-0 shadow-none bg-focus" id="commentsproduct"
-                                                                      rows="2"
-                                                                      placeholder="Product Comments">@Model.Comments</textarea>
-                                                        </div>
-                                                        <!-- /text area -->
-
-                                                    </form>
-
-
-                                                    <!-- Badges -->
-                                                    <!-- /badges -->
-                                                    <!-- Form -->
-                                                    <!-- /form -->
-                                                    <!-- Separator -->
-                                                    <hr class="my-7">
-                                                    <!-- /separator -->
-                                                    <div class="row">
-                                                        <h4 class="display-4">Sales Reps Forecast</h4>
-                                                    </div>
-
-                                                    <h5 class="card-subtitle mb-0">Source: Sales Reviews</h5>
-                                                    <!-- Badges -->
-                                                    <div class="badge-group mb-5">
-
-
-                                                    </div>
-                                                    <table class="table" id="salesforecast" style="width:100%">
-                                                        <thead>
-                                                            <tr>
-                                                                <th>Sales Rep</th>
-                                                                <th>1</th>
-                                                                <th>2</th>
-                                                                <th>3</th>
-                                                                <th>4</th>
-                                                                <th>5</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach (var item in ViewBag.SalesRepsEdit)
-                                                            {
-
-                                                                if (item.id_SalesRep == 0)
-                                                                {
-                                                                    <tr style="font-weight:bold;">
-                                                                        <td>TOTAL (Sales Budget)</td>
-                                                                        <td class="finalcolp1">@Math.Round(Convert.ToDouble(item.p1), 0, MidpointRounding.ToEven)</td>
-                                                                        <td class="finalcolp2">@Math.Round(Convert.ToDouble(item.p2), 0, MidpointRounding.ToEven)</td>
-                                                                        <td class="finalcolp3">@Math.Round(Convert.ToDouble(item.p3), 0, MidpointRounding.ToEven)</td>
-                                                                        <td class="finalcolp4">@Math.Round(Convert.ToDouble(item.p4), 0, MidpointRounding.ToEven)</td>
-                                                                        <td class="finalcolp5">@Math.Round(Convert.ToDouble(item.p5), 0, MidpointRounding.ToEven)</td>
-
-
-
-
-                                                                    </tr>
-                                                                }
-                                                                else
-                                                                {
-                                                                    <tr>
-                                                                        <td>@item.SalesRep</td>
-                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp1">@Math.Round(Convert.ToDouble(item.p1), 0, MidpointRounding.ToEven)</td>
-                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp2">@Math.Round(Convert.ToDouble(item.p2), 0, MidpointRounding.ToEven)</td>
-                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp3">@Math.Round(Convert.ToDouble(item.p3), 0, MidpointRounding.ToEven)</td>
-                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp4">@Math.Round(Convert.ToDouble(item.p4), 0, MidpointRounding.ToEven)</td>
-                                                                        <td data-salesrep="@item.id_SalesRep" class="editMe colp5">@Math.Round(Convert.ToDouble(item.p5), 0, MidpointRounding.ToEven)</td>
-
-
-
-                                                                    </tr>
-                                                                }
-                                                            }
-
-
-                                                        </tbody>
-                                                    </table>
-                                                    <button class="btn btn-danger btn-sm " onclick="saveTotalSB()">Save Sales Budget</button>
-                                                </div>
-                                                <!-- /module content inner -->
-
-                                            </div>
-                                            <!-- /module content -->
-                                            <!-- Comment Box -->
-                                            <!-- /comment box -->
-
-                                        </div>
-                                        <!-- /module container -->
-                                        <!-- Module Drawer -->
-                                        <div class="dt-module__drawer dt-drawer position-left">
-
-                                            <!-- Module Drawer Inner -->
-                                            <div class="dt-module__drawer-inner">
-
-                                                <div class="dt-module__drawer-header">
-                                                    <a href="javascript:void(0)" class="d-inline-block" data-dismiss="mdrawer">
-                                                        <i class="icon icon-arrow-long-left icon-2x mr-3"></i> <span class="align-middle">Back</span>
-                                                    </a>
-                                                </div>
-
-                                                <!-- Actionable Drawer -->
-                                                <div class="dt-actionable-drawer">
-
-                                                    <!-- Menu Bar -->
-                                                    <div class="dt-action-bar">
-
-                                                        <!-- Action Menu -->
-                                                        <ul class="dt-action-nav">
-
-                                                            <!-- Menu Item -->
-                                                            <!-- /menu item -->
-                                                            <!-- Menu Item -->
-                                                            <li class="dt-action-nav__item">
-                                                                <a href="javascript:void(0)" class="dt-action-nav__link"
-                                                                   data-switch="mdrawer" data-target="#drawer-initialforecast">
-                                                                    <i class="icon icon-courses icon-fw"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li class="dt-action-nav__item">
-                                                                <a href="javascript:void(0)" class="dt-action-nav__link"
-                                                                   data-switch="mdrawer" data-target="#drawer-agentsforecast">
-                                                                    <i class="icon icon-customer icon-fw"></i>
-                                                                </a>
-                                                            </li>
-                                                            <li class="dt-action-nav__item">
-                                                                <a href="javascript:void(0)" class="dt-action-nav__link"
-                                                                   data-switch="mdrawer" data-target="#drawer-search-bar">
-                                                                    <i class="icon icon-price-list icon-fw"></i>
-                                                                </a>
-                                                            </li>
-
-                                                            <!-- /menu item -->
-                                                            <!-- Menu Item -->
-                                                            <!-- /menu item -->
-
-                                                        </ul>
-                                                        <!-- /action menu -->
-
-                                                    </div>
-                                                    <!-- /menu bar -->
-                                                    <!-- Drawer Content Area -->
-                                                    <!-- Drawer Content Area -->
-                                                    <div class="dt-action-content-wrapper ps-custom-scrollbar">
-
-                                                        <div class="dt-action-content">
-
-                                                            <div class="dt-notification fade" id="drawer-initialforecast">
-                                                                <h4>Purchase tool Forecast</h4>
-                                                                <h5 class="card-subtitle mb-0">Source: MatrizCompras Database</h5><br />
-
-                                                                <table id="data_sales" class="table" style="width:100%; font-family: 'Open Sans' !important">
-
-
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>PERIOD-YEAR</td>
-                                                                            <td>@Model.Forecast1_source1_period - @Model.Forecast1_source1_year</td>
-                                                                            <td>@Model.Forecast2_source1_period - @Model.Forecast2_source1_year</td>
-                                                                            <td>@Model.Forecast3_source1_period - @Model.Forecast3_source1_year</td>
-                                                                            <td>@Model.Forecast4_source1_period - @Model.Forecast4_source1_year</td>
-                                                                            <td>@Model.Forecast5_source1_period - @Model.Forecast5_source1_year</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>BASELINE</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline1), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline2), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline3), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline4), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Baseline5), 0, MidpointRounding.ToEven)</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>FORECAST</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast1_source1), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast2_source1), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast3_source1), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast4_source1), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast5_source1), 0, MidpointRounding.ToEven)</td>
-                                                                        </tr>
-                                                                    </tbody>
-
-
-
-
-                                                                </table>
-                                                            </div>
-
-                                                            <div class="dt-notification fade" id="drawer-agentsforecast">
-                                                                <h4>Agents Forecast</h4>
-                                                                <h5 class="card-subtitle mb-0">Source: Purchases Agents</h5><br />
-                                                                <table id="tablepurchaseforecast" class="table" style="width:100%; font-family: 'Open Sans' !important">
-
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                            <th></th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>PERIOD-YEAR</td>
-                                                                            <td>@Model.Forecast1_source1_period - @Model.Forecast1_source1_year</td>
-                                                                            <td>@Model.Forecast2_source1_period - @Model.Forecast2_source1_year</td>
-                                                                            <td>@Model.Forecast3_source1_period - @Model.Forecast3_source1_year</td>
-                                                                            <td>@Model.Forecast4_source1_period - @Model.Forecast4_source1_year</td>
-                                                                            <td>@Model.Forecast5_source1_period - @Model.Forecast5_source1_year</td>
-                                                                        </tr>
-                                                                        <tr>
-                                                                            <td>FORECAST</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast1_source2), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast2_source2), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast3_source2), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast4_source2), 0, MidpointRounding.ToEven)</td>
-                                                                            <td>@Math.Round(Convert.ToDouble(Model.Forecast5_source2), 0, MidpointRounding.ToEven)</td>
-                                                                        </tr>
-                                                                    </tbody>
-
-                                                                </table>
-                                                            </div>
-
-                                                            <div class="dt-notification fade" id="drawer-search-bar">
-                                                                <h4>Sales History</h4>
-                                                                <h5 class="card-subtitle mb-0">Source: SAP</h5><br />
-                                                                <table class="table" style="width:100%">
-                                                                    <thead>
-                                                                        <tr>
-                                                                            <th>Sales Rep</th>
-                                                                            <th>-1</th>
-                                                                            <th>-2</th>
-                                                                            <th>-3</th>
-                                                                            <th>-4</th>
-                                                                            <th>-5</th>
-                                                                            <th>-6</th>
-                                                                            <th>AVG</th>
-                                                                            <th>%</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody>
-                                                                        @foreach (var item in ViewBag.salesHistory)
-                                                                        {
-                                                                            if (item.id_SalesRep == 0)
-                                                                            {
-                                                                                <tr style="font-weight:bold">
-                                                                                    <td style="font-size:11px;">Total</td>
-                                                                                    <td style="font-size:11px;"></td>
-                                                                                    <td style="font-size:11px;"></td>
-                                                                                    <td style="font-size:11px;"></td>
-                                                                                    <td style="font-size:11px;"></td>
-                                                                                    <td style="font-size:11px;"></td>
-                                                                                    <td style="font-size:11px;"></td>
-
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N}", item.AVG)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N}", item.PCT)</td>
-                                                                                </tr>
-                                                                            }
-                                                                            else
-                                                                            {
-                                                                                <tr>
-                                                                                    <td style="font-size:11px;">@item.SalesRep</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p1)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p2)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p3)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p4)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p5)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.p6)</td>
-
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.AVG)</td>
-                                                                                    <td style="font-size:11px;">@String.Format("{0:N0}", item.PCT)</td>
-                                                                                </tr>
-                                                                            }
-
-                                                                        }
-
-
-                                                                    </tbody>
-                                                                </table>
-
-                                                            </div>
-                                                            <!-- /search -->
-
-                                             
-                                                            <!-- /notification -->
-                                                            <!-- /messages -->
-
-                                                        </div>
-
-                                                    </div>
-                                                    <!-- /drawer content area -->
-                                                </div>
-                                                <!-- /actionable drawer -->
-
-                                            </div>
-                                            <!-- /module drawer inner -->
-
-                                        </div>
-                                        <!-- /module drawer -->
-
-                                    </div>
-                                    <!-- /module -->
-
-                                </div>
-                                <!-- /grid item -->
-
-                            </div>
-                            <!-- /grid item -->
-
-
-                        </div>
-                        <!-- /site content -->
-
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Purchases.cshtml")
+<!-- Page Header -->
+<!-- /loader -->
+<div class="container-fluid page__heading-container">
+    <div class="page__heading d-flex align-items-center">
+        <div class="flex">
+
+            <h1 class="mb-2">@Model.ItemCode</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#"><i class="material-icons">folder_open</i>@Model.Description</a></li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a href="#" class="btn btn-outline-success" onclick="saveTotalSB()">Save all changes <i class="material-icons ml-2">check</i></a>
+            <a href="@Url.Action("Final_forecast", "Operations", new { iddata=ViewBag.iddata})" class="btn btn-light ml-3"><i class="material-icons">chevron_left</i> Back</a>
+
+           
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid page__container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <h5 class="card-subtitle mb-0">Source: Sales Reviews</h5>
+            <!-- Badges -->
+            <div class="badge-group mb-5">
+
+
+            </div>
+            <table class="table" id="salesforecast" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Sales Rep</th>
+                        <th>1</th>
+                        <th>2</th>
+                        <th>3</th>
+                        <th>4</th>
+                        <th>5</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in ViewBag.SalesRepsEdit)
+                    {
+
+                        if (item.id_SalesRep == 0)
+                        {
+                            <tr style="font-weight:bold;">
+                                <td>TOTAL (Sales Budget)</td>
+                                <td class="finalcolp1">@Math.Round(Convert.ToDouble(item.p1), 0, MidpointRounding.ToEven)</td>
+                                <td class="finalcolp2">@Math.Round(Convert.ToDouble(item.p2), 0, MidpointRounding.ToEven)</td>
+                                <td class="finalcolp3">@Math.Round(Convert.ToDouble(item.p3), 0, MidpointRounding.ToEven)</td>
+                                <td class="finalcolp4">@Math.Round(Convert.ToDouble(item.p4), 0, MidpointRounding.ToEven)</td>
+                                <td class="finalcolp5">@Math.Round(Convert.ToDouble(item.p5), 0, MidpointRounding.ToEven)</td>
+
+
+
+
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr>
+                                <td>@item.SalesRep</td>
+                                <td data-salesrep="@item.id_SalesRep" class="editMe colp1">@Math.Round(Convert.ToDouble(item.p1), 0, MidpointRounding.ToEven)</td>
+                                <td data-salesrep="@item.id_SalesRep" class="editMe colp2">@Math.Round(Convert.ToDouble(item.p2), 0, MidpointRounding.ToEven)</td>
+                                <td data-salesrep="@item.id_SalesRep" class="editMe colp3">@Math.Round(Convert.ToDouble(item.p3), 0, MidpointRounding.ToEven)</td>
+                                <td data-salesrep="@item.id_SalesRep" class="editMe colp4">@Math.Round(Convert.ToDouble(item.p4), 0, MidpointRounding.ToEven)</td>
+                                <td data-salesrep="@item.id_SalesRep" class="editMe colp5">@Math.Round(Convert.ToDouble(item.p5), 0, MidpointRounding.ToEven)</td>
+
+
+
+                            </tr>
+                        }
+                    }
+
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr />
+    <div class="alert alert-soft-success d-flex align-items-center card-margin" role="alert">
+        <i class="material-icons mr-3">star</i>
+        <div class="text-body"><strong>Product Information.</strong> Here you can check all product information and assigned forecast. </div>
+    </div>
+    <div class="row">
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header card-header-large bg-white">
+                    <h4 class="card-header__title">Sales History</h4>
+                    <p>Click on a Sales Representative to show more information.</p>
+                </div>
+                <div class="card-body">
+                    <table class="table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Sales Rep</th>
+                                <th>-1</th>
+                                <th>-2</th>
+                                <th>-3</th>
+                                <th>-4</th>
+                                <th>-5</th>
+                                <th>-6</th>
+                                <th>AVG</th>
+                                <th>%</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.salesHistory)
+                            {
+                                if (item.id_SalesRep == 0)
+                                {
+                                    <tr style="font-weight:bold">
+                                        <td style="font-size:11px;">Total</td>
+                                        <td style="font-size:11px;"></td>
+                                        <td style="font-size:11px;"></td>
+                                        <td style="font-size:11px;"></td>
+                                        <td style="font-size:11px;"></td>
+                                        <td style="font-size:11px;"></td>
+                                        <td style="font-size:11px;"></td>
+
+                                        <td style="font-size:11px;">@String.Format("{0:N}", item.AVG)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N}", item.PCT)</td>
+                                    </tr>
+                                }
+                                else
+                                {
+                                    <tr>
+                                        <td style="font-size:11px;"><a href="#" data-idrep="@item.id_SalesRep" data-name="@item.SalesRep" data-p1value="@item.p1" data-toggle="modal" data-target="#large-modal">@item.SalesRep</a></td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.p1)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.p2)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.p3)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.p4)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.p5)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.p6)</td>
+
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.AVG)</td>
+                                        <td style="font-size:11px;">@String.Format("{0:N0}", item.PCT)</td>
+                                    </tr>
+                                }
+
+                            }
+
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-header__title">Agents Forecast</h4>
+                    <p>Source: Purchases Agents.</p>
+                    <table id="tablepurchaseforecast" class="table" style="width:100%; font-family: 'Open Sans' !important; font-size:12px">
+
+                        <tbody>
+                            <tr>
+                                <td>PERIOD-YEAR</td>
+                                <td>@Model.Forecast1_source1_period - @Model.Forecast1_source1_year</td>
+                                <td>@Model.Forecast2_source1_period - @Model.Forecast2_source1_year</td>
+                                <td>@Model.Forecast3_source1_period - @Model.Forecast3_source1_year</td>
+                                <td>@Model.Forecast4_source1_period - @Model.Forecast4_source1_year</td>
+                                <td>@Model.Forecast5_source1_period - @Model.Forecast5_source1_year</td>
+                            </tr>
+                            <tr>
+                                <td>FORECAST</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast1_source2), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast2_source2), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast3_source2), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast4_source2), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast5_source2), 0, MidpointRounding.ToEven)</td>
+                            </tr>
+                        </tbody>
+
+                    </table>
+                    <hr />
+
+                    <h4 class="card-header__title">Purchase tool Forecast</h4>
+                    <p>Source: MatrizCompras Database</p>
+                    <table id="data_sales" class="table" style="width:100%; font-family: 'Open Sans' !important; font-size:12px;font-weight:normal">
+
+                        <tbody>
+                            <tr>
+                                <td>PERIOD-YEAR</td>
+                                <td>@Model.Forecast1_source1_period - @Model.Forecast1_source1_year</td>
+                                <td>@Model.Forecast2_source1_period - @Model.Forecast2_source1_year</td>
+                                <td>@Model.Forecast3_source1_period - @Model.Forecast3_source1_year</td>
+                                <td>@Model.Forecast4_source1_period - @Model.Forecast4_source1_year</td>
+                                <td>@Model.Forecast5_source1_period - @Model.Forecast5_source1_year</td>
+                            </tr>
+                            <tr>
+                                <td>BASELINE</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Baseline1), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Baseline2), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Baseline3), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Baseline4), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Baseline5), 0, MidpointRounding.ToEven)</td>
+                            </tr>
+                            <tr>
+                                <td>FORECAST</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast1_source1), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast2_source1), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast3_source1), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast4_source1), 0, MidpointRounding.ToEven)</td>
+                                <td>@Math.Round(Convert.ToDouble(Model.Forecast5_source1), 0, MidpointRounding.ToEven)</td>
+                            </tr>
+                        </tbody>
+
+
+
+
+                    </table>
+
+                    <hr />
+                    <!-- Text Area -->
+                    <div class="form-group">
+                        <label>Comments:</label><br />
+                        <textarea class="form-control border-0 shadow-none bg-focus" id="commentsproduct"
+                                  rows="2"
+                                  placeholder="Product Comments">@Model.Comments</textarea>
                     </div>
-                    <!-- /site content wrapper -->
-
+                    <hr />
+                    <a href="@Url.Action("Product_stats","Operations", new { ItemCode= Model.ItemCode, data=ViewBag.iddata})" class="btn btn-light ml-3"><i class="material-icons">chevron_left</i> Sales Stats</a>
                 </div>
-                <!-- /custom Container -->
-
-            </main>
-            <!-- /main -->
-            <!-- Footer -->
-            <footer class="dt-footer">
-                <div class="dt-container">
-                    Copyright Distribuidora Limena © 2019
-                </div>
-            </footer>
-            <!-- /footer -->
-
+            </div>
         </div>
     </div>
-    <!-- /root -->
-    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
-    <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>
 
-    <script>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="large-modal" tabindex="-1" role="dialog"
+     aria-labelledby="model-4"
+     aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+
+        <!-- Modal Content -->
+        <div class="modal-content">
+
+            <!-- /modal header -->
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <h3 class="modal-title" id="model-4">Porcentajes de Acertividad</h3><br />
+                <label id="replabel"></label><br />
+                <label id="itemcodelabel"></label>
+
+                <br />
+                <br />
+                <table class="table table-bordered mb-0">
+                    <thead>
+                        <tr style="border:1px solid #ddd">
+                            <td colspan="3" style="text-align:center">PERIODO ANTERIOR<br /><label id="periodoantlabel"></label></td>
+                            <td colspan="2" style="text-align:center">PERIODO ACTUAL<br /><label id="periodoactuallabel"></label></td>
+
+                        </tr>
+                        <tr style="border:1px solid #ddd">
+                            <th>CANT. CAJAS (SALES H)</th>
+                            <th>CANT. CAJAS (SOP)</th>
+                            <th>ACERTIVIDAD</th>
+                            <th>CANT. CAJAS (SOP)</th>
+                            <th>COMPARACION</th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><label id="lastforecastSHlabel"></label></td>
+
+                            <td><label id="lastsavedforecastlabel"></label></td>
+                            <td id="acertividadcol"></td>
+                            <td><label id="actualforecastlabel"></label></td>
+                            <td><label id="comparacionlabel"></label></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- /modal body -->
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm"
+                        data-dismiss="modal">
+                    Close
+                </button>
+            </div>
+            <!-- /modal footer -->
+
+        </div>
+        <!-- /modal content -->
+
+    </div>
+</div>
+<!-- /modal -->
+<!-- /root -->
+@Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+<script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>
+
+<script>
         $(document).ready(function () {
             //Basic editor
             var simpleEditor = new SimpleTableCellEditor("salesforecast");
@@ -557,7 +333,7 @@
             simpleEditor.SetEditableClass("editMe");
 
             $('#salesforecast').on("cell:edited", function (event) {
-          
+
                 var classsel = "";
                 var classselFinal = "";
 
@@ -568,7 +344,7 @@
             var iddatad = '@ViewBag.iddata';
                 var rep = $(event.element).data("salesrep")
 
-                if (event.element.classList.contains("colp1")) { 
+                if (event.element.classList.contains("colp1")) {
                     classsel = ".colp1";
                     classselFinal = ".finalcolp1";
                     periodo = "f1";
@@ -590,9 +366,9 @@
                     periodo = "f5";
                 }
 
-                
 
-                //verificamos si es numero 
+
+                //verificamos si es numero
                 var esnumero = 0.0;
                 try {
                     esnumero = parseFloat(event.newValue);
@@ -601,7 +377,7 @@
                         esnumero = 0.0;
                         event.element.style.backgroundColor = "#ffeea5";
                         event.element.innerHTML = "0";
-                     
+
                         var suma = 0.0;
                         //Foreach
                         $.each($(classsel), function () {
@@ -637,32 +413,11 @@
                                 data: { 'itemcode': itemcode, 'description': description, 'periodo': periodo, 'newval': suma, 'iddata': iddatad, 'rep': rep, 'valbyrep': esnumero },
                                 success: function (result) {
                                     if (result == "SUCCESS") {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
-
-                                        toast({
-                                            type: 'success',
-                                            title: 'Data saved successfully.'
-                                        });
+                                        toastr.success('Data saved successfully');
 
 
                                     } else {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
-
-                                        toast({
-                                            type: 'info',
-                                            title: 'Something went wrong, try again'
-                                        });
-
+                                        toastr.warning('Something went wrong, try again');
                                         $(classselFinal).css("background-color", "red")
                                     }
 
@@ -682,7 +437,7 @@
                     event.element.innerHTML = "0";
                     $(".finalcolp1").text("Error");
                 }
-                 
+
 
 
 
@@ -705,31 +460,11 @@
                         data: { 'comment': comment, 'iddata': iddatad, 'product': product },
                         success: function (result) {
                             if (result == "SUCCESS") {
-                                var toast = swal.mixin({
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-
-                                toast({
-                                    type: 'success',
-                                    title: 'Data saved successfully.'
-                                });
+                                toastr.success('Data saved successfully');
 
 
                             } else {
-                                var toast = swal.mixin({
-                                    toast: true,
-                                    position: 'top-end',
-                                    showConfirmButton: false,
-                                    timer: 3000
-                                });
-
-                                toast({
-                                    type: 'info',
-                                    title: 'Something went wrong, try again'
-                                });
+                                toastr.warning('Something went wrong, try again');
                             }
 
 
@@ -743,7 +478,101 @@
 
 
 
+            (function ($) {
+                'use strict';
+                $('#large-modal').on('show.bs.modal', function (event) {
 
+                    var button = $(event.relatedTarget);// Button that triggered the modal
+
+                    var idrep = button.data("idrep");
+                    var name = button.data("name");
+                    var p1value = parseFloat(button.data("p1value"));
+                    var iddatad = '@ViewBag.iddata';
+                    var itemcode = '@Model.ItemCode';
+                    var description = '@Model.Description';
+
+                    $.ajax
+                        ({
+                            url: '/Operations/Get_acertividadSR',
+                            type: 'POST',
+                            data: { 'itemcode': itemcode, 'iddata': iddatad, 'idsap': idrep},
+                            success: function (result) {
+                                if (result.response == "SUCCESS") {
+
+                                    $("#periodoantlabel").text(result.period);
+                                    $("#periodoactuallabel").text(result.actualperiod);
+                                    $("#actualforecastlabel").text(result.actualforecast);
+                                    //result.lastsavedforecast = 9 //Eliminar esto
+                                    $("#lastsavedforecastlabel").text(result.lastsavedforecast);
+                                    $("#lastforecastSHlabel").text(p1value.toFixed(0));
+                                    $("#replabel").text(name);
+
+                                    var comp = parseInt(result.actualforecast - result.lastsavedforecast);
+                                    if (comp > 0) { $("#comparacionlabel").text("+" +  comp); } else { $("#comparacionlabel").text(comp);}
+
+                                    $("#itemcodelabel").text(itemcode + " - " + description);
+
+                                    var htmllabel = '';
+                                    $("#acertividadcol").html('');
+                                    if (result.lastsavedforecast == 0 || p1value==0) { htmllabel = '<label>N/A</label>' }
+                                    else {
+
+                                        if (result.lastsavedforecast > p1value && result.lastsavedforecast != p1value) { //Valores positivos
+                                            var resultado = ((result.lastsavedforecast - p1value)/p1value) * 10;
+
+                                            if (resultado > 0 && resultado < 6) {
+                                                htmllabel = '<span class="badge badge-circle badge-success">+ ' + resultado.toFixed(1) + '%</span>';
+                                            }
+                                            if (resultado > 5 && resultado < 11) {
+                                                htmllabel = '<span class="badge badge-circle badge-warning">+ ' + resultado.toFixed(1) + '%</span>';
+                                            }
+                                            if (resultado > 10) {
+                                                htmllabel = '<span class="badge badge-circle badge-danger">+ ' + resultado.toFixed(1) + '%</span>';
+                                            }
+
+
+                                        }
+                                        else if (result.lastsavedforecast == p1value) {
+                                            htmllabel = '<span class="badge badge-circle badge-success">0%</span>';
+                                        }
+
+                                        else {//valores negativos
+
+                                            var resultado = ((p1value - result.lastsavedforecast) / result.lastsavedforecast) * 10;
+
+                                            if (resultado > 0 && resultado < 6) {
+                                                htmllabel = '<span class="badge badge-circle badge-success">- ' + resultado.toFixed(1) + '%</span>';
+                                            }
+                                            if (resultado > 5 && resultado < 11) {
+                                                htmllabel = '<span class="badge badge-circle badge-warning">- ' + resultado.toFixed(1) + '%</span>';
+                                            }
+                                            if (resultado > 10) {
+                                                htmllabel = '<span class="badge badge-circle badge-danger">- ' + resultado.toFixed(1) + '%</span>';
+                                            }
+                                        }
+
+                                    }
+
+
+                                    $("#acertividadcol").append(htmllabel);
+
+
+
+                                } else {
+                                    toastr.info(result.response);
+                                    $('#large-modal').hide();
+
+                                }
+
+
+                            },
+                            error: function () {
+
+                            },
+                        });
+
+                })
+            })(jQuery);
 
 
         });
@@ -752,7 +581,7 @@
             var itemcode = '@Model.ItemCode';
             var description = '@Model.Description';
             var iddatad = '@ViewBag.iddata';
-  
+
                var sumap1 = 0.0;
                var sumap2 = 0.0;
                var sumap3 = 0.0;
@@ -764,17 +593,22 @@
 
                     $.each($(".colp1"), function () {
                         sumap1 = parseFloat($(this).text()) + sumap1;
+
                     });
 
                     $.each($(".colp2"), function () {
                         sumap2 = parseFloat($(this).text()) + sumap2;
                     });
+
                     $.each($(".colp3"), function () {
                         sumap3 = parseFloat($(this).text()) + sumap3;
+                        console.log(sumap3);
                     });
+
                     $.each($(".colp4"), function () {
                         sumap4 = parseFloat($(this).text()) + sumap4;
                     });
+
                     $.each($(".colp5"), function () {
                         sumap5 = parseFloat($(this).text()) + sumap5;
                     });
@@ -786,33 +620,13 @@
                                 data: { 'itemcode': itemcode, 'description': description, 'iddata': iddatad, 'newvalp1': sumap1, 'newvalp2': sumap2, 'newvalp3': sumap3, 'newvalp4': sumap4, 'newvalp5': sumap5   },
                                 success: function (result) {
                                     if (result == "SUCCESS") {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
-
-                                        toast({
-                                            type: 'success',
-                                            title: 'Data saved successfully.'
-                                        });
+                                        toastr.success('Sales Budget saved successfully');
 
 
                                     } else {
-                                        var toast = swal.mixin({
-                                            toast: true,
-                                            position: 'top-end',
-                                            showConfirmButton: false,
-                                            timer: 3000
-                                        });
+                                        toastr.warning('Something went wrong, try again');
 
-                                        toast({
-                                            type: 'info',
-                                            title: 'Something went wrong, try again'
-                                        });
 
-                                       
                                     }
 
 
@@ -822,13 +636,13 @@
                                 },
                             });
 
-                    
+
 
 
                 } catch{
 
                 }
-                 
+
             }
 
             //var editor;
@@ -854,9 +668,4 @@
             //    });
 
             //});
-    </script>
-
-</body>
-</html>
-
-
+</script>

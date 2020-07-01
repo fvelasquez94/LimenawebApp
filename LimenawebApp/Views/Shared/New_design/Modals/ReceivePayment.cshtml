@@ -1,0 +1,484 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div id="modal-large" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg">
+
+                        <div class="card-header card-header-tabs-basic nav" role="tablist">
+                            <a href="#general_details" class="active" data-toggle="tab" role="tab" aria-controls="general_details" aria-selected="true">General Details</a>
+                            <a href="#customers_details" data-toggle="tab" role="tab" aria-selected="false">Customers</a>
+
+                        </div>
+                        <div class="card-body tab-content">
+                            <div class="tab-pane active  show fade" id="general_details">
+                                <div class="card card-form">
+                                    <div class="row no-gutters">
+                                        <div class="col-lg-4 card-body">
+                                            <p><strong class="headings-color">Route details</strong></p>
+                                            <p>
+                                                <small class="mr-2">Total to receive: $5000</small><br />
+                                                <small class="mr-2">Total customers: 10</small><br />
+                                                <small class="mr-2">Total Invoices: 1</small><br />
+                                                <small class="mr-2">Total A/R: 2</small><br />
+                                                <hr />
+                                                <small class="mr-2">Total cash: $0.00</small><br />
+                                                <small class="mr-2">Total checks: $0.00</small><br />
+                                                <small class="mr-2">Total credit card: $0.00</small><br />
+                                                <small class="mr-2">Total money order: $0.00</small><br />
+                                                <small class="mr-2">Total wire: $0.00</small><br />
+                                                <small class="mr-2">Total ACH: $0.00</small>
+
+                                                <hr />
+
+                                                <small class="mr-2">ID - Customer's Name</small><br />
+                                                <small class="mr-2">Route's Name</small><br />
+                                                <small class="mr-2">Driver's Name</small><br />
+                                                <small class="mr-2">Sales Representative's Name</small><br />
+                                                <small class="mr-2">Date</small><br />
+                                            </p>
+                                        </div>
+                                        <div class="col-lg-8 card-form__body card-body">
+
+
+                                            <div class="card-header card-header-large  d-flex align-items-center">
+                                                <h4 class="card-header__title flex">Total to Receive by Customer</h4>
+                                                <div class="d-flex align-items-center">
+                                                    <label for="chart-switch-toggle" class="mb-0">Show A/R:</label>
+                                                    <div class="custom-control custom-checkbox-toggle ml-2">
+                                                        <input checked="" aria-checked="true" type="checkbox" id="chart-switch-toggle" class="custom-control-input" role="switch" data-toggle="chart" data-target="#ordersChartSwitch" data-add='{"data":{"datasets":[{"data":[15,10,20,12,7,0,8,16,18,16,10,22],"backgroundColor":"#b2e599","label":"Affiliate"}]}}'>
+                                                        <label class="custom-control-label" for="chart-switch-toggle"><span class="sr-only">Show A/R</span></label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+
+                                                <div class="chart">
+                                                    <canvas id="ordersChartSwitch" class="chart-canvas"></canvas>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane show fade" id="customers_details">
+                                <div class="card card-form">
+
+
+                                    <div class="card card-form d-flex flex-column flex-sm-row" style="width:100%">
+                                        <div class="card-form__body card-body-form-group flex">
+                                            <div class="row">
+                                                <div class="col-lg-auto">
+                                                    <div class="form-group">
+                                                        <label for="filter_customers">Search</label>
+                                                        <input id="filter_customers" type="text" class="form-control" placeholder="Search">
+                                                    </div>
+                                                </div>
+
+
+                                                <div class="col-md-auto">
+
+                                                </div>
+                                                <div class="col-sm-auto">
+                                                    <div class="form-group">
+                                                        <label for="filter_stock">Bulk Options</label>
+                                                        <div class="custom-control custom-checkbox mt-sm-2">
+                                                            <button class="btn btn-primary">Receive Payment</button>
+                                                            <button class="btn btn-warning">Report an Issue</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="table-responsive">
+                                        <table id="myTable" class="table mb-0 thead-border-top-0  border-bottom-0">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 18px;">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input js-toggle-check-all" data-target="#companies" id="customCheckAll">
+                                                            <label class="custom-control-label" for="customCheckAll"><span class="text-hide">Toggle all</span></label>
+                                                        </div>
+                                                    </th>
+                                                    <th>Customer</th>
+                                                    <th>Status</th>
+                                                    <th style="width: 120px;" class="text-center">Date</th>
+                                                    <th class="text-center">#INV</th>
+                                                    <th style="width: 50px;">#A/R</th>
+                                                    <th style="width: 120px;" class="text-right">Total to receive</th>
+                                                    <th style="width: 50px;">
+
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="list" id="companies">
+
+                                                <tr>
+
+                                                    <td class="text-center">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input js-check-selected-row" id="customCheck1_1">
+                                                            <label class="custom-control-label" for="customCheck1_1"><span class="text-hide">Check</span></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="material-icons icon-16pt mr-1 text-primary">store</i>
+                                                                <a href="#">S00554 - Customer's Name</a>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i> Nashville, TN, USA</small>
+                                                        </div>
+                                                    </td>
+                                                    <td><div class="badge badge-warning ml-2">Waiting</div></td>
+                                                    <td style="width: 140px;"><i class="material-icons icon-16pt text-muted-light mr-1">today</i> 05-05-2019</td>
+                                                    <td class="text-center">1</td>
+
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-right"><strong>$32,124</strong></td>
+                                                    <td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="text-center">
+                                                        <div class="custom-control custom-checkbox">
+                                                            <input type="checkbox" class="custom-control-input js-check-selected-row" id="customCheck1_1">
+                                                            <label class="custom-control-label" for="customCheck1_1"><span class="text-hide">Check</span></label>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="material-icons icon-16pt mr-1 text-primary">store</i>
+                                                                <a href="#">S00001 - Customer's Name</a>
+                                                            </div>
+
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i> Nashville, TN, USA</small>
+                                                        </div>
+                                                    </td>
+                                                    <td><div class="badge badge-warning ml-2">Waiting</div></td>
+                                                    <td style="width: 140px;"><i class="material-icons icon-16pt text-muted-light mr-1">today</i> 05-05-2019</td>
+                                                    <td class="text-center">1</td>
+
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-right"><strong>$32,124</strong></td>
+                                                    <td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>
+                                                </tr>
+
+                                                <tr>
+
+                                                    <td class="text-center"></td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="material-icons icon-16pt mr-1 text-primary">store</i>
+                                                                <a href="#">S00281 - Customer's Name</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i> Address</small>
+                                                        </div>
+                                                    </td>
+                                                    <td><div class="badge badge-success ml-2">Finished</div></td>
+                                                    <td style="width: 140px;"><i class="material-icons icon-16pt text-muted-light mr-1">today</i> 05-05-2019</td>
+                                                    <td class="text-center">1</td>
+
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-right"><strong>$13,593</strong></td>
+                                                    <td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="text-center"></td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="material-icons icon-16pt mr-1 text-primary">store</i>
+                                                                <a href="#">S00963 - Customer's Name</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i> Address</small>
+                                                        </div>
+                                                    </td>
+                                                    <td><div class="badge badge-success ml-2">Finished</div></td>
+                                                    <td style="width: 140px;"><i class="material-icons icon-16pt text-muted-light mr-1">today</i> 05-05-2019</td>
+                                                    <td class="text-center">1</td>
+
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-right"><strong>$13,593</strong></td>
+                                                    <td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="text-center"></td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="material-icons icon-16pt mr-1 text-primary">store</i>
+                                                                <a href="#">S00741 - Customer's Name</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i> Address</small>
+                                                        </div>
+                                                    </td>
+                                                    <td><div class="badge badge-success ml-2">Finished</div></td>
+                                                    <td style="width: 140px;"><i class="material-icons icon-16pt text-muted-light mr-1">today</i> 05-05-2019</td>
+                                                    <td class="text-center">1</td>
+
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-right"><strong>$13,593</strong></td>
+                                                    <td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>
+                                                </tr>
+                                                <tr>
+
+                                                    <td class="text-center"></td>
+                                                    <td>
+                                                        <div class="d-flex align-items-center">
+
+                                                            <div class="d-flex align-items-center">
+                                                                <i class="material-icons icon-16pt mr-1 text-primary">store</i>
+                                                                <a href="#">S00341 - Customer's Name</a>
+                                                            </div>
+                                                        </div>
+                                                        <div class="d-flex align-items-center">
+                                                            <small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i> Address</small>
+                                                        </div>
+                                                    </td>
+                                                    <td><div class="badge badge-success ml-2">Finished</div></td>
+                                                    <td style="width: 140px;"><i class="material-icons icon-16pt text-muted-light mr-1">today</i> 05-05-2019</td>
+                                                    <td class="text-center">1</td>
+
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-right"><strong>$13,593</strong></td>
+                                                    <td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>
+                                                </tr>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div> <!-- // END .modal-body -->
+
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->
+<div id="modalPayIndividual" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-lg">
+
+                        <div class="card card-form">
+                            <div class="row no-gutters">
+                                <div class="col-lg-4 card-body">
+                                    <p>
+                                        <strong class="headings-color">Payment details</strong><br />
+                                        <small class="mr-2">ID - Customer's Name</small><br />
+                                    </p>
+                                    <p>
+                                        <small class="mr-2">Total to receive: $5000</small><br />
+                                        <small class="mr-2">Total Invoices: 1</small><br />
+                                        <small class="mr-2">Total A/R: 2</small><br />
+                                        <hr />
+                                        <small class="mr-2">Total cash: $0.00</small><br />
+                                        <small class="mr-2">Total check: $0.00</small><br />
+                                        <small class="mr-2">Total credit card: $0.00</small><br />
+                                        <small class="mr-2">Total money order: $0.00</small><br />
+                                        <small class="mr-2">Total ACH: $0.00</small><br />
+                                        <small class="mr-2">Total wire: $0.00</small>
+                                        <hr />
+                                        <strong>Invoices</strong><br />
+                                        <small class="mr-2">#45969595</small><br />
+                                        <a href="@Url.Action("Authorizations","Finance")"><small class="mr-2">#87989595</small></a><br />
+                                        <hr />
+                                        <strong>Accounts Receivable</strong><br />
+                                        <a href="@Url.Action("Authorizations","Finance")"><small class="mr-2">#35689595</small></a><br />
+                                        <hr />
+
+                                    </p>
+                                </div>
+                                <div class="col-lg-8 card-form__body card-body">
+
+                                    <p class="text-dark-gray d-flex align-items-center mt-3">
+                                        <i class="material-icons icon-muted mr-2">payments</i>
+                                        <strong>CASH</strong>
+                                    </p>
+
+
+                                    <div class="row align-items-center projects-item mb-1">
+
+                                        <div class="col-sm">
+                                            <div class="card m-0">
+                                                <div class="px-4 py-3">
+                                                    <div class="row align-items-center">
+                                                        <div class="col" style="min-width: 300px">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="#" class="text-body"><strong class="text-15pt mr-2">#023323</strong></a>
+                                                                <span class="badge badge-info">INVOICE</span>
+                                                            </div>
+                                                            <div class="d-flex align-items-center">
+                                                                <small class="mr-2">Total to receive: $5000</small>
+                                                                <a class="badge" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                                                    Show denominations
+                                                                </a>
+                                                            </div>
+
+                                                            <div class="collapse" id="collapseExample">
+                                                                <div class="card card-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <p style="color:black">
+                                                                                <label>$100: 5 = $0.00</label><br />
+                                                                                <label>$50: 5 = $0.00</label><br />
+
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <p style="color:black">
+                                                                                <label>$0.5: 5 = $0.00</label><br />
+                                                                                <label>$0.1: 5 = $0.00</label><br />
+
+                                                                            </p>
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-auto d-flex align-items-center" style="min-width: 140px;">
+                                                            <div class="custom-control custom-checkbox-toggle custom-control-inline mr-1">
+                                                                <input onchange="countchecksind()" type="checkbox" id="subscribe" class="custom-control-input checkboxesindiv">
+                                                                <label class="custom-control-label" for="subscribe"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-dark-gray d-flex align-items-center mt-3">
+                                        <i class="material-icons icon-muted mr-2">payments</i>
+                                        <strong>CHECKS</strong>
+                                    </p>
+
+
+                                    <div class="row align-items-center projects-item mb-1">
+
+                                        <div class="col-sm">
+                                            <div class="card m-0">
+                                                <div class="px-4 py-3">
+                                                    <div class="row align-items-center">
+                                                        <div class="col" style="min-width: 300px">
+                                                            <div class="d-flex align-items-center">
+                                                                <a href="#" class="text-body"><strong class="text-15pt mr-2">#565645</strong></a>
+                                                                <span class="badge badge-warning">Account Receivable</span>
+                                                            </div>
+                                                            <div class="d-flex align-items-center">
+                                                                <small class="mr-2">Total to receive: $5000</small>
+                                                                <a class="badge" data-toggle="collapse" href="#collapsecheque" role="button" aria-expanded="false" aria-controls="collapsecheque">
+                                                                    Show details
+                                                                </a>
+
+                                                            </div>
+
+                                                            <div class="collapse" id="collapsecheque">
+                                                                <div class="card card-body">
+                                                                    <div class="row">
+                                                                        <div class="col-md-6">
+                                                                            <p style="color:black">
+                                                                                <label>Check Number</label><br />
+                                                                                <label>Check Bank</label><br />
+                                                                                <label>Check Owner Name</label><br />
+
+                                                                            </p>
+                                                                        </div>
+                                                                        <div class="col-md-6">
+                                                                            <img src="assets/images/256_daniel-gaffey-1060698-unsplash.jpg" alt="Check-front" class="avatar-img rounded">
+                                                                            <img src="assets/images/256_daniel-gaffey-1060698-unsplash.jpg" alt="Check-rear" class="avatar-img rounded">
+                                                                        </div>
+                                                                    </div>
+
+                                                                </div>
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="col-auto d-flex align-items-center" style="min-width: 140px;">
+                                                            <div class="custom-control custom-checkbox-toggle custom-control-inline mr-1">
+                                                                <input onchange="countchecksind()" type="checkbox" id="subscribe2" class="custom-control-input checkboxesindiv">
+                                                                <label class="custom-control-label" for="subscribe2"></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <p class="text-dark-gray d-flex align-items-center mt-3">
+                                        <i class="material-icons icon-muted mr-2">payments</i>
+                                        <strong>CREDIT CARD</strong>
+                                    </p>
+                                    <p class="text-dark-gray d-flex align-items-center mt-3">
+                                        <i class="material-icons icon-muted mr-2">payments</i>
+                                        <strong>MONEY ORDER</strong>
+                                    </p>
+                                    <p class="text-dark-gray d-flex align-items-center mt-3">
+                                        <i class="material-icons icon-muted mr-2">payments</i>
+                                        <strong>ACH</strong>
+                                    </p>
+                                    <p class="text-dark-gray d-flex align-items-center mt-3">
+                                        <i class="material-icons icon-muted mr-2">payments</i>
+                                        <strong>WIRE</strong>
+                                    </p>
+                                    <br /><br />
+                                    <button type="submit" style="display:none" id="submitPay" class="btn btn-primary">Submit</button>
+                                    <button type="button" data-dismiss="modal" class="btn btn-light">Back</button>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->

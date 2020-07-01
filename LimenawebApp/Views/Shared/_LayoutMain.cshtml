@@ -1,0 +1,97 @@
+﻿<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    @Html.Partial("~/Views/Shared/New_design/Head.cshtml")
+</head>
+<body class="layout-fluid layout-sticky-subnav">
+    <div class="preloader"></div>
+    <!-- Header Layout -->
+    <div class="mdk-header-layout js-mdk-header-layout">
+        <!-- Header -->
+        @Html.Partial("~/Views/Shared/New_design/Header.cshtml")
+        <!-- // END Header -->
+        <!-- Header Layout Content -->
+        <div class="mdk-header-layout__content page">
+            @RenderBody()
+
+        </div>
+        <!-- // END header-layout__content -->
+    </div>
+    <!-- // END header-layout -->
+    <!-- //.modal -->
+    @if (ViewBag.Title == "Authorizations")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Modals/Authorizations.cshtml")
+    }
+    @if (ViewBag.Title == "ReceiveCredits")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Modals/ReceiveCredits.cshtml")
+    }
+    @if (ViewBag.Title == "ReceivePayment")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Modals/ReceivePayment.cshtml")
+    }
+
+    <!-- // END .modal -->
+
+    @Html.Partial("~/Views/Shared/New_design/Sidebar.cshtml")
+
+    @Html.Partial("~/Views/Shared/New_design/Scripts.cshtml")
+
+
+    @if (ViewBag.Title == "ReceiveCredits")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/ReceiveCreditsScript.cshtml")
+    }
+
+<!--Purchases-->
+    @if (ViewBag.Title == "Distribuidora Limeña - New Data")
+    {@Html.Partial("~/Views/Shared/Scripts_newData.cshtml")}
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Product Catalog")
+    {@Html.Partial("~/Views/Shared/Scripts_productCatalog.cshtml")}
+
+    <script>
+        $(document).ready(function () {
+            $('#myTable').DataTable({
+                pageLength: 15,
+                "dom": 'rtip',
+                "aoColumnDefs": [
+                    { "bSortable": false, "aTargets": [0] },
+                    { "bSearchable": false, "aTargets": [0] }
+                ]
+            });
+
+            $('#filter_customers').keyup(function () {
+                $('#myTable').DataTable().search($(this).val()).draw();
+            });
+
+        });
+
+
+        function countchecksind() {
+            var validate = 0;
+            $('.checkboxesindiv').each(function () {
+                if ($(this).is(":checked")) {
+                } else {
+                    validate = 1;
+                }
+
+            });
+
+            if (validate == 0) {
+                $("#submitPay").css("display", "inline-block");
+            } else {
+                $("#submitPay").css("display", "none");
+            }
+
+        }
+
+
+
+
+
+    </script>
+</body>
+</html>
+

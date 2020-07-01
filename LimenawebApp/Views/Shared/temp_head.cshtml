@@ -31,7 +31,18 @@
 <link href="~/Content/appcontent/assets/vendor/select2/css/select2.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="~/Content/appcontent/assets/vendor/calendarrangepicker/css/daterangepicker.css" />
 
+@if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data" || ViewBag.Title == "Distribuidora Limeña - Edit Purchase Data")
+{
+    <link rel="stylesheet" href="~/Content/appcontent/assets/css/fixedColumns.dataTables.css">
+    <link rel="stylesheet" href="~/Content/appcontent/assets/vendor/contextmeu/jquery.contextMenu.css">
 
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Product Catalog")
+{
+    <link rel="stylesheet" href="~/Content/appcontent/assets/vendor/data-tables/datatables.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/x-editable/1.5.0/bootstrap3-editable/css/bootstrap-editable.css">
+
+}
 <style>
     @@media (max-width: 575.98px) {
         .dt-module__content {

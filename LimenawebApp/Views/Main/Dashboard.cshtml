@@ -1,0 +1,236 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Main</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Dashboard</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+
+
+<div class="page__header page__header-nav">
+
+    <div class="container-fluid page__container">
+
+
+    </div>
+</div>
+<div class="container-fluid page__container">
+    <div class="alert alert-soft-warning d-flex align-items-center card-margin" role="alert">
+        <i class="material-icons mr-3">error_outline</i>
+        <div class="text-body"><strong>API gateways are now Offline.</strong> Please try the API later. If you want to stay up to date check our <a href="#">Status Page </a></div>
+    </div>
+
+
+    @*<p class="text-dark-gray d-flex align-items-center mt-3">
+            <strong>Commercial</strong><hr />
+        </p>
+
+        <div class="row card-group-row  pt-2">
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/routes2.jpg" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="#" class="btn btn-success mt-auto">Marketing Activities</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/pricerequest3.png" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="#" class="btn btn-success mt-auto">Price Request</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/credits.jpg" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="#" class="btn btn-success mt-auto">Credits Request</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row card-group-row  pt-2">
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/customercare.png" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="#" class="btn btn-success mt-auto">Customer Care</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+    <p class="text-dark-gray d-flex align-items-center mt-3">
+        <strong>Finance</strong><hr />
+    </p>
+
+    <div class="row card-group-row  pt-2">
+        <div class="col-md-3">
+            <div class="card card-group-row__card pricing__card">
+                <div class="card-body d-flex flex-column">
+                    <div class="text-center">
+                        <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:89px;" />
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <a href="@Url.Action("Authorizations","Finance")" class="btn btn-success mt-auto">Driver's Authorizations</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-group-row__card pricing__card">
+                <div class="card-body d-flex flex-column">
+                    <div class="text-center">
+                        <img src="~/Content/assets/images/dashboard/paymentfinance.jpg" style="width:100px;" />
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <a href="@Url.Action("ReceivePayment","Finance")" class="btn btn-success mt-auto">Receive Payments</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<p class="text-dark-gray d-flex align-items-center mt-3">
+            <strong>Operations</strong><hr />
+        </p>
+
+        <div class="row card-group-row  pt-2">
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/planning.jpg" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="@Url.Action("Authorizations","Finance")" class="btn btn-success mt-auto">Planning</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/qualitycontrol1.jpg" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="@Url.Action("ReceivePayment","Finance")" class="btn btn-success mt-auto">Quality Control</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
+                <div class="card card-group-row__card pricing__card">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center">
+                            <img src="~/Content/assets/images/dashboard/qc.jpg" style="width:200px;" />
+
+                        </div>
+                        <div class="card-body d-flex flex-column">
+                            <a href="@Url.Action("ReceivePayment","Finance")" class="btn btn-success mt-auto">Warehouse Control</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+    <p class="text-dark-gray d-flex align-items-center mt-3">
+        <strong>Warehouse</strong><hr />
+    </p>
+
+    <div class="row card-group-row  pt-2">
+        <div class="col-md-4 col-lg-3">
+            <div class="card card-group-row__card pricing__card">
+                <div class="card-body d-flex flex-column">
+                    <div class="text-center">
+                        <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:89px;" />
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <a href="@Url.Action("ReceiveCredits","Warehouse")" class="btn btn-success mt-auto">Receive Credits</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="text-dark-gray d-flex align-items-center mt-3">
+        <strong>Purchases</strong><hr />
+    </p>
+
+    <div class="row card-group-row  pt-2">
+        <div class="col-md-3">
+            <div class="card card-group-row__card pricing__card">
+                <div class="card-body d-flex flex-column">
+                    <div class="text-center">
+                        <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:100px;" />
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <a href="@Url.Action("OTB","OTB")" class="btn btn-success mt-auto">OTB</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+  
+        <div class="col-md-3">
+            <div class="card card-group-row__card pricing__card">
+                <div class="card-body d-flex flex-column">
+                    <div class="text-center">
+                        <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:100px;" />
+
+                    </div>
+                    <div class="card-body d-flex flex-column">
+                        <a href="@Url.Action("SOP","SOP")" class="btn btn-success mt-auto">S&OP</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

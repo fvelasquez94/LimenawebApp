@@ -55,7 +55,7 @@ else
 }
                                 <div class=" widget-action-link">
 
-
+                                     <a href="@Url.Action("SurveysCbyRep","Commercial")" class="btn btn-success">Stats by Sales Representatives</a>
 
                                 </div>
 
@@ -148,7 +148,7 @@ else
 
                                 <td style="padding: .25rem;">
 
-                                    <a href="@Url.Action("Customersbcl", "Commercial", new { id = item.idSAP, profile=item.classifications })" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>View Customers</a>
+                                    <a href="@Url.Action("Customersbcl", "Commercial", new { id = item.idSAP, profile=item.classifications,module="byclassification"  })" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>View Customers</a>
 
 
                                 </td>

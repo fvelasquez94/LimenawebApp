@@ -27,6 +27,25 @@ namespace LimenawebApp.Controllers
         private MatrizComprasEntities dbMatriz = new MatrizComprasEntities();
 
 
+        public class pronostico
+        {
+            public string itemcode { get; set; }
+            public string itemname { get; set; }
+           public string period { get; set; }
+           public string year { get; set; }
+           public decimal actualforecast { get; set; }
+           public decimal lastsavedforecast { get; set; }
+           public decimal lastsalesHistory { get; set; }
+           public decimal lastsalesHistory2 { get; set; }
+           public decimal lastsalesHistory3 { get; set; }
+           public decimal lastsalesHistory4 { get; set; }
+           public decimal lastsalesHistory5 { get; set; }
+           public int? actualperiod { get; set; }
+           public int? actualyear { get; set; }
+
+
+        }
+
         public ActionResult Initial_forecast(int iddata)
         {
             if (generalClass.checkSession())
@@ -35,53 +54,129 @@ namespace LimenawebApp.Controllers
 
                 //HEADER
                 //ACTIVE PAGES
-                ViewData["Menu"] = "Operations";
-                ViewData["Page"] = "Purchase Data";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "operpur_submenu";
+                ViewData["Menu"] = "Purchases";
+                ViewData["Page"] = "SOP";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
 
                 var data = (from a in dbMatriz.PurchaseData_product where(a.ID_purchaseData== iddata) select a).ToList();
-                //var ids = (from a in data where (a.ID_purchaseData== iddata) select a.ItemCode).ToArray();
-
-                //var forecast = dbMatriz.Database.SqlQuery<Forecast_Cajas>("Select * from Forecast_Cajas").ToList<Forecast_Cajas>();
-                //forecast.Where(c => ids.Contains(c.CodProducto)).ToList();
-                //Tenemos todos los datos del forecast
-                //List<Initial_forecastData> initial_forecast = new List<Initial_forecastData>();
-                //foreach (var forec in data)
-                //{
-                //    Initial_forecastData newforrep = new Initial_forecastData();
-                //    newforrep.CodProducto = forec.ItemCode;
-                //    newforrep.Producto = data.Where(c => c.ItemCode == forec.ItemCode).Select(c => c.Description).FirstOrDefault();
-                //    newforrep.b1 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).FirstOrDefault();
-                //    newforrep.b2 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(1).FirstOrDefault();
-                //    newforrep.b3 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(2).FirstOrDefault();
-                //    newforrep.b4 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(3).FirstOrDefault();
-                //    newforrep.b5 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(4).FirstOrDefault();
-                //    newforrep.f1 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.Forecast ).FirstOrDefault();
-                //    newforrep.f2 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(1).FirstOrDefault();
-                //    newforrep.f3 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(2).FirstOrDefault();
-                //    newforrep.f4 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(3).FirstOrDefault();
-                //    newforrep.f5 = forecast.Where(c => c.CodProducto == forec.ItemCode).Select(c => c.BaseLine ).Skip(4).FirstOrDefault();
-
-                //    initial_forecast.Add(newforrep);
-                //}
+                var dataprocess = (from a in dblim.Purchase_data where (a.ID_purchaseData == iddata) select a).FirstOrDefault();
 
 
+                ViewBag.comment = dataprocess.query1;
                 ViewBag.iddata = iddata;
 
 
-                //return View(initial_forecast);
+                //Calculamos periodo anterior
+                List<pronostico> lstpronostico = new List<pronostico>();
+
+                foreach (var item in data) {
+                    pronostico lstitem = new pronostico();
+                    lstitem.itemcode = item.ItemCode;
+                    lstitem.itemname = item.Description;
+
+                    decimal actual_forecast = 0; //cajas
+                    decimal lastsaved_forecast = 0; //cajas
+                    decimal lastsaved_history = 0; //cajas
+                    decimal lastsaved_historymultiple = 0; //cajas
+                    var anio = "";
+                    var periodo = "";
+                    //Obtenemos el historial del producto en el proceso actual
+                    var producto = (from a in dbMatriz.PurchaseData_product where (a.ItemCode == item.ItemCode && a.ID_purchaseData == iddata) select a).FirstOrDefault();
+                    if (producto != null) { actual_forecast = producto.Forecast1_source3; }
+        
+                
+
+                    //Evaluamos si hara salto de anio o lo mantiene
+                    if (producto.Forecast1_source1_period == 1)
+                    {
+                        periodo = (13).ToString();
+                        anio = producto.Forecast1_source1_year.ToString();
+                    }
+                    else if (producto.Forecast1_source1_period == 3) //Periodo 3 siempre  es Enero->
+                    {
+                        periodo = (producto.Forecast1_source1_period - 1).ToString();
+                        anio = (producto.Forecast1_source1_year - 1).ToString();
+                    }
+                    else
+                    {
+                        periodo = (producto.Forecast1_source1_period - 1).ToString();
+                        anio = producto.Forecast1_source1_year.ToString();
+                    }
+                    var periodoint = Convert.ToInt32(periodo);
+                    var anioint = Convert.ToInt32(anio);
+
+                    var rephistorybyPeriodYear = dbMatriz.PurchaseData_product.Where(a => a.ItemCode == item.ItemCode && a.Forecast1_source1_period == periodoint && a.Forecast1_source1_year == anioint).FirstOrDefault();
+                    if (rephistorybyPeriodYear != null) { lastsaved_forecast = rephistorybyPeriodYear.Forecast1_source3; }
+                    //Historialfinal
+                    var salesHistory = dlipro.Database.SqlQuery<salesHistory>("Select * from BI_Sales_History_Matriz_Compras where ItemCode={0} and Year_DLI={1} and Period={2}", item.ItemCode, anio, periodo).ToList<salesHistory>();
+                    if (salesHistory != null) { lastsaved_history = Convert.ToDecimal(salesHistory.Select(c=>c.Quantity).Sum()); }
+
+                    lstitem.period = periodo;
+                    lstitem.year = anio;
+                    lstitem.actualforecast = actual_forecast;
+
+                    lstitem.lastsavedforecast = lastsaved_forecast;
+                    lstitem.lastsalesHistory = lastsaved_history;
+                    lstitem.actualperiod = producto.Forecast1_source1_period;
+                    lstitem.actualyear = producto.Forecast1_source1_year;
+
+                    var periodossiguientesinit = Convert.ToInt32(periodo);
+                    for (int i = 1; i < 5; i++) {
+                        var nuevoperiod ="";
+                        var nuevoanio ="";
+
+                        if (periodossiguientesinit == 1)
+                        {
+                            nuevoperiod = (13).ToString();
+                            nuevoanio = producto.Forecast1_source1_year.ToString();
+                        }
+                        else if (periodossiguientesinit == 3) //Periodo 3 NO siempre  es Enero->
+                        {
+                            nuevoperiod = (periodossiguientesinit - 1).ToString();
+                            nuevoanio = (producto.Forecast1_source1_year - 1).ToString();
+                        }
+                        else
+                        {
+                            nuevoperiod = (periodossiguientesinit - 1).ToString();
+                            nuevoanio = producto.Forecast1_source1_year.ToString();
+                        }
+
+                        var newsalesHistory = dlipro.Database.SqlQuery<salesHistory>("Select * from BI_Sales_History_Matriz_Compras where ItemCode={0} and Year_DLI={1} and Period={2}", item.ItemCode, nuevoanio, nuevoperiod).ToList<salesHistory>();
+                        if (newsalesHistory != null) { lastsaved_historymultiple = Convert.ToDecimal(newsalesHistory.Select(c => c.Quantity).Sum()); }
+
+                        switch (i) {
+                            case 1:
+                                lstitem.lastsalesHistory2 = lastsaved_historymultiple;
+                                break;
+                            case 2:
+                                lstitem.lastsalesHistory3 = lastsaved_historymultiple;
+                                break;
+                            case 3:
+                                lstitem.lastsalesHistory4 = lastsaved_historymultiple;
+                                break;
+                            case 4:
+                                lstitem.lastsalesHistory5 = lastsaved_historymultiple;
+                                break;
+                        }
+
+                        periodossiguientesinit = Convert.ToInt32(nuevoperiod);
+                    }
+
+
+                    lstpronostico.Add(lstitem);
+                }
+
+                ViewBag.lstpronostico = lstpronostico;
+
                 return View(data);
 
             }
@@ -102,20 +197,17 @@ namespace LimenawebApp.Controllers
 
                 //HEADER
                 //ACTIVE PAGES
-                ViewData["Menu"] = "Operations";
-                ViewData["Page"] = "Purchase Data";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "operpur_submenu";
+                ViewData["Menu"] = "Purchases";
+                ViewData["Page"] = "SOP";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
                 var product = dbMatriz.PurchaseData_product.Where(c => c.ID_purchaseData == data && c.ItemCode == ItemCode).FirstOrDefault();
 
@@ -142,10 +234,37 @@ namespace LimenawebApp.Controllers
                         newperiod.category = "P" + i;
                         newperiod.a2018 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2018).Select(a => a.Quantity).Sum()), 2);
                         newperiod.a2019 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2019).Select(a => a.Quantity).Sum()), 2);
-                    newperiod.a2020 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2020).Select(a => a.Quantity).Sum()), 2);
+
+
+                    if (i == product.Forecast1_source1_period)
+                    {
+                        newperiod.a2020 = Math.Round(Convert.ToDouble(product.Forecast1_source3), 2);
+                    }else if (i == product.Forecast2_source1_period)
+                    {
+                        newperiod.a2020 = Math.Round(Convert.ToDouble(product.Forecast2_source3), 2);
+                    }
+                    else if (i == product.Forecast3_source1_period)
+                    {
+                        newperiod.a2020 = Math.Round(Convert.ToDouble(product.Forecast3_source3), 2);
+                    }
+                    else if (i == product.Forecast4_source1_period)
+                    {
+                        newperiod.a2020 = Math.Round(Convert.ToDouble(product.Forecast4_source3), 2);
+                    }
+                    else if (i == product.Forecast5_source1_period)
+                    {
+                        newperiod.a2020 = Math.Round(Convert.ToDouble(product.Forecast5_source3), 2);
+                    }else {
+                        newperiod.a2020 = Math.Round(Convert.ToDouble(salesHistory.Where(a => a.period == prd && a.Year_DLI == 2020).Select(a => a.Quantity).Sum()), 2);
+                    }
+                   
+                 
 
                     listsalesChart.Add(newperiod);
                 }
+
+                
+
 
                 ViewBag.salesJSON = listsalesChart.ToArray();
                 return View(salesHistory);
@@ -228,20 +347,17 @@ namespace LimenawebApp.Controllers
 
                 //HEADER
                 //ACTIVE PAGES
-                ViewData["Menu"] = "Operations";
-                ViewData["Page"] = "Purchase Data";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "operpur_submenu";
+                ViewData["Menu"] = "Purchases";
+                ViewData["Page"] = "SOP";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
 
                 var data = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == iddata) select a).ToList();
@@ -352,19 +468,6 @@ public class Initial_forecastData
 
         }
 
-        //public class salesHistory_product
-        //{
-        //    public Int64 ID { get; set; }
-        //    public string id_Period { get; set; }
-        //    public string period { get; set; }
-        //    public Int32 OffSetPeriod { get; set; }
-        //    public Int16 Year_DLI { get; set; }
-        //    public string ItemCode { get; set; }
-        //    public decimal? LineTotal { get; set; }
-        //    public decimal? Profit { get; set; }
-        //    public decimal? Each { get; set; }
-        //}
-
         public class salesHistory
         {
             public int ID { get; set; }
@@ -399,25 +502,23 @@ public class Initial_forecastData
             if (generalClass.checkSession())
             {
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
                 //HEADER
                 //ACTIVE PAGES
-                ViewData["Menu"] = "Operations";
-                ViewData["Page"] = "Process";
-                ViewBag.menunameid = "inventory_menu";
-                ViewBag.submenunameid = "stock_submenu";
+                ViewData["Menu"] = "Purchases";
+                ViewData["Page"] = "SOP";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
 
-    
+
                 var product = dbMatriz.PurchaseData_product.Where(c => c.ID_purchaseData == data && c.ItemCode == ItemCode).FirstOrDefault();
 
                 var salesHistory = dlipro.Database.SqlQuery<salesHistory>("Select * from BI_Sales_History_Matriz_Compras where ItemCode={0}", ItemCode).ToList<salesHistory>();
@@ -472,7 +573,10 @@ public class Initial_forecastData
                 foreach (var itt in lstforecastRep) {
                     var sumav = lstforecastRep.Select(c => c.AVG).Sum();
 
-                    var totperc = ((itt.AVG / sumav) * 100);
+                    decimal totperc = 0;
+                    if (sumav > 0) {
+                        totperc= Convert.ToDecimal((itt.AVG / sumav) * 100);
+                    }
                     itt.PCT = totperc;
                 }
 
@@ -523,12 +627,18 @@ public class Initial_forecastData
                     newforrep2.id_SalesRep = forec;
                     newforrep2.SalesRep = salesHistory.Where(c => c.id_SalesRep == forec).Select(c => c.SalesRep).FirstOrDefault();
                     var datosedt = lstforecastRep.Where(a => a.id_SalesRep == forec).FirstOrDefault();
-
-                    newforrep2.p1 =  f1s2 > 0 ? f1s2 : ((product.Forecast1_source2 * datosedt.PCT)/100);
-                    newforrep2.p2 = f2s2 > 0 ? f2s2 :  ((product.Forecast2_source2 * datosedt.PCT) / 100);
-                    newforrep2.p3 = f3s2 > 0 ? f3s2 : ((product.Forecast3_source2 * datosedt.PCT) / 100);
-                    newforrep2.p4 = f4s2 > 0 ? f4s2 : ((product.Forecast4_source2 * datosedt.PCT) / 100);
-                    newforrep2.p5 = f5s2 > 0 ? f5s2 : ((product.Forecast5_source2 * datosedt.PCT) / 100);
+                    //Realizamos los calculos
+                    var p1conv = f1s2 > 0 ? f1s2 : (product.Forecast1_source3 * datosedt.PCT) / 100;
+                    var p2conv = f2s2 > 0 ? f2s2 : ((product.Forecast2_source3 * datosedt.PCT) / 100);
+                    var p3conv = f3s2 > 0 ? f3s2 : ((product.Forecast3_source3 * datosedt.PCT) / 100);
+                    var p4conv = f4s2 > 0 ? f4s2 : ((product.Forecast4_source3 * datosedt.PCT) / 100);
+                    var p5conv = f5s2 > 0 ? f5s2 : ((product.Forecast5_source3 * datosedt.PCT) / 100);
+                    //Por solicitud, redondeamos a enteros
+                    newforrep2.p1 = Math.Round(Convert.ToDecimal(p1conv), 0, MidpointRounding.AwayFromZero);
+                    newforrep2.p2 = Math.Round(Convert.ToDecimal(p2conv), 0, MidpointRounding.AwayFromZero);
+                    newforrep2.p3 = Math.Round(Convert.ToDecimal(p3conv), 0, MidpointRounding.AwayFromZero);
+                    newforrep2.p4 = Math.Round(Convert.ToDecimal(p4conv), 0, MidpointRounding.AwayFromZero);
+                    newforrep2.p5 = Math.Round(Convert.ToDecimal(p5conv), 0, MidpointRounding.AwayFromZero);
                     newforrep2.p6 = 0;
                     newforrep2.AVG = 0;
                     newforrep2.PCT = 0;
@@ -576,10 +686,9 @@ public class Initial_forecastData
 
         public ActionResult ProductCatalog()
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
-
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
                 //HEADER
                 //ACTIVE PAGES
                 ViewData["Menu"] = "Operations";
@@ -682,9 +791,9 @@ public class Initial_forecastData
         }
         public ActionResult edit_purchaseData(int id)
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
                 //ACTIVE PAGES
@@ -793,11 +902,12 @@ public class Initial_forecastData
 
             }
         }
-        public ActionResult new_purchaseData()
+        public ActionResult new_purchaseData(int id)
         {
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (generalClass.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+               
 
                 //HEADER
                 //ACTIVE PAGES
@@ -816,164 +926,34 @@ public class Initial_forecastData
 
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
+
+                var existe = (from j in dblim.Purchase_data_details where (j.ID_purchaseData == id) select j).Count();
+                if (existe > 0)
+                {
+                    return RedirectToAction("edit_purchaseData", "Operations", new { id = id });
+                }
+                
+
+                //Seleccionamos los productos de la submatriz
+                var products = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == id) select a).ToList();
+                var IDsproducts = (from g in products  select g.ItemCode).ToArray();
+                //Seleccionamos los datos de los productos en la submatriz, generada por el proceso de compras en db_matrizCompras
+                List<view_MatrizMadre> data = (from b in dbMatriz.view_MatrizMadre where (IDsproducts.Contains(b.ProdCodigo)) select b).ToList();
+
+                foreach (var item in data) {
+                    //Colocamos los pronosticos que se crearon en SOP (siempre tienen que existir ya que la sub matriz se crea en el proceso SOP
+                    var productfin = products.Where(c => c.ItemCode == item.ProdCodigo).FirstOrDefault();
+                    if (productfin != null) {
+                        item.PronosticoPeriodoActual = Convert.ToDouble(productfin.Forecast1_source3);
+                        item.PronosticoSiguiente1 = Convert.ToDouble(productfin.Forecast2_source3);
+                        item.PronosticoSiguiente2 = Convert.ToDouble(productfin.Forecast3_source3);
+                        item.PronosticoSiguiente3 = Convert.ToDouble(productfin.Forecast4_source3);
+                        item.PronosticoSiguiente4 = Convert.ToDouble(productfin.Forecast5_source3);
+                    }
+                    
          
-                List<view_MatrizMadre> data = (from b in dbMatriz.view_MatrizMadre select b).ToList();
-                //List<MatrizMadre> data = (from b in dbMatriz.Matriz_Formato select new MatrizMadre
-                //{
-
-                //    ProdCodigo = b.ProdCodigo,
-                //    ProdNombre = b.ProdNombre,
-
-                //    FactorCompra = 0,
-                //    FactorCompra_quiebre = 0,
-                //    Politica_cobertura = 0,
-                //    Marca = b.Marca,
-                //    SubCategory = b.SubCategory,
-                //    Category = b.Category,
-                //    ProvCodigo = b.ProvCodigo,
-                //    ProvNombre = b.ProvNombre,
-
-                //    UnidadMedidaLetras = b.UnidadMedidaLetras,
-                //    InventarioCajas = b.InventarioCajas,
-                //    InventarioEach = b.InventarioEach,
-                //    Promedio = b.Promedio,
-                //    Desviacion = b.Desviacion,
-                //    Maximo = b.Maximo,
-                //    Minimo = b.Minimo,
-                //    PronosticoPeriodoActual = b.PronosticoPeriodoActual,
-                //    Promedio_AA = b.Promedio_AA,
-                //    VentaB1 = b.VentaB1,
-                //    Variacion = 0,
-                //    TendenciaPeriodoActual = b.TendenciaPeriodoActual,
-                //    PronosticoSiguiente1 = b.PronosticoSiguiente1,
-                //    PronosticoSiguiente2 = b.PronosticoSiguiente2,
-                //    PronosticoSiguiente3 = b.PronosticoSiguiente3,
-                //    PronosticoSiguiente4 = b.PronosticoSiguiente4,
-                //    CoberturaActual = b.CoberturaActual,
-                //    CoberturaProyectada = b.CoberturaProyectada,
-                //    OTB = 0,
-                //    Pedido = 0,
-                //    DeliveryDate = b.DeliveryDate,
-                //    DocumentDate = b.DocumentDate,
-                //    U_TI = b.U_TI,
-                //    U_HI = b.U_HI,
-                //    U_PalletCount = 0,
-                //    PalletsdeOrden = 0,
-                //    CoberturaProyectadaNume = b.CoberturaProyectadaNume,
-                //    CoberturaIngresoPO = 0,
-                //    Costo = 0,
-                //    DescuentoAp = 0,
-                //    DescuentoAn = 0,
-                //    CostoconDescuento = 0,
-                //    MontoPO = 0,
-                //    Comentarios = "",
-                //    Cobertura_OTB = 0,
-                //    CoberturaProyectadaDeno = b.CoberturaProyectadaDeno,
-                //    VentaF1 = b.VentaF1,
-                //    LeadTime = b.LeadTime,
-                //    transito = 0
-                //}).ToList();
-
-
-                //foreach (var item in data) {
-                //    if (item.Promedio_AA == null) { item.Promedio_AA = 0; }
-                //    if (item.VentaB1 == null) { item.VentaB1 = 0; }
-                //    if (item.TendenciaPeriodoActual == null) { item.TendenciaPeriodoActual = 0; }
-                //    if (item.PronosticoSiguiente1 == null) { item.PronosticoSiguiente1 = 0; }
-                //    if (item.PronosticoSiguiente2 == null) { item.PronosticoSiguiente2 = 0; }
-                //    if (item.PronosticoSiguiente3 == null) { item.PronosticoSiguiente3 = 0; }
-                //    if (item.PronosticoSiguiente4 == null) { item.PronosticoSiguiente4 = 0; }
-                //    if (item.Desviacion == null) { item.Desviacion = 0; }
-                //    if (item.Maximo == null) { item.Maximo = 0; }
-                //    if (item.Minimo == null) { item.Minimo = 0; }
-                //    if (item.PronosticoPeriodoActual == null) { item.PronosticoPeriodoActual = 0; }
-                //    if (item.CoberturaActual == null) { item.CoberturaActual = 0; }
-                //    if (item.CoberturaProyectada == null) { item.CoberturaProyectada = 0; }
-                //    if (item.CoberturaProyectadaDeno == null) { item.CoberturaProyectadaDeno = 0; }
-                //    if (item.CoberturaProyectadaNume == null) { item.CoberturaProyectadaNume = 0; }
-                //    if (item.Promedio == null) { item.Promedio = 0; }
-                //    if (item.U_TI == null) { item.U_TI = 0; }
-                //    if (item.U_HI == null) { item.U_HI = 0; }
-                //    if (item.U_PalletCount == null) { item.U_PalletCount = 0; }
-                //    if (item.Variacion == null) { item.Variacion = 0; }
-                //    if (item.VentaF1 == null) { item.VentaF1 = 0; }
-
-
-                //    var factorunidad = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.FactorUnidadCompra).FirstOrDefault();
-                //    if (factorunidad != null) { item.U_PalletCount = Convert.ToDecimal(factorunidad); }
-                    
-
-                //    item.Costo = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.Costo).FirstOrDefault();
-                //    item.CostoconDescuento = item.Costo;
-                //    if (item.Costo == null) { item.Costo = 0; item.CostoconDescuento = 0; }
-         
-
-
-                //    item.FactorCompra = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.FactorCompra).FirstOrDefault();
-                //    if (item.FactorCompra == null) { item.FactorCompra = 0; }
-                //    item.FactorCompra_quiebre = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.FactorCompra_quiebre).FirstOrDefault();
-                //    if (item.FactorCompra_quiebre == null) { item.FactorCompra_quiebre = 0; }
-
-                //    item.Politica_cobertura = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.Politica_cobertura).FirstOrDefault();
-                //    if (item.Politica_cobertura == null) { item.Politica_cobertura = 0; }
-                //    item.transito = (from a in dbMatriz.Transito_Final where (a.ProdCodigo == item.ProdCodigo) select a).Count();
-
-                //    item.Comentarios = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.Comentarios).FirstOrDefault();
-                //    if (item.Comentarios == null) { item.Comentarios = ""; }
-                //    if (item.FactorCompra_quiebre == null) { item.FactorCompra_quiebre = 0; }
-                //    if (item.CoberturaProyectada > item.Politica_cobertura)
-                //    {
-                //        int res2 = 0;
-                //        try
-                //        {
-                //            res2 = Convert.ToInt32((((((item.CoberturaProyectada * 4) * (item.FactorCompra)) - (item.CoberturaProyectadaNume)) / Convert.ToDouble(item.U_PalletCount))) * Convert.ToDouble(item.U_PalletCount));
-                //        }
-                //        catch
-                //        {
-                //            res2 = 0;
-                //        }
-                //        item.OTB = res2;
-                //    }
-                //    else {
-                //        int res2 = 0;
-                //        try
-                //        {
-                //            res2 = Convert.ToInt32((((item.CoberturaProyectada * 4) * (item.FactorCompra_quiebre)) / Convert.ToDouble(item.U_PalletCount)) * Convert.ToDouble(item.U_PalletCount));
-                //        }
-                //        catch {
-                //            res2 = 0;
-                //        }
-                    
-                //        item.OTB = res2;
-                //    }
-                //    try {
-                //        item.Cobertura_OTB = (item.CoberturaProyectadaNume + item.OTB) / item.CoberturaProyectadaDeno;
-                //        if (item.CoberturaProyectadaDeno == 0) { item.Cobertura_OTB = 0; }
-                //    } catch { item.Cobertura_OTB = 0; }
-
-                //    try { item.CoberturaIngresoPO = (item.CoberturaProyectadaNume + item.Pedido) / item.CoberturaProyectadaDeno;
-                //        if (item.CoberturaProyectadaDeno == 0) { item.CoberturaIngresoPO = 0; }
-                //    } catch { item.CoberturaIngresoPO = 0; }
-                //    try
-                //    {
-                //        if (item.PronosticoPeriodoActual == 0)
-                //        {
-                //            item.Variacion = 0;
-                //        }
-                //        else {
-                //            item.Variacion = (item.VentaF1 - item.PronosticoPeriodoActual) / item.PronosticoPeriodoActual;
-                //        }
-                        
-                //    }
-                //    catch { item.Variacion = 0; }
-                    
-
-                //}
-                //var child = (from b in dbMatriz.Transito_Final select b).Take(300).ToList();
-
-                //JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
-                //var acts = javaScriptSerializer.Serialize(data);
-
+                }
+                ViewBag.iddata = id;
                 ViewBag.data = data;
                 return View();
 
@@ -1033,211 +1013,7 @@ public class Initial_forecastData
             public string category { get; set; }
 
         }
-        //public JsonResult CustomServerSideSearchAction()
-        //{
-        //    // action inside a standard controller
-        //    //int filteredResultsCount;
-        //    //int totalResultsCount;
-        //    //var res = YourCustomSearchFunc(model, out filteredResultsCount, out totalResultsCount);
 
-        //    //var result = new List<MatrizMadre>(res.Count);
-        //    ////foreach (var s in res)
-        //    ////{
-        //    ////    // simple remapping adding extra info to found dataset
-        //    ////    result.Add(new YourCustomSearchClass
-        //    ////    {
-        //    ////        EmployerId = User.ClaimsUserId(),
-        //    ////        Id = s.Id,
-        //    ////        Pin = s.Pin,
-        //    ////        Firstname = s.Firstname,
-        //    ////        Lastname = s.Lastname,
-        //    ////        RegistrationStatusId = DoSomethingToGetIt(s.Id),
-        //    ////        Address3 = s.Address3,
-        //    ////        Address4 = s.Address4
-        //    ////    });
-        //    ////};
-
-        //    var catalogo = dblim.Purchase_catalog.Select(a => a).ToList();
-        //    List<MatrizMadre> result = (from b in dbMatriz.Matriz_Formato
-        //                                select new MatrizMadre
-        //                                {
-
-        //                                    ProdCodigo = b.ProdCodigo,
-        //                                    ProdNombre = b.ProdNombre,
-
-        //                                    FactorCompra = 0,
-        //                                    FactorCompra_quiebre = 0,
-        //                                    Politica_cobertura = 0,
-        //                                    Marca = b.Marca,
-        //                                    SubCategory = b.SubCategory,
-        //                                    Category = b.Category,
-        //                                    ProvCodigo = b.ProvCodigo,
-        //                                    ProvNombre = b.ProvNombre,
-
-        //                                    UnidadMedidaLetras = b.UnidadMedidaLetras,
-        //                                    InventarioCajas = b.InventarioCajas,
-        //                                    InventarioEach = b.InventarioEach,
-        //                                    Promedio = b.Promedio,
-        //                                    Desviacion = b.Desviacion,
-        //                                    Maximo = b.Maximo,
-        //                                    Minimo = b.Minimo,
-        //                                    PronosticoPeriodoActual = b.PronosticoPeriodoActual,
-        //                                    Promedio_AA = b.Promedio_AA,
-        //                                    VentaB1 = b.VentaB1,
-        //                                    Variacion = 0,
-        //                                    TendenciaPeriodoActual = b.TendenciaPeriodoActual,
-        //                                    PronosticoSiguiente1 = b.PronosticoSiguiente1,
-        //                                    PronosticoSiguiente2 = b.PronosticoSiguiente2,
-        //                                    PronosticoSiguiente3 = b.PronosticoSiguiente3,
-        //                                    PronosticoSiguiente4 = b.PronosticoSiguiente4,
-        //                                    CoberturaActual = b.CoberturaActual,
-        //                                    CoberturaProyectada = b.CoberturaProyectada,
-        //                                    OTB = 0,
-        //                                    Pedido = 0,
-        //                                    DeliveryDate = b.DeliveryDate,
-        //                                    DocumentDate = b.DocumentDate,
-        //                                    U_TI = b.U_TI,
-        //                                    U_HI = b.U_HI,
-        //                                    U_PalletCount = b.U_PalletCount,
-        //                                    PalletsdeOrden = 0,
-        //                                    CoberturaProyectadaNume = b.CoberturaProyectadaNume,
-        //                                    CoberturaIngresoPO = 0,
-        //                                    Costo = 0,
-        //                                    DescuentoAp = 0,
-        //                                    DescuentoAn = 0,
-        //                                    CostoconDescuento = 0,
-        //                                    MontoPO = 0,
-        //                                    Comentarios = "",
-        //                                    Cobertura_OTB = 0,
-        //                                    CoberturaProyectadaDeno = b.CoberturaProyectadaDeno,
-        //                                    VentaF1 = b.VentaF1,
-        //                                    LeadTime = b.LeadTime,
-        //                                    transito = 0
-        //                                }).Take(10).ToList();
-
-        //    //filteredResultsCount = result.Count();
-        //    //totalResultsCount = result.Count();
-        //    foreach (var item in result)
-        //    {
-        //        if (item.Promedio_AA == null) { item.Promedio_AA = 0; }
-        //        if (item.VentaB1 == null) { item.VentaB1 = 0; }
-        //        if (item.TendenciaPeriodoActual == null) { item.TendenciaPeriodoActual = 0; }
-        //        if (item.PronosticoSiguiente1 == null) { item.PronosticoSiguiente1 = 0; }
-        //        if (item.PronosticoSiguiente2 == null) { item.PronosticoSiguiente2 = 0; }
-        //        if (item.PronosticoSiguiente3 == null) { item.PronosticoSiguiente3 = 0; }
-        //        if (item.PronosticoSiguiente4 == null) { item.PronosticoSiguiente4 = 0; }
-        //        if (item.Desviacion == null) { item.Desviacion = 0; }
-        //        if (item.Maximo == null) { item.Maximo = 0; }
-        //        if (item.Minimo == null) { item.Minimo = 0; }
-        //        if (item.PronosticoPeriodoActual == null) { item.PronosticoPeriodoActual = 0; }
-        //        if (item.CoberturaActual == null) { item.CoberturaActual = 0; }
-        //        if (item.CoberturaProyectada == null) { item.CoberturaProyectada = 0; }
-        //        if (item.CoberturaProyectadaDeno == null) { item.CoberturaProyectadaDeno = 0; }
-        //        if (item.CoberturaProyectadaNume == null) { item.CoberturaProyectadaNume = 0; }
-        //        if (item.Promedio == null) { item.Promedio = 0; }
-        //        if (item.U_TI == null) { item.U_TI = 0; }
-        //        if (item.U_HI == null) { item.U_HI = 0; }
-        //        if (item.U_PalletCount == null) { item.U_PalletCount = 0; }
-        //        if (item.Variacion == null) { item.Variacion = 0; }
-        //        if (item.VentaF1 == null) { item.VentaF1 = 0; }
-
-
-        //        item.Costo = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.Costo).FirstOrDefault();
-        //        item.CostoconDescuento = item.Costo;
-        //        if (item.Costo == null) { item.Costo = 0; item.CostoconDescuento = 0; }
-
-
-
-        //        item.FactorCompra = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.FactorCompra).FirstOrDefault();
-        //        if (item.FactorCompra == null) { item.FactorCompra = 0; }
-        //        item.FactorCompra_quiebre = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.FactorCompra_quiebre).FirstOrDefault();
-        //        if (item.FactorCompra_quiebre == null) { item.FactorCompra_quiebre = 0; }
-
-        //        item.Politica_cobertura = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.Politica_cobertura).FirstOrDefault();
-        //        if (item.Politica_cobertura == null) { item.Politica_cobertura = 0; }
-        //        item.transito = (from a in dbMatriz.Transito_Final where (a.ProdCodigo == item.ProdCodigo) select a).Count();
-
-        //        item.Comentarios = (from a in catalogo where (a.ProductCode == item.ProdCodigo) select a.Comentarios).FirstOrDefault();
-        //        if (item.FactorCompra_quiebre == null) { item.FactorCompra_quiebre = 0; }
-        //        if (item.CoberturaProyectada > item.Politica_cobertura)
-        //        {
-        //            int res2 = 0;
-        //            try
-        //            {
-        //                res2 = Convert.ToInt32((((((item.CoberturaProyectada * 4) * (item.FactorCompra)) - (item.CoberturaProyectadaNume)) / Convert.ToDouble(item.U_PalletCount))) * Convert.ToDouble(item.U_PalletCount));
-        //            }
-        //            catch
-        //            {
-        //                res2 = 0;
-        //            }
-        //            item.OTB = res2;
-        //        }
-        //        else
-        //        {
-        //            int res2 = 0;
-        //            try
-        //            {
-        //                res2 = Convert.ToInt32((((item.CoberturaProyectada * 4) * (item.FactorCompra_quiebre)) / Convert.ToDouble(item.U_PalletCount)) * Convert.ToDouble(item.U_PalletCount));
-        //            }
-        //            catch
-        //            {
-        //                res2 = 0;
-        //            }
-
-        //            item.OTB = res2;
-        //        }
-        //        try
-        //        {
-        //            item.Cobertura_OTB = (item.CoberturaProyectadaNume + item.OTB) / item.CoberturaProyectadaDeno;
-        //            if (item.CoberturaProyectadaDeno == 0) { item.Cobertura_OTB = 0; }
-        //        }
-        //        catch { item.Cobertura_OTB = 0; }
-        //        try
-        //        {
-        //            item.CoberturaIngresoPO = (item.CoberturaProyectadaNume + item.Pedido) / item.CoberturaProyectadaDeno;
-        //            if (item.CoberturaProyectadaDeno == 0) { item.CoberturaIngresoPO = 0; }
-        //        }
-        //        catch { item.CoberturaIngresoPO = 0; }
-        //        try
-        //        {
-        //            if (item.PronosticoPeriodoActual == 0)
-        //            {
-        //                item.Variacion = 0;
-        //            }
-        //            else
-        //            {
-        //                item.Variacion = (item.VentaF1 - item.PronosticoPeriodoActual) / item.PronosticoPeriodoActual;
-        //            }
-
-        //        }
-        //        catch { item.Variacion = 0; }
-
-
-        //    }
-        //    MatrizDatatable dataTable = new MatrizDatatable();
-        //    dataTable.draw = int.Parse(Request.QueryString["draw"]);
-
-
-        //    dataTable.data = result.ToArray();
-        //    dataTable.recordsTotal = result.Count;
-        //    dataTable.recordsFiltered = result.Count();
-        //    JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
-        //    string result2 = javaScriptSerializer.Serialize(result.ToArray());
-        //    return Json(result2, JsonRequestBehavior.AllowGet);
-
-        //    //JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
-        //    //var acts = javaScriptSerializer.Serialize(result);
-
-        //    //return Json(acts, JsonRequestBehavior.AllowGet);
-        //    //return Json(new
-        //    //{
-        //    //    // this is what datatables wants sending back
-        //    //    draw = model.num,
-        //    //    recordsTotal = totalResultsCount,
-        //    //    recordsFiltered = filteredResultsCount,
-        //    //    data = result
-        //    //});
-        //}
         public ActionResult getTransitoFinal(string id) {
             var child = (from b in dbMatriz.Transito_Final where (b.ProdCodigo == id) select b).ToList();
 
@@ -1248,7 +1024,7 @@ public class Initial_forecastData
         }
 
         [HttpPost]
-        public ActionResult Save_PurchaseData(List<MatrizMadre> objects, string Categories, string Subcategories, string Providers, string Brands)
+        public ActionResult Save_PurchaseData(List<MatrizMadre> objects, int IDpurchasedata)
         {
             string ttresult = "";
             try
@@ -1260,26 +1036,11 @@ public class Initial_forecastData
                     userid = activeuser.ID_User;
                 }
 
-                    Purchase_data newDataM = new Purchase_data();
-                newDataM.Date_create = DateTime.UtcNow;
-                newDataM.Date_data = DateTime.UtcNow.AddDays(-1);
-                newDataM.User_create = userid;
-                newDataM.query1 = "";
-                newDataM.query2 = "";
-                newDataM.Categories = Categories;
-                newDataM.SubCategories = Subcategories;
-                newDataM.Providers = Providers;
-                newDataM.Brands = Brands;
-                dblim.Purchase_data.Add(newDataM);
-                dblim.SaveChanges();
-
-                
-
                 List<Purchase_data_details> lsttosave = new List<Purchase_data_details>();
                 foreach (var items in objects)
                 {
                     Purchase_data_details newDet = new Purchase_data_details();
-                    newDet.ID_purchaseData = newDataM.ID_purchaseData;
+                    newDet.ID_purchaseData = IDpurchasedata;
                     newDet.num = items.num;
                     newDet.ProdCodigo = items.ProdCodigo;
                     newDet.ProdNombre = items.ProdNombre;
@@ -1476,6 +1237,13 @@ public class Initial_forecastData
                     newDet.Forecast5_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).Skip(4).FirstOrDefault();
                     newDet.Forecast5_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).Skip(4).FirstOrDefault();
                     newDet.Baseline5 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(4).FirstOrDefault();
+
+                    //Agregamos por defecto el forecast source 1 al forecast source 3
+                    newDet.Forecast1_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).FirstOrDefault());
+                    newDet.Forecast2_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).Skip(1).FirstOrDefault());
+                    newDet.Forecast3_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).Skip(2).FirstOrDefault());
+                    newDet.Forecast4_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).Skip(3).FirstOrDefault());
+                    newDet.Forecast5_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).Skip(4).FirstOrDefault());
 
                     newDet.ID_purchaseData = newDataM.ID_purchaseData;
                     newDet.SourceSel = 1;
@@ -1746,7 +1514,7 @@ public class Initial_forecastData
                     dblim.BulkDelete(details);
 
                     var detailsForecast = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == idD) select a).ToList();
-                    dblim.BulkDelete(detailsForecast);
+                    dbMatriz.BulkDelete(detailsForecast);
 
 
                     dblim.Purchase_data.Remove(data);
@@ -1829,21 +1597,36 @@ public class Initial_forecastData
                     if (periodo == "f1")
                     {
                         producto.Forecast1_source2 = newval;
+                        //Agregamos cambios a forecast de producto, sustituyendo
+                            producto.Forecast1_source3 = newval;
+
                     }
                     else if (periodo == "f2") {
                         producto.Forecast2_source2 = newval;
+     
+                            producto.Forecast2_source3 = newval;
+                        
                     }
                     else if (periodo == "f3")
                     {
                         producto.Forecast3_source2 = newval;
+                    
+                            producto.Forecast3_source3 = newval;
+                     
                     }
                     else if (periodo == "f4")
                     {
                         producto.Forecast4_source2 = newval;
+                    
+                            producto.Forecast4_source3 = newval;
+                        
                     }
                     else if (periodo == "f5")
                     {
                         producto.Forecast5_source2 = newval;
+                  
+                            producto.Forecast5_source3 = newval;
+                        
                     }
 
                     producto.Last_update = DateTime.UtcNow;
@@ -1933,27 +1716,25 @@ public class Initial_forecastData
                 if (producto != null)
                 {
                     //Existe por lo tanto actualizaremos
-
-                    if (periodo == "f1")
+                    switch (periodo)
                     {
-                        producto.Forecast1_source3 = newval;
+                        case "f1":
+                            producto.Forecast1_source3 = newval;
+                            break;
+                        case "f2":
+                            producto.Forecast2_source3 = newval;
+                            break;
+                        case "f3":
+                            producto.Forecast3_source3 = newval;
+                            break;
+                        case "f4":
+                            producto.Forecast4_source3 = newval;
+                            break;
+                        case "f5":
+                            producto.Forecast5_source3 = newval;
+                            break;
                     }
-                    else if (periodo == "f2")
-                    {
-                        producto.Forecast2_source3 = newval;
-                    }
-                    else if (periodo == "f3")
-                    {
-                        producto.Forecast3_source3 = newval;
-                    }
-                    else if (periodo == "f4")
-                    {
-                        producto.Forecast4_source3 = newval;
-                    }
-                    else if (periodo == "f5")
-                    {
-                        producto.Forecast5_source3 = newval;
-                    }
+                        
 
                     producto.Last_update = DateTime.UtcNow;
 
@@ -1961,9 +1742,8 @@ public class Initial_forecastData
                     dbMatriz.SaveChanges();
 
                     //Guardamos en el historial por agente
-
                     var rephistory = dbMatriz.PurchaseData_byReps.Where(a => a.ID_user == rep && a.ID_purchaseData == iddata && a.ItemCode == itemcode).FirstOrDefault();
-                    if (rephistory == null)
+                    if (rephistory == null) //Creamos historial
                     {
                         var rephis = new PurchaseData_byReps();
                         rephis.ItemCode = itemcode;
@@ -1971,26 +1751,26 @@ public class Initial_forecastData
                         rephis.ID_user = rep;
                         rephis.ID_purchaseData = iddata;
                         rephis.Description = description;
-
-                        if (periodo == "f1")
+                 
+                        switch (periodo)
                         {
-                            rephis.Forecast1_source2= valbyrep;
-                        }
-                        else if (periodo == "f2")
-                        {
-                            rephis.Forecast2_source2 = valbyrep;
-                        }
-                        else if (periodo == "f3")
-                        {
-                            rephis.Forecast3_source2 = valbyrep;
-                        }
-                        else if (periodo == "f4")
-                        {
-                            rephis.Forecast4_source2 = valbyrep;
-                        }
-                        else if (periodo == "f5")
-                        {
-                            rephis.Forecast5_source2 = valbyrep;
+                            case "f1":
+                                rephis.Forecast1_source2 = valbyrep;
+                                rephis.Period = producto.Forecast1_source1_period.ToString();//Solo aplica para el pronostico 1
+                                rephis.Year = producto.Forecast1_source1_year.ToString();
+                                break;
+                            case "f2":
+                                rephis.Forecast2_source2 = valbyrep;
+                                break;
+                            case "f3":
+                                rephis.Forecast3_source2 = valbyrep;
+                                break;
+                            case "f4":
+                                rephis.Forecast4_source2 = valbyrep;
+                                break;
+                            case "f5":
+                                rephis.Forecast5_source2 = valbyrep;
+                                break;
                         }
 
 
@@ -2002,30 +1782,33 @@ public class Initial_forecastData
                         //Actualizamos el historial
 
                         rephistory.Last_update = DateTime.UtcNow;
-                        if (periodo == "f1")
+                     
+                        switch (periodo)
                         {
-                            rephistory.Forecast1_source2 = valbyrep;
-                        }
-                        else if (periodo == "f2")
-                        {
-                            rephistory.Forecast2_source2 = valbyrep;
-                        }
-                        else if (periodo == "f3")
-                        {
-                            rephistory.Forecast3_source2 = valbyrep;
-                        }
-                        else if (periodo == "f4")
-                        {
-                            rephistory.Forecast4_source2 = valbyrep;
-                        }
-                        else if (periodo == "f5")
-                        {
-                            rephistory.Forecast5_source2 = valbyrep;
+                            case "f1":
+                                rephistory.Forecast1_source2 = valbyrep;
+                                rephistory.Period = producto.Forecast1_source1_period.ToString();
+                                rephistory.Year = producto.Forecast1_source1_year.ToString();
+                                break;
+                            case "f2":
+                                rephistory.Forecast2_source2 = valbyrep;
+                                break;
+                            case "f3":
+                                rephistory.Forecast3_source2 = valbyrep;
+                                break;
+                            case "f4":
+                                rephistory.Forecast4_source2 = valbyrep;
+                                break;
+                            case "f5":
+                                rephistory.Forecast5_source2 = valbyrep;
+                                break;
                         }
 
                         dbMatriz.Entry(rephistory).State = EntityState.Modified;
                         dbMatriz.SaveChanges();
                     }
+
+
 
 
                     ttresult = "SUCCESS";
@@ -2206,5 +1989,73 @@ public class Initial_forecastData
 
 
         }
+
+        public ActionResult Get_acertividadSR(int idsap, int iddata, string itemcode)
+        {
+            try
+            {
+                decimal actual_forecast = 0; //cajas
+                decimal lastsaved_forecast = 0; //cajas
+                var anio = "";
+                var periodo = "";
+                //Obtenemos el historial del producto en el proceso actual
+                var rephistory = dbMatriz.PurchaseData_byReps.Where(a => a.ID_user == idsap && a.ID_purchaseData == iddata && a.ItemCode == itemcode).FirstOrDefault();
+                if (rephistory != null) { actual_forecast = rephistory.Forecast1_source2; }
+                //Obtenemos el historial del producto para en anio y periodo
+                var producto = (from a in dbMatriz.PurchaseData_product where (a.ItemCode == itemcode && a.ID_purchaseData == iddata) select a).FirstOrDefault();
+
+                //Evaluamos si hara salto de anio o lo mantiene
+                if (producto.Forecast1_source1_period == 1)
+                {
+                    periodo = (13).ToString();
+                    anio = producto.Forecast1_source1_year.ToString();
+                }
+                else if (producto.Forecast1_source1_period == 3) //Periodo 3 siempre  es Enero->
+                {
+                    periodo = (producto.Forecast1_source1_period - 1).ToString();
+                    anio = (producto.Forecast1_source1_year - 1).ToString();
+                }
+                else
+                {
+                    periodo = (producto.Forecast1_source1_period - 1).ToString();
+                    anio = producto.Forecast1_source1_year.ToString();
+                }
+
+
+                var rephistorybyPeriodYear = dbMatriz.PurchaseData_byReps.Where(a => a.ItemCode == itemcode && a.Period == periodo && a.Year == anio).FirstOrDefault();
+                if (rephistorybyPeriodYear != null) { lastsaved_forecast = rephistorybyPeriodYear.Forecast1_source2; }
+                var result = new
+                {
+                    response = "SUCCESS",
+                    period = periodo,
+                    year = anio,
+                    actualforecast = actual_forecast,
+                    lastsavedforecast = lastsaved_forecast,
+                    actualperiod= producto.Forecast1_source1_period,
+                    actualyear= producto.Forecast1_source1_year
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex) {
+                var result = new
+                {
+                    response = "Error: " + ex.Message,
+                    period = 0,
+                    year = 0,
+                    actualforecast = 0,
+                    lastsavedforecast = 0,
+                    actualperiod = 0,
+                    actualyear = 0
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+
+           
+        }
+
+
+
+
     }
 }

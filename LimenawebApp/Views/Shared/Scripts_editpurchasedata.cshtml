@@ -1,0 +1,587 @@
+﻿
+@{
+    Layout = null;
+}
+<script type="text/javascript">
+        //$('#data_tableEditor2').DataTable({
+        //    'paging':false
+        //});
+
+
+        function test() {
+                 var objects = @Html.Raw(Json.Encode(ViewBag.data));
+            var myArray = [];
+            if (objects.length > 0) {
+
+                try {
+                    $("#maintbbo").empty();
+                    $("#data_tableEditor2").append();
+                    for (var i = 0; i < objects.length; i++) {
+                        //console.log(objects[i]["ProdCodigo"]);
+                        //var tr = "";
+
+
+                        if (objects[i]["transito"] > 0) {
+                            myArray.push('<tr class="context-menu-one" style="background-color:aliceblue" id="' + objects[i]["ProdCodigo"] + '">');
+                        } else {
+                            myArray.push('<tr  class="context-menu-one" id="' + objects[i]["ProdCodigo"] + '">');
+                        }
+                        myArray.push('<td></td>');
+                        myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorUnidadCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;display:none">' + objects[i]["FactorCompra_quiebre"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;display:none">' + objects[i]["Politica_cobertura"] + "</td>");
+
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Marca"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["SubCategory"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["Category"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["InventarioCajas"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Desviacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Maximo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Minimo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B5"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B4"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B3"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B2"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio_AA"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["VentaB1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Variacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["TendenciaPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente2"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente3"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente4"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;" class="editCoberturaProyectadaNumeOriginal">' + objects[i]["CoberturaProyectadaNume"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;" class="editCoberturaProyectadaDeno">' + objects[i]["CoberturaProyectadaDeno"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"].toFixed(2) + "</td>");
+
+                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
+
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_TI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + Math.round(objects[i]["InventarioIngresoPO"]) + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
+
+
+
+                        if (objects[i]["Comentarios"] != null) {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea>' + objects[i]["Comentarios"] + '</textarea>' + "</td>");
+                        } else {
+                            myArray.push('<td style="padding: .25rem;">' + '<textarea></textarea>' + "</td>");
+                        }
+
+
+                        //myArray.push('<td hidden style="padding: .25rem;" class="editCoberturaProyectadaDeno">' + objects[i]["CoberturaProyectadaDeno"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["VentaF1"] + "</td>");
+                        myArray.push('<td hidden style="padding: .25rem;">' + objects[i]["LeadTime"] + "</td>");
+                        //myArray.push('<td hidden style="padding: .25rem;" class="editCoberturaProyectadaNumeOriginal">' + objects[i]["CoberturaProyectadaNume"] + "</td>");
+                        myArray.push('</tr >');
+
+                    }
+                    $('#maintbbo').append(myArray.join(''));
+
+                }
+                catch (err) {
+                    console.log("error: " + err.message);
+                    $("#maintbbo").empty();
+                    $("#data_tableEditor2").append();
+                }
+            } else {
+                console.log("error2");
+                $("#maintbbo").empty();
+                $("#data_tableEditor2").append();
+            }
+
+
+
+        }
+
+        $(document).ready(function () {
+            //Llamamos los datos
+            test();
+
+            var table = $('#data_tableEditor2').DataTable({
+                dom: 'lrtip',
+                scrollY: "400px",
+                scrollX: true,
+                scrollCollapse: true,
+                paging: false,
+
+                fixedColumns: {
+                    leftColumns: 3
+                }
+
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            function sort_unique(arr) {
+                return arr.sort().filter(function (el, i, a) {
+                    return (i == a.indexOf(el));
+                });
+            }
+
+            $(function () {
+                $('input.filternumbers').on('input', function () {
+                    this.value = this.value
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+                });
+            });
+
+
+            $('input.editPedido[type = "text"]').on('focusout', function () {
+                //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
+                var pedido = parseFloat($(this).val());
+                var coberturaProyectadaNume = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaNumeOriginal').text());
+                var coberturaProyectadaDeno = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaDeno').text());
+                var total = 0.0;
+                if (coberturaProyectadaDeno > 0) {
+                    total = ((coberturaProyectadaNume + pedido) / coberturaProyectadaDeno);
+
+                }
+
+                $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
+                //            //$(this).html('DEL');
+
+                ///Monto PO
+                var desc = 0;
+
+                desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                var monto = desc * pedido;
+                if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                //Pallet de orden editPalletOrden
+                var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
+                var palletstotal = (pedido / casesPallet);
+
+                if (casesPallet == 0) { palletstotal = 0; }
+                if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
+
+                $(this).closest('tr').find('.editCoberturaProyectadaNume').html(pedido + coberturaProyectadaNume);
+
+            });
+
+            $('input.editDAp[type = "text"]').on('focusout', function () {
+
+                var x = $(this).closest('tr').find('.editDAp').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAn').val('');
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - ((descuentop * costo) / 100));
+                    //costo con descuento
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var desc = 0;
+
+                    desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                    var monto = desc * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+                    //$(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2));
+
+                }
+
+
+            });
+
+            $('input.editDAn[type = "text"]').on('focusout', function () {
+                var x = $(this).closest('tr').find('.editDAn').val();
+                if (x != "") {
+                    $(this).closest('tr').find('.editDAp').val('');
+
+                    var descuentop = $(this).val();
+                    var costo = $(this).closest('tr').find('.editCosto').text();
+
+                    var total = (+costo - descuentop);
+                    if (total != 0) { $(this).closest('tr').find('.editCostoDescuento').html(total.toFixed(2)); } else { $(this).closest('tr').find('.editCostoDescuento').html(0); }
+
+
+                    ///Monto PO
+                    var pedido = $(this).closest('tr').find('.editPedido').val();
+                    var monto = total * pedido;
+
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                }
+
+
+            });
+        });
+
+
+
+        $('#data_tableEditor2 tbody').on('click', 'tr', function () {
+            if ($(this).hasClass('selected')) {
+                $(this).removeClass('selected');
+            }
+            else {
+                $('#data_tableEditor2 tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+        });
+
+        //$('#data_tableEditor2').treegrid();
+        //$('#data_tableEditor2').treegrid('collapseAll');
+
+
+
+
+        $(function () {
+            $.contextMenu({
+                selector: '.context-menu-one',
+                trigger: 'right',
+                items: $.contextMenu.fromMenu($('#html5menu'))
+            });
+
+            $('.context-menu-one').on('contextmenu', function (e) {
+                var product = this.id;
+                //Cargamos Transito final
+
+                $.ajax({
+                    url: '/Operations/getTransitoFinal',
+                    type: 'GET',
+                    data: { 'id': product },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        var obj = JSON.parse(result);
+
+                        if (obj.length > 0) {
+
+                            obj.sort(function (a, b) {
+                                if (a.NumTransito > b.NumTransito) {
+                                    return 1;
+                                }
+                                if (a.NumTransito < b.NumTransito) {
+                                    return -1;
+                                }
+                                // a must be equal to b
+                                return 0;
+                            });
+
+                            try {
+                                $(".tbodyid").empty();
+                                $(".tb_editor").append();
+                                for (var i = 0; i < obj.length; i++) {
+                                    var tr = "<tr>";
+                                    tr += "<td>" + obj[i]["NumTransito"] + "</td>";
+                                    tr += "<td>" + (new Date(parseInt(obj[i]["DocDate"].substr(6)))).toLocaleDateString('en-US') + "</td>";
+                                    tr += "<td>" + obj[i]["DiaSemana"] + "</td>";
+                                    tr += "<td>" + obj[i]["DifSemanas"] + "</td>";
+                                    tr += "<td>" + obj[i]["NumFactura"] + "</td>";
+                                    tr += "<td>" + obj[i]["CantCajas"] + "</td>";
+                                    tr += "<td>" + obj[i]["FormulaDia"] + "</td>";
+                                    tr += "<td>" + obj[i]["CoberturaSemanal"] + "</td>";
+                                    tr += '</tr > ';
+
+                                    $(".tb_editor").append(tr);
+
+
+                                }
+
+                                $.contextMenu({
+                                    selector: '.context-menu-one',
+                                    trigger: 'right',
+                                    items: $.contextMenu.fromMenu($('#html5menu'))
+                                });
+                            }
+                            catch (err) {
+
+                                $(".tbodyid").empty();
+                                $(".tb_editor").append();
+                            }
+                        } else {
+
+                            $(".tbodyid").empty();
+                            $(".tb_editor").append();
+                        }
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..Please, try again");
+
+                    }
+
+                });
+
+            });
+        });
+
+
+        function savePurchaseData() {
+            var data;
+            data = Array();
+
+
+
+            $("#data_tableEditor2 tr").each(function (i, v) {
+                data[i] = Array();
+                $(this).children('td').each(function (ii, vv) {
+                    if (ii == 38) { //orden a colocar
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+                    } else if (ii == 52) {
+
+                        data[i][ii] = $(this).eq(0).find('textarea').val();
+
+
+
+                    } else if (ii == 48) {
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+
+
+                    } else if (ii == 49) {
+
+                        data[i][ii] = $(this).eq(0).find('input').val();
+
+
+
+                    } else {
+
+                        data[i][ii] = $(this).text();
+
+                    }
+
+
+                });
+            })
+
+
+            var objects = [];
+            for (var i = 0, len = data.length; i < len; i++) {
+                if (i != 0) {
+                    objects.push({
+
+                        num: data[i][0],
+
+                        ProdCodigo: data[i][1].trim(),
+
+                        ProdNombre: data[i][2],
+
+                        FactorCompra: data[i][3],
+
+                        FactorUnidadCompra: data[i][4],
+
+                        FactorCompra_quiebre: data[i][5],
+
+                        Politica_cobertura: data[i][6],
+
+                        Marca: data[i][7],
+
+                        SubCategory: data[i][8],
+
+                        Category: data[i][9],
+
+                        ProvNombre: data[i][10],
+
+                        UnidadMedidaLetras: data[i][11],
+
+                        InventarioEach: data[i][12],
+
+                        InventarioCajas: data[i][13],
+
+                        Promedio: data[i][14],
+
+                        Desviacion: data[i][15],
+
+                        Maximo: data[i][16],
+
+                        Minimo: data[i][17],
+
+                        PronosticoPeriodoActual: data[i][18],
+
+                        B5: data[i][19],
+                        B4: data[i][20],
+                        B3: data[i][21],
+                        B2: data[i][22],
+                        B1: data[i][23],
+
+                        Promedio_AA: data[i][24],
+
+                        VentaB1: data[i][25],
+
+                        Variacion: data[i][26],
+
+                        TendenciaPeriodoActual: data[i][27],
+
+                        PronosticoSiguiente1: data[i][28],
+
+                        PronosticoSiguiente2: data[i][29],
+
+                        PronosticoSiguiente3: data[i][30],
+
+                        PronosticoSiguiente4: data[i][31],
+
+                        CoberturaActual: data[i][32],
+
+                        CoberturaProyectada: data[i][33],
+
+                        CoberturaProyectadaNume: data[i][34],
+                        CoberturaProyectadaDeno: data[i][35],
+
+                        OTB: data[i][36],
+
+                        Cobertura_OTB: data[i][37],
+
+                        Pedido: data[i][38],
+
+                        DeliveryDate: data[i][39],
+
+                        DocumentDate: data[i][40],
+
+                        U_TI: data[i][41],
+
+                        U_HI: data[i][42],
+
+                        U_PalletCount: data[i][43],
+
+                        PalletsdeOrden: data[i][44],
+
+                        InventarioIngresoPO: data[i][45],
+                        CoberturaIngresoPO: data[i][46],
+
+                        Costo: data[i][47],
+
+                        DescuentoAn: data[i][48],
+
+                        DescuentoAp: data[i][49],
+
+                        CostoconDescuento: data[i][50],
+
+                        MontoPO: data[i][51],
+
+                        Comentarios: data[i][52],
+
+
+
+                        VentaF1: data[i][53],
+
+                        LeadTime: data[i][54],
+
+                        transito: 0
+
+                    });
+
+                }
+
+            }
+            var idpurchase = @ViewBag.purchasedataID;
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Operations/SaveEdit_PurchaseData',
+                    type: 'POST',
+                    data: {'id': idpurchase, 'objects': objects },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            var toast = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toast({
+                                type: 'success',
+                                title: 'Data saved successfully.'
+                            });
+                            document.getElementById("loader").style.display = "none";
+
+                        } else {
+                            var toast = swal.mixin({
+                                toast: true,
+                                position: 'top-end',
+                                showConfirmButton: false,
+                                timer: 3000
+                            });
+
+                            toast({
+                                type: 'info',
+                                title: 'Something went wrong. ' + result
+                            });
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        var toast = swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+
+                        toast({
+                            type: 'info',
+                            title: 'Something went wrong, try again'
+                        });
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+
+            //$('.editPedido').on('change', function () {
+            //    console.log("editing");
+            //            //$(this).closest('tr').hide();
+            //            //$(this).html('DEL');
+
+
+
+
+
+            //    //$(this).closest('tr').find("input,button,select").attr("disabled", true);
+            //    //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
+            //    //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
+            //});
+
+        }
+        //SECCION PARA EDICION Y FORMULAS
+
+
+</script>

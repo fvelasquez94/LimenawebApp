@@ -1,0 +1,20 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="page__header page__header-nav">
+    <div class="container-fluid page__container">
+        <div class="navbar navbar-secondary navbar-light navbar-expand-sm p-0">
+            <button class="navbar-toggler navbar-toggler-right" data-toggle="collapse" data-target="#navbarsExample03" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="navbar-collapse collapse" id="navbarsExample03">
+                <ul class="nav navbar-nav">
+                    @if (ViewData["Page"].ToString() == "Authorizations for Drivers") { <li class="nav-item active"><a href="@Url.Action("Authorizations","Finance")" class="nav-link">Authorizations for Drivers</a></li> }else{  <li class="nav-item"><a href="@Url.Action("Authorizations","Finance")" class="nav-link">Authorizations</a></li>}
+                    @if(ViewData["Page"].ToString() == "Receive Payments") {<li class="nav-item active"><a href="@Url.Action("ReceivePayment","Finance")" class="nav-link">Receive Payments</a></li> }else{<li class="nav-item "><a href="@Url.Action("ReceivePayment","Finance")" class="nav-link">Receive Payments</a></li>}</ul>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,266 @@
+﻿@model IEnumerable<LimenawebApp.Models.Purchase_data>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Purchase Data";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Purchases</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">S&OP</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">S&OP</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Purchases.cshtml")
+<!-- Page Header -->
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_customers">Search</label>
+                        <input id="filter_customers" type="text" class="form-control" placeholder="Enter keyword">
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_date">Daterange</label>
+                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                            <i class="mdi mdi-calendar"></i>&nbsp;
+                            <span></span> <i class="fa fa-caret-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+
+                        <div class="custom-control custom-checkbox mt-sm-2">
+                            <a href="@Url.Action("SOP_create", "SOP")" class="btn btn-success ml-3"><i class="material-icons">add</i>New process</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card card-form d-flex flex-column flex-sm-row">
+            <div class="table-responsive">
+                <table id="myTable" class="table mb-0 thead-border-top-0 border-bottom-0 table-striped">
+                    <thead>
+                        @*<tr>
+                                <th rowspan="2">ID</th>
+                                <th rowspan="2">Date</th>
+                                <th colspan="1">FILTERS</th>
+
+                            </tr>*@
+                        <tr>
+
+                            <th scope="col">ID</th>
+                            <th scope="col">DATE</th>
+                            <th scope="col">VENDOR</th>
+                            <th scope="col">CATEGORY</th>
+                            <th scope="col">SUB CATEGORY</th>
+                            <th scope="col">BRAND</th>
+                            <th scope="col">ACTIONS</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                    </tfoot>
+                    <tbody class="list" id="companies">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.ID_purchaseData</td>
+                                <td >@Convert.ToDateTime(item.Date_create).ToShortDateString()</td>
+                                <td >@item.Providers</td>
+                                <td >@item.Categories</td>
+                                <td >@item.SubCategories</td>
+                                <td >@item.Brands</td>
+                                <td>
+                                    <a href="@Url.Action("Initial_forecast", "Operations", new { iddata = item.ID_purchaseData })" class="btn btn-outline-info">Edit</a>
+                                    @if (item.query2 == "1")
+                                    {
+                                        <a href="@Url.Action("PurchaseData_ForecastExport", "Operations", new { id = item.ID_purchaseData })" class="btn btn-outline-success">Export</a>
+
+                                    }
+
+                                    <a href="#" id="@item.ID_purchaseData" onclick="Del_PurchaseData(this.id)" class="btn  btn-outline-danger delbtn">Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+<!-- /grid item -->
+
+
+
+
+
+
+<script>
+
+
+
+    function Del_PurchaseData(id_data) {
+
+
+        swal.fire({
+            title: 'Are you sure to delete this data?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3dba6f',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+
+                $.ajax({
+                    url: '/Operations/Del_PurchaseData',
+                    type: 'POST',
+                    data: { 'id': id_data },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success('The Data has been deleted.');
+
+                            window.location.reload(true);
+                        }
+                        else {
+                            //alert("Something went wrong..");
+                            //toastr.info("Deleting details...", "Delete");
+                            repeatdel(id_data);
+
+                        }
+
+
+                    },
+                    error: function (request) {
+                        //alert("Something went wrong..");
+                    }
+                });
+
+            }
+        })
+    }
+
+    function repeatdel(id_data) {
+        $.ajax({
+            url: '/Operations/Del_PurchaseData',
+            type: 'POST',
+            data: { 'id': id_data },
+            cache: false,
+            global: false,
+            success: function (result) {
+
+                if (result == "SUCCESS") {
+
+                    toastr.success('The Data has been deleted.');
+                    window.location.reload(true);
+                }
+                else {
+                    //alert("Something went wrong..");
+                    //toastr.info("Deleting details...", "Delete");
+                    repeatdel(id_data);
+                }
+
+
+            },
+            error: function (request) {
+                //alert("Something went wrong..");
+            }
+        });
+
+    }
+
+
+
+</script>
+<script type="text/javascript">
+    window.onload = function (e) {
+
+        var flag = 0;
+
+
+                //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = '@Url.Action("SOP", "SOP", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+
+            window.location.href = newurl;
+        };
+
+
+        $("#data_table2").DataTable({
+            "lengthChange": false
+        });
+    }
+</script>
+

@@ -1,0 +1,402 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<script type="text/javascript">
+        $(document).ready(function () {
+
+            table = $('#data_tableEditor2').DataTable({
+                dom: 'flrtip',
+                scrollY: "600px",
+                fixedHeader: true,
+                scrollX: true,
+                scrollCollapse: true,
+                "order": [[1, "asc"]],
+                "search": { regex: true },
+                paging: false,
+                "columnDefs": [{
+                    "targets": 'no-sort',
+                    "orderable": false,
+                }],
+                initComplete: function () {
+
+                    this.api().columns([5]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstCategory");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    this.api().columns([6]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstSubCategory");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    this.api().columns([3]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstProvider");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    this.api().columns([4]).every(function () {
+
+                        var column = this;
+
+
+
+                        var select = $("#lstBrands");
+
+                        column.data().unique().sort().each(function (d, j) {
+
+                            select.append('<option value="' + d + '">' + d + '</option>')
+
+                        });
+
+                    });
+
+                    $("#lstCategory").select2({ multiple: true });
+
+                    $("#lstSubCategory").select2({ multiple: true });
+
+                    $("#lstProvider").select2({ multiple: true });
+
+                    $("#lstBrands").select2({ multiple: true });
+
+                }
+
+            });
+
+
+            $('#lstCategory').on('change', function () {
+
+                var search = [];
+                var data2;
+
+                data2 = Array();
+
+                $.each($('#lstCategory option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+                search = search.join('|');
+
+                table.column(5).search(search, true, false).draw();
+
+                var select = $("#lstSubCategory");
+
+                select.empty();
+
+
+                table.rows({ search: 'applied' }).data().unique().sort().each(function (value, index) {
+
+                    data2.push(value[6]);
+
+                });
+
+                data2 = sort_unique(data2);
+
+                $.each(data2, function (key, value) {
+
+                    select.append('<option value="' + value + '">' + value + '</option>')
+
+                });
+
+
+
+
+
+            });
+
+
+            function sort_unique(arr) {
+
+                return arr.sort().filter(function (el, i, a) {
+
+                    return (i == a.indexOf(el));
+
+                });
+
+            }
+
+            $('#lstSubCategory').on('change', function () {
+
+                var search = [];
+
+
+
+                $.each($('#lstSubCategory option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(6).search(search, true, false).draw();
+
+            });
+
+
+
+            $('#lstBrands').on('change', function () {
+
+                var search = [];
+
+
+
+                $.each($('#lstBrands option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(4).search(search, true, false).draw();
+
+            });
+
+
+
+            $('#lstProvider').on('change', function () {
+
+                var search = [];
+
+
+
+                $.each($('#lstProvider option:selected'), function () {
+
+                    search.push($(this).val());
+
+                });
+
+
+
+                search = search.join('|');
+
+                table.column(3).search(search, true, false).draw();
+
+            });
+
+            $('#chk_all2').change(function () {
+                if (this.checked) {
+                    //table.$("input.selectchk").prop("checked", true);
+                    $('input.selectchk2', table.rows({ filter: 'applied' }).nodes()).prop("checked", true);
+
+                } else {
+                    //table.$("input.selectchk").prop("checked", false);
+                    $('input.selectchk2*', table.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+
+                }
+
+            });
+
+        });
+
+
+
+
+    $("#btnsaveproducts").click(function () {
+
+                swal.fire({
+                    title: 'Save changes',
+                    text: "Are you sure you want to save this changes?",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        //Guardamos
+
+                        $("#btnsaveproducts").attr("disabled", true);
+
+                        var data;
+                        data = Array();
+
+                                    var dataCategory = [];
+
+            if ($("#lstCategory").select2('data').length) {
+
+                $.each($("#lstCategory").select2('data'), function (key, item) {
+
+                    dataCategory.push(item.text);
+
+                });
+
+            }
+
+
+
+            var dataSubCategory = [];
+
+            if ($("#lstSubCategory").select2('data').length) {
+
+                $.each($("#lstSubCategory").select2('data'), function (key, item) {
+
+                    dataSubCategory.push(item.text);
+
+                });
+
+            }
+
+
+
+            var dataProvider = [];
+
+            if ($("#lstProvider").select2('data').length) {
+
+                $.each($("#lstProvider").select2('data'), function (key, item) {
+
+                    dataProvider.push(item.text);
+
+                });
+
+            }
+
+
+
+            var dataBrands = [];
+
+            if ($("#lstBrands").select2('data').length) {
+
+                $.each($("#lstBrands").select2('data'), function (key, item) {
+
+                    dataBrands.push(item.text);
+
+                });
+
+            }
+
+                        $("#data_tableEditor2 tr").each(function (i, v) {
+                            data[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data[i][ii] = true;
+
+                                    } else {
+                                        data[i][ii] = false;
+                                    }
+                                } else {
+                                    data[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+
+                        var objects = [];
+                        for (var i = 0, len = data.length; i < len; i++) {
+
+                            if (i != 0) {
+                                if (data[i][0] == true) {
+                                    objects.push({
+                                        ItemCode: data[i][1],
+                                        Description: data[i][2],
+                                        Vendor: data[i][3],
+                                        Brand: data[i][4],
+                                        Category: data[i][5],
+                                        Subcategory: data[i][6]
+
+                                    });
+                                }
+
+                            }
+
+                        }
+
+                        if (objects.length > 0) {
+
+                            $.ajax
+                            ({
+                                    url: '/Operations/Save_DataProcess',
+                                type: 'POST',
+                                    data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString()},
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success('Data saved successfully');
+
+
+                                        setTimeout(
+                                            function () {
+                                                var url = '@Url.Action("SOP", "SOP", null)';
+                                                url = url.replace('amp;', '');
+                                                 window.location.href = url;
+                                            }, 2000);
+
+                                    } else {
+
+                                    }
+                                    $("#btnsaveproducts").attr("disabled", false);
+
+                                },
+                                error: function () {
+                                    $("#btnsaveproducts").attr("disabled", false);
+                                },
+                            });
+
+                        } else {
+                            $("#btnsaveproducts").attr("disabled", false);
+                            toastr.warning('Please select at least one product');
+                           
+
+                        }
+
+
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+
+
+
+        });
+
+
+
+
+</script>

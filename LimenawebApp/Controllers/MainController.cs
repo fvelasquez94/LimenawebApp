@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
 using Newtonsoft.Json;
 
@@ -14,6 +15,9 @@ namespace LimenawebApp.Controllers
         private DLI_PROEntities dlipro = new DLI_PROEntities();
         private Interna_DLIEntities internadli = new Interna_DLIEntities();
         private dbComerciaEntities dbcmk = new dbComerciaEntities();
+
+        private Cls_session cls_session = new Cls_session();
+
         // GET: Main Dashboard_sales
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
@@ -508,6 +512,47 @@ namespace LimenawebApp.Controllers
             }
 
         }
+
+        public ActionResult Dashboard()
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Main";
+                ViewData["Page"] = "Index";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
+    
+
+                return View();
+
+
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+      
+
+          
+
+        }
+
 
     }
 }

@@ -105,6 +105,8 @@ warning 6002: The table/view 'MatrizCompras.dbo.Matriz_Formato' does not have a 
           <Property Name="Forecast5_source2" Type="decimal" Precision="18" Scale="2" Nullable="false" />
           <Property Name="ID_user" Type="int" Nullable="false" />
           <Property Name="Last_update" Type="datetime" Nullable="false" />
+          <Property Name="Period" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Year" Type="varchar" MaxLength="10" Nullable="false" />
         </EntityType>
         <EntityType Name="PurchaseData_product">
           <Key>
@@ -614,6 +616,8 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <Property Name="Forecast5_source2" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
           <Property Name="ID_user" Type="Int32" Nullable="false" />
           <Property Name="Last_update" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Period" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Year" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -832,6 +836,8 @@ warning 6002: The table/view 'MatrizCompras.dbo.view_MatrizMadre' does not have 
           <EntitySetMapping Name="PurchaseData_byReps">
             <EntityTypeMapping TypeName="MatrizComprasModel.PurchaseData_byReps">
               <MappingFragment StoreEntitySet="PurchaseData_byReps">
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="Period" ColumnName="Period" />
                 <ScalarProperty Name="Last_update" ColumnName="Last_update" />
                 <ScalarProperty Name="ID_user" ColumnName="ID_user" />
                 <ScalarProperty Name="Forecast5_source2" ColumnName="Forecast5_source2" />

@@ -1,0 +1,17 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div class="page__header page__header-nav">
+    <div class="container-fluid page__container">
+        <div class="navbar navbar-secondary navbar-light navbar-expand-sm p-0">
+            <div class="navbar-collapse collapse" id="navbarsExample03">
+                <ul class="nav navbar-nav">
+                    @if (ViewData["Page"].ToString() == "Receive Credits") { <li class="nav-item active"><a href="@Url.Action("ReceiveCredits","Warehouse")" class="nav-link">Receive a Credit</a></li> }else{  <li class="nav-item"><a href="@Url.Action("ReceiveCredits","Warehouse")" class="nav-link">Receive a Credit</a></li>}
+                    @if (ViewData["Page"].ToString() == "Received Credits") { <li class="nav-item active"><a href="@Url.Action("ReceivedCredits","Warehouse")" class="nav-link">Received Credits</a></li> }else{  <li class="nav-item"><a href="@Url.Action("ReceivedCredits","Warehouse")" class="nav-link">Received Credits</a></li>}
+                  </ul>
+            </div>
+        </div>
+    </div>
+</div>

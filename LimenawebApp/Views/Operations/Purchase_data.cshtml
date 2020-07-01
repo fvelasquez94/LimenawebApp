@@ -1,54 +1,46 @@
 ﻿@model IEnumerable<LimenawebApp.Models.Purchase_data>
 @{
     ViewBag.Title = "Distribuidora Limeña - Purchase Data";
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    @Html.Partial("~/Views/Shared/temp_head.cshtml")
-</head>
-<body>
-
-    <!-- Loader -->
-    <div class="dt-loader-container">
-        <div class="dt-loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-            </svg>
-        </div>
-    </div>
-    <!-- /loader -->
-    <!-- Root -->
-    <div class="dt-root">
-        <div class="dt-root__inner">
-
-            <!-- Header -->
-            @Html.Partial("~/Views/Shared/temp_header.cshtml")
-            <!-- /header -->
-            <!-- Site Main -->
-            <main class="dt-main">
-                <!-- Sidebar -->
-                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
-                <!-- /sidebar -->
-                <!-- Custom Container -->
-                <div class="dt-container">
-
-                    <!-- Site Content Wrapper -->
-                    <div class="dt-content-wrapper">
-
-                        <!-- Site Content -->
-                        <div class="dt-content">
 
                             <!-- Page Header -->
                             <div class="dt-page__header">
-                                <h1 class="dt-page__title">Data Center</h1>
+                                <nav class="mb-0 breadcrumb">
+                                    <a href="javascript:void(0)" class="breadcrumb-item">Operations</a>
+                                    <span class="active breadcrumb-item">SOP Tool</span>
+                                </nav>
                             </div>
                             <!-- /page header -->
                             <!-- Grid Item -->
                             <div class="row">
-                                <div class="col-md-6 col-12">
+                                <div class="col-md-4 col-12">
+                         
+                                        <!-- Card -->
+                                        <div class="dt-card">
+
+                                            <!-- Card Body -->
+                                            <div class="dt-card__body p-xl-8 py-sm-8 py-6 px-4">
+                                                    <!-- Media Body -->
+                                                    <div class="media-body">
+                                                        <div class="form-group row col-xl-12">
+                                                            <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Date</label>
+                                                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                                                                <i class="mdi mdi-calendar"></i>&nbsp;
+                                                                <span></span> <i class="fa fa-caret-down"></i>
+                                                            </div>
+
+                                                        </div>
+                                                    </div>
+                                                    <!-- /media body -->
+                                            </div>
+                                            <!-- /card body -->
+
+                                        </div>
+                                        <!-- /card -->
+                             
+                                </div>                                
+                                <div class="col-md-4 col-12">
                                     <a href="@Url.Action("new_Data", "Operations")">
                                         <!-- Card -->
                                         <div class="dt-card">
@@ -83,8 +75,8 @@
                                 </div>
 
 
-                                <div class="col-md-6 col-12">
-                                    <a href="#">
+                                <div class="col-md-4 col-12">
+                                    <a href="@Url.Action("ProductCatalog", "Operations")">
                                         <!-- Card -->
                                         <div class="dt-card">
 
@@ -100,8 +92,8 @@
 
                                                     <!-- Media Body -->
                                                     <div class="media-body">
-                                                        <p class="mb-1 h1">Product Catalog</p>
-                                                        <span class="d-block text-light-gray">Choose this option to go to the Product Catalog</span>
+                                                        <p class="mb-1 h1">Products Catalog</p>
+                                                        <span class="d-block text-light-gray">Choose this option to go to the Products Catalog</span>
                                                     </div>
                                                     <!-- /media body -->
 
@@ -123,25 +115,7 @@
 
                                         <div class="row">
                                             <div class="col-xl-12">
-                                                <div class="card card-shadow">
-                                                    <div class="card-header">
-                                                        <div class="custom-title-wrap bar-success">
-                                                            <div class="custom-title">
-
-                                                                <div class="form-group row col-xl-4">
-                                                                    <label class="col-sm-12 col-form-label col-form-label-sm">Filter by Date</label>
-                                                                    <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
-                                                                        <i class="mdi mdi-calendar"></i>&nbsp;
-                                                                        <span></span> <i class="fa fa-caret-down"></i>
-                                                                    </div>
-
-                                                                </div>
-                                                            </div>
-                                                        </div>
-
-                                                    </div>
    
-                                                    <div class="card-body- pt-3 pb-4">
                                                         <div class="table-responsive">
                                                             <table id="data_table2" class="table table-hover table-custom" cellspacing="0">
                                                                 <thead>
@@ -176,154 +150,125 @@
                                                     <td style="font-size:11px;">@item.Brands</td>
                                                     <td>
                                                         <a href="@Url.Action("Initial_forecast", "Operations", new { iddata = item.ID_purchaseData })" class="btn btn-sm btn-primary">Edit</a>
-                                                        @if (item.query2 == "1") {
-                                                        <a href="@Url.Action("PurchaseData_ForecastExport", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-success">Export</a>
-                                                        }
-                                                        
-                                                        <a href="#" id="@item.ID_purchaseData" class="btn btn-sm btn-danger delbtn">Del</a>
+                                                        @if (item.query2 == "1")
+    {
+                                                    <a href="@Url.Action("PurchaseData_ForecastExport", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-success">Export Forecast</a>
+
+}
+
+
+                                                        @if (item.query2 == "1")
+    {
+
+                                                    <a href="@Url.Action("new_purchaseData", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-primary">OTB</a>
+                                                    <a href="@Url.Action("PurchaseData_Export", "Operations", new { id = item.ID_purchaseData })" class="btn btn-sm btn-success">Export OTB</a>
+}
+                                                        <a href="#" id="@item.ID_purchaseData" onclick="Del_PurchaseData(this.id)" class="btn btn-sm btn-danger delbtn">Delete</a>
                                                     </td>
                                                 </tr>
                     }
                                                                 </tbody>
                                                             </table>
                                                         </div>
-                                                    </div>
-                                                </div>
+                                                
+                                               
                                             </div>
                                         </div>
 
                             <!-- /grid item -->
 
 
-                        </div>
-                        <!-- /site content -->
-
-                    </div>
-                    <!-- /site content wrapper -->
-
-                </div>
-                <!-- /custom Container -->
-
-            </main>
-            <!-- /main -->
-            <!-- Footer -->
-            <footer class="dt-footer">
-                <div class="dt-container">
-                    Copyright Distribuidora Limena © 2019
-                </div>
-            </footer>
-            <!-- /footer -->
-
-        </div>
-    </div>
-    <!-- /root -->
-    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
-
-</body>
-</html>
 
 
 
 
 <script>
-    $(document).ready(function () {
-        $(".delbtn").click(function () {
-            var contentPanelId = jQuery(this).attr("id");
-            id_data = contentPanelId;
+  
+        
 
-            Del_PurchaseData(id_data);
-        });
-
-        $("#data_table2").DataTable({
-            "lengthChange": false
-        });
-
-        function Del_PurchaseData(id_data) {
+            function Del_PurchaseData(id_data) {
 
 
-            swal.fire({
-                title: 'Are you sure to delete this data?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3dba6f',
-                cancelButtonColor: '#aaa',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.value) {
+                swal.fire({
+                    title: 'Are you sure to delete this data?',
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then((result) => {
+                    if (result.value) {
 
-                    $.ajax({
-                        url: '/Operations/Del_PurchaseData',
-                        type: 'POST',
-                        data: { 'id': id_data },
-                        cache: false,
-                        global: false,
-                        success: function (result) {
+                        $.ajax({
+                            url: '/Operations/Del_PurchaseData',
+                            type: 'POST',
+                            data: { 'id': id_data },
+                            cache: false,
+                            global: false,
+                            success: function (result) {
 
-                            if (result == "SUCCESS") {
+                                if (result == "SUCCESS") {
 
-                                Swal.fire(
-                                    'Data deleted!',
-                                    'The Data has been deleted.',
-                                    'success'
-                                )
-                                window.location.reload(true);
-                            }
-                            else {
+                                    Swal.fire(
+                                        'Data deleted!',
+                                        'The Data has been deleted.',
+                                        'success'
+                                    )
+                                    window.location.reload(true);
+                                }
+                                else {
+                                    //alert("Something went wrong..");
+                                    //toastr.info("Deleting details...", "Delete");
+                                    repeatdel(id_data);
+
+                                }
+
+
+                            },
+                            error: function (request) {
                                 //alert("Something went wrong..");
-                                toastr.info("Deleting details...", "Delete");
-                                repeatdel(id_data);
-
                             }
+                        });
 
+                    }
+                })
+            }
 
-                        },
-                        error: function (request) {
-                            //alert("Something went wrong..");
+            function repeatdel(id_data) {
+                $.ajax({
+                    url: '/Operations/Del_PurchaseData',
+                    type: 'POST',
+                    data: { 'id': id_data },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+
+                            Swal.fire(
+                                'Data deleted!',
+                                'The Data has been deleted.',
+                                'success'
+                            )
+                            window.location.reload(true);
                         }
-                    });
+                        else {
+                            //alert("Something went wrong..");
+                            //toastr.info("Deleting details...", "Delete");
+                            repeatdel(id_data);
+                        }
 
-                }
-            })
-        }
 
-        function repeatdel(id_data) {
-            $.ajax({
-                url: '/Operations/Del_PurchaseData',
-                type: 'POST',
-                data: { 'id': id_data },
-                cache: false,
-                global: false,
-                success: function (result) {
-
-                    if (result == "SUCCESS") {
-
-                        Swal.fire(
-                            'Data deleted!',
-                            'The Data has been deleted.',
-                            'success'
-                        )
-                        window.location.reload(true);
-                    }
-                    else {
+                    },
+                    error: function (request) {
                         //alert("Something went wrong..");
-                        toastr.info("Deleting details...", "Delete");
-                        repeatdel(id_data);
                     }
+                });
 
+            }
 
-                },
-                error: function (request) {
-                    //alert("Something went wrong..");
-                }
-            });
-
-        }
-        //var classname = document.getElementsByClassName("delbtn");
-
-        //for (var i = 0; i < classname.length; i++) {
-        //    classname[i].addEventListener('click', Del_PurchaseData, false);
-        //}
-    });
+ 
+    
 </script>
 <script type="text/javascript">
     window.onload = function (e) {
@@ -385,7 +330,9 @@
         };
 
 
-
+        $("#data_table2").DataTable({
+            "lengthChange": false
+        });
     }
 </script>
 

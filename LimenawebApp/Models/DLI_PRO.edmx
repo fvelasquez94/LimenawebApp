@@ -860,6 +860,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
             
             <PropertyRef Name="CantBonif" />
             <PropertyRef Name="FactorBonif" />
+            
             <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="nvarchar" MaxLength="65" Nullable="false" />
@@ -887,15 +888,17 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="SRP" Type="numeric" Precision="19" Scale="6" />
           <Property Name="unitCost" Type="numeric" Precision="19" Scale="6" />
           <Property Name="MinPorcent" Type="int" Nullable="false" />
-          <Property Name="MinPrice" Type="numeric" Precision="38" Scale="9" />
+          <Property Name="MinPrice" Type="numeric" Precision="38" Scale="17" />
           <Property Name="Bonificables" Type="varchar" MaxLength="1" />
           <Property Name="MinPercIndiv" Type="varchar" MaxLength="1" />
           <Property Name="CantBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
           <Property Name="FactorBonif" Type="numeric" Precision="19" Scale="6" Nullable="false" />
-          <Property Name="Credits" Type="nvarchar" MaxLength="10" />
+          <Property Name="Credits" Type="varchar" MaxLength="3" Nullable="false" />
           <Property Name="StorageType" Type="nvarchar" MaxLength="20" />
           <Property Name="Stock" Type="numeric" Precision="19" Scale="6" />
           <Property Name="StockBonif" Type="numeric" Precision="38" Scale="6" />
+          <Property Name="UoMGroup" Type="nvarchar" MaxLength="100" />
+          <Property Name="InventoryItem" Type="varchar" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1230,7 +1233,9 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Products].[Credits] AS [Credits], 
     [BI_Dim_Products].[StorageType] AS [StorageType], 
     [BI_Dim_Products].[Stock] AS [Stock], 
-    [BI_Dim_Products].[StockBonif] AS [StockBonif]
+    [BI_Dim_Products].[StockBonif] AS [StockBonif], 
+    [BI_Dim_Products].[UoMGroup] AS [UoMGroup], 
+    [BI_Dim_Products].[InventoryItem] AS [InventoryItem]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -1929,17 +1934,19 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="id_brand" Type="Int32" />
           <Property Name="unitCost" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="MinPorcent" Type="Int32" Nullable="false" />
-          <Property Name="MinPrice" Type="Decimal" Precision="38" Scale="9" />
+          <Property Name="MinPrice" Type="Decimal" Precision="38" Scale="17" />
           <Property Name="item_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Vendor_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Bonificables" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="MinPercIndiv" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="CantBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
           <Property Name="FactorBonif" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
-          <Property Name="Credits" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Credits" Type="String" MaxLength="3" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="StorageType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
           <Property Name="Stock" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="StockBonif" Type="Decimal" Precision="38" Scale="6" />
+          <Property Name="UoMGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="InventoryItem" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
@@ -3075,6 +3082,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="InventoryItem" ColumnName="InventoryItem" />
+                <ScalarProperty Name="UoMGroup" ColumnName="UoMGroup" />
                 <ScalarProperty Name="StockBonif" ColumnName="StockBonif" />
                 <ScalarProperty Name="Stock" ColumnName="Stock" />
                 <ScalarProperty Name="StorageType" ColumnName="StorageType" />

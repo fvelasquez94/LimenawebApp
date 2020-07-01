@@ -643,7 +643,8 @@ namespace LimenawebApp.Controllers
                                        DateCheckOut = a.DateCheckOut,
                                        ID_userValidate = a.ID_userValidate,
                                        Warehouse = a.Warehouse,
-                                       transferred = 0
+                                       transferred = 0,
+                                       existendeOtraBodega = 0
                                    }).ToList();
                 }
                 else {
@@ -674,7 +675,8 @@ namespace LimenawebApp.Controllers
                                        DateCheckOut = a.DateCheckOut,
                                        ID_userValidate = a.ID_userValidate,
                                        Warehouse = a.Warehouse,        
-                                       transferred = 0
+                                       transferred = 0,
+                                         existendeOtraBodega = 0
                                    }).ToList();
                 }
 
@@ -708,7 +710,7 @@ namespace LimenawebApp.Controllers
 
                     var existendeOtraBodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count != e.QC_totalCount && e.Warehouse != company_bodega) select e).Count();
                     ViewBag.existendeOtraBodega = existendeOtraBodega;
-
+                    rutait.existendeOtraBodega = existendeOtraBodega;
                     var existemibodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.type.Contains("I") && e.Warehouse == company_bodega) select e).Count();
 
 

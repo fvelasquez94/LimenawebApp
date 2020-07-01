@@ -48,5 +48,7 @@ namespace LimenawebApp.Models
         public string StorageType { get; set; }
         public Nullable<decimal> Stock { get; set; }
         public Nullable<decimal> StockBonif { get; set; }
+        public string UoMGroup { get; set; }
+        public string InventoryItem { get; set; }
     }
 }

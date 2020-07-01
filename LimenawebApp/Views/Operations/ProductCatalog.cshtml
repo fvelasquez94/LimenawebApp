@@ -1,27 +1,19 @@
 ﻿@model IEnumerable<LimenawebApp.Models.Purchase_catalog>
 @{
     ViewBag.Title = "Distribuidora Limeña - Product Catalog";
+    Layout = "~/Views/Shared/_NewLayout.cshtml";
 }
 
-<!--main content wrapper-->
-<div class="content-wrapper">
-    <div class="box-container">
-        <div class="container-fluid">
-
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card card-shadow mb-4">
-                        <div class="card-header border-0">
-                            <div class="custom-title-wrap bar-primary">
-                                <div class="custom-title">Product Catalog</div>
-                                <a href="@Url.Action("Purchase_data", "Operations")" class="btn btn-outline-info btn-sm">Back</a>
-                                <div class=" widget-action-link">
-
-                                </div>
-
-
+                 <!-- Page Header -->
+                            <div class="dt-page__header">
+                                <nav class="mb-0 breadcrumb">
+                                    <a href="javascript:void(0)" class="breadcrumb-item">Operations</a>
+                                    <span class="active breadcrumb-item">Products Catalog</span>
+                                </nav>
                             </div>
-                        </div>
+                            <!-- /page header -->
+                            <!-- Grid Item -->
+                            <!--main content wrapper-->
 
                         <div class="card-body pt-3 pb-4" style="font-size:12px;line-height:1.5;">
                             <div class="table-responsive">
@@ -68,12 +60,4 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-</div>
 

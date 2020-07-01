@@ -1,0 +1,108 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @Html.Partial("~/Views/Shared/temp_head.cshtml")
+</head>
+<body>
+
+    <!-- Loader -->
+    <div class="dt-loader-container" id="loader">
+        <div class="dt-loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
+            </svg>
+        </div>
+    </div>
+    <!-- /loader -->
+    <!-- Root -->
+    <div class="dt-root">
+        <div class="dt-root__inner">
+
+            <!-- Header -->
+            @Html.Partial("~/Views/Shared/temp_header.cshtml")
+            <!-- /header -->
+            <!-- Site Main -->
+            <main class="dt-main">
+                <!-- Sidebar -->
+                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
+                <!-- /sidebar -->
+                <!-- Custom Container -->
+                <div class="dt-container">
+
+                    <!-- Site Content Wrapper -->
+                    <div class="dt-content-wrapper">
+
+                        <!-- Site Content -->
+                        <div class="dt-content">
+                            @RenderBody()
+
+                        </div>
+                        <!-- /site content -->
+
+                    </div>
+                    <!-- /site content wrapper -->
+
+                </div>
+                <!-- /custom Container -->
+
+            </main>
+            <!-- /main -->
+            <!-- Footer -->
+            <footer class="dt-footer">
+                <div class="dt-container">
+                    Copyright Distribuidora Limena © 2019
+                </div>
+            </footer>
+            <!-- /footer -->
+
+        </div>
+    </div>
+    <!-- /root -->
+    @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
+   
+
+    @if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data"){@Html.Partial("~/Views/Shared/Scripts_newpurchasedata.cshtml")}
+    @if (ViewBag.Title == "Distribuidora Limeña - Edit Purchase Data") {@Html.Partial("~/Views/Shared/Scripts_editpurchasedata.cshtml")}
+    @if (ViewBag.Title == "Distribuidora Limeña - Product Catalog") {@Html.Partial("~/Views/Shared/Scripts_productCatalog.cshtml")}
+    @if (ViewBag.Title == "Distribuidora Limeña - New Data") {@Html.Partial("~/Views/Shared/Scripts_newData.cshtml")}
+
+</body>
+</html>
+
+
+<!--NOTIFICACIONES GLOBALES-->
+
+@if (TempData["error"] != null)
+{
+    <script type="text/javascript">
+        window.onload = function () {
+
+            toastr.danger("@(TempData["error"])", "Warning");
+        };
+    </script>
+}
+
+
+@if (TempData["advertencia"] != null)
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            toastr.warning("@(TempData["advertencia"])", "Warning");
+
+        });
+    </script>
+}
+
+
+@if (TempData["exito"] != null)
+{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            toastr.success("@(TempData["exito"])", "Success");
+
+        });
+    </script>
+}

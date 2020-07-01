@@ -248,5 +248,6 @@ namespace LimenawebApp.Models
         public int ID_userValidate { get; set; }
         public string Warehouse { get; set; }
         public int transferred { get; set; }
+        public int existendeOtraBodega { get; set; }
     }
 }

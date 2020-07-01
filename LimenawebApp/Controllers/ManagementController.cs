@@ -63,7 +63,7 @@ namespace LimenawebApp.Controllers
 
         }
 
-        public ActionResult SendToSharepoint(int? id)
+        public ActionResult SendToSharepoint(int? id, string emailresp)
         {
             try
             {
@@ -225,8 +225,47 @@ namespace LimenawebApp.Controllers
                         dblim.Entry(user).State = EntityState.Modified;
                         dblim.SaveChanges();
 
+                        //Enviar correo a supervisor asignado o si es gerencia comercial, enviarselo a JOHAN 05/08/2020
 
                         TempData["exito"] = "User uploaded to Sharepoint successfully.";
+
+                        try
+                        { //Enviamos correos
+                            if (emailresp == "supervisors")
+                            {
+                                var sup = user.Supervisor.ToString();
+                                var emailsupervisor = (from g in dblim.Sys_Users where (g.IDSAP == sup && g.Roles.Contains("Sales Supervisor")) select g).FirstOrDefault();
+
+                                if (emailsupervisor != null) {
+                                    //Send the email
+                                    dynamic semail = new Email("email_notificationEnrollSharepoint");
+                                    semail.To = emailsupervisor.Email;
+                                    semail.From = "donotreply@limenainc.net";
+                                    semail.customer = user.CardName;
+                                    semail.url = urltosharepoint;
+
+                                    semail.Send();
+                                }
+        
+                            }
+                            else {
+   
+                                //Send the email
+                                dynamic semail = new Email("email_notificationEnrollSharepoint");
+                                semail.To = emailresp;
+                                semail.From = "donotreply@limenainc.net";
+                                semail.customer = user.CardName;
+                                semail.url = urltosharepoint;
+  
+                                semail.Send();
+                            }
+
+                        }
+                        catch {
+
+                        }
+
+
 
                     }
                     catch (Exception ex) {
@@ -379,18 +418,14 @@ namespace LimenawebApp.Controllers
                 //FIN HEADER
 
                 List<Tb_NewCustomers> lstCustomers = new List<Tb_NewCustomers>();
-                //SABER SI ES ADMIN
-                int isAdmin = 0;
-                if (activeuser.Roles.Contains("Super Admin"))
-                {
-                    isAdmin = 1;
-                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.FirstName !="") select a).ToList();
-                }
-                else
-                {
-                    isAdmin = 0;
-                    var strid = Convert.ToInt32(activeuser.IDSAP);
-                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.Supervisor==strid && a.FirstName != "") select a).ToList();
+
+                    lstCustomers = (from a in dblim.Tb_NewCustomers where(a.FirstName !="" && a.E_Mail !="" && a.OnSharepoint==false)  select a).ToList();
+
+                foreach (var item in lstCustomers) {
+                    var slp = (from des in dlipro.OSLP where (des.SlpCode == item.idSAPRep) select des).FirstOrDefault();
+                    if (slp != null) {
+                        item.emailRep = slp.SlpName;
+                    }
                 }
 
              
@@ -530,6 +565,9 @@ namespace LimenawebApp.Controllers
                 User.BolsaValor = 0;
                 User.PorcentajeBolsa = 0;
                 User.IDSAP = "";
+                User.ID_Truck = "";
+                User.Truck_name = "";
+                User.Url_image = "";
                 if (User.Position == null)
                 {
                     User.Position = "";
@@ -1092,7 +1130,7 @@ namespace LimenawebApp.Controllers
                 if (contacts > 0) { existe = 1; }
 
                 var contactsLocal = (from a in internadli.Tb_customerscontacts
-                                     where (a.Email == email)
+                                     where (a.Email == email && a.Accion !=3)
                                      select a).Count();
 
                 if (contactsLocal > 0) { existe = 1; }
