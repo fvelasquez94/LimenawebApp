@@ -10,10 +10,10 @@
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="#">Purchases</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">S&OP</li>
+                        <li class="breadcrumb-item active" aria-current="page">OTB</li>
                     </ol>
                 </nav>
-                <h1 class="m-0">S&OP</h1>
+                <h1 class="m-0">OTB</h1>
             </div>
 
         </div>
@@ -45,7 +45,7 @@
                     <div class="form-group">
 
                         <div class="custom-control custom-checkbox mt-sm-2">
-                            <a href="@Url.Action("SOP_create", "SOP")" class="btn btn-success ml-3"><i class="material-icons">add</i>New process</a>
+                            <a href="@Url.Action("OTB_create", "OTB")" class="btn btn-success ml-3"><i class="material-icons">add</i>New process</a>
                         </div>
                     </div>
                 </div>
@@ -88,9 +88,9 @@
                                 <td >@item.SubCategories</td>
                                 <td >@item.Brands</td>
                                 <td>
-                                    <a href="@Url.Action("Initial_forecast", "Operations", new { iddata = item.ID_purchaseData })" class="btn btn-outline-info">Edit</a>
+                                    <a href="@Url.Action("edit_purchaseData", "OTB", new { id = item.ID_purchaseData })" class="btn btn-outline-info">Edit</a>
 
-                                        <a href="@Url.Action("PurchaseData_ForecastExport", "Operations", new { id = item.ID_purchaseData })" class="btn btn-outline-success">Export</a>
+                                        <a href="@Url.Action("PurchaseData_Export", "Operations", new { id = item.ID_purchaseData })" class="btn btn-outline-success">Export</a>
 
                              
 
@@ -246,7 +246,7 @@
             st = st.toLocaleDateString();
             ed = ed.toLocaleDateString();
             //colocamos la url de la demo
-            var url = '@Url.Action("SOP", "SOP", new { fstartd = "dad", fendd="tfe" })';
+            var url = '@Url.Action("OTB", "OTB", new { fstartd = "dad", fendd="tfe" })';
             url = url.replace('dad', st);
             var newurl = url;
             newurl = newurl.replace('tfe', ed);

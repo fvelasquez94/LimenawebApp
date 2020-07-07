@@ -32,7 +32,7 @@
             <h1 class="mb-2">@Model.ItemCode</h1>
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb mb-0">
-                    <li class="breadcrumb-item"><a href="#"><i class="material-icons">folder_open</i>@Model.Description</a></li>
+                    <li class="breadcrumb-item"><a href="#"><i class="material-icons">bookmark</i>@Model.Description</a></li>
                 </ol>
             </nav>
         </div>
@@ -108,7 +108,7 @@
     </div>
     <hr />
     <div class="alert alert-soft-success d-flex align-items-center card-margin" role="alert">
-        <i class="material-icons mr-3">star</i>
+        <i class="material-icons mr-3">bookmark</i>
         <div class="text-body"><strong>Product Information.</strong> Here you can check all product information and assigned forecast. </div>
     </div>
     <div class="row">
@@ -250,7 +250,7 @@
                                   placeholder="Product Comments">@Model.Comments</textarea>
                     </div>
                     <hr />
-                    <a href="@Url.Action("Product_stats","Operations", new { ItemCode= Model.ItemCode, data=ViewBag.iddata})" class="btn btn-light ml-3"><i class="material-icons">chevron_left</i> Sales Stats</a>
+                    <a href="@Url.Action("Product_stats","Operations", new { ItemCode= Model.ItemCode, data=ViewBag.iddata})" class="btn btn-light ml-3"><i class="material-icons">timeline</i> Sales Stats</a>
                 </div>
             </div>
         </div>
@@ -259,68 +259,6 @@
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="large-modal" tabindex="-1" role="dialog"
-     aria-labelledby="model-4"
-     aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-
-        <!-- Modal Content -->
-        <div class="modal-content">
-
-            <!-- /modal header -->
-            <!-- Modal Body -->
-            <div class="modal-body">
-                <h3 class="modal-title" id="model-4">Porcentajes de Acertividad</h3><br />
-                <label id="replabel"></label><br />
-                <label id="itemcodelabel"></label>
-
-                <br />
-                <br />
-                <table class="table table-bordered mb-0">
-                    <thead>
-                        <tr style="border:1px solid #ddd">
-                            <td colspan="3" style="text-align:center">PERIODO ANTERIOR<br /><label id="periodoantlabel"></label></td>
-                            <td colspan="2" style="text-align:center">PERIODO ACTUAL<br /><label id="periodoactuallabel"></label></td>
-
-                        </tr>
-                        <tr style="border:1px solid #ddd">
-                            <th>CANT. CAJAS (SALES H)</th>
-                            <th>CANT. CAJAS (SOP)</th>
-                            <th>ACERTIVIDAD</th>
-                            <th>CANT. CAJAS (SOP)</th>
-                            <th>COMPARACION</th>
-                        </tr>
-
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><label id="lastforecastSHlabel"></label></td>
-
-                            <td><label id="lastsavedforecastlabel"></label></td>
-                            <td id="acertividadcol"></td>
-                            <td><label id="actualforecastlabel"></label></td>
-                            <td><label id="comparacionlabel"></label></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <!-- /modal body -->
-            <!-- Modal Footer -->
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary btn-sm"
-                        data-dismiss="modal">
-                    Close
-                </button>
-            </div>
-            <!-- /modal footer -->
-
-        </div>
-        <!-- /modal content -->
-
-    </div>
-</div>
-<!-- /modal -->
 <!-- /root -->
 @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
 <script src="~/Content/appcontent/assets/vendor/tableeditorinline/SimpleTableCellEditor.es6.min.js"></script>

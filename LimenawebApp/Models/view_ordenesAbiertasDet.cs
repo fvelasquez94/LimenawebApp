@@ -35,5 +35,6 @@ namespace LimenawebApp.Models
         public string NoPepperi { get; set; }
         public string U_DeliveryR { get; set; }
         public string StatusPlanningFlow { get; set; }
+
     }
 }

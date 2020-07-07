@@ -17,7 +17,7 @@
                     $("#maintbbo").empty();
                     $("#data_tableEditor2").append();
                     for (var i = 0; i < objects.length; i++) {
-                        //console.log(objects[i]["ProdCodigo"]);
+                        console.log(objects[i]["ProdCodigo"]);
                         //var tr = "";
 
 
@@ -29,8 +29,8 @@
                         myArray.push('<td></td>');
                         myArray.push('<td style="padding: .25rem;top:5px">' + objects[i]["ProdCodigo"] + "</td>");
                         myArray.push('<td style="padding: .25rem;">' + objects[i]["ProdNombre"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorCompra"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["FactorUnidadCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right">' + objects[i]["FactorCompra"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right">' + objects[i]["FactorUnidadCompra"] + "</td>");
                         myArray.push('<td style="padding: .25rem;display:none">' + objects[i]["FactorCompra_quiebre"] + "</td>");
                         myArray.push('<td style="padding: .25rem;display:none">' + objects[i]["Politica_cobertura"] + "</td>");
 
@@ -40,51 +40,51 @@
                         myArray.push('<td style="padding: .25rem;">' + objects[i]["ProvNombre"] + "</td>");
 
                         myArray.push('<td  style="padding: .25rem;">' + objects[i]["UnidadMedidaLetras"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["InventarioEach"] + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["InventarioCajas"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Desviacion"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Maximo"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Minimo"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoPeriodoActual"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B5"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B4"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B3"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B2"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["B1"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Promedio_AA"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["VentaB1"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["Variacion"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["TendenciaPeriodoActual"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente1"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente2"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente3"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + Math.round(objects[i]["PronosticoSiguiente4"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaActual"].toFixed(2) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["CoberturaProyectada"].toFixed(2) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;" class="editCoberturaProyectadaNumeOriginal">' + objects[i]["CoberturaProyectadaNume"].toFixed(2) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;" class="editCoberturaProyectadaDeno">' + objects[i]["CoberturaProyectadaDeno"].toFixed(2) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["OTB"].toFixed(2) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;">' + objects[i]["Cobertura_OTB"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["InventarioEach"] + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["InventarioCajas"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Promedio"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Desviacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Maximo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Minimo"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B5"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B4"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B3"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B2"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Promedio_AA"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["VentaB1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Variacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["TendenciaPeriodoActual"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoSiguiente1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoSiguiente2"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoSiguiente3"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoSiguiente4"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["CoberturaActual"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["CoberturaProyectada"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right" class="editCoberturaProyectadaNumeOriginal">' + objects[i]["CoberturaProyectadaNume"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right" class="editCoberturaProyectadaDeno">' + objects[i]["CoberturaProyectadaDeno"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["OTB"].toFixed(2) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["Cobertura_OTB"].toFixed(2) + "</td>");
 
                         myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
 
 
-                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
 
-                        myArray.push('<td style="padding: .25rem;">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right">' + (new Date(parseInt(objects[i]["DocumentDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
 
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_TI"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;">' + objects[i]["U_HI"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCoberturaProyectadaNume">' + Math.round(objects[i]["InventarioIngresoPO"]) + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCosto">' + objects[i]["Costo"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right">' + objects[i]["U_TI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right">' + objects[i]["U_HI"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editCasesPerPallet">' + objects[i]["U_PalletCount"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editPalletOrden">' + objects[i]["PalletsdeOrden"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editCoberturaProyectadaNume">' + Math.round(objects[i]["InventarioIngresoPO"]) + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editCobertura_dePO">' + objects[i]["CoberturaIngresoPO"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editCosto">' + objects[i]["Costo"] + "</td>");
                         myArray.push('<td style="padding: .25rem;">' + "<input class='editDAp form-control filternumbers' style='text-align: right; width: 120px' type='text' />" + "</td>");
                         myArray.push('<td style="padding: .25rem;">' + "<input class='editDAn form-control filternumbers' style='text-align: right;width:120px' type='text' />" + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
-                        myArray.push('<td style="padding: .25rem;" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editCostoDescuento">' + objects[i]["CostoconDescuento"] + "</td>");
+                        myArray.push('<td style="padding: .25rem;text-align:right" class="editMontoPO">' + objects[i]["MontoPO"] + '</td>');
 
 
 
@@ -508,7 +508,7 @@
 
             }
             var idpurchase = @ViewBag.purchasedataID;
-            document.getElementById("loader").style.display = "block";
+            //document.getElementById("loader").style.display = "block";
             $.ajax
                 ({
                     url: '/Operations/SaveEdit_PurchaseData',
@@ -517,50 +517,20 @@
                     success: function (result) {
 
                         if (result == "SUCCESS") {
-                            var toast = swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-
-                            toast({
-                                type: 'success',
-                                title: 'Data saved successfully.'
-                            });
-                            document.getElementById("loader").style.display = "none";
+                            toastr.success('Data saved successfully');
+                           
 
                         } else {
-                            var toast = swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-
-                            toast({
-                                type: 'info',
-                                title: 'Something went wrong. ' + result
-                            });
-                            document.getElementById("loader").style.display = "none";
+                            toastr.info('Something went wrong. ' + result);
+                           
                         }
 
 
                     },
                     error: function () {
 
-                        var toast = swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-
-                        toast({
-                            type: 'info',
-                            title: 'Something went wrong, try again'
-                        });
-                        document.getElementById("loader").style.display = "none";
+                        toastr.warning('Something went wrong, try again');
+                       
                     },
                 });
 

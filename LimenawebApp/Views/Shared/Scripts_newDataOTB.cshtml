@@ -349,7 +349,7 @@
 
                             $.ajax
                             ({
-                                    url: '/Operations/Save_DataProcess',
+                                    url: '/Operations/Save_DataProcessOTB',
                                 type: 'POST',
                                     data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString()},
                                 success: function (result) {
@@ -360,13 +360,13 @@
 
                                         setTimeout(
                                             function () {
-                                                var url = '@Url.Action("SOP", "SOP", null)';
+                                                var url = '@Url.Action("OTB", "OTB", null)';
                                                 url = url.replace('amp;', '');
                                                  window.location.href = url;
                                             }, 2000);
 
                                     } else {
-                                        toastr.info(result);
+
                                     }
                                     $("#btnsaveproducts").attr("disabled", false);
 

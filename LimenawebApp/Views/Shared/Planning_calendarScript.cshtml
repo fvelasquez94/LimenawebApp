@@ -580,7 +580,7 @@
                                         contents += '<small>Amount: $ </small><small class="pillAmount2">' + selSO.OpenAmount.toFixed(2) + '</small><br>';
                                         //contents += '<div class="float-right">';
                                         //contents += '<br><small class="text-muted text-sm">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US')  + '</small>';
-                                        contents += '<small class="text-muted text-sm pilldate2">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                        contents += '<small class="text-muted text-sm pilldate2">Date:' + (new Date(parseInt(selSO.SODate.substr(6)))).toLocaleDateString('en-US', { timeZone: 'UTC' }) + '</small>';
                                         if (selSO.Remarks === null) {
 
                                         } else {
@@ -630,7 +630,7 @@
 
                                         //contentOpenSO += '<div class="float-right">';
                                         //contentOpenSO += '<br/><small class="text-muted">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
-                                        contentOpenSO += '<small class="text-muted pilldate2">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US') + '</small>';
+                                        contentOpenSO += '<small class="text-muted pilldate2">Date: ' + (new Date(parseInt(openSO.SODate.substr(6)))).toLocaleDateString('en-US', { timeZone: 'UTC' }) + '</small>';
                                         if (openSO.Remarks === null) {
 
                                         } else {

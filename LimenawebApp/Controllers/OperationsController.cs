@@ -213,6 +213,7 @@ namespace LimenawebApp.Controllers
 
                 ViewBag.iddata = data;
                 ViewBag.idproduct = product.ItemCode;
+                ViewBag.product = product.Description;
 
                 var salesHistory = dlipro.Database.SqlQuery<salesHistory>("Select * from BI_Sales_History_Matriz_Compras where ItemCode={0}", ItemCode).ToList<salesHistory>();
                
@@ -281,12 +282,12 @@ namespace LimenawebApp.Controllers
         {
             try
             {
-                //HEADER
-                var dataprocess = (from a in dblim.Purchase_data where (a.ID_purchaseData == iddata) select a).FirstOrDefault();
+                //HEADER  YA NO SE UTILIZA MAS PORQUE NO MANEJAREMOS ESTADOS
+                //var dataprocess = (from a in dblim.Purchase_data where (a.ID_purchaseData == iddata) select a).FirstOrDefault();
 
-                dataprocess.query2 = "1";
-                dblim.Entry(dataprocess).State = EntityState.Modified;
-                dblim.SaveChanges();
+                //dataprocess.query2 = "1";
+                //dblim.Entry(dataprocess).State = EntityState.Modified;
+                //dblim.SaveChanges();
             }
             catch {
 
@@ -294,7 +295,7 @@ namespace LimenawebApp.Controllers
 
 
 
-            return RedirectToAction("Purchase_data", "Operations", null);
+            return RedirectToAction("SOP", "SOP", null);
 
 
 
@@ -935,24 +936,11 @@ public class Initial_forecastData
                 
 
                 //Seleccionamos los productos de la submatriz
-                var products = (from a in dbMatriz.PurchaseData_product where (a.ID_purchaseData == id) select a).ToList();
-                var IDsproducts = (from g in products  select g.ItemCode).ToArray();
+                var products = (from a in dblim.Purchase_data_details where (a.ID_purchaseData == id) select a).ToList();
+                var IDsproducts = (from g in products  select g.ProdCodigo).ToArray();
                 //Seleccionamos los datos de los productos en la submatriz, generada por el proceso de compras en db_matrizCompras
                 List<view_MatrizMadre> data = (from b in dbMatriz.view_MatrizMadre where (IDsproducts.Contains(b.ProdCodigo)) select b).ToList();
 
-                foreach (var item in data) {
-                    //Colocamos los pronosticos que se crearon en SOP (siempre tienen que existir ya que la sub matriz se crea en el proceso SOP
-                    var productfin = products.Where(c => c.ItemCode == item.ProdCodigo).FirstOrDefault();
-                    if (productfin != null) {
-                        item.PronosticoPeriodoActual = Convert.ToDouble(productfin.Forecast1_source3);
-                        item.PronosticoSiguiente1 = Convert.ToDouble(productfin.Forecast2_source3);
-                        item.PronosticoSiguiente2 = Convert.ToDouble(productfin.Forecast3_source3);
-                        item.PronosticoSiguiente3 = Convert.ToDouble(productfin.Forecast4_source3);
-                        item.PronosticoSiguiente4 = Convert.ToDouble(productfin.Forecast5_source3);
-                    }
-                    
-         
-                }
                 ViewBag.iddata = id;
                 ViewBag.data = data;
                 return View();
@@ -1030,7 +1018,7 @@ public class Initial_forecastData
             try
             {
                 int userid = 0;
-                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                Sys_Users activeuser    = Session["activeUser"] as Sys_Users;
                 if (activeuser != null)
                 {
                     userid = activeuser.ID_User;
@@ -1152,7 +1140,12 @@ public class Initial_forecastData
             string ttresult = "";
             try
             {
-                int userid = 0;
+               
+
+   
+
+
+                    int userid = 0;
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
                 if (activeuser != null)
                 {
@@ -1164,7 +1157,7 @@ public class Initial_forecastData
                 newDataM.Date_data = DateTime.UtcNow.AddDays(-1);
                 newDataM.User_create = userid;
                 newDataM.query1 = "";
-                newDataM.query2 = "";
+                newDataM.query2 = "SOP";
                 newDataM.Categories = Categories;
                 newDataM.SubCategories = Subcategories;
                 newDataM.Providers = Providers;
@@ -1172,11 +1165,14 @@ public class Initial_forecastData
                 dblim.Purchase_data.Add(newDataM);
                 dblim.SaveChanges();
 
-
-
+                var flagExiste = false;
+                var productoexiste = "";
+                var forecast = dbMatriz.Database.SqlQuery<Forecast_Cajas>("Select * from Forecast_Cajas").ToList<Forecast_Cajas>();
                 List<PurchaseData_product> lsttosave = new List<PurchaseData_product>();
                 foreach (var items in objects)
                 {
+        
+                  
                     PurchaseData_product newDet = new PurchaseData_product();
                     newDet.ItemCode = items.ItemCode;
                     newDet.Description = items.Description;
@@ -1215,11 +1211,12 @@ public class Initial_forecastData
                     newDet.Baseline3 = 0;
                     newDet.Baseline4 = 0;
                     newDet.Baseline5 = 0;
-                    var forecast = dbMatriz.Database.SqlQuery<Forecast_Cajas>("Select * from Forecast_Cajas").ToList<Forecast_Cajas>();
+                   
 
                     newDet.Forecast1_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).FirstOrDefault());
                     newDet.Forecast1_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).FirstOrDefault();
                     newDet.Forecast1_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).FirstOrDefault();
+                    //
                     newDet.Baseline1 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).FirstOrDefault();
                     newDet.Forecast2_source1 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(1).FirstOrDefault());
                     newDet.Forecast2_source1_period = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Periodo).Skip(1).FirstOrDefault();
@@ -1238,6 +1235,188 @@ public class Initial_forecastData
                     newDet.Forecast5_source1_year = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Anio).Skip(4).FirstOrDefault();
                     newDet.Baseline5 = forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.BaseLine).Skip(4).FirstOrDefault();
 
+
+                    //Verificamos si NO hay algun producto que se repita en el periodo actual
+                    var existSOP = (from a in dbMatriz.PurchaseData_product where (a.ItemCode == items.ItemCode && a.Forecast1_source1_period == newDet.Forecast1_source1_period && a.Forecast1_source1_year == newDet.Forecast1_source1_year) select a).Count();
+                    if (existSOP > 0) {
+                        //El producto existe para este periodo, por lo tanto debemos alertar al usuario
+                        flagExiste = true;
+                        productoexiste = items.ItemCode;
+                        break;
+                    }
+
+                    //Verificamos si existe pronostico almacenado
+                    var existeregSOP = (from a in dbMatriz.PurchaseData_product where (a.ItemCode == items.ItemCode) select a).OrderByDescending(c=>c.Last_update).FirstOrDefault();
+                    if (existeregSOP !=null) //Si existe
+                    {
+                        //Pronostico 1 de NUEVO DETALLE
+                        //Recordemos que no puede evaluarse contra Forecast1 porque seria repetido
+                        if (existeregSOP.Forecast2_source1_period == newDet.Forecast1_source1_period && existeregSOP.Forecast2_source1_year == newDet.Forecast1_source1_year)
+                        {
+                            //Existe registro de pronostico y se coloca
+                            newDet.Forecast1_source1 = existeregSOP.Forecast2_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                            //newDet.Forecast1_source1_period = existeregSOP.Forecast2_source1_period;
+                            //newDet.Forecast1_source1_year = existeregSOP.Forecast2_source1_year;
+                        }
+                        else {
+                            if (existeregSOP.Forecast3_source1_period == newDet.Forecast1_source1_period && existeregSOP.Forecast3_source1_year == newDet.Forecast1_source1_year)
+                            {
+                                //Existe registro de pronostico y se coloca
+                                newDet.Forecast1_source1 = existeregSOP.Forecast3_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                //newDet.Forecast1_source1_period = existeregSOP.Forecast3_source1_period;
+                                //newDet.Forecast1_source1_year = existeregSOP.Forecast3_source1_year;
+                            }
+                            else
+                            {
+                                if (existeregSOP.Forecast4_source1_period == newDet.Forecast1_source1_period && existeregSOP.Forecast4_source1_year == newDet.Forecast1_source1_year)
+                                {
+                                    //Existe registro de pronostico y se coloca
+                                    newDet.Forecast1_source1 = existeregSOP.Forecast4_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                    //newDet.Forecast1_source1_period = existeregSOP.Forecast4_source1_period;
+                                    //newDet.Forecast1_source1_year = existeregSOP.Forecast4_source1_year;
+                                }
+                                else
+                                {
+                                    if (existeregSOP.Forecast5_source1_period == newDet.Forecast1_source1_period && existeregSOP.Forecast5_source1_year == newDet.Forecast1_source1_year)
+                                    {
+                                        //Existe registro de pronostico y se coloca
+                                        newDet.Forecast1_source1 = existeregSOP.Forecast5_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                        //newDet.Forecast1_source1_period = existeregSOP.Forecast5_source1_period;
+                                        //newDet.Forecast1_source1_year = existeregSOP.Forecast5_source1_year;
+                                    }
+                                }
+                            }
+
+                        }
+
+
+                        //Pronostico 2 de NUEVO DETALLE
+                        //Recordemos que no puede evaluarse contra Forecast1 porque seria repetido
+                        if (existeregSOP.Forecast2_source1_period == newDet.Forecast2_source1_period && existeregSOP.Forecast2_source1_year == newDet.Forecast2_source1_year)
+                        {
+                            //Existe registro de pronostico y se coloca
+                            newDet.Forecast2_source1 = existeregSOP.Forecast2_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                            //newDet.Forecast2_source1_period = existeregSOP.Forecast2_source1_period;
+                            //newDet.Forecast2_source1_year = existeregSOP.Forecast2_source1_year;
+                        }
+                        else
+                        {
+                            if (existeregSOP.Forecast3_source1_period == newDet.Forecast2_source1_period && existeregSOP.Forecast3_source1_year == newDet.Forecast2_source1_year)
+                            {
+                                //Existe registro de pronostico y se coloca
+                                newDet.Forecast2_source1 = existeregSOP.Forecast3_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                //newDet.Forecast2_source1_period = existeregSOP.Forecast3_source1_period;
+                                //newDet.Forecast2_source1_year = existeregSOP.Forecast3_source1_year;
+                            }
+                            else
+                            {
+                                if (existeregSOP.Forecast4_source1_period == newDet.Forecast2_source1_period && existeregSOP.Forecast4_source1_year == newDet.Forecast2_source1_year)
+                                {
+                                    //Existe registro de pronostico y se coloca
+                                    newDet.Forecast2_source1 = existeregSOP.Forecast4_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                    //newDet.Forecast2_source1_period = existeregSOP.Forecast4_source1_period;
+                                    //newDet.Forecast2_source1_year = existeregSOP.Forecast4_source1_year;
+                                }
+                                else
+                                {
+                                    if (existeregSOP.Forecast5_source1_period == newDet.Forecast2_source1_period && existeregSOP.Forecast5_source1_year == newDet.Forecast2_source1_year)
+                                    {
+                                        //Existe registro de pronostico y se coloca
+                                        newDet.Forecast2_source1 = existeregSOP.Forecast5_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                        //newDet.Forecast2_source1_period = existeregSOP.Forecast5_source1_period;
+                                        //newDet.Forecast2_source1_year = existeregSOP.Forecast5_source1_year;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        //Pronostico 3 de NUEVO DETALLE
+                        //Recordemos que no puede evaluarse contra Forecast1 porque seria repetido
+                        if (existeregSOP.Forecast2_source1_period == newDet.Forecast3_source1_period && existeregSOP.Forecast2_source1_year == newDet.Forecast3_source1_year)
+                        {
+                            //Existe registro de pronostico y se coloca
+                            newDet.Forecast3_source1 = existeregSOP.Forecast2_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                            //newDet.Forecast3_source1_period = existeregSOP.Forecast2_source1_period;
+                            //newDet.Forecast3_source1_year = existeregSOP.Forecast2_source1_year;
+                        }
+                        else
+                        {
+                            if (existeregSOP.Forecast3_source1_period == newDet.Forecast3_source1_period && existeregSOP.Forecast3_source1_year == newDet.Forecast3_source1_year)
+                            {
+                                //Existe registro de pronostico y se coloca
+                                newDet.Forecast3_source1 = existeregSOP.Forecast3_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                //newDet.Forecast3_source1_period = existeregSOP.Forecast3_source1_period;
+                                //newDet.Forecast3_source1_year = existeregSOP.Forecast3_source1_year;
+                            }
+                            else
+                            {
+                                if (existeregSOP.Forecast4_source1_period == newDet.Forecast3_source1_period && existeregSOP.Forecast4_source1_year == newDet.Forecast3_source1_year)
+                                {
+                                    //Existe registro de pronostico y se coloca
+                                    newDet.Forecast3_source1 = existeregSOP.Forecast4_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                    //newDet.Forecast3_source1_period = existeregSOP.Forecast4_source1_period;
+                                    //newDet.Forecast3_source1_year = existeregSOP.Forecast4_source1_year;
+                                }
+                                else
+                                {
+                                    if (existeregSOP.Forecast5_source1_period == newDet.Forecast3_source1_period && existeregSOP.Forecast5_source1_year == newDet.Forecast3_source1_year)
+                                    {
+                                        //Existe registro de pronostico y se coloca
+                                        newDet.Forecast3_source1 = existeregSOP.Forecast5_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                        //newDet.Forecast3_source1_period = existeregSOP.Forecast5_source1_period;
+                                        //newDet.Forecast3_source1_year = existeregSOP.Forecast5_source1_year;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        //Pronostico 4 de NUEVO DETALLE
+                        //Recordemos que no puede evaluarse contra Forecast1 porque seria repetido
+                        if (existeregSOP.Forecast2_source1_period == newDet.Forecast4_source1_period && existeregSOP.Forecast2_source1_year == newDet.Forecast4_source1_year)
+                        {
+                            //Existe registro de pronostico y se coloca
+                            newDet.Forecast4_source1 = existeregSOP.Forecast2_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                            //newDet.Forecast4_source1_period = existeregSOP.Forecast2_source1_period;
+                            //newDet.Forecast4_source1_year = existeregSOP.Forecast2_source1_year;
+                        }
+                        else
+                        {
+                            if (existeregSOP.Forecast3_source1_period == newDet.Forecast4_source1_period && existeregSOP.Forecast3_source1_year == newDet.Forecast4_source1_year)
+                            {
+                                //Existe registro de pronostico y se coloca
+                                newDet.Forecast4_source1 = existeregSOP.Forecast3_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                //newDet.Forecast4_source1_period = existeregSOP.Forecast3_source1_period;
+                                //newDet.Forecast4_source1_year = existeregSOP.Forecast3_source1_year;
+                            }
+                            else
+                            {
+                                if (existeregSOP.Forecast4_source1_period == newDet.Forecast4_source1_period && existeregSOP.Forecast4_source1_year == newDet.Forecast4_source1_year)
+                                {
+                                    //Existe registro de pronostico y se coloca
+                                    newDet.Forecast4_source1 = existeregSOP.Forecast4_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                    //newDet.Forecast4_source1_period = existeregSOP.Forecast4_source1_period;
+                                    //newDet.Forecast4_source1_year = existeregSOP.Forecast4_source1_year;
+                                }
+                                else
+                                {
+                                    if (existeregSOP.Forecast5_source1_period == newDet.Forecast4_source1_period && existeregSOP.Forecast5_source1_year == newDet.Forecast4_source1_year)
+                                    {
+                                        //Existe registro de pronostico y se coloca
+                                        newDet.Forecast4_source1 = existeregSOP.Forecast5_source3; //Source 3 es el ultimo pronostico (Sales Budget)
+                                        //newDet.Forecast4_source1_period = existeregSOP.Forecast5_source1_period;
+                                        //newDet.Forecast4_source1_year = existeregSOP.Forecast5_source1_year;
+                                    }
+                                }
+                            }
+
+                        }
+
+                        //Pronostico 5 de NUEVO DETALLE NO es evaluado,  ya que se espera que nunca entre en proceso valido
+
+                    }
+
                     //Agregamos por defecto el forecast source 1 al forecast source 3
                     newDet.Forecast1_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).FirstOrDefault());
                     newDet.Forecast2_source3 = Convert.ToDecimal(forecast.Where(c => c.CodProducto == items.ItemCode).Select(c => c.Forecast).Skip(1).FirstOrDefault());
@@ -1252,8 +1431,157 @@ public class Initial_forecastData
                     
                 }
 
-                dbMatriz.BulkInsert(lsttosave);
-         
+                if (flagExiste == false)
+                {
+
+                    dbMatriz.BulkInsert(lsttosave);
+
+
+
+                    ttresult = "SUCCESS";
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+                else {
+
+                    dblim.Purchase_data.Remove(newDataM);
+                    dblim.SaveChanges();
+
+                    ttresult = "A product in the list already has a S&OP Process for the current period: " + productoexiste;
+                    return Json(ttresult, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                ttresult = "ERROR: " + ex.Message;
+                return Json(ttresult, JsonRequestBehavior.AllowGet);
+            }
+        }
+        [HttpPost]
+        public ActionResult Save_DataProcessOTB(List<MyObj_save> objects, string Categories, string Subcategories, string Providers, string Brands)
+        {
+            string ttresult = "";
+            try
+            {
+                int userid = 0;
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                if (activeuser != null)
+                {
+                    userid = activeuser.ID_User;
+                }
+
+                Purchase_data newDataM = new Purchase_data();
+                newDataM.Date_create = DateTime.UtcNow;
+                newDataM.Date_data = DateTime.UtcNow.AddDays(-1);
+                newDataM.User_create = userid;
+                newDataM.query1 = "";
+                newDataM.query2 = "OTB";
+                newDataM.Categories = Categories;
+                newDataM.SubCategories = Subcategories;
+                newDataM.Providers = Providers;
+                newDataM.Brands = Brands;
+                dblim.Purchase_data.Add(newDataM);
+                dblim.SaveChanges();
+
+
+                //Details OTB
+
+                //Seleccionamos los productos de la submatriz
+                var IDsproducts = (from g in objects select g.ItemCode).ToArray();
+                //Seleccionamos los datos de los productos en la submatriz, generada por el proceso de compras en db_matrizCompras
+                List<view_MatrizMadre> data = (from b in dbMatriz.view_MatrizMadre where (IDsproducts.Contains(b.ProdCodigo)) select b).ToList();
+
+
+                List<Purchase_data_details> lsttosave = new List<Purchase_data_details>();
+                foreach (var items in data)
+                {
+                    Purchase_data_details newDet = new Purchase_data_details();
+                    newDet.ID_purchaseData = newDataM.ID_purchaseData;
+                    newDet.num = items.num;
+                    newDet.ProdCodigo = items.ProdCodigo;
+                    newDet.ProdNombre = items.ProdNombre;
+                    newDet.FactorCompra = items.FactorCompra;
+                    //nuevo 09/17/2019
+                    newDet.FactorUnidadCompra = items.FactorUnidadCompra;
+                    newDet.B1 = items.B1;
+                    newDet.B2 = items.B2;
+                    newDet.B3 = items.B3;
+                    newDet.B4 = items.B4;
+                    newDet.B5 = items.B5;
+
+                    newDet.FactorCompra_quiebre = items.FactorCompra_quiebre;
+                    newDet.Politica_cobertura = items.Politica_cobertura;
+                    newDet.Marca = items.Marca;
+                    newDet.Category = items.Category;
+                    newDet.SubCategory = items.SubCategory;
+                    newDet.ProvNombre = items.ProvNombre;
+                    newDet.UnidadMedidaLetras = items.UnidadMedidaLetras;
+                    if (items.InventarioEach == null) { newDet.InventarioEach = 0; } else { newDet.InventarioEach = items.InventarioEach; }
+                    if (items.InventarioCajas == null) { newDet.InventarioCajas = 0; } else { newDet.InventarioCajas = items.InventarioCajas; }
+                    newDet.Promedio = items.Promedio;
+                    newDet.Desviacion = items.Desviacion;
+                    newDet.Maximo = items.Maximo;
+                    newDet.Minimo = items.Minimo;
+                    newDet.PronosticoPeriodoActual = items.PronosticoPeriodoActual;
+                    newDet.Promedio_AA = items.Promedio_AA;
+                    newDet.VentaB1 = items.VentaB1;
+                    newDet.Variacion = items.Variacion;
+                    newDet.TendenciaPeriodoActual = items.TendenciaPeriodoActual;
+                    newDet.PronosticoSiguiente1 = items.PronosticoSiguiente1;
+                    newDet.PronosticoSiguiente2 = items.PronosticoSiguiente2;
+                    newDet.PronosticoSiguiente3 = items.PronosticoSiguiente3;
+                    newDet.PronosticoSiguiente4 = items.PronosticoSiguiente4;
+                    newDet.CoberturaActual = items.CoberturaActual;
+                    newDet.CoberturaProyectada = items.CoberturaProyectada;
+                    newDet.OTB = items.OTB;
+                    newDet.Cobertura_OTB = items.Cobertura_OTB;
+                    newDet.Pedido = Convert.ToDouble(items.Pedido); 
+                    newDet.DeliveryDate = items.DeliveryDate;
+                    newDet.DocumentDate = items.DocumentDate;
+                    newDet.U_TI = items.U_TI;
+                    newDet.U_HI = items.U_HI;
+                    newDet.U_PalletCount = 0;
+                    newDet.PalletsdeOrden = 0; 
+                    newDet.CoberturaProyectadaNume = items.CoberturaProyectadaNume;
+                    newDet.CoberturaIngresoPO = items.CoberturaIngresoPO;
+                    newDet.InventarioIngresoPO = 0;
+                    newDet.Costo = items.Costo;
+                    newDet.Descuento_allowanced = items.DescuentoAn; 
+                    newDet.Descuento_allowancep = items.DescuentoAp; 
+                    newDet.CostoconDescuento = items.CostoconDescuento;
+                    newDet.MontoPO = 0;
+
+                    if (items.Comentarios == null) { newDet.Comentarios = ""; } else { newDet.Comentarios = items.Comentarios; }
+                    newDet.CoberturaProyectadaDeno = items.CoberturaProyectadaDeno;
+                    newDet.VentaF1 = items.VentaF1;
+
+                    newDet.LeadTime = 0;
+                    lsttosave.Add(newDet);
+                    //Actualizamos el comentario
+                    try
+                    {
+                        if (items.Comentarios != "")
+                        {
+                            var producto = (from a in dbMatriz.Purchase_catalog where (a.ProductCode == items.ProdCodigo) select a).FirstOrDefault();
+
+                            if (producto != null)
+                            {
+                                producto.Comentarios = items.Comentarios;
+                                dbMatriz.Entry(producto).State = EntityState.Modified;
+                                dbMatriz.SaveChanges();
+                            }
+                        }
+
+                    }
+                    catch { }
+                }
+
+                dblim.BulkInsert(lsttosave);
+
+
+
+
 
 
                 ttresult = "SUCCESS";
@@ -1266,7 +1594,6 @@ public class Initial_forecastData
                 return Json(ttresult, JsonRequestBehavior.AllowGet);
             }
         }
-
 
         [HttpPost]
         public ActionResult SaveEdit_PurchaseData(int id, List<MatrizMadre> objects)

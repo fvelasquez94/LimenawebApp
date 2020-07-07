@@ -1,0 +1,113 @@
+﻿@model List<LimenawebApp.Models.view_MatrizMadre>
+@{
+    ViewBag.Title = "Distribuidora Limeña - New Data OTB";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Purchases</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">OTB</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">New process</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Purchases.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_customers">Category</label>
+                        <select id="lstCategory" class="form-control" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_customers">SubCategory</label>
+                        <select id="lstSubCategory" class="form-control" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_customers">Brand</label>
+                        <select id="lstBrands" class="form-control" multiple="multiple"></select>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_customers">Vendor</label>
+                        <select id="lstProvider" class="form-control" multiple="multiple"></select>
+                    </div>
+                </div>            
+                <div class="col-sm-auto">
+                    <a id="btnsaveproducts" href="#" class="btn btn-success">Save Data</a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="table-responsive">
+            <table id="data_tableEditor2" class="table border-bottom-0 " cellspacing="0">
+                <thead>
+                    <tr>
+                        <th class="no-sort">
+                            <label class="ui-check m-0 ">
+                                <input type="checkbox" class="selectchkAll2" id="chk_all2" value="0">
+                                <i></i>
+                            </label>
+                        </th>
+
+                        <th>COD PRODUCTO</th>
+                        <th>DESCRIPCION</th>
+
+                        <th>PROVEEDOR</th>
+                        <th>MARCA</th>
+                        <th>CATEGORIA</th>
+                        <th>SUB CATEGORIA</th>
+
+                    </tr>
+                </thead>
+                <tfoot>
+                </tfoot>
+                <tbody id="maintbbo" class="list">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" value="0" class="selectchk2" id="chk_@item.ProdCodigo">
+                            </td>
+                            <td>@item.ProdCodigo</td>
+                            <td>@item.ProdNombre</td>
+                            <td>@item.ProvNombre</td>
+                            <td>@item.Marca</td>
+                            <td>@item.Category</td>
+                            <td>@item.SubCategory</td>
+
+                        </tr>
+                    }
+                </tbody>
+
+            </table>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+

@@ -1,114 +1,72 @@
 ﻿@model  List<LimenawebApp.Controllers.OperationsController.salesHistory>
 @{
     ViewBag.Title = "Distribuidora Limeña - Purchase Data";
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Purchases</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">S&OP</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Sales Stats</h1>
+            </div>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    @Html.Partial("~/Views/Shared/temp_head.cshtml")
-</head>
-<body>
-
-    <!-- Loader -->
-    <div class="dt-loader-container">
-        <div class="dt-loader">
-            <svg class="circular" viewBox="25 25 50 50">
-                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle>
-            </svg>
         </div>
     </div>
-    <!-- /loader -->
-    <!-- Root -->
-    <div class="dt-root">
-        <div class="dt-root__inner">
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Purchases.cshtml")
+<!-- Page Header -->
+<!-- /loader -->
+<div class="container-fluid page__heading-container">
+    <div class="page__heading d-flex align-items-center">
+        <div class="flex">
 
-            <!-- Header -->
-            @Html.Partial("~/Views/Shared/temp_header.cshtml")
-            <!-- /header -->
-            <!-- Site Main -->
-            <main class="dt-main">
-                <!-- Sidebar -->
-                @Html.Partial("~/Views/Shared/main_sidebar.cshtml")
-                <!-- /sidebar -->
-                <!-- Custom Container -->
-                <div class="dt-container">
-
-                    <!-- Site Content Wrapper -->
-                    <div class="dt-content-wrapper">
-
-                        <!-- Site Content -->
-                        <div class="dt-content">
-
-                            <!-- Page Header -->
-                            <div class="dt-page__header">
-                                <h1 class="dt-page__title">Product Stats</h1>
-                                <!-- Page Header -->
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <!-- Back -->
-                                        <a href="@Url.Action("edit_process","Operations", new { ItemCode= ViewBag.idproduct, data= ViewBag.iddata})" class="text-dark">
-                                            <i class="icon icon-arrow-left icon-fw icon-1x"></i><span class="display-6 align-middle ml-1">Back</span>
-                                        </a>
-                                        <!-- /back -->
-                                    </div>
-                                </div>
+            <h1 class="mb-2">@ViewBag.idproduct</h1>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a href="#"><i class="material-icons">timeline</i>@ViewBag.product</a></li>
+                </ol>
+            </nav>
+        </div>
+        <div>
+            <a href="@Url.Action("edit_process","Operations", new { ItemCode= ViewBag.idproduct, data= ViewBag.iddata})" class="btn btn-light ml-3"><i class="material-icons">chevron_left</i> Back</a>
 
 
-                            </div>
-                            <!-- /page header -->
-                            <!--main content wrapper-->
+        </div>
+    </div>
+</div>
 
-
-                            <div class="row">
-                                <div class="col-xl-12">
-                                    <div class="card card-shadow">
-                                        <div class="card-header">
-                                            <div class="custom-title-wrap bar-success">
-                                                <div class="custom-title">
-                                                    <h5 class="card-subtitle mb-0">Source: SAP & MatrizCompras Database</h5><br />
-                                                </div>
-                                            </div>
-
-                                        </div>
-
-                                        <div class="card-body- pt-3 pb-4">
-                                           
-
-                                            <div class="embed-responsive embed-responsive-21by9">
-                                                <div id="chartdiv" class="embed-responsive-item"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- /grid item -->
-
-
+<div class="container-fluid page__container">
+    <div class="row">
+        <div class="col-xl-12">
+            <div class="card card-shadow">
+                <div class="card-header">
+                    <div class="custom-title-wrap bar-success">
+                        <div class="custom-title">
+                            <h5 class="card-subtitle mb-0">Source: SAP & MatrizCompras Database</h5><br />
                         </div>
-                        <!-- /site content -->
-
                     </div>
-                    <!-- /site content wrapper -->
 
                 </div>
-                <!-- /custom Container -->
 
-            </main>
-            <!-- /main -->
-            <!-- Footer -->
-            <footer class="dt-footer">
-                <div class="dt-container">
-                    Copyright Distribuidora Limena © 2019
+                <div class="card-body- pt-3 pb-4">
+
+
+                    <div class="embed-responsive embed-responsive-21by9">
+                        <div id="chartdiv" class="embed-responsive-item"></div>
+                    </div>
                 </div>
-            </footer>
-            <!-- /footer -->
-
+            </div>
         </div>
     </div>
-    <!-- /root -->
+</div>
+
     @Html.Partial("~/Views/Shared/main_Scripts.cshtml")
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/charts.js"></script>
@@ -220,9 +178,6 @@
 
 
     </script>
-
-</body>
-</html>
 
 
 

@@ -8,13 +8,6 @@ namespace LimenawebApp.Controllers
 {
     public class FinanceController : Controller
     {
-        // GET: Finance
-        public ActionResult Authorizations()
-        {
-            ViewData["Menu"] = "Finance";
-            ViewData["Page"] = "Authorizations for Drivers";
-            return View();
-        }
 
         public ActionResult ReceivePayment()
         {

@@ -121,29 +121,33 @@ else
                             <td style="font-size:11px;">
 
                                 @if (product.estado == 0)
-            {
+    {
 
-                    <label class="text-warning"> Waiting for authorization</label>
+                            <label class="text-warning"> Waiting for authorization</label>
 }
 else if (product.estado == 2)
 {
-                    <label class="text-success">Authorized</label>
+                            <label class="text-success">Authorized</label>
 }
 else if (product.estado == 1)
 {
-                    <label class="text-danger">Not Authorized</label>
+                            <label class="text-danger">Not Authorized</label>
 }
 else if (product.estado == 3)
 {
-                    <label class="text-success">On SAP</label>
+                            <label class="text-success">On SAP</label>
 }
 else if (product.estado == 4)
 {
-                    <label class="text-warning">Waiting Order</label>
+                            <label class="text-warning">Waiting Order</label>
 }
 else if (product.estado == 5)
 {
-                    <label class="text-danger">Expired</label>
+                            <label class="text-danger">Expired</label>
+}
+else if (product.estado == 6)
+{
+                            <label class="text-warning">Order Already Planned</label>
 }
                             </td>
                             <td>

@@ -982,35 +982,14 @@
 
                         if (result == "SUCCESS") {
 
-                            var toast = swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-
-                            toast({
-                                type: 'success',
-                                title: 'Data saved successfully.'
-                            });
-
+                            toastr.success('Data saved successfully');
                             document.getElementById("loader").style.display = "none";
 
                         
 
                         } else {
+                            toastr.info('Something went wrong. ' + result);
 
-                            var toast = swal.mixin({
-                                toast: true,
-                                position: 'top-end',
-                                showConfirmButton: false,
-                                timer: 3000
-                            });
-
-                            toast({
-                                type: 'info',
-                                title: 'Something went wrong. ' + result
-                            });
 
                             document.getElementById("loader").style.display = "none";
 
@@ -1024,20 +1003,9 @@
 
                     error: function () {
 
+                        toastr.warning('Something went wrong, try again');
 
-
-                        var toast = swal.mixin({
-                            toast: true,
-                            position: 'top-end',
-                            showConfirmButton: false,
-                            timer: 3000
-                        });
-
-                        toast({
-                            type: 'info',
-                            title: 'Something went wrong, try again'
-                        });
-
+ 
                         document.getElementById("loader").style.display = "none";
 
                     },

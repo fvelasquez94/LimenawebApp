@@ -243,6 +243,7 @@
     <Compile Include="Controllers\clsGeneral.cs" />
     <Compile Include="Controllers\DSDController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
+    <Compile Include="Controllers\Finance\AuthorizationsController.cs" />
     <Compile Include="Controllers\FormsActionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
@@ -458,6 +459,7 @@
     <Compile Include="Models\PurchaseData_product.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Purchases\Mdl_Matriz.cs" />
     <Compile Include="Models\Purchase_catalog.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
@@ -1781,6 +1783,7 @@
     <Content Include="Content\assets\images\dashboard\routes.jpg" />
     <Content Include="Content\assets\images\dashboard\routes2.jpg" />
     <Content Include="Content\assets\images\digital-product.png" />
+    <Content Include="Content\assets\images\fondolimena1.jpg" />
     <Content Include="Content\assets\images\fontted-logo-blue.svg" />
     <Content Include="Content\assets\images\frontted-logo-white.svg" />
     <Content Include="Content\assets\images\login\alexandre-godreau-431553-unsplash.jpg" />
@@ -15494,6 +15497,11 @@
     <Content Include="Views\SOP\SOP.cshtml" />
     <Content Include="Views\SOP\SOP_create.cshtml" />
     <Content Include="Views\Purchases\ProductCatalog.cshtml" />
+    <Content Include="Views\OTB\OTB.cshtml" />
+    <Content Include="Views\OTB\OTB_create.cshtml" />
+    <Content Include="Views\Shared\Scripts_newDataOTB.cshtml" />
+    <Content Include="Views\OTB\new_purchaseData.cshtml" />
+    <Content Include="Views\OTB\edit_purchaseData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -15503,8 +15511,8 @@
     <Folder Include="Content\images\enroll\" />
     <Folder Include="Content\images\temp_sign\" />
     <Folder Include="Reports\pdf\" />
+    <Folder Include="Views\Authorizations\" />
     <Folder Include="Views\FormsActions\" />
-    <Folder Include="Views\OTB\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

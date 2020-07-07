@@ -13,7 +13,15 @@ namespace LimenawebApp.Models
         public int PreviousPeriod { get; set; }
 
     }
+    public class BolsaUtilizada
+    {
+        public string id_Period { get; set; }
+        public string Period_Name { get; set; }
+        public int ID_user { get; set; }
+        public string UserName { get; set; }
+        public decimal? Utilizado { get; set; }
 
+    }
     public class ActivitiesReport
     {
         public int ID_Activity { get; set; }

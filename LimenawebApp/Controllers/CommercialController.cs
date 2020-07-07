@@ -582,10 +582,23 @@ namespace LimenawebApp.Controllers
 
 
                 var usuarioBolsa = (from g in dblim.Sys_Users where (g.ID_User == activeuser.ID_User) select g.BolsaValor).FirstOrDefault();
+                //nueva configuracion para calcular bolsa 07/03/2020  mm/dd/yyyy
+                BolsaUtilizada bolsaUtilizada = new BolsaUtilizada();
+                bolsaUtilizada = internadli.Database.SqlQuery<BolsaUtilizada>("Select * from Help_BolsaUtilizada where ID_user=@id", new SqlParameter("@id", activeuser.ID_User)).FirstOrDefault();
+
+                //
 
                 if (usuarioBolsa != 0 && usuarioBolsa != null)
                 {
-                    ViewBag.bolsa = usuarioBolsa;
+                    if (bolsaUtilizada != null)
+                    {
+                        ViewBag.bolsa = usuarioBolsa - bolsaUtilizada.Utilizado;
+                    }
+                    else
+                    {
+                        ViewBag.bolsa = usuarioBolsa;
+                    }
+
                 }
                 else
                 {
@@ -610,7 +623,7 @@ namespace LimenawebApp.Controllers
                     var pedidos = (from g in dlipro.view_ordenesAbiertasDet
                                    join j in dlipro.OCRD on g.CardCode equals j.CardCode
                                    where (TagIds.Contains(g.SlpCode))
-                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0 }).Distinct().OrderBy(c => c.cardname).ToArray();
+                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0, Printed=g.Printed }).Distinct().OrderBy(c => c.cardname).ToArray();
 
                     foreach (var item in pedidos)
                     {
@@ -705,7 +718,8 @@ namespace LimenawebApp.Controllers
                                         {
                                             id = p.docnum,
                                             text = p.cardcode + " - " + p.cardname + " | #" + p.docnum,
-                                            status = p.status
+                                            status = p.status,
+                                            printed = p.Printed
                                         }).ToList());
                     ViewBag.pedidos = JsonConvert.SerializeObject(myArrList);
                 }
@@ -715,7 +729,7 @@ namespace LimenawebApp.Controllers
                     var pedidos = (from g in dlipro.view_ordenesAbiertasDet
                                    join j in dlipro.OCRD on g.CardCode equals j.CardCode
                                    where (g.SlpCode == slpcode)
-                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0 }).Distinct().OrderBy(c => c.cardname).ToArray();
+                                   select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0, Printed = g.Printed }).Distinct().OrderBy(c => c.cardname).ToArray();
 
                     foreach (var item in pedidos)
                     {
@@ -815,7 +829,8 @@ namespace LimenawebApp.Controllers
                                         {
                                             id = p.docnum,
                                             text = p.cardcode + " - " + p.cardname + " | #" + p.docnum,
-                                            status = p.status
+                                            status = p.status,
+                                            printed = p.Printed
                                         }).ToList());
                     ViewBag.pedidos = JsonConvert.SerializeObject(myArrList);
                     //ViewBag.pedidos = pedidos;
@@ -919,7 +934,9 @@ namespace LimenawebApp.Controllers
             public string cardcode { get; set; }
             public string cardname { get; set; }
             public int status { get; set; }
-        
+            public string Printed { get; set; }
+
+
         }
 
         public ActionResult PedidoExiste(int docnum)
@@ -1908,9 +1925,22 @@ public ActionResult Prices_requestpdo(int docnum)
 
                 var usuarioBolsa = (from g in dblim.Sys_Users where (g.ID_User == activeuser.ID_User) select g.BolsaValor).FirstOrDefault();
 
+                //nueva configuracion para calcular bolsa 07/03/2020  mm/dd/yyyy
+                BolsaUtilizada bolsaUtilizada = new BolsaUtilizada();
+                bolsaUtilizada = internadli.Database.SqlQuery<BolsaUtilizada>("Select * from Help_BolsaUtilizada where ID_user=@id", new SqlParameter("@id", activeuser.ID_User)).FirstOrDefault();
+
+                //
+
                 if (usuarioBolsa != 0 && usuarioBolsa != null)
                 {
-                    ViewBag.bolsa = usuarioBolsa;
+                    if (bolsaUtilizada != null)
+                    {
+                        ViewBag.bolsa = usuarioBolsa - bolsaUtilizada.Utilizado;
+                    }
+                    else {
+                        ViewBag.bolsa = usuarioBolsa;
+                    }
+                   
                 }
                 else
                 {

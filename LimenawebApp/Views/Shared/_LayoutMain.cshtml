@@ -2,6 +2,19 @@
 <html lang="en" dir="ltr">
 <head>
     @Html.Partial("~/Views/Shared/New_design/Head.cshtml")
+
+    <style>
+        .DTFC_Cloned thead > tr:first-child {
+            height: 48px !important;
+        }
+        .dataTables_wrapper.no-footer .dataTables_scrollBody {
+        border-bottom:none !important;
+        }
+        table.dataTable.no-footer {
+            border-bottom: none !important;
+        }
+    </style>
+
 </head>
 <body class="layout-fluid layout-sticky-subnav">
     <div class="preloader"></div>
@@ -44,9 +57,80 @@
         @Html.Partial("~/Views/Shared/New_design/Scripts/ReceiveCreditsScript.cshtml")
     }
 
-<!--Purchases-->
+    <!--Purchases-->
     @if (ViewBag.Title == "Distribuidora Limeña - New Data")
-    {@Html.Partial("~/Views/Shared/Scripts_newData.cshtml")}
+    {@Html.Partial("~/Views/Shared/Scripts_newData.cshtml")
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="large-modal" tabindex="-1" role="dialog"
+         aria-labelledby="model-4"
+         aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+
+            <!-- Modal Content -->
+            <div class="modal-content">
+
+                <!-- /modal header -->
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <h3 class="modal-title" id="model-4">Porcentajes de Acertividad</h3><br />
+                    <label id="replabel"></label><br />
+                    <label id="itemcodelabel"></label>
+
+                    <br />
+                    <br />
+                    <table class="table table-bordered mb-0">
+                        <thead>
+                            <tr style="border:1px solid #ddd">
+                                <td colspan="3" style="text-align:center">PERIODO ANTERIOR<br /><label id="periodoantlabel"></label></td>
+                                <td colspan="2" style="text-align:center">PERIODO ACTUAL<br /><label id="periodoactuallabel"></label></td>
+
+                            </tr>
+                            <tr style="border:1px solid #ddd">
+                                <th>CANT. CAJAS (SALES H)</th>
+                                <th>CANT. CAJAS (SOP)</th>
+                                <th>ACERTIVIDAD</th>
+                                <th>CANT. CAJAS (SOP)</th>
+                                <th>COMPARACION</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><label id="lastforecastSHlabel"></label></td>
+
+                                <td><label id="lastsavedforecastlabel"></label></td>
+                                <td id="acertividadcol"></td>
+                                <td><label id="actualforecastlabel"></label></td>
+                                <td><label id="comparacionlabel"></label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /modal body -->
+                <!-- Modal Footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary"
+                            data-dismiss="modal">
+                        Close
+                    </button>
+                </div>
+                <!-- /modal footer -->
+
+            </div>
+            <!-- /modal content -->
+
+        </div>
+    </div>
+    <!-- /modal -->
+}
+
+    @if (ViewBag.Title == "Distribuidora Limeña - New Data OTB")
+    {@Html.Partial("~/Views/Shared/Scripts_newDataOTB.cshtml")}
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Edit Purchase Data")
+    {@Html.Partial("~/Views/Shared/Scripts_editpurchasedata.cshtml")}
 
     @if (ViewBag.Title == "Distribuidora Limeña - Product Catalog")
     {@Html.Partial("~/Views/Shared/Scripts_productCatalog.cshtml")}

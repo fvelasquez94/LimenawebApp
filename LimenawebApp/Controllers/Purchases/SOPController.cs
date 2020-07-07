@@ -48,7 +48,7 @@ namespace LimenawebApp.Controllers.Purchases
                 ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
 
-                var data = (from a in db.Purchase_data where (a.Date_create >= filtrostartdate && a.Date_create <= filtroenddate) select a).ToList();
+                var data = (from a in db.Purchase_data where (a.Date_create >= filtrostartdate && a.Date_create <= filtroenddate && a.query2.Contains("SOP")) select a).ToList();
 
                 return View(data);
 

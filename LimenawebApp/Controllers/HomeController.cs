@@ -352,7 +352,7 @@ namespace LimenawebApp.Controllers
                 {
                     if (activeuser.Roles.Contains("Purchases"))
                     {
-                        return RedirectToAction("Dashboard_OperationsPurchases", "Main", null);
+                        return RedirectToAction("Dashboard", "Main", null);
                     }
                     else {
                         return RedirectToAction("Dashboard_operations", "Main", null);
