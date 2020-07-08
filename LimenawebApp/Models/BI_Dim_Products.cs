@@ -50,5 +50,6 @@ namespace LimenawebApp.Models
         public Nullable<decimal> StockBonif { get; set; }
         public string UoMGroup { get; set; }
         public string InventoryItem { get; set; }
+        public Nullable<decimal> UnitPrice { get; set; }
     }
 }

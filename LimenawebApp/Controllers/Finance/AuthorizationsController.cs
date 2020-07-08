@@ -1,5 +1,7 @@
-﻿using LimenawebApp.Controllers.Session;
+﻿using LimenawebApp.Controllers.API;
+using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
+using LimenawebApp.Models.Authorizations;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,6 +15,7 @@ namespace LimenawebApp.Controllers.Finance
     {
 
         private Cls_session cls_session = new Cls_session();
+        private Cls_Authorizations cls_Authorizations = new Cls_Authorizations();
         // GET: Authorizations
         public ActionResult Index(string fstartd, string fendd)
         {
@@ -47,14 +50,48 @@ namespace LimenawebApp.Controllers.Finance
                 ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
 
+                //Authorizations
+                
+                var authorizations = cls_Authorizations.GetAuthorizations(0, "", "", filtrostartdate,filtroenddate);
 
-                return View();
+                return View(authorizations.data);
 
             }
             else
             {
 
                 return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult Put_Authorization(string commentsfinance, string id_authorization, int status)
+        {
+            try
+            {
+                PutAuthorization_api updateauth = new PutAuthorization_api();
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                updateauth.commentsFinance = commentsfinance;
+                updateauth.idFinanceUser = activeuser.IDSAP;
+                updateauth.status = status;
+                var response = cls_Authorizations.PutAuthorization(updateauth, id_authorization);
+
+                if (response.IsSuccessful == true)
+                {
+                    var result = "SUCCESS";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var result = "Error";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var resulterror = ex.Message;
+                return Json(resulterror, JsonRequestBehavior.AllowGet);
 
             }
         }

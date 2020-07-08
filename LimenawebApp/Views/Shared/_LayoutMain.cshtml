@@ -57,6 +57,12 @@
         @Html.Partial("~/Views/Shared/New_design/Scripts/ReceiveCreditsScript.cshtml")
     }
 
+   <!--Authorizations-->
+
+    @if (ViewBag.Title == "Authorizations")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/AuthorizationsScript.cshtml")
+    }
     <!--Purchases-->
     @if (ViewBag.Title == "Distribuidora Limeña - New Data")
     {@Html.Partial("~/Views/Shared/Scripts_newData.cshtml")

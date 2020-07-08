@@ -238,6 +238,7 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Controllers\API\Cls_Authorizations.cs" />
     <Compile Include="Controllers\API\Cls_Creditmemos.cs" />
     <Compile Include="Controllers\API\Cls_Returnreasons.cs" />
     <Compile Include="Controllers\clsGeneral.cs" />
@@ -278,6 +279,7 @@
     <Compile Include="Models\Activities_RefImg.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Authorizations\Mdl_Authorizations.cs" />
     <Compile Include="Models\AuxiliarModels.cs" />
     <Compile Include="Models\BI_Contact_Person.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
@@ -15477,7 +15479,7 @@
     <Content Include="Views\Shared\Scripts_productCatalog.cshtml" />
     <Content Include="Views\Shared\Scripts_newData.cshtml" />
     <Content Include="Views\Shared\_LayoutMain.cshtml" />
-    <Content Include="Views\Finance\Authorizations.cshtml" />
+    <Content Include="Views\Authorizations\Index.cshtml" />
     <Content Include="Views\Main\Dashboard.cshtml" />
     <Content Include="Views\Finance\ReceivePayment.cshtml" />
     <Content Include="Views\Shared\New_design\Head.cshtml" />
@@ -15490,7 +15492,7 @@
     <Content Include="Views\Shared\New_design\Modals\Authorizations.cshtml" />
     <Content Include="Views\Shared\New_design\Modals\ReceivePayment.cshtml" />
     <Content Include="Views\Shared\New_design\Modals\ReceiveCredits.cshtml" />
-    <Content Include="Views\Shared\New_design\Scripts\ReceiveCreditsScript.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\AuthorizationsScript.cshtml" />
     <Content Include="Views\Warehouse\ReceivedCredits.cshtml" />
     <Content Include="Views\Shared\New_design\Menus\Purchases.cshtml" />
     <Content Include="Views\Shared\New_design\Scripts\MenuScript.cshtml" />
@@ -15502,6 +15504,7 @@
     <Content Include="Views\Shared\Scripts_newDataOTB.cshtml" />
     <Content Include="Views\OTB\new_purchaseData.cshtml" />
     <Content Include="Views\OTB\edit_purchaseData.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\ReceiveCreditsScript.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -15511,7 +15514,6 @@
     <Folder Include="Content\images\enroll\" />
     <Folder Include="Content\images\temp_sign\" />
     <Folder Include="Reports\pdf\" />
-    <Folder Include="Views\Authorizations\" />
     <Folder Include="Views\FormsActions\" />
   </ItemGroup>
   <ItemGroup>

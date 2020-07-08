@@ -5747,7 +5747,7 @@ Configure tooltips globally
             placeholder: "Select...",
             data: data,
                 templateResult: function (data) {
-                    if (data.printed = 'N') {
+                    if (data.printed == 'N') {
                         if (data.status == 1) {
                             return $('<span style="color:green">' + data.text + '<span>');
                         } else if (data.status == 0) {

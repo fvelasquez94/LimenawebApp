@@ -148,5 +148,7 @@ namespace LimenawebApp.Models
         public Nullable<int> CreateTS { get; set; }
         public Nullable<int> UpdateTS { get; set; }
         public string EnInsurNum { get; set; }
+        public string U_DeptName { get; set; }
+        public string U_BranchName { get; set; }
     }
 }

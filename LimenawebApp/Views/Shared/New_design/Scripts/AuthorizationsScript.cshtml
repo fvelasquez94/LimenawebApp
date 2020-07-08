@@ -1,0 +1,334 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+
+    (function ($) {
+        'use strict';
+        $('#modal-authorizations').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget);// Button that triggered the modal
+            var customer = button.data("customer");
+            var idauthorization = button.data('authcode');
+            var idreaon = button.data('idreason');
+            var reason = button.data('reason');
+            var driver = button.data('driver');
+            var route = button.data('route');
+            var date = button.data('date');
+            var financeuser = button.data('financeuser');
+            var commentsdriver = button.data('drivercomm');
+            var commentsfinance = button.data('commentsfinance');
+
+
+            $("#customerauth").html(customer);
+            $("#routeauth").html(route);
+            $("#driverauth").html(driver);
+            $("#reasonauth").html(reason);
+            $("#commentsdriverauth").html(commentsdriver);
+
+            if (commentsfinance != "N/A") {
+
+                $("#commentsfinanceauth").val(commentsfinance);
+            }
+
+            $("#idauthupdate").val(idauthorization);
+            $("#dateauth").html(date);
+
+
+
+          
+        })
+    })(jQuery);
+
+    window.onload = function () {
+
+        $('#btnApproveAuth').on('click', function () {
+            Swal.fire({
+                title: 'Are you sure to approve this Authorization?',
+                text: "You won't be able to revert this.",
+                icon: 'warning',
+                showCancelButton: true,
+
+                confirmButtonText: 'Yes, approve it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    var idauthorization = $("#idauthupdate").val();
+                    var commentsfinanceauth = $("#commentsfinanceauth").val();
+
+                    $.ajax
+                        ({
+                            url: '/Authorizations/Put_Authorization',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                id_authorization: idauthorization,
+                                commentsfinance: commentsfinanceauth,
+                                status : 1
+                            }),
+                            success: function (result) {
+                                if (result == "SUCCESS") {
+
+                                    Swal.fire(
+                                        'Authorization approved',
+                                        'Authorization was successfully approved.',
+                                        'success'
+                                    )
+
+                                    window.location.reload(true);
+                                } else {
+                                    alert("Authorization no se actualizo");
+                                }
+
+                            },
+                            error: function () {
+                                alert("Whooaaa! Something went wrong..")
+                            },
+                        });
+
+
+                }
+            })
+
+        });
+
+        $('#denyAuth').on('click', function () {
+
+
+            Swal.fire({
+                title: 'Are you sure to deny this Authorization?',
+                text: "You won't be able to revert this.",
+                icon: 'warning',
+                showCancelButton: true,
+
+                confirmButtonText: 'Yes, deny it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    var idauthorization = $("#idauthupdate").val();
+                    var commentsfinanceauth = $("#commentsfinanceauth").val();
+
+                    $.ajax
+                        ({
+                            url: '/Authorizations/Put_Authorization',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                id_authorization: idauthorization,
+                                commentsfinance: commentsfinanceauth,
+                                status: 2
+                            }),
+                            success: function (result) {
+                                if (result == "SUCCESS") {
+
+                                    Swal.fire(
+                                        'Authorization denied',
+                                        'Authorization was successfully denied.',
+                                        'success'
+                                    )
+
+                                    window.location.reload(true);
+                                } else {
+                                    alert("Authorization no se actualizo");
+                                }
+
+                            },
+                            error: function () {
+                                alert("Whooaaa! Something went wrong..")
+                            },
+                        });
+
+                }
+            })
+
+        });
+
+
+
+        $('#filter_date').on('change', function () {
+
+            var st = new Date($('#filter_date').data('daterangepicker').startDate);
+            var ed = new Date($('#filter_date').data('daterangepicker').endDate);
+
+
+            var today = st;
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            st = mm + '/' + dd + '/' + yyyy;
+
+            var today2 = ed;
+            var dd2 = today2.getDate();
+            var mm2 = today2.getMonth() + 1; //January is 0!
+
+            var yyyy2 = today2.getFullYear();
+            if (dd2 < 10) {
+                dd2 = '0' + dd2;
+            }
+            if (mm2 < 10) {
+                mm2 = '0' + mm2;
+            }
+            ed = mm2 + '/' + dd2 + '/' + yyyy2;
+
+
+
+
+            var tipo_actividad = $('#filter_type').val();
+            var prioridad = $('#filter_prioridad').val();
+
+            var url = '@Url.Action("ReceiveCredits", "Warehouse", new { fstartd = "START", fendd = "FINISH"})';
+
+
+            url = url.replace('START', st);
+            url = url.replace('FINISH', ed);
+            var newurl = url;
+
+            newurl = newurl.replace(/&amp;/g, "&");
+            window.location.href = newurl;
+
+        });
+
+
+
+    }
+    function checkCredit(id) {
+        var button = $("#" + id);// Button that triggered the modal
+        var validate = 0;
+
+        var docentry = button.data("docent");
+        var itemCode = button.data("itemcode");
+        var quantity = button.data("qty");
+        var uomEntry = button.data("uom");
+        var returnReasonCode = button.data("returnreason");
+        var baseLine = button.data("baseline");
+        var lineNum = button.data("linenum");
+        var visOrder = button.data("visorder");
+
+
+
+        var creditMemo_itemDraft = {
+            itemCode: itemCode,
+            quantity: quantity,
+            uomEntry: uomEntry,
+            returnReasonCode: returnReasonCode,
+            deleted: false,
+            baseLine: baseLine,
+            lineNum: lineNum,
+            visOrder: visOrder,
+            received: button.is(":checked")
+        };
+       
+
+        $.ajax({
+            url: '/Warehouse/Put_creditMemoDetail',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Item: creditMemo_itemDraft,
+                DocentryCredit: docentry
+            })
+            ,
+            success: function (result) {
+                if (result == "SUCCESS") {
+
+                    toastr.success('Credit Memo updated');
+                    window.location.reload(true);
+
+                } else {
+                    alert("Credito memo no actualizado");
+                }
+            },
+            error: function (err) {
+
+            }
+        });
+
+        ////Validamos si mostrar el boton de enviar a todo
+        //$('.checkboxesindiv').each(function () {
+        //    if ($(this).is(":checked")) {
+        //        //Put to api
+
+        //    } else {
+        //        validate = 1;
+
+        //    }
+
+        //});
+
+        //if (validate == 0) {
+        //    $("#submitPay").css("display", "inline-block");
+        //} else {
+        //    $("#submitPay").css("display", "none");
+        //}
+
+    };
+
+    function changeReturnReason(id) {
+        var button = $("#" + id);// Button that triggered the modal
+        var validate = 0;
+
+        var docentry = button.data("docent");
+        var itemCode = button.data("itemcode");
+        var quantity = button.data("qty");
+        var uomEntry = button.data("uom");
+        var returnReasonCode = button.data("returnreason");
+        var baseLine = button.data("baseline");
+        var lineNum = button.data("linenum");
+        var visOrder = button.data("visorder");
+        var received = button.data("received");
+
+        var newReturnReason = button.val();
+
+        var creditMemo_itemDraft = {
+            itemCode: itemCode,
+            quantity: quantity,
+            uomEntry: uomEntry,
+            returnReasonCode: newReturnReason,
+            deleted: false,
+            baseLine: baseLine,
+            lineNum: lineNum,
+            visOrder: visOrder,
+            received: received
+        };
+
+
+        $.ajax({
+            url: '/Warehouse/Put_creditMemoDetail',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Item: creditMemo_itemDraft,
+                DocentryCredit: docentry
+            })
+            ,
+            success: function (result) {
+                if (result == "SUCCESS") {
+
+                    toastr.success('Credit Memo updated');
+                    window.location.reload(true);
+
+                } else {
+                    alert("Credito memo no actualizado");
+                }
+            },
+            error: function (err) {
+
+            }
+        });
+
+    };
+
+</script>

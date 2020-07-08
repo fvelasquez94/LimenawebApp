@@ -724,6 +724,8 @@
           <Property Name="CreateTS" Type="int" />
           <Property Name="UpdateTS" Type="int" />
           <Property Name="EnInsurNum" Type="ntext" />
+          <Property Name="U_DeptName" Type="nvarchar" MaxLength="20" />
+          <Property Name="U_BranchName" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="OITT">
           <Key>
@@ -777,6 +779,8 @@
           <Property Name="Email" Type="nvarchar" MaxLength="100" />
           <Property Name="U_id_Supervisor" Type="smallint" />
           <Property Name="U_Type" Type="nvarchar" MaxLength="10" />
+          <Property Name="U_DeptName" Type="nvarchar" MaxLength="20" />
+          <Property Name="U_BranchName" Type="nvarchar" MaxLength="20" />
         </EntityType>
         <EntityType Name="UFD1">
           <Key>
@@ -851,6 +855,16 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Customer' does not have a prima
           <Property Name="Warehouses" Type="nvarchar" MaxLength="25" />
           <Property Name="IsBuyer" Type="char" MaxLength="1" />
           <Property Name="StatusCustomer" Type="nvarchar" MaxLength="25" />
+          <Property Name="StatusCustomerName" Type="nvarchar" MaxLength="254" />
+          <Property Name="Address" Type="nvarchar" MaxLength="100" />
+          <Property Name="SalesDay" Type="nvarchar" MaxLength="10" />
+          <Property Name="DeliveryDay" Type="nvarchar" MaxLength="10" />
+          <Property Name="MainTel" Type="nvarchar" MaxLength="20" />
+          <Property Name="MainEmail" Type="nvarchar" MaxLength="100" />
+          <Property Name="Week1" Type="char" MaxLength="1" />
+          <Property Name="Week2" Type="char" MaxLength="1" />
+          <Property Name="Week3" Type="char" MaxLength="1" />
+          <Property Name="Week4" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -899,6 +913,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="StockBonif" Type="numeric" Precision="38" Scale="6" />
           <Property Name="UoMGroup" Type="nvarchar" MaxLength="100" />
           <Property Name="InventoryItem" Type="varchar" MaxLength="1" />
+          <Property Name="UnitPrice" Type="numeric" Precision="19" Scale="6" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1103,6 +1118,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_ordenesAbiertasDet' does not have
           <Property Name="NoPepperi" Type="nvarchar" MaxLength="100" />
           <Property Name="U_DeliveryR" Type="nvarchar" MaxLength="30" />
           <Property Name="StatusPlanningFlow" Type="nvarchar" MaxLength="10" Nullable="false" />
+          <Property Name="Printed" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1195,7 +1211,17 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Customer].[PymntGroup] AS [PymntGroup], 
     [BI_Dim_Customer].[Warehouses] AS [Warehouses], 
     [BI_Dim_Customer].[IsBuyer] AS [IsBuyer], 
-    [BI_Dim_Customer].[StatusCustomer] AS [StatusCustomer]
+    [BI_Dim_Customer].[StatusCustomer] AS [StatusCustomer], 
+    [BI_Dim_Customer].[StatusCustomerName] AS [StatusCustomerName], 
+    [BI_Dim_Customer].[Address] AS [Address], 
+    [BI_Dim_Customer].[SalesDay] AS [SalesDay], 
+    [BI_Dim_Customer].[DeliveryDay] AS [DeliveryDay], 
+    [BI_Dim_Customer].[MainTel] AS [MainTel], 
+    [BI_Dim_Customer].[MainEmail] AS [MainEmail], 
+    [BI_Dim_Customer].[Week1] AS [Week1], 
+    [BI_Dim_Customer].[Week2] AS [Week2], 
+    [BI_Dim_Customer].[Week3] AS [Week3], 
+    [BI_Dim_Customer].[Week4] AS [Week4]
     FROM [dbo].[BI_Dim_Customer] AS [BI_Dim_Customer]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="BI_Dim_Products" EntityType="Self.BI_Dim_Products" store:Type="Views" store:Schema="dbo">
@@ -1235,7 +1261,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Products].[Stock] AS [Stock], 
     [BI_Dim_Products].[StockBonif] AS [StockBonif], 
     [BI_Dim_Products].[UoMGroup] AS [UoMGroup], 
-    [BI_Dim_Products].[InventoryItem] AS [InventoryItem]
+    [BI_Dim_Products].[InventoryItem] AS [InventoryItem], 
+    [BI_Dim_Products].[UnitPrice] AS [UnitPrice]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -1390,7 +1417,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [view_ordenesAbiertasDet].[TreeType] AS [TreeType], 
     [view_ordenesAbiertasDet].[NoPepperi] AS [NoPepperi], 
     [view_ordenesAbiertasDet].[U_DeliveryR] AS [U_DeliveryR], 
-    [view_ordenesAbiertasDet].[StatusPlanningFlow] AS [StatusPlanningFlow]
+    [view_ordenesAbiertasDet].[StatusPlanningFlow] AS [StatusPlanningFlow], 
+    [view_ordenesAbiertasDet].[Printed] AS [Printed]
     FROM [dbo].[view_ordenesAbiertasDet] AS [view_ordenesAbiertasDet]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="view_VendorsData" EntityType="Self.view_VendorsData" store:Type="Views" store:Schema="dbo">
@@ -1891,6 +1919,16 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="Warehouses" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
           <Property Name="IsBuyer" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
           <Property Name="StatusCustomer" Type="String" MaxLength="25" FixedLength="false" Unicode="true" />
+          <Property Name="StatusCustomerName" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="SalesDay" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="DeliveryDay" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="MainTel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="MainEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Week1" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Week2" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Week3" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Week4" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="UFD1">
           <Key>
@@ -1947,6 +1985,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="StockBonif" Type="Decimal" Precision="38" Scale="6" />
           <Property Name="UoMGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="InventoryItem" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="UnitPrice" Type="Decimal" Precision="19" Scale="6" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
@@ -2262,6 +2301,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="CreateTS" Type="Int32" />
           <Property Name="UpdateTS" Type="Int32" />
           <Property Name="EnInsurNum" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="U_DeptName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="U_BranchName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OSLP">
           <Key>
@@ -2283,6 +2324,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="U_id_Supervisor" Type="Int16" />
           <Property Name="U_Type" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="U_DeptName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="U_BranchName" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="SalesRep">
           <Key>
@@ -2349,6 +2392,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="NoPepperi" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="U_DeliveryR" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
           <Property Name="StatusPlanningFlow" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Printed" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="view_VendorsData">
           <Key>
@@ -3036,6 +3080,16 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Customer">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Customer">
               <MappingFragment StoreEntitySet="BI_Dim_Customer">
+                <ScalarProperty Name="Week4" ColumnName="Week4" />
+                <ScalarProperty Name="Week3" ColumnName="Week3" />
+                <ScalarProperty Name="Week2" ColumnName="Week2" />
+                <ScalarProperty Name="Week1" ColumnName="Week1" />
+                <ScalarProperty Name="MainEmail" ColumnName="MainEmail" />
+                <ScalarProperty Name="MainTel" ColumnName="MainTel" />
+                <ScalarProperty Name="DeliveryDay" ColumnName="DeliveryDay" />
+                <ScalarProperty Name="SalesDay" ColumnName="SalesDay" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="StatusCustomerName" ColumnName="StatusCustomerName" />
                 <ScalarProperty Name="StatusCustomer" ColumnName="StatusCustomer" />
                 <ScalarProperty Name="IsBuyer" ColumnName="IsBuyer" />
                 <ScalarProperty Name="Warehouses" ColumnName="Warehouses" />
@@ -3082,6 +3136,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
                 <ScalarProperty Name="InventoryItem" ColumnName="InventoryItem" />
                 <ScalarProperty Name="UoMGroup" ColumnName="UoMGroup" />
                 <ScalarProperty Name="StockBonif" ColumnName="StockBonif" />
@@ -3303,6 +3358,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="OHEM">
             <EntityTypeMapping TypeName="DLI_PROModel.OHEM">
               <MappingFragment StoreEntitySet="OHEM">
+                <ScalarProperty Name="U_BranchName" ColumnName="U_BranchName" />
+                <ScalarProperty Name="U_DeptName" ColumnName="U_DeptName" />
                 <ScalarProperty Name="EnInsurNum" ColumnName="EnInsurNum" />
                 <ScalarProperty Name="UpdateTS" ColumnName="UpdateTS" />
                 <ScalarProperty Name="CreateTS" ColumnName="CreateTS" />
@@ -3443,6 +3500,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="OSLP">
             <EntityTypeMapping TypeName="DLI_PROModel.OSLP">
               <MappingFragment StoreEntitySet="OSLP">
+                <ScalarProperty Name="U_BranchName" ColumnName="U_BranchName" />
+                <ScalarProperty Name="U_DeptName" ColumnName="U_DeptName" />
                 <ScalarProperty Name="U_Type" ColumnName="U_Type" />
                 <ScalarProperty Name="U_id_Supervisor" ColumnName="U_id_Supervisor" />
                 <ScalarProperty Name="Email" ColumnName="Email" />
@@ -3499,6 +3558,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="view_ordenesAbiertasDet">
             <EntityTypeMapping TypeName="DLI_PROModel.view_ordenesAbiertasDet">
               <MappingFragment StoreEntitySet="view_ordenesAbiertasDet">
+                <ScalarProperty Name="Printed" ColumnName="Printed" />
                 <ScalarProperty Name="StatusPlanningFlow" ColumnName="StatusPlanningFlow" />
                 <ScalarProperty Name="U_DeliveryR" ColumnName="U_DeliveryR" />
                 <ScalarProperty Name="NoPepperi" ColumnName="NoPepperi" />

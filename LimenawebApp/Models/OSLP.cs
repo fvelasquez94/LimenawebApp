@@ -30,5 +30,7 @@ namespace LimenawebApp.Models
         public string Email { get; set; }
         public Nullable<short> U_id_Supervisor { get; set; }
         public string U_Type { get; set; }
+        public string U_DeptName { get; set; }
+        public string U_BranchName { get; set; }
     }
 }

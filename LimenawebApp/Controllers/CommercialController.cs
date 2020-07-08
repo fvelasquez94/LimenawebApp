@@ -592,7 +592,14 @@ namespace LimenawebApp.Controllers
                 {
                     if (bolsaUtilizada != null)
                     {
-                        ViewBag.bolsa = usuarioBolsa - bolsaUtilizada.Utilizado;
+                        var bol = usuarioBolsa - bolsaUtilizada.Utilizado;
+                        if (bol > 0) {
+                            ViewBag.bolsa = bol;
+                        }
+                        else {
+                            ViewBag.bolsa = 0.0;
+                        }
+                      
                     }
                     else
                     {
@@ -1086,10 +1093,10 @@ namespace LimenawebApp.Controllers
                     }
                     try
                     {
-                        //Guardamos bolsa
-                        usuario.BolsaValor = bolsa;
-                        dblim.Entry(usuario).State = EntityState.Modified;
-                        dblim.SaveChanges();
+                        //Guardamos bolsa  //se elimino el 7/7/2020 ya que ahora se toma en tiempo real desde vista Help_bolsaxxdfdff
+                       // usuario.BolsaValor = bolsa;
+                        //dblim.Entry(usuario).State = EntityState.Modified;
+                        //dblim.SaveChanges();
                     }
                     catch {
 
@@ -1232,9 +1239,9 @@ namespace LimenawebApp.Controllers
                     try
                     {
                         //Guardamos bolsa
-                        usuario.BolsaValor = bolsa;
-                        dblim.Entry(usuario).State = EntityState.Modified;
-                        dblim.SaveChanges();
+                        //usuario.BolsaValor = bolsa;
+                        //dblim.Entry(usuario).State = EntityState.Modified;
+                        //dblim.SaveChanges();
                     }
                     catch { }
 

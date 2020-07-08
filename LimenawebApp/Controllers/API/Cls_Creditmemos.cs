@@ -115,10 +115,9 @@ namespace LimenawebApp.Controllers.API
             }
             if (fstart != null) {
                 request.AddParameter("StartDate", fstart.Value.ToShortDateString());
-            }
-            if (fend != null) {
                 request.AddParameter("EndDate", fend.Value.ToShortDateString());
             }
+
 
 
             if (includeDetails == true)

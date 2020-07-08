@@ -42,5 +42,15 @@ namespace LimenawebApp.Models
         public string Warehouses { get; set; }
         public string IsBuyer { get; set; }
         public string StatusCustomer { get; set; }
+        public string StatusCustomerName { get; set; }
+        public string Address { get; set; }
+        public string SalesDay { get; set; }
+        public string DeliveryDay { get; set; }
+        public string MainTel { get; set; }
+        public string MainEmail { get; set; }
+        public string Week1 { get; set; }
+        public string Week2 { get; set; }
+        public string Week3 { get; set; }
+        public string Week4 { get; set; }
     }
 }

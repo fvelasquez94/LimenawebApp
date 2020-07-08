@@ -13,25 +13,28 @@
                             <p><strong class="headings-color">Authorizations Details</strong></p>
                             <p>
 
-                                <small class="mr-2">ID - Customer's Name</small><br />
-                                <small class="mr-2">Route's Name</small><br />
-                                <small class="mr-2">Driver's Name</small><br />
+                                <small class="mr-2" id="customerauth">ID - Customer's Name</small><br />
+                                <small class="mr-2" id="routeauth">Route's Name</small><br />
+                                <small class="mr-2" id="driverauth">Driver's Name</small><br />
+                                <small class="mr-2" id="dateauth">Date</small><br />
 
                             </p>
                         </div>
+                      
                         <div class="col-lg-8 card-form__body card-body">
+                            <input type="text" id="idauthupdate" />
                             <label>Reason:</label>
-                            <p>
-                                No recibir pago de cuentas por cobrar<br />
-                            </p>
+                            <p id="reasonauth">
+
+                            </p><br />
                             <label>Comments by Driver:</label>
-                            <p> El cliente no puede pagar el dia de hoy pero lo pagara manana cuando pase el vendedor</p>
+                            <p id="commentsdriverauth"> </p>
                             <hr />
                             <label>Comments by Finance Department:</label>
-                            <textarea class="form-control"></textarea>
+                            <textarea class="form-control" id="commentsfinanceauth"></textarea>
                             <br /><br />
-                            <button type="submit" class="btn btn-success">Approve</button>
-                            <button type="submit" class="btn btn-danger">Deny</button>
+                            <button type="submit" id="btnApproveAuth" class="btn btn-success">Approve</button>
+                            <button type="submit" id="denyAuth" class="btn btn-danger">Deny</button>
                             <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
 
                         </div>
