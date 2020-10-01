@@ -1,0 +1,675 @@
+﻿
+@{
+    Layout = null;
+}
+
+<div id="modal-containers" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card card-form">
+                    <div class="row no-gutters">
+                        <div class="col-lg-12 card-body">
+                            <p><strong class="headings-color">Add Container to Route</strong></p>
+
+                            <label>Select a Route</label>
+                            <select class="form-control" id="routetoaddcontainer" style="width:100%"></select><br /><br /><br />
+                            <label>Select a Container</label>
+                            <select class="form-control" multiple id="containertoadd" style="width:100%"></select>
+                            <br /><hr />
+                            <button type="submit" id="btnAddContainer" onclick="addContainer()" class="btn btn-success">Add</button>
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div> <!-- // END .modal-body -->
+
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->
+
+
+<div id="modal-containersToRoute" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card card-form">
+                    <div class="row no-gutters">
+                        <div class="col-lg-12 card-body">
+                            <p><strong class="headings-color">Add Container to Route</strong></p>
+                            <input type="hidden" id="idroute2" />
+                            <label id="routename2" ></label> <br /><br />
+                            <label>Select a Container</label>
+                            <select class="form-control" multiple id="containertoadd2" style="width:100%"></select>
+                            <br /><hr />
+                            <button type="submit" id="btnAddContainer" onclick="addContainerToRoute()" class="btn btn-success">Add and close all orders</button>
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div> <!-- // END .modal-body -->
+
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->
+
+
+<script>
+    function addContainer() {
+        var route = $("#routetoaddcontainer").val();
+
+        var selMulti = $.map($("#containertoadd option:selected"), function (el, i) {
+            return $(el).val();
+        });
+        var containers = selMulti.join(",");
+
+        if (route != '' && containers != '') {
+
+
+
+            swal.fire({
+                title: 'Add Container?',
+                text: "Are you sure you want to add this Container to the selected Route?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+
+                    $.ajax({
+                        url: '/Invoices/addContainer',
+                        type: 'POST',
+                        data: { 'id_route': route, 'containers': containers },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+          
+                                Swal.fire(
+                                    'Container added!',
+                                    'The Container has been added to the route.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+
+                            } else {
+                                alert("Something went wrong..");
+                         
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+                    
+
+                        }
+                    });
+
+                }
+            })
+        } else {
+
+            toastr.info('Please select an option');
+        }
+
+
+
+    }
+
+    function addContainerToRoute() {
+        var route = $("#idroute2").val();
+
+        var selMulti = $.map($("#containertoadd2 option:selected"), function (el, i) {
+            return $(el).val();
+        });
+        var containers = selMulti.join(",");
+
+        if (route != '' && containers != '') {
+
+
+
+            swal.fire({
+                title: 'Add Container?',
+                text: "Are you sure you want to add this Container to the Route?",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+
+
+                    $.ajax({
+                        url: '/Invoices/addContainer',
+                        type: 'POST',
+                        data: { 'id_route': route, 'containers': containers },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+                        
+                                Swal.fire(
+                                    'Container added!',
+                                    'The Container has been added to the route.',
+                                    'success'
+                                ).then((result) => {
+                                    closeOrderAfterContainer(route);
+                                });
+                          
+
+                            } else {
+                                alert("Something went wrong..");
+                                
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+                           
+
+                        }
+                    });
+
+                }
+            })
+        } else {
+
+            toastr.info('Please select an option');
+        }
+
+
+
+    }
+
+
+
+        function closeRoute(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to invoice this route?',
+                text: "You won't be able to revert this",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/closeRoute',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Route closed!',
+                                    'The Route has been closed.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function PrintRoute(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to print this route?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/Print_route',
+                        type: 'POST',
+                        data: { 'id': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+                                $("#loader").hide();
+                                Swal.fire(
+                                    'Route printed',
+                                    '',
+                                    'success'
+                                )
+                                //window.location.reload(true);
+                            } else {
+                                alert("Something went wrong.."); $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong.."); $("#loader").hide();
+
+                        }
+                    });
+
+                }
+            })
+        }
+        function PrintRouteWHS(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to print this route?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/Print_routeWHS',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+                                $("#loader").hide();
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                                $("#loader").hide();
+                            }
+
+                            else {
+                                alert(result);
+                                $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+                            $("#loader").hide();
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function PrintDailyPayment(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to print the Daily Payment Report for this Route?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_WHSDailyPayment',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+
+                                window.open('@Url.Action("DailyPaymentCrossDock", "Invoices",new { activityname = "DailyPaymentCrossDock" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                            }
+
+                            else {
+                                alert(result);
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+
+        function closeOrders(id_route, routename) {
+
+            swal.fire({
+                title: 'Do you want to add some Containers to the Route?',
+                text: "You can add Containers at this point or later",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No, just close all Orders'
+            }).then(function (result) {
+                if (result.value) {
+
+                    $("#idroute2").val(id_route);
+                    $("#routename2").html("<strong> " + id_route + " - " + routename + "</strong>");
+
+                    $("#modal-containersToRoute").modal({
+                        backdrop: 'static',
+                        keyboard: false
+                    });
+                } else if (result.dismiss == 'cancel') {
+                    swal.fire({
+                        title: 'Are you sure to close all Sales Orders for this route?',
+                        text: "You won't be able to revert this",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3dba6f',
+                        cancelButtonColor: '#aaa',
+                        confirmButtonText: 'Yes'
+                    }).then((result) => {
+                        if (result.value) {
+
+
+                            $.ajax({
+                                url: '/Invoices/closeAllSalesOrders',
+                                type: 'POST',
+                                data: { 'id_route': id_route },
+                                cache: false,
+                                global: false,
+                                success: function (result) {
+
+                                    if (result == "success") {
+                                        Swal.fire(
+                                            'Sales Orders closed!',
+                                            'The Sales Orders have been closed.',
+                                            'success'
+                                        )
+                                        window.location.reload(true);
+                                
+                                    } else {
+                                        alert("Something went wrong..");
+                                    }
+
+
+                                },
+                                error: function (request) {
+                                    alert("Something went wrong..");
+
+                                }
+                            });
+
+                        }
+                    })
+                }
+
+            });
+
+    }
+
+
+    function closeOrderAfterContainer(id_route) {
+                $.ajax({
+                    url: '/Invoices/closeAllSalesOrders',
+                    type: 'POST',
+                    data: { 'id_route': id_route },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        if (result == "success") {
+
+                            Swal.fire(
+                                'Sales Orders closed!',
+                                'The Sales Orders have been closed.',
+                                'success'
+                            )
+                            window.location.reload(true);
+                        } else {
+                            alert("Something went wrong..");
+                        }
+
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..");
+
+                    }
+                });
+
+    }
+
+        function transferItems(id_route) {
+
+            swal.fire({
+                title: 'Are you sure you want to close and print all Sales Orders for this route?',
+                text: "You won't be able to revert this",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/transferItems',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Sales Orders closed!',
+                                    'The Sales Orders have been deleted.',
+                                    'success'
+                                )
+                                window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+    }
+
+    window.onload = function () {
+        $(document).ready(function () {
+            var json = JSON.parse('@Html.Raw(ViewBag.routes)')
+
+            var data = $.map(json, function (obj) {
+                obj.id = obj.id; // replace pk with your identifier
+                obj.text = obj.text;
+                return obj;
+            });
+
+            $("#routetoaddcontainer").select2({
+                placeholder: "Select...",
+                data: data
+            });
+
+            var json2 = JSON.parse('@Html.Raw(ViewBag.frezzers)')
+
+            var data2 = $.map(json2, function (obj) {
+                obj.id = obj.id; // replace pk with your identifier
+                obj.text = obj.text;
+                return obj;
+            });
+
+            $("#containertoadd").select2({
+                placeholder: "Select...",
+                data: data2
+            });
+            $("#containertoadd2").select2({
+                placeholder: "Select...",
+                data: data2
+            });
+
+        });
+
+         $('#data_tableEditor').DataTable({
+            dom: 'Bfrtip',
+            select: true
+        });
+
+        try {
+            $('#data_tableEditor2').DataTable({
+                dom: 'Bfrtip',
+                select: true
+            });
+        } catch{
+
+        }
+
+        var flag = 0;
+       //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        @*function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            st = st.toLocaleDateString();
+            ed = ed.toLocaleDateString();
+            //colocamos la url de la demo
+            var url = 'Url.Action("QualityControl_planning", "Invoices", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+
+            window.location.href = newurl;
+        };*@
+
+
+
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            //st = st.toLocaleDateString();
+            //ed = ed.toLocaleDateString();
+            ////colocamos la url de la demo
+
+
+
+            var today = st;
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            st = mm + '/' + dd + '/' + yyyy;
+
+            var today2 = ed;
+            var dd2 = today2.getDate();
+            var mm2 = today2.getMonth() + 1; //January is 0!
+
+            var yyyy2 = today2.getFullYear();
+            if (dd2 < 10) {
+                dd2 = '0' + dd2;
+            }
+            if (mm2 < 10) {
+                mm2 = '0' + mm2;
+            }
+            ed = mm2 + '/' + dd2 + '/' + yyyy2;
+
+            var url = '@Url.Action("QualityControl_planning", "Invoices", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+
+            window.location.href = newurl;
+        };
+
+    }
+</script>

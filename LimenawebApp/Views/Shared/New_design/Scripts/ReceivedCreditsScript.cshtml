@@ -1,0 +1,356 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+
+    (function ($) {
+        'use strict';
+        $('#modal-creditproducts').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);// Button that triggered the modal
+            //var lstdetails = button.data("details");
+            var customer = button.data('customercomplete');
+            var invoices = button.data('invoices');
+            var totalproducts = button.data('totalproducts');
+            var docentry = button.data('docentry');
+            var docnum = button.data('docnum');
+            var newRowInvoice = '';
+            newRowInvoice += '<small class="mr-2">#' + docnum + '</small><br />';
+            $("#invoicesdiv").html("");
+            $("#invoicesdiv").append(newRowInvoice);
+                $.ajax
+                    ({
+                        url: '/Warehouse/Get_creditMemoDetailOriginal',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            DocentryCredit: invoices
+                        }),
+                        success: function (result) {
+                            if (result.error == "Error") {
+
+                            } else {
+                                var lstdetails = result.details;
+                              
+
+
+
+
+            $("#docentryCreditmemo").val(docentry);
+
+                                $("#docentryInvoice").val(invoices);
+            $("#totalproductsreturns").html(totalproducts);
+
+
+
+            var returnReasons = @Html.Raw(Json.Encode(ViewBag.returnreasons));
+            var returnReasonsChange = @Html.Raw(Json.Encode(ViewBag.returnreasonschange));
+            $("#divCreditsproduct").html("");
+            //$("#invoicesdiv").html("");
+            $("#customername").html(customer);
+
+                         
+
+            var flagcheck = 1;
+
+
+            var totalproductsshowing = 0;
+            $.each(returnReasons, function (i, returnReason) {
+                var newRowContent = '';
+    
+                var flag = 0;
+                $.each(lstdetails, function (i, products) {
+
+                    if (flag == 0) {
+                        if (products.returnReasonCode == returnReason.reasonCode) {
+                            newRowContent += '<p class="text-dark-gray d-flex align-items-center mt-3">';
+                            newRowContent += ' <i class="material-icons icon-muted mr-2">payments</i>';
+                            newRowContent += '<strong>' + returnReason.reasonCode + ' - ' + returnReason.reason + '</strong>';
+                            newRowContent += ' </p>';
+                            $("#divCreditsproduct").append(newRowContent);
+                            newRowContent = '';
+                            flag = 1;
+                        }
+
+                    } 
+
+
+                    if (products.returnReasonCode == returnReason.reasonCode) {
+                        if (products.quantity < 0) {
+
+                        } else {
+
+                            totalproductsshowing += 1;
+                            newRowContent += '<div class="row align-items-center projects-item mb-1">';
+                            newRowContent += '<div class="col-sm">';
+                            newRowContent += '<div class="card m-0">';
+                            newRowContent += '<div class="px-4 py-3">';
+                            newRowContent += '<div class="row align-items-center">';
+                            newRowContent += ' <div class="col" style="min-width: 300px">';
+                            newRowContent += '<div class="d-flex align-items-center">';
+                            newRowContent += '<a href="#" class="text-body"><strong class="text-15pt mr-2">' + products.itemCode + ' - ' + products.itemName + '</strong></a>';
+                            newRowContent += '</div>';
+                            newRowContent += '<div class="d-flex align-items-center">';
+                            newRowContent += '<small class="mr-2">QTY: ' + products.quantity + '</small>';
+                            newRowContent += '<small class="mr-2">UOM: ' + products.unitMsr + '</small>';
+                            newRowContent += '<small class="mr-2">Total Units: ' + parseFloat(products.quantity * products.numPerMsr).toFixed(2) + '</small>';
+
+                            newRowContent += '<small class="mr-2 ">Unit Price: $' + parseFloat(products.unitPrice).toFixed(3) + '</small>';
+                            newRowContent += '<small class="mr-2">Total: $' + products.totalSale + '</small>';
+
+                            if (products.noShow==false) { } else {
+                                newRowContent += '<label class="badge badge-warning">Product not received</label>';
+                            }
+
+                            newRowContent += '</div>';
+
+
+                            newRowContent += '<div class="col-auto d-flex align-items-center" style="min-width: 140px;">';
+
+                            newRowContent += '</div></div></div></div></div></div>';
+
+                            $("#divCreditsproduct").append(newRowContent);
+                            newRowContent = '';
+                        }
+
+                    }
+
+
+                });
+
+                
+                
+            });
+            $("#nproductsreturns").html(totalproductsshowing);
+            if (flagcheck == 1) {//Todo esta checkeado
+              
+            } else {
+              
+            }
+
+                            }
+
+                        },
+                        error: function () {
+                            alert("Whooaaa! Something went wrong..")
+                        },
+                    });
+
+
+
+        })
+    })(jQuery);
+
+    window.onload = function () {
+
+
+
+
+        $('#submitPay').on('click', function () {
+
+
+            Swal.fire({
+                title: 'Are you sure to submit this Credit Memo?',
+                text: "You won't be able to revert this.",
+                icon: 'warning',
+                showCancelButton: true,
+
+                confirmButtonText: 'Yes, submit it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+
+                    var creditmem = $("#docentryCreditmemo").val();
+                    var docEntryInv = $("#docentryInvoice").val();
+
+
+
+                    $.ajax
+                        ({
+                            url: '/Warehouse/Transform_creditMemo',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                docentryCreditMemo: creditmem,
+                                docEntryInv: docEntryInv
+                            }),
+                            success: function (result) {
+                                if (result == "SUCCESS" || result =="VALIDAR") {
+                                    if (result == "VALIDAR") {
+                                        toastr.info('Credit Memo has more details to validate');
+                                    } else {
+                                        Swal.fire(
+                                            'Credit Memo submited',
+                                            'Credit Memo was successfully submited.',
+                                            'success'
+                                        )
+                                        window.location.reload(true);
+                                    }
+
+                                } else {
+
+                                    toastr.warning('Credit Memo was not submited');
+                                }
+
+                            },
+                            error: function () {
+                                alert("Whooaaa! Something went wrong..")
+                            },
+                        });
+
+
+                }
+            })
+
+        });
+
+        $('#filter_date').on('change', function () {
+
+            var st = new Date($('#filter_date').data('daterangepicker').startDate);
+            var ed = new Date($('#filter_date').data('daterangepicker').endDate);
+
+
+            var today = st;
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            st = mm + '/' + dd + '/' + yyyy;
+
+            var today2 = ed;
+            var dd2 = today2.getDate();
+            var mm2 = today2.getMonth() + 1; //January is 0!
+
+            var yyyy2 = today2.getFullYear();
+            if (dd2 < 10) {
+                dd2 = '0' + dd2;
+            }
+            if (mm2 < 10) {
+                mm2 = '0' + mm2;
+            }
+            ed = mm2 + '/' + dd2 + '/' + yyyy2;
+
+
+
+
+            var tipo_actividad = $('#filter_type').val();
+            var prioridad = $('#filter_prioridad').val();
+
+            var url = '@Url.Action("ReceivedCredits", "Warehouse", new { fstartd = "START", fendd = "FINISH"})';
+
+
+            url = url.replace('START', st);
+            url = url.replace('FINISH', ed);
+            var newurl = url;
+
+            newurl = newurl.replace(/&amp;/g, "&");
+            window.location.href = newurl;
+
+        });
+
+        $(document).ready(function () {
+
+            $("#filter_name").keyup(function (e) {
+                var txt = $(this).val();
+
+                $('.rowcustom').each(function () {
+                    if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+            });
+        });
+
+    }
+    function checkCredit(id) {
+        var button = $("#" + id);// Button that triggered the modal
+        var validate = 0;
+
+        var docentry = button.data("docent");
+        var itemCode = button.data("itemcode");
+        var quantity = button.data("qty");
+        var uomEntry = button.data("uom");
+        var returnReasonCode = button.data("returnreason");
+        var baseLine = button.data("baseline");
+        var lineNum = button.data("linenum");
+        var visOrder = button.data("visorder");
+
+
+
+        var creditMemo_itemDraft = {
+            itemCode: itemCode,
+            quantity: quantity,
+            uomEntry: uomEntry,
+            returnReasonCode: returnReasonCode,
+            deleted: false,
+            baseLine: baseLine,
+            lineNum: lineNum,
+            visOrder: visOrder,
+            received: button.is(":checked")
+        };
+
+
+        $.ajax({
+            url: '/Warehouse/Put_creditMemoDetail',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Item: creditMemo_itemDraft,
+                DocentryCredit: docentry
+            })
+            ,
+            success: function (result) {
+                if (result == "SUCCESS") {
+
+                    toastr.success('Credit Memo updated');
+                    //window.location.reload(true);
+
+                            //Validamos si mostrar el boton de enviar a todo
+        $('.checkboxesindiv').each(function () {
+            if ($(this).is(":checked")) {
+                //Put to api
+
+            } else {
+                validate = 1;
+
+            }
+
+        });
+
+        if (validate == 0) {
+            $("#submitPay").css("display", "inline-block");
+        } else {
+            $("#submitPay").css("display", "none");
+        }
+
+                } else {
+                    alert("Credito Memo was not updated");
+                }
+            },
+            error: function (err) {
+
+            }
+        });
+
+
+
+    };
+
+
+
+ 
+
+</script>

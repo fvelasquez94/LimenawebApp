@@ -1,230 +1,194 @@
 ﻿@{
     ViewBag.Title = "Distribuidora Limeña - Quality Control";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
-<!--main content wrapper-->
-<div class="content-wrapper">
-    <div class="box-container">
-        <div class="container-fluid">
-          
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="card card-shadow mb-4">
-                        <div class="card-header border-0">
-                            <div class="custom-title-wrap bar-primary">
-                                <div class="custom-title">Sales Orders</div>
-                                <a href="@Url.Action("QualityControl_planning", "Invoices")" class="btn btn-outline-info btn-sm">Back</a>
-                            </div>
-                        </div>
-                        <div class="card-body- pt-3 pb-4">
-                            <div class="table-responsive">
-                                <table id="data_tableEditor2" class="table" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>DOC NUM</th>
-                                            <th>DATE</th>
-                                            <th>CUSTOMER</th>
-                                            @*<th>SALES REP</th>*@
-                                            <th>TOTAL</th>
-                                            <th>STATUS</th>
-                                            <th>ACTIONS</th>
-                                           
- 
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                    </tfoot>
-                                    <tbody>
-                                        @foreach (var so in ViewBag.lstSO) {
-                                            <tr class="treegrid-@Html.Raw(so.ID_salesorder)" style="background-color: rgba(0, 0, 0, .02);">
-                                                <td style="padding: .25rem;">
-                                                    @so.SAP_docnum
-                                                    @if (so.isfinished == true && so.DocEntry != "" && so.DocEntry != "--")
-                                                    {<small class="text-success">(Invoiced)</small>
-                                                    }
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Quality Control</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Quality Control</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Operations.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="row">
+        <div class="col-md-12">
+        <div class="card">
+            <div class="card-header card-header-large bg-white d-flex align-items-center">
+                <h4 class="card-header__title flex m-0">Sales Orders/Invoices in Route</h4>
+                <div>
+                    <a href="@Url.Action("QualityControl_planning", "Invoices")" class="btn btn-info">Back</a>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table id="data_tableEditor2" class="table" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>DOC NUM</th>
+                            <th>DATE</th>
+                            <th>CUSTOMER</th>
+                            @*<th>SALES REP</th>*@
+                            <th>TOTAL</th>
+                            <th>STATUS</th>
+                            <th>ACTIONS</th>
 
 
-                                                    else if (so.isfinished == true && so.DocEntry == "")
-                                                    {
-                                                <small class="text-success">(Closed)</small>
-                                                    }
-                                                    else if (so.isfinished == true && so.DocEntry != "--") {
-                                                          <small class="text-danger">(Canceled)</small>
-                                                    }</td>
-                                                <td style="padding: .25rem;">@Convert.ToDateTime(so.SAP_docdate).ToShortDateString()</td>
-                                                <td style="padding: .25rem;">@so.ID_customer - @so.Customer_name</td>
-                                                @*<td style="padding: .25rem;">@so.Rep_name</td>*@
-                                                <td style="padding: .25rem;">$@Convert.ToDecimal(so.Amount).ToString("n2")</td>
-                                                <td style="padding: .25rem;">
-                                                    <div class="progress-title">
-                                                        <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2</span>
-                                                    </div>
-                                                    <div class="progress" style="height: 2px;">
-                                                        @if (Convert.ToDecimal(so.query1) < 100)
-        {
-                                                <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                    </tfoot>
+                    <tbody>
+                        @foreach (var so in ViewBag.lstSO)
+                {
+                    <tr class="treegrid-@Html.Raw(so.ID_salesorder)" style="background-color: rgba(0, 0, 0, .02);">
+                        <td style="padding: .25rem;">
+                            @if (so.query5 == "Invoice")
+                            {<small class="badge badge-warning">Invoice</small>}
+                            else { <small class="badge badge-warning">S.O</small>}@so.SAP_docnum
+
+                            @if (so.isfinished == true && so.DocEntry != "" && so.DocEntry != "--")
+    {<small class="badge badge-success">(Invoiced)</small>
 }
-else
+
+
+else if (so.isfinished == true && so.DocEntry == "")
 {
-                                                <div class="progress-bar bg-success" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
+                        <small class="badge badge-info">(Closed)</small>
 }
-                                                    </div>
-                                                </td>
-                                                <td style="padding: .25rem;">
-                                                    @if (so.isfinished == true && so.DocEntry != "")
+else if (so.isfinished == true && so.DocEntry != "--")
+{
+                        <small class="badge badge-danger ">(Canceled)</small>
+}
+                        </td>
+                        <td style="padding: .25rem;">@Convert.ToDateTime(so.SAP_docdate).ToShortDateString()</td>
+                        <td style="padding: .25rem;">@so.ID_customer - @so.Customer_name</td>
+                        @*<td style="padding: .25rem;">@so.Rep_name</td>*@
+                        <td style="padding: .25rem;">$@Convert.ToDecimal(so.Amount).ToString("n2")</td>
+                        <td style="padding: .25rem;">
+                            @if (so.query5 == "Invoice")
     {
-                                                <a href="#" onclick="PrintSO(@so.ID_Route,@so.DocEntry)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>
-}
-
-
-                                                @*@if (Convert.ToDecimal(so.query1) >= 100)
-        {
-            if (so.isfinished == false)
-            {
-                                                    <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeSO(@so.ID_salesorder)"><i class="fa fa-close"></i>Close</a>
+<label>Check pallet</label>
     }
-
-    }
-                                                        @if (so.query2=="(0/ 0)" ) { <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeSO(@so.ID_salesorder)"><i class="fa fa-close"></i>Close</a>}*@
-                                                </td>
-                                            </tr>
-                                            foreach (var childso in ViewBag.lstSO_children) {
-                                                if (childso.ID_salesOrder == so.ID_salesorder) {
-                                                <tr class="treegrid-parent-@Html.Raw(so.ID_salesorder)">
-                                                    <td  style="padding: .15rem;"> </td>
-                                                    <td  style="padding: .15rem;"></td>
-                                                    <td style="padding: .15rem;">
-                                                        @if (childso.Storage == "COOLER" || childso.Storage == "FREEZER")
-                                                        {
-                                                            @Html.Raw("(COOLER, FREEZER)");
-                                                        }
-                                                        else {
-                                                            @childso.Storage
-                                                        }</td>
-                                                    <td  style="padding: .15rem;">
-                                                       @if (childso.Picker == "") {
-                                                           <label>PICKER: NOT ASSIGNED</label>
-
-                                                       }
-                                                       else {
-                                                           <label>PICKER: @childso.Picker</label>
-                                                       }
-
-                                                    </td>
-                                                 
-                                                    <td  style="padding: .15rem;">
-                                                        <div class="progress-title">
-                                                            <span id="forms_p2" class="">@Convert.ToDecimal(childso.data1).ToString("n2")% @childso.data2</span>
-                                                        </div>
-                                                        <div class="progress" style="height: 2px;">
-                                                            @if (Convert.ToDecimal(childso.data1) < 100)
-        {
-                                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @childso.data1%;" aria-valuemax="100"></div>
+    else
+    {
+                        <div class="progress-title">
+                            <span id="forms_p1" class="">@Convert.ToDecimal(so.query1).ToString("n2")% @so.query2</span>
+                        </div>
+                        <div class="progress" style="height: 2px;">
+                            @if (Convert.ToDecimal(so.query1) < 100)
+    {
+                        <div class="progress-bar bg-warning" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
 }
 else
 {
-                                                    <div class="progress-bar bg-success" role="progressbar" style="width: @childso.data1%;" aria-valuemax="100"></div>
+                        <div class="progress-bar bg-success" role="progressbar" style="width: @so.query1%;" aria-valuemax="100"></div>
 }
-                                                        </div>
-                                                    </td>
-                                                    <td  style="padding: .15rem;">
-                                                        @if (so.isfinished == false)
-                                                        {
-                                                            
-                                                    <a href="#" class="btn btn-sm btn-outline-info btn-sm form-pill" data-saleso="@so.ID_salesorder" data-saledoc="@so.SAP_docnum" data-salestorage="@childso.ID_storage" data-picker="@childso.Picker" onclick="getSOdata(this)"><i class="fa fa-external-link"></i>View</a>
-}
-
-                                                    </td>
-                                                </tr>
-                                                }
-
-
-                                            }
-
-                                        }
-
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+}
+                        </td>
+                        <td style="padding: .25rem;">
+                            @if (so.isfinished == true && so.DocEntry != "")
+                    {
+                        <a href="#" onclick="PrintSO(@so.ID_Route,@so.DocEntry)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>
+            }
 
-    
+
+            @*@if (Convert.ToDecimal(so.query1) >= 100)
+            {
+                if (so.isfinished == false)
+                {
+                                                        <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeSO(@so.ID_salesorder)"><i class="fa fa-close"></i>Close</a>
+        }
+
+        }
+                                                            @if (so.query2=="(0/ 0)" ) { <a href="#" class="btn btn-sm btn-outline-success btn-sm form-pill" onclick="closeSO(@so.ID_salesorder)"><i class="fa fa-close"></i>Close</a>}*@
+                        </td>
+                    </tr>
+            foreach (var childso in ViewBag.lstSO_children)
+            {
+                if (childso.ID_salesOrder == so.ID_salesorder)
+                {
+                    <tr class="treegrid-parent-@Html.Raw(so.ID_salesorder)">
+                        <td style="padding: .15rem;"> </td>
+                        <td style="padding: .15rem;"></td>
+                        <td style="padding: .15rem;">
+                            @if (childso.Storage == "COOLER" || childso.Storage == "FREEZER")
+                    {
+                        @Html.Raw("(COOLER, FREEZER)");
+            }
+            else
+            {
+                @childso.Storage
+    }
+                        </td>
+                        <td style="padding: .15rem;">
+                            @if (childso.Picker == "")
+                    {
+                        <label>PICKER: NOT ASSIGNED</label>
+
+            }
+            else
+            {
+                <label>PICKER: @childso.Picker</label>
+    }
+
+                        </td>
+
+                        <td style="padding: .15rem;">
+                            <div class="progress-title">
+                                <span id="forms_p2" class="">@Convert.ToDecimal(childso.data1).ToString("n2")% @childso.data2</span>
+                            </div>
+                            <div class="progress" style="height: 2px;">
+                                @if (Convert.ToDecimal(childso.data1) < 100)
+                        {
+                            <div class="progress-bar bg-warning" role="progressbar" style="width: @childso.data1%;" aria-valuemax="100"></div>
+                }
+                else
+                {
+                    <div class="progress-bar bg-success" role="progressbar" style="width: @childso.data1%;" aria-valuemax="100"></div>
+        }
+                            </div>
+                        </td>
+                        <td style="padding: .15rem;"><div class="button-list">
+    @if (so.isfinished == false)
+    {
+
+        <a href="#" class="btn  btn-info" data-saleso="@so.ID_salesorder" data-saledoc="@so.SAP_docnum" data-salestorage="@childso.ID_storage" data-picker="@childso.Picker" onclick="getSOdata(this,0)"><i class="fa fa-external-link"></i>View</a>
+    }
+    else
+    {
+        <a href="#" class="btn  btn-info" data-saleso="@so.ID_salesorder" data-saledoc="@so.SAP_docnum" data-salestorage="@childso.ID_storage" data-picker="@childso.Picker" onclick="getSOdata(this,1)"><i class="fa fa-external-link"></i>View</a>
+    }
+
+</div> </td>
+                    </tr>
+        }
+
+
+    }
+
+}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>            
+        </div>            
+    </div>          
 </div>
 
-<div class="modal fade" id="SOdetails" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
-    <div class="modal-dialog qcmodal modal-lg modalso">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="mySmallModalLabel">Sales Order Details  -  <span style="font-size:13px;font-weight:500;" id="docselnum"></span>  |  <span style="font-size:13px;font-weight:500;" id="storageselso"></span></h5>
 
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-xl-12">
-                        <div class="card card-shadow mb-4">
-                            <div class="card-title">
-                                <div class="row" style="margin-bottom: 0;">
-                                    <div class="col s12 m4">
-                                        <div class="col-12">
-                                            <span style="font-size:10px;font-weight:500;">PICKER: *</span>
-                                            <select data-minimum-results-for-search="Infinity" id="pickerlst" class="form-control" style="width:40%; font-size:12px;" >
-                                                <option value="0">SELECT A PICKER..</option>
-                                            </select>
-                                            <div class="float-right" id="savebtns">
-                                                <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-                                                <button type="button" onclick="saveData()" class="btn btn-primary">Save</button>
-                                            </div>
-                                                </div>
-                                                @*<div class="col-12">
-                    <span style="font-size:10px;font-weight:500;">FILTER BY STORAGE TYPE:</span>
-                    <select id="officeFltr" class="form-control" style="width:50%">
-
-                    </select>
-
-                    <div class="float-right">
-                        <span style="font-size:13px;font-weight:500;" id="docselnum">FILTER BY STORAGE TYPE:</span><br />
-                        <span style="font-size:13px;font-weight:500;" class="text-success" id="valitems">FILTER BY STORAGE TYPE:</span>
-
-                        <label class="text-warning" id="delitems" style="display:none;"></label>
-                    </div>
-                </div>*@
-                                        </div>
-
-                                    </div>
-                            </div>
-                            <div class="card-body- pt-3 pb-4">
-                                <div class="table-responsive">
-                                    <input type="text" id="selectSOd" value="" hidden/>
-
-                                    <table id="htmlgrid" class="table tableEdit table-striped table-condensed">
-                                        <thead>
-
-                                        </thead>
-                                        <tbody></tbody>
-
-                                    </table>
-                                </div>
-                            </div>
-                            <button id="showAll" class="btn btn-outline-light" style="color:black !important">Restore deleted products</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
-                <button type="button" onclick="saveData()" class="btn btn-primary">Save</button>
-
-            </div>
-        </div>
-    </div>
-</div>
 

@@ -962,6 +962,9 @@ warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders' does not have a prima
           <Property Name="BonifPendientes" Type="varchar" MaxLength="1" Nullable="false" />
           <Property Name="WareHouse" Type="nvarchar" MaxLength="2" />
           <Property Name="NoWhs" Type="int" />
+          <Property Name="CreateDate" Type="datetime" />
+          <Property Name="DocTime" Type="nvarchar" MaxLength="4000" />
+          <Property Name="SOType" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders_Details' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1152,6 +1155,13 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
         <Function Name="sp_genericInvoice" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="dockey" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="sp_genericInvoiceV2" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="dockey" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="sp_genericInvoiceV2_kit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="docEntry" Type="nvarchar" Mode="In" />
+          <Parameter Name="kitcode" Type="nvarchar" Mode="In" />
+        </Function>
         <EntityContainer Name="DLI_PROModelStoreContainer">
           <EntitySet Name="@DRIVERS" EntityType="Self.@DRIVERS" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="@DROUTE" EntityType="Self.@DROUTE" Schema="dbo" store:Type="Tables" />
@@ -1301,7 +1311,10 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [OpenSalesOrders].[Remarks] AS [Remarks], 
     [OpenSalesOrders].[BonifPendientes] AS [BonifPendientes], 
     [OpenSalesOrders].[WareHouse] AS [WareHouse], 
-    [OpenSalesOrders].[NoWhs] AS [NoWhs]
+    [OpenSalesOrders].[NoWhs] AS [NoWhs], 
+    [OpenSalesOrders].[CreateDate] AS [CreateDate], 
+    [OpenSalesOrders].[DocTime] AS [DocTime], 
+    [OpenSalesOrders].[SOType] AS [SOType]
     FROM [dbo].[OpenSalesOrders] AS [OpenSalesOrders]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="OpenSalesOrders_Details" EntityType="Self.OpenSalesOrders_Details" store:Type="Views" store:Schema="dbo">
@@ -1856,7 +1869,6 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySet Name="ITM1" EntityType="DLI_PROModel.ITM1" />
           <EntitySet Name="Dsd_Products" EntityType="DLI_PROModel.Dsd_Products" />
           <EntitySet Name="View_dsd_suggestedinventory" EntityType="DLI_PROModel.View_dsd_suggestedinventory" />
-          <EntitySet Name="OpenSalesOrders" EntityType="DLI_PROModel.OpenSalesOrders" />
           <EntitySet Name="C_DROUTE" EntityType="DLI_PROModel.C_DROUTE" />
           <EntitySet Name="C_HELPERS" EntityType="DLI_PROModel.C_HELPERS" />
           <EntitySet Name="C_TRUCKS" EntityType="DLI_PROModel.C_TRUCKS" />
@@ -1883,6 +1895,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
             <Parameter Name="Date" Mode="In" Type="String" />
           </FunctionImport>
           <EntitySet Name="BI_Contact_Person" EntityType="DLI_PROModel.BI_Contact_Person" />
+          <EntitySet Name="OpenSalesOrders" EntityType="DLI_PROModel.OpenSalesOrders" />
+          <FunctionImport Name="sp_genericInvoiceV2" ReturnType="Collection(DLI_PROModel.sp_genericInvoiceV2_Result)">
+          <Parameter Name="dockey" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="sp_genericInvoiceV2_kit" ReturnType="Collection(DLI_PROModel.sp_genericInvoiceV2_kit_Result)">
+            <Parameter Name="docEntry" Mode="In" Type="String" />
+            <Parameter Name="kitcode" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
@@ -2040,32 +2060,6 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="MaxStock" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="Request" Type="Decimal" Precision="20" Scale="6" />
           <Property Name="WhsName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-        </EntityType>
-        <EntityType Name="OpenSalesOrders">
-          <Key>
-            <PropertyRef Name="NumSO" />
-            <PropertyRef Name="BonifPendientes" />
-          </Key>
-          <Property Name="SODate" Type="DateTime" Precision="3" />
-          <Property Name="NumSO" Type="Int32" Nullable="false" />
-          <Property Name="PepperiNum" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
-          <Property Name="CustomerName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="Printed" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
-          <Property Name="DeliveryRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="TotalSO" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="TotalCost" Type="Decimal" Precision="20" Scale="6" />
-          <Property Name="GrossProfit" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="GProfitPer" Type="Decimal" Precision="38" Scale="14" />
-          <Property Name="TotalInvoice" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="OpenAmount" Type="Decimal" Precision="20" Scale="6" />
-          <Property Name="SalesPerson" Type="String" MaxLength="155" FixedLength="false" Unicode="true" />
-          <Property Name="Classification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
-          <Property Name="Remarks" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
-          <Property Name="IDSalesPerson" Type="Int32" />
-          <Property Name="BonifPendientes" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="WareHouse" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
-          <Property Name="NoWhs" Type="Int32" />
         </EntityType>
         <EntityType Name="C_DROUTE">
           <Key>
@@ -2670,6 +2664,118 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="SlpName" Type="String" MaxLength="155" FixedLength="false" Unicode="true" />
           <Property Name="SlpEmail" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
+        <EntityType Name="OpenSalesOrders">
+          <Key>
+            <PropertyRef Name="NumSO" />
+            <PropertyRef Name="BonifPendientes" />
+          </Key>
+          <Property Name="SODate" Type="DateTime" Precision="3" />
+          <Property Name="NumSO" Type="Int32" Nullable="false" />
+          <Property Name="PepperiNum" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CustomerName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Printed" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="DeliveryRoute" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="TotalSO" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalCost" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="GrossProfit" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="GProfitPer" Type="Decimal" Precision="38" Scale="14" />
+          <Property Name="TotalInvoice" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="OpenAmount" Type="Decimal" Precision="20" Scale="6" />
+          <Property Name="IDSalesPerson" Type="Int32" />
+          <Property Name="SalesPerson" Type="String" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="Classification" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="Remarks" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="BonifPendientes" Type="String" Nullable="false" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="WareHouse" Type="String" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="NoWhs" Type="Int32" />
+          <Property Name="CreateDate" Type="DateTime" Precision="3" />
+          <Property Name="DocTime" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Name="SOType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <ComplexType Name="sp_genericInvoiceV2_Result">
+          <Property Type="String" Name="CardCode" Nullable="true" MaxLength="15" />
+          <Property Type="String" Name="CardName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="DocNum" Nullable="true" />
+          <Property Type="Int32" Name="DocEntry" Nullable="false" />
+          <Property Type="DateTime" Name="DocDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="DocDueDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="SlpCode" Nullable="true" />
+          <Property Type="String" Name="SlpName" Nullable="false" MaxLength="155" />
+          <Property Type="String" Name="BaseRef" Nullable="true" MaxLength="16" />
+          <Property Type="Int32" Name="BaseType" Nullable="true" />
+          <Property Type="Int16" Name="GroupNum" Nullable="true" />
+          <Property Type="String" Name="PymntGroup" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="ShipToCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Address2" Nullable="true" MaxLength="254" />
+          <Property Type="String" Name="PHONE" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="Comments" Nullable="true" MaxLength="254" />
+          <Property Type="String" Name="TrnspName" Nullable="false" MaxLength="40" />
+          <Property Type="Decimal" Name="Volume" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="Weight" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Int32" Name="U_STOPD" Nullable="true" />
+          <Property Type="String" Name="U_ROUTED" Nullable="true" MaxLength="30" />
+          <Property Type="String" Name="U_REGIOND" Nullable="true" MaxLength="3" />
+          <Property Type="String" Name="TreeType" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="ItemCode" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Dscription" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="CalcSRP" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="U_SRP" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="Weight1" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="String" Name="Category" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="GrupName" Nullable="false" MaxLength="20" />
+          <Property Type="String" Name="ItmsGrpNam" Nullable="true" MaxLength="71" />
+          <Property Type="String" Name="CodeBars" Nullable="true" MaxLength="254" />
+          <Property Type="String" Name="BinLoc" Nullable="true" MaxLength="10" />
+          <Property Type="String" Name="WhsCode" Nullable="true" MaxLength="8" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="38" Scale="19" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="38" Scale="6" />
+          <Property Type="Decimal" Name="UnitPrice" Nullable="true" Precision="38" Scale="11" />
+          <Property Type="String" Name="PriceBefDi" Nullable="true" MaxLength="21" />
+          <Property Type="Decimal" Name="LineTotal" Nullable="false" Precision="38" Scale="6" />
+          <Property Type="String" Name="TotalExpns" Nullable="true" MaxLength="21" />
+          <Property Type="String" Name="UomCode" Nullable="true" MaxLength="4" />
+          <Property Type="String" Name="uniMsr" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="NumPerMsr" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="String" Name="TotalBefDisc" Nullable="true" MaxLength="21" />
+          <Property Type="Decimal" Name="DiscPrcnt" Nullable="true" Precision="19" />
+          <Property Type="String" Name="DiscSum" Nullable="true" MaxLength="21" />
+          <Property Type="String" Name="DocTotal" Nullable="true" MaxLength="21" />
+          <Property Type="Decimal" Name="Discount" Nullable="false" Precision="19" Scale="6" />
+          <Property Type="String" Name="PROMO" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="PERC" Nullable="true" MaxLength="1" />
+          <Property Type="String" Name="AMOUNT" Nullable="true" MaxLength="1" />
+          <Property Type="Decimal" Name="NormalPrice" Nullable="true" Precision="38" Scale="11" />
+          <Property Type="Decimal" Name="DiscPer" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="DiscAmount" Nullable="true" Precision="38" Scale="6" />
+          <Property Type="Decimal" Name="Cases" Nullable="true" Precision="38" Scale="19" />
+          <Property Type="Decimal" Name="Packs" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="Units" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="Libras" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Int32" Name="AREA" Nullable="false" />
+          <Property Type="String" Name="Storage" Nullable="true" MaxLength="20" />
+          <Property Type="String" Name="Liq" Nullable="true" MaxLength="1" />
+          <Property Type="Decimal" Name="TotalPlus" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="TotalNeg" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="String" Name="ReturnReason" Nullable="true" MaxLength="254" />
+          <Property Type="Int32" Name="LineNum" Nullable="false" />
+          <Property Type="Int32" Name="VisOrder" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="sp_genericInvoiceV2_kit_Result">
+          <Property Type="String" Name="Father" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Code" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="ItemName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="ChildNum" Nullable="false" />
+          <Property Type="Decimal" Name="Quantity" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="Price" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="TotalPrice" Nullable="true" Precision="38" Scale="11" />
+          <Property Type="Decimal" Name="Disc" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="NumInBuy" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="String" Name="CodeBars" Nullable="true" MaxLength="254" />
+          <Property Type="String" Name="BuyUnitMsr" Nullable="true" MaxLength="100" />
+          <Property Type="Decimal" Name="SRP" Nullable="true" Precision="19" Scale="6" />
+          <Property Type="Decimal" Name="PriceList" Nullable="true" Precision="19" Scale="6" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3229,32 +3335,6 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
                 <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="OpenSalesOrders">
-            <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders">
-              <MappingFragment StoreEntitySet="OpenSalesOrders">
-                <ScalarProperty Name="NoWhs" ColumnName="NoWhs" />
-                <ScalarProperty Name="WareHouse" ColumnName="WareHouse" />
-                <ScalarProperty Name="BonifPendientes" ColumnName="BonifPendientes" />
-                <ScalarProperty Name="IDSalesPerson" ColumnName="IDSalesPerson" />
-                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
-                <ScalarProperty Name="Classification" ColumnName="Classification" />
-                <ScalarProperty Name="SalesPerson" ColumnName="SalesPerson" />
-                <ScalarProperty Name="OpenAmount" ColumnName="OpenAmount" />
-                <ScalarProperty Name="TotalInvoice" ColumnName="TotalInvoice" />
-                <ScalarProperty Name="GProfitPer" ColumnName="GProfitPer" />
-                <ScalarProperty Name="GrossProfit" ColumnName="GrossProfit" />
-                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
-                <ScalarProperty Name="TotalSO" ColumnName="TotalSO" />
-                <ScalarProperty Name="DeliveryRoute" ColumnName="DeliveryRoute" />
-                <ScalarProperty Name="Printed" ColumnName="Printed" />
-                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
-                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
-                <ScalarProperty Name="PepperiNum" ColumnName="PepperiNum" />
-                <ScalarProperty Name="NumSO" ColumnName="NumSO" />
-                <ScalarProperty Name="SODate" ColumnName="SODate" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -3869,6 +3949,126 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="OpenSalesOrders">
+            <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders">
+              <MappingFragment StoreEntitySet="OpenSalesOrders">
+                <ScalarProperty Name="SOType" ColumnName="SOType" />
+                <ScalarProperty Name="DocTime" ColumnName="DocTime" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="NoWhs" ColumnName="NoWhs" />
+                <ScalarProperty Name="WareHouse" ColumnName="WareHouse" />
+                <ScalarProperty Name="BonifPendientes" ColumnName="BonifPendientes" />
+                <ScalarProperty Name="Remarks" ColumnName="Remarks" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="SalesPerson" ColumnName="SalesPerson" />
+                <ScalarProperty Name="IDSalesPerson" ColumnName="IDSalesPerson" />
+                <ScalarProperty Name="OpenAmount" ColumnName="OpenAmount" />
+                <ScalarProperty Name="TotalInvoice" ColumnName="TotalInvoice" />
+                <ScalarProperty Name="GProfitPer" ColumnName="GProfitPer" />
+                <ScalarProperty Name="GrossProfit" ColumnName="GrossProfit" />
+                <ScalarProperty Name="TotalCost" ColumnName="TotalCost" />
+                <ScalarProperty Name="TotalSO" ColumnName="TotalSO" />
+                <ScalarProperty Name="DeliveryRoute" ColumnName="DeliveryRoute" />
+                <ScalarProperty Name="Printed" ColumnName="Printed" />
+                <ScalarProperty Name="CustomerName" ColumnName="CustomerName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="PepperiNum" ColumnName="PepperiNum" />
+                <ScalarProperty Name="NumSO" ColumnName="NumSO" />
+                <ScalarProperty Name="SODate" ColumnName="SODate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_genericInvoiceV2" FunctionName="DLI_PROModel.Store.sp_genericInvoiceV2">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DLI_PROModel.sp_genericInvoiceV2_Result">
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocDueDate" ColumnName="DocDueDate" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
+                <ScalarProperty Name="SlpName" ColumnName="SlpName" />
+                <ScalarProperty Name="BaseRef" ColumnName="BaseRef" />
+                <ScalarProperty Name="BaseType" ColumnName="BaseType" />
+                <ScalarProperty Name="GroupNum" ColumnName="GroupNum" />
+                <ScalarProperty Name="PymntGroup" ColumnName="PymntGroup" />
+                <ScalarProperty Name="ShipToCode" ColumnName="ShipToCode" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="TrnspName" ColumnName="TrnspName" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="U_STOPD" ColumnName="U_STOPD" />
+                <ScalarProperty Name="U_ROUTED" ColumnName="U_ROUTED" />
+                <ScalarProperty Name="U_REGIOND" ColumnName="U_REGIOND" />
+                <ScalarProperty Name="TreeType" ColumnName="TreeType" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
+                <ScalarProperty Name="CalcSRP" ColumnName="CalcSRP" />
+                <ScalarProperty Name="U_SRP" ColumnName="U_SRP" />
+                <ScalarProperty Name="Weight1" ColumnName="Weight1" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="GrupName" ColumnName="GrupName" />
+                <ScalarProperty Name="ItmsGrpNam" ColumnName="ItmsGrpNam" />
+                <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
+                <ScalarProperty Name="BinLoc" ColumnName="BinLoc" />
+                <ScalarProperty Name="WhsCode" ColumnName="WhsCode" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="PriceBefDi" ColumnName="PriceBefDi" />
+                <ScalarProperty Name="LineTotal" ColumnName="LineTotal" />
+                <ScalarProperty Name="TotalExpns" ColumnName="TotalExpns" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
+                <ScalarProperty Name="uniMsr" ColumnName="uniMsr" />
+                <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
+                <ScalarProperty Name="TotalBefDisc" ColumnName="TotalBefDisc" />
+                <ScalarProperty Name="DiscPrcnt" ColumnName="DiscPrcnt" />
+                <ScalarProperty Name="DiscSum" ColumnName="DiscSum" />
+                <ScalarProperty Name="DocTotal" ColumnName="DocTotal" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="PROMO" ColumnName="PROMO" />
+                <ScalarProperty Name="PERC" ColumnName="PERC" />
+                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="NormalPrice" ColumnName="NormalPrice" />
+                <ScalarProperty Name="DiscPer" ColumnName="DiscPer" />
+                <ScalarProperty Name="DiscAmount" ColumnName="DiscAmount" />
+                <ScalarProperty Name="Cases" ColumnName="Cases" />
+                <ScalarProperty Name="Packs" ColumnName="Packs" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Libras" ColumnName="Libras" />
+                <ScalarProperty Name="AREA" ColumnName="AREA" />
+                <ScalarProperty Name="Storage" ColumnName="Storage" />
+                <ScalarProperty Name="Liq" ColumnName="Liq" />
+                <ScalarProperty Name="TotalPlus" ColumnName="TotalPlus" />
+                <ScalarProperty Name="TotalNeg" ColumnName="TotalNeg" />
+                <ScalarProperty Name="ReturnReason" ColumnName="ReturnReason" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="VisOrder" ColumnName="VisOrder" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="sp_genericInvoiceV2_kit" FunctionName="DLI_PROModel.Store.sp_genericInvoiceV2_kit">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="DLI_PROModel.sp_genericInvoiceV2_kit_Result">
+                <ScalarProperty Name="Father" ColumnName="Father" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
+                <ScalarProperty Name="ChildNum" ColumnName="ChildNum" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="TotalPrice" ColumnName="TotalPrice" />
+                <ScalarProperty Name="Disc" ColumnName="Disc" />
+                <ScalarProperty Name="NumInBuy" ColumnName="NumInBuy" />
+                <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
+                <ScalarProperty Name="BuyUnitMsr" ColumnName="BuyUnitMsr" />
+                <ScalarProperty Name="SRP" ColumnName="SRP" />
+                <ScalarProperty Name="PriceList" ColumnName="PriceList" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

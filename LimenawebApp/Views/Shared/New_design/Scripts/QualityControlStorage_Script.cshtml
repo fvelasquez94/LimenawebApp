@@ -1,0 +1,839 @@
+﻿
+@{
+    Layout = null;
+}
+
+
+<div class="modal fade" id="SOdetails" data-backdrop="static" data-keyboard="false" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modalso">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="mySmallModalLabel">Sales Order Details  -  <span style="font-size:13px;font-weight:500;" id="docselnum"></span>  |  <span style="font-size:13px;font-weight:500;" id="storageselso"></span></h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-title">
+                                <div class="row" style="margin-bottom: 0;">
+                                    <div class="col s12 m4">
+                                        <div class="col-12">
+                                            <span style="font-size:10px;font-weight:500;">PICKER: *</span>
+                                            <select data-minimum-results-for-search="Infinity" id="pickerlst" class="form-control" style="width:100%; font-size:12px;">
+                                                <option value="0">SELECT A PICKER..</option>
+                                            </select>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body- pt-3 pb-4">
+                                <div class="table-responsive">
+                                    <input type="text" id="selectSOd" value="" hidden />
+                                    <input type="text" id="selectStoragetype" value="" hidden />
+
+                                    <table id="htmlgrid" class="table tableEdit table-striped table-condensed">
+                                        <thead>
+
+                                        </thead>
+                                        <tbody></tbody>
+
+                                    </table>
+                                </div>
+                            </div>
+                            <button onclick="restoreData_StorageType()" class="btn btn-outline-light" style="color:black !important">Restore Storage Type</button>
+                            <br />
+                            <button onclick="saveData_StorageType()" class="btn btn-primary" style="color:black !important">Validate Storage Type</button>
+                            <br />
+                            <br />
+                            <button onclick="deleteData_StorageType()" class="btn btn-outline-light" style="color:black !important">Delete Storage Type</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-dark" data-dismiss="modal">Cancel</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+
+    function getuomdata(control) {
+
+        $('#UOMshow').modal('show');
+
+    }
+
+    function getSOdataByStorage(control) {
+        //Llamamos con AJAX
+
+        var id_salesOrder = $(control).data('saleso');
+        var sapdoc = $(control).data('saledoc');
+        var sapdocstorage = $(control).data('salestorage');
+        var sapdocpicker = $(control).data('picker');
+
+        if (sapdocpicker == "") {
+            $("#pickerlst").val("0").change();
+        } else {
+            $("#pickerlst option").filter(function () {
+                return this.text == sapdocpicker;
+            }).attr('selected', true).change();
+        }
+
+
+
+        $("#selectSOd").val(id_salesOrder);
+        $("#selectStoragetype").val(sapdocstorage);
+        $("#docselnum").html("DOC NUM: " + sapdoc);
+        if (sapdocstorage == "COOLER") {
+            $("#storageselso").html("STORAGE TYPE: COOLER, FREEZER");
+        } else {
+            $("#storageselso").html("STORAGE TYPE: " + sapdocstorage);
+        }
+
+
+        $('#SOdetails').modal('show');
+
+
+
+
+    }
+
+
+    function getSOdata(control) {
+        //Llamamos con AJAX
+
+        var id_salesOrder = $(control).data('saleso');
+        var sapdoc = $(control).data('saledoc');
+        var sapdocstorage = $(control).data('salestorage');
+        var sapdocpicker = $(control).data('picker');
+
+        if (sapdocpicker == "") {
+            $("#pickerlst").val("0").change();
+        } else {
+            $("#pickerlst option").filter(function () {
+                return this.text == sapdocpicker;
+            }).attr('selected', true).change();
+        }
+
+
+
+        $("#selectSOd").val(id_salesOrder);
+        $("#docselnum").html("DOC NUM: " + sapdoc);
+        if (sapdocstorage == "COOLER") {
+            $("#storageselso").html("STORAGE TYPE: COOLER, FREEZER");
+        } else {
+            $("#storageselso").html("STORAGE TYPE: " + sapdocstorage);
+        }
+
+
+        $("#loader").show();
+        $.ajax({
+            url: '/Invoices/GetSalesOrdersDetails',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                id: id_salesOrder,
+                id_storage: sapdocstorage
+            }),
+            cache: false,
+            global: false,
+            success: function (result) {
+                $("#loader").hide();
+                var chtml = "";
+                if ($.fn.dataTable.isDataTable('#htmlgrid')) {
+                    //do nothing
+                    $('#htmlgrid').DataTable().clear().destroy();
+                }
+                $("#htmlgrid tbody tr").remove()
+                $("#htmlgrid thead tr").remove()
+                $("#htmlgrid tfoot tr").remove()
+                $('#officeFltr').html("");
+                chtml += "<tr>";
+                chtml += "    <th class='rowselord' style='font-size:10px;'>" + "ROW" + "</th>";
+                chtml += "    <th>" + "VALIDATED" + "</th>";
+                chtml += "    <th>" + "STORAGE TYPE" + "</th>";
+                chtml += "    <th>" + "BIN LOC" + "</th>";
+                chtml += "    <th>" + "UOM" + "</th>";
+                chtml += "    <th >" + "QTY" + "</th>";
+
+                chtml += "    <th>" + "ITEM CODE" + "</th>";
+                chtml += "    <th>" + "ITEM NAME" + "</th>";
+
+                chtml += "    <th>" + "DEL" + "</th>";
+                chtml += " </tr>";
+                $('#htmlgrid > thead').html(chtml);
+
+                //chtml = "";
+
+                //chtml += "<tr>";
+                //chtml += "    <th>" + "LINE NUM" + "</th>";
+                //chtml += "    <th>" + "BIN LOC" + "</th>";
+                //chtml += "    <th>" + "STORAGE" + "</th>";
+                //chtml += "    <th>" + "ITEM CODE" + "</th>";
+                //chtml += "    <th>" + "ITEM NAME" + "</th>";
+                //chtml += "    <th>" + "QUANTITY" + "</th>";
+                //chtml += "    <th>" + "UOM" + "</th>";
+                //chtml += "    <th>" + "VALIDATED" + "</th>";
+                //chtml += " </tr>";
+                //$('#htmlgrid > tfoot').html(chtml);
+
+                chtml = "";
+
+
+                $.each($.parseJSON(result.result), function (i, selSO) {
+
+                    if (selSO.query1 == "DEL") {
+                        chtml += "<tr id=" + selSO.ID_detail + " style='display:none;'>";
+                    } else {
+                        chtml += "<tr id=" + selSO.ID_detail + " >";
+                    }
+
+                    chtml += "    <td style='font-size:10px;'>" + selSO.Line_num + "</td>";
+                    if (selSO.isvalidated) {
+                        chtml += "<td><button style='font-size:18px;'  class='btn btn-success btnselSuccess btnslso btn-lg'>" + "YES" + "</button></td>";
+                    } else {
+                        chtml += "<td><button style='font-size:18px;' class='btn btn-secondary btnslso  btn-lg' >" + "NO" + "</button></td>";
+                    }
+                    chtml += "    <td>" + selSO.ID_storagetype + "</td>";
+                    chtml += "    <td>" + selSO.Bin_loc + "</td>";
+
+
+                    chtml += '    <td><select class="form-control seluoms" style="width:100px">';
+                    $.each(selSO.lstuom, function (i, uom) {
+                        if (uom.UomEntry == selSO.UomEntry) {
+                            chtml += '    <option val="' + uom.UomEntry + '" selected>' + uom.UomCode + '</option>';
+                        } else {
+                            chtml += '    <option val="' + uom.UomEntry + '">' + uom.UomCode + '</option>';
+                        }
+
+                    });
+
+                    chtml += '</select ></td > ';
+                    if (selSO.query2 == "3") {
+                        chtml += '    <td><input readonly style="padding:0;width: 60px;" class="form-control numord" type="number" min="1" value="' + selSO.Quantity + '" /></td>';
+                    } else {
+                        chtml += '    <td><input min="1" type="number"  style="padding:0;width: 60px;" class="form-control numord" value="' + selSO.Quantity + '" /></td>';
+                    }
+
+                    //chtml += '    <td><input style="padding:0;" class="form-control units" type="number" min="-9999" value="' + selSO.Quantity + '" /></td>'; con botones
+                    chtml += "    <td>" + selSO.ItemCode + "</td>";
+                    chtml += "    <td>" + selSO.ItemName + "</td>";
+
+
+                    if (selSO.query1 == "DEL") {
+                        chtml += "    <td>" + '<a><i style="cursor: pointer;font-size:22px;" class="fa fa-trash itemDelete">DEL</i></a>' + "</td>";
+                    } else {
+                        if (selSO.isvalidated) {
+                            chtml += "    <td>" + '<a><i style="display:none;cursor: pointer;font-size:22px" class="fa fa-trash itemDelete"></i></a>' + "</td>";
+                        } else {
+                            chtml += "    <td>" + '<a><i style="cursor: pointer;font-size:22px;" class="fa fa-trash itemDelete"></i></a>' + "</td>";
+                        }
+
+                    }
+
+                    chtml += " </tr>";
+
+                    $('#htmlgrid > tbody').html(chtml);
+
+
+                });
+
+
+
+
+                //editableGrid = new EditableGrid("DemoGridAttach");
+                ////editableGrid = new EditableGrid("DemoGridAttach", { sortIconUp: "up.png", sortIconDown: "down.png" });
+
+                //// we build and load the metadata in Javascript
+                //editableGrid.load({
+                //    metadata: [
+                //        { name: "line_num", datatype: "string", editable: false },
+                //        { name: "isvalidated", datatype: "html", editable: false },
+                //        { name: "Storage", datatype: "string", editable: false },
+                //        { name: "Bin_loc", datatype: "string", editable: false },
+
+                //        { name: "Quantity", datatype: "html", editable: false },
+                //        {
+                //            name: "UOM", datatype: "string", editable: true, values:
+                //                {
+                //                    "7": "CASE 6", "13": "CASE 12", "17": "CASE 17", "21": "CASE 24", "-1": "MANUAL"
+                //                }
+                //        },
+                //        { name: "ItemCode", datatype: "string", editable: false },
+                //        { name: "ItemName", datatype: "string", editable: false }
+
+
+
+
+
+                //    ]
+                //});
+
+                //// then we attach to the HTML table and render it
+                //editableGrid.attachToHTMLTable('htmlgrid');
+                //editableGrid.renderGrid();
+
+                //$(".units").bootstrapNumber({
+                //    upClass: 'default btn-sm',
+                //    downClass: 'default btn-sm',
+                //    center: true
+
+                //});
+                $('.btnslso').on('click', function () {
+                    if ($(this).hasClass("btnselSuccess")) {
+                        $(this).removeClass('btn-success');
+                        $(this).addClass('btn-secondary');
+                        $(this).html('NO');
+                        $(this).closest('tr').find(".itemDelete").show();
+                    } else {
+                        $(this).addClass('btnselSuccess');
+                        $(this).addClass('btn-success');
+                        $(this).removeClass('btn-secondary');
+                        $(this).html('YES');
+                        $(this).closest('tr').find(".itemDelete").hide();
+                    }
+
+
+                });
+                if ($.fn.dataTable.isDataTable('#htmlgrid')) {
+                    //do nothing
+
+                    var table = $('#htmlgrid').DataTable({
+                        dom: 'frtip',
+                        aLengthMenu: [
+                            [15, 25, 50, 100, -1],
+                            [15, 25, 50, 100, "All"]
+                        ],
+                        "columnDefs": [
+                            {
+
+                                "targets": [2],
+                                "visible": false,
+                                "searchable": false
+                            }
+                        ],
+                        "ordering": false,
+                        paging: false,
+                        initComplete: function () {
+                            this.api().columns([2]).every(function () {
+                                var column = this;
+
+                                var select = $("#officeFltr");
+                                select.append('<option value="' + "0" + '">' + "SELECT ALL.." + '</option>')
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>')
+                                });
+                            });
+
+                        }
+                    });
+
+                    $('#officeFltr').on('change', function () {
+                        var search = [];
+                        if ($('#officeFltr').val() == "0") {
+                            table.search('').columns().search('').draw();
+                        } else {
+                            $.each($('#officeFltr option:selected'), function () {
+                                search.push($(this).val());
+                            });
+
+                            search = search.join('|');
+                            table.column(2).search(search, true, false).draw();
+                        }
+
+                        $("#valitems").html("VALIDATED ITEMS: " + "0" + " / " + getNumFilteredRows("#htmlgrid"))
+                        $("#delitems").html("Deleted Items: " + "0")
+
+                    });
+
+                    function getNumFilteredRows(id) {
+                        var info = $(id).DataTable().page.info();
+                        return info.recordsDisplay;
+                    }
+                }
+                else {
+                    var table = $('#htmlgrid').DataTable({
+                        dom: 'frtip',
+                        aLengthMenu: [
+                            [15, 25, 50, 100, -1],
+                            [15, 25, 50, 100, "All"]
+                        ],
+                        "ordering": false,
+                        "columnDefs": [
+                            {
+                                "targets": [2],
+                                "visible": false,
+                                "searchable": false
+                            }
+                        ],
+                        paging: false,
+                        initComplete: function () {
+                            this.api().columns([2]).every(function () {
+                                var column = this;
+
+                                var select = $("#officeFltr");
+                                select.append('<option value="' + "0" + '">' + "SELECT ALL.." + '</option>')
+                                column.data().unique().sort().each(function (d, j) {
+                                    select.append('<option value="' + d + '">' + d + '</option>')
+                                });
+                            });
+
+
+                        }
+                    });
+
+                    $('#officeFltr').on('change', function () {
+                        var search = [];
+
+                        if ($('#officeFltr').val() == "0") {
+                            table.search('').columns().search('').draw();
+                        } else {
+                            $.each($('#officeFltr option:selected'), function () {
+                                search.push($(this).val());
+                            });
+
+                            search = search.join('|');
+                            table.column(2).search(search, true, false).draw();
+                        }
+
+                        //console.log(getNumFilteredRows("#htmlgrid"));
+                        $("#valitems").html("VALIDATED ITEMS: " + "0" + " / " + getNumFilteredRows("#htmlgrid"))
+                        $("#delitems").html("Deleted Items: " + "0")
+                    });
+
+
+                    function getNumFilteredRows(id) {
+                        var info = $(id).DataTable().page.info();
+                        return info.recordsDisplay;
+                    }
+
+                }
+
+                $("#valitems").html("VALIDATED ITEMS: " + "0" + " / " + getNumFilteredRows("#htmlgrid"))
+                $('#SOdetails').modal('show');
+
+            },
+            error: function (request) {
+                $("#loader").hide();
+
+
+            }
+        });
+
+
+    }
+
+    function saveData() {
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
+
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+            var table = $('#htmlgrid').DataTable();
+            // var oTable = $('#htmlgrid').dataTable();
+            //console.log(oTable.fnGetData());
+
+            oSettings = table.settings();
+            oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
+            table.search('').columns().search('').draw();
+
+
+            var data;
+            data = Array();
+
+
+
+            $("#htmlgrid tr").each(function (i, v) {
+                data[i] = Array();
+                $(this).children('td').each(function (ii, vv) {
+
+                    if (ii == 4) {
+                        data[i][ii] = $(this).eq(0).find('input').val();
+                    } else if (ii == 3) {
+                        data[i][ii] = $(this).eq(0).find('select option:selected').text();
+
+                    } else {
+                        data[i][ii] = $(this).text();
+                    }
+
+                });
+            })
+            var objects = [];
+            var flagalert = 0;
+            for (var i = 0, len = data.length; i < len; i++) {
+
+                if (i != 0) {
+                    objects.push({
+                        lineNumber: data[i][0],
+                        validated: data[i][1],
+                        quantity: data[i][4],
+                        uom: data[i][3],
+                        ItemCode: data[i][5],
+                        ItemName: data[i][6],
+                        deleted: data[i][7]
+                    });
+
+                    if ((data[i][4] == "" || data[i][4] == "0") && data[i][7] != "DEL") {
+                        flagalert = 1;
+                    }
+                }
+
+
+
+            }
+
+            if (flagalert == 1) {
+                alert("Please check all products quantity.")
+            } else {
+                var idt = $("#selectSOd").val();
+                //console.log(idt + objects + idpicker + pickername);
+                //console.log(objects);
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Invoices/Save_SODetails',
+                        type: 'POST',
+                        data: { 'id': idt, 'objects': objects, 'idPicker': idpicker, 'pickername': pickername },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                toastr.success("Data saved successfully.", "Success");
+                                document.getElementById("loader").style.display = "none";
+                                window.location.reload(true);
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+                                document.getElementById("loader").style.display = "none";
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+            }
+
+        }
+
+
+
+    }
+
+    function saveData_StorageType() {
+        var idpicker = "AA";//$('#pickerlst').val();
+        var pickername = "ANDRES SOTO";//$("#pickerlst option:selected").text();
+
+        var storage = $('#selectStoragetype').val();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Save_SODetailsByStorage',
+                    type: 'POST',
+                    data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+        }
+
+
+
+    }
+
+    function restoreData_StorageType() {
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
+        var storage = $('#selectStoragetype').val();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Restore_SODetailsByStorage',
+                    type: 'POST',
+                    data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data restored successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+        }
+
+
+
+    }
+    function deleteData_StorageType() {
+        var idpicker = $('#pickerlst').val();
+        var pickername = $("#pickerlst option:selected").text();
+        var storage = $('#selectStoragetype').val();
+        if (idpicker == "0") {
+            $("#savebtns").show()
+            toastr.warning("Select a picker", "Warning");
+            $("#pickerlst").focus();
+        } else {
+
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Delete_SODetailsByStorage',
+                    type: 'POST',
+                    data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Data deleted successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+
+        }
+
+
+
+    }
+
+</script>
+
+<script>
+    window.onload = function () {
+
+        
+    $(document).ready(function () {
+        var json = JSON.parse('@Html.Raw(ViewBag.pickers)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#pickerlst").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+        $('#data_tableEditor2').treegrid();
+        $('#data_tableEditor2').treegrid('collapseAll');
+
+        $('#data_tableEditor').DataTable({
+            dom: 'ftip',
+            "ordering": false
+
+        });
+    });
+
+
+
+        $('#htmlgrid').on('click', '.itemDelete', function () {
+
+            swal.fire({
+                title: 'Are you sure to delete this item?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $(this).closest('tr').hide();
+                    $(this).html('DEL');
+
+                }
+            })
+
+
+
+            //$(this).closest('tr').find("input,button,select").attr("disabled", true);
+            //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
+            //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
+        });
+
+        $('#showAll').click(function () {
+            $(".itemDelete").html("");
+            var rows = $('#htmlgrid tr');
+            rows.show();
+        });
+
+
+
+    }
+
+    function closeSO(id_so) {
+
+        swal.fire({
+            title: 'Are you sure to close this sales order?',
+            text: "You won't be able to revert this",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3dba6f',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+
+                $.ajax({
+                    url: '/Invoices/closeSO',
+                    type: 'POST',
+                    data: { 'id_sales': id_so },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+
+                        if (result == "success") {
+
+                            Swal.fire(
+                                'Sales Order closed!',
+                                'The Sales Order has been deleted.',
+                                'success'
+                            )
+                            window.location.reload(true);
+                        } else {
+                            alert("Something went wrong..");
+                        }
+
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..");
+
+                    }
+                });
+
+            }
+        })
+    }
+
+</script>
+
+<script>
+
+        function PrintSO(id, docentry) {
+
+            swal.fire({
+                title: 'Are you sure to print this sales order?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_so',
+                        type: 'POST',
+                        data: { 'id': id, 'docentry':docentry },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Sales Order printed',
+                                    '',
+                                    'success'
+                                )
+                                //window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+</script>

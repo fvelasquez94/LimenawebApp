@@ -358,7 +358,7 @@
 
             //initGeolocation();
 
-            document.getElementById("loader").style.display = "block";
+            document.getElementById("loader").style.display = "flex";
 
 
             var idvisita = "";
@@ -446,7 +446,7 @@
 
     function success(pos) {
         var crd = pos.coords;
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
 
         var lat = crd.latitude;
         var lng = crd.longitude;
@@ -536,7 +536,7 @@
 
     function error(err) {
         console.warn('ERROR(' + err.code + '): ' + err.message);
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
         var idvisita = "";
         idvisita = document.getElementById('idvisita').value;
 
@@ -753,8 +753,8 @@
                 if ($(this).parent().closest('.parentdiv').prev().attr('class') == null) { //Si es un item independiente
 
                     if ($(this).val() == "0" || $(this).val() == null) {
-                        flag = false;
-                        $(this).addClass("border-danger");
+                        //flag = false;
+                        //$(this).addClass("border-danger");
                     }
                     else {
                         $(this).removeClass("border-danger");
@@ -766,8 +766,8 @@
                     } else {
                         //Evaluamos para validacion ya que chequearon al padre
                         if ($(this).val() == "0" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
+                            //flag = false;
+                            //$(this).addClass("border-danger");
                         } else {
                             $(this).removeClass("border-danger");
                         }
@@ -778,8 +778,8 @@
                     } else {
                         //Evaluamos para validacion ya que chequearon al padre
                         if ($(this).val() == "0" || $(this).val() == null) {
-                            flag = false;
-                            $(this).addClass("border-danger");
+                            //flag = false;
+                            //$(this).addClass("border-danger");
                         } else {
                             $(this).removeClass("border-danger");
                         }
@@ -798,7 +798,7 @@
                 //initGeolocation2();
 
   
-                document.getElementById("loader").style.display = "block";
+                document.getElementById("loader").style.display = "flex";
 
         var idvisita = "";
         idvisita = document.getElementById('idvisita').value;
@@ -935,7 +935,7 @@
             //$.each($('input[type="file"]'), function () {
             var ID = $(this).attr('id');
 
-            document.getElementById("loader").style.display = "block";
+            document.getElementById("loader").style.display = "flex";
 
             //COPIAMOS LA IMG A UN IMG INPUT
             var url = $(this).val();
@@ -1118,7 +1118,7 @@
 
     function success2(pos) {
         var crd = pos.coords;
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
 
         var lat = crd.latitude;
         var lng = crd.longitude;
@@ -1156,7 +1156,7 @@
 
     function error2(err) {
         console.warn('ERROR(' + err.code + '): ' + err.message);
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
         var idvisita = "";
         idvisita = document.getElementById('idvisita').value;
 
@@ -1496,11 +1496,9 @@
         var objects = [];
         //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
 
-        //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
 
 
-
-        $.each($('input.form-check-input[name=' + $(this).attr('name') + ']'), function () {
+        $.each($('input.checknew[name=' + $(this).attr('name') + ']'), function () {
 
 
             objects.push({
@@ -1658,7 +1656,7 @@
         $('' + btn + '').attr('disabled', 'disabled');
         $('' + btn + '').val('Loading products, please wait...');
 
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
         var customerId = $("#customer_list").val();
         var idvisita = "";
         idvisita = document.getElementById('idvisita').value;
@@ -1710,7 +1708,7 @@
   
 
 
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
         var customerId = $("#customer_list").val();
         var idvisita = "";
         idvisita = document.getElementById('idvisita').value;
@@ -1752,7 +1750,7 @@
     }
 
     function cargarproductospormarca() {
-        document.getElementById("loader").style.display = "block";
+        document.getElementById("loader").style.display = "flex";
         var customerId = $("#customer_list").val();
         var idvisita = "";
         idvisita = document.getElementById('idvisita').value;

@@ -1,0 +1,758 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script>
+
+    (function ($) {
+        'use strict';
+        $('#modal-large').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);// Button that triggered the modal
+            $("#myTablecustomers").DataTable().rows().remove().draw();
+         
+            var iddelivery = button.data('route');
+            document.getElementById("loadertable").style.display = "block";
+            document.getElementById("alerttable").style.display = "none !important";
+            $.ajax
+                ({
+                    url: '/Payments/Get_CustomersRoute',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        iddelivery: iddelivery
+                    }),
+                    success: function (result) {
+                        if (result.error == "Error") {
+                           
+                            document.getElementById("loadertable").style.display = "none";
+                            document.getElementById("alerttable").style.display = "block";
+                        } else {
+                            var lstdetails = result.details;
+                            $.each(lstdetails, function (i, customer) {
+                  
+
+                                var newRowContent = '';
+                                newRowContent += '<tr>';
+                                //1st col
+                                newRowContent += '<td > <div class="d-flex align-items-center"><div class="d-flex align-items-center"><i class="material-icons icon-16pt mr-1 text-primary">store</i><a href="#" data-toggle="modal" data-target="#modalPayIndividual" data-idcustomer="' + customer.CardCode +'">' + customer.CardCode + " - " + customer.CardName + '</a ></div></div>';
+                                newRowContent += '<div class="d-flex align-items-center"><small class="text-muted"><i class="material-icons icon-16pt mr-1">pin_drop</i>' + customer.SlpName + '</small></div></td>';
+                                //2nd col
+                                newRowContent += '<td class="text-right"><strong>$' + parseFloat(customer.TotalAmount).toFixed(2) + '</strong></td>';
+                                newRowContent += '<td class="text-right"><strong>$' + parseFloat(customer.TotalReturns).toFixed(2) + '</strong></td>';
+                                newRowContent += '<td class="text-right"><strong>$' + parseFloat(customer.TotalIncomingPayments).toFixed(2) + '</strong></td>';
+                                newRowContent += '<td class="text-right"><strong>$' + parseFloat(customer.TotalAR_paid).toFixed(2) + '</strong></td>';
+                                if (customer.OrdersC > 0) {
+                                    newRowContent += '<td><div class="badge badge-warning ml-2">' + "Undelivered" + '</div></td>';
+                                }
+                                else {
+
+                                    if (customer.OrdersF > 0 && customer.OrdersP == 0) {
+                                        newRowContent += '<td><div class="badge badge-warning ml-2">' + "Waiting payment" + '</div></td>';
+                              
+                                    }
+                                    else if (customer.OrdersF > 0 && customer.OrdersP > 0) {
+                                        newRowContent += '<td><div class="badge badge-info ml-2">' + "In Transit" + '</div></td>';
+                                    }
+                                    else if (customer.OrdersF == 0 && customer.OrdersP > 0) {
+                                        newRowContent += '<td><div class="badge badge-info ml-2">' + "In Transit" + '</div></td>';
+                                    }
+                                }
+                                
+                                newRowContent += '<td><a href="#" data-toggle="modal" data-target="#modalPayIndividual" data-idcustomer="' + customer.CardCode +'" class="btn btn-sm btn-link"><i class="material-icons icon-16pt">arrow_forward</i></a> </td>';
+
+                                newRowContent += ' </tr>';
+
+                                $("#myTablecustomers").DataTable().row.add($(newRowContent).get(0)).draw();
+
+                            });
+                            document.getElementById("loadertable").style.display = "none";
+                       
+                        }
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+                        document.getElementById("loadertable").style.display = "none";
+                    },
+
+                });
+        })
+    })(jQuery);
+
+
+    (function ($) {
+        'use strict';
+        $('#modalPayIndividual').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget);// Button that triggered the modal
+            $("#divCreditsproduct").html('');
+
+            var idcustomer = button.data('idcustomer');
+            //document.getElementById("loadertable").style.display = "block";
+            //document.getElementById("alerttable").style.display = "none !important";
+            $.ajax
+                ({
+                    url: '/Payments/Get_CustomersRoutePayments',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        idcustomer: idcustomer
+                    }),
+                    success: function (result) {
+                        if (result.error == "Error") {
+
+
+                        } else {
+                            var lstdetails = result.details;
+                          
+                        
+                            let paymentstype = [
+                                {
+                                    "id": "1",
+                                    "text": "CASH",
+                                },
+                                {
+                                    "id": "2",
+                                    "text": "CHECK",
+                                },
+                                {
+                                    "id": "3",
+                                    "text": "MONEY ORDER",
+                                },
+                                {
+                                    "id": "4",
+                                    "text": "CREDIT CARD",
+                                },
+                                {
+                                    "id": "5",
+                                    "text": "ACH",
+                                },
+                                {
+                                    "id": "6",
+                                    "text": "WIRE",
+                                }
+                            ];
+                            $.each(paymentstype, function (i, paymenttype) {
+                                var newRowContent = '';
+                                newRowContent += '<p class="text-dark-gray d-flex align-items-center mt-3">';
+                                newRowContent += ' <i class="material-icons icon-muted mr-2">payments</i>';
+                                newRowContent += '<strong>' + paymenttype.text + '</strong>';
+                                newRowContent += ' </p>';
+
+                                $("#divCreditsproduct").append(newRowContent);
+                                $.each(lstdetails, function (i, payments) {
+                                    newRowContent="";
+                                    if (payments.paymentType == paymenttype.id) {
+                                        //totalproductsshowing += 1;
+                                        newRowContent += '<div class="row align-items-center projects-item mb-1">';
+                                        newRowContent += '<div class="col-sm">';
+                                        newRowContent += '<div class="card m-0">';
+                                        newRowContent += '<div class="px-4 py-3">';
+                                        newRowContent += '<div class="row align-items-center">';
+                                        newRowContent += ' <div class="col" style="min-width: 300px">';
+                                        newRowContent += '<div class="d-flex align-items-center">';
+                                        newRowContent += '<a href="#" class="text-body"><strong class="text-15pt mr-2"> #' + payments.docNumInv  + '</strong></a>';
+                                        newRowContent += '</div>';
+                                        newRowContent += '<div class="d-flex align-items-center">';
+                                        newRowContent += '<small class="mr-2">Amount: $' + parseFloat(payments.docTotalInv).toFixed(3) + '</small>';
+                                        newRowContent += '<small class="mr-2">Returns: - $' + parseFloat(payments.remarks).toFixed(2) + '</small>';
+                                        newRowContent += '<small class="mr-2">Total to receive: $' + parseFloat(payments.sumApplied).toFixed(3) + '</small>';
+                                        if (payments.paymentType == 2) {
+                                            newRowContent += '<small class="mr-2">Check Number: ' + payments.check.checkNum + '</small>';
+                                        }
+                                      
+                                        //newRowContent += '<small class="mr-2">Invoice type: ' + payments.invoiceType + '</small>';
+
+                                        newRowContent += '<a class="btn btn-success" href="#" onclick="convertDraft(' + payments.docEntry + ', ' + payments.docEntryInv + ')">Submit</a >';
+                                 
+                                        newRowContent += '<a class="badge" data-toggle="collapse" href="#collapsediv_' + payments.docEntry + '" role="button" aria-expanded="false" aria-controls="collapseExample">More options</a >';
+                                        newRowContent += '</div>';
+                                        //More options
+                                        newRowContent += '<div class="collapse" id="collapsediv_' + payments.docEntry + '"><div style="margin-top:10px;" class="row"><div class="col-md-8">';
+                                        //Report issue
+                                        if (lstdetails.length < 2) {
+                                            newRowContent += '<a style="margin-left:5px;" class="btn btn-warning" href="#" onclick="reportIssue(' + payments.docEntry + ', ' + payments.docEntryInv + ', \'\ ' + payments.cardCode + ' \'\)">Report difference</a >';
+
+                                        }
+                                        newRowContent += '<a style="margin-left:5px;" class="btn btn-primary" href="#"  data-toggle="modal" data-target="#modalEditPay" data-docentry="' + payments.docEntry + '"  data-docentryInv="' + payments.docEntryInv + '" data-docnum="' + payments.docNumInv +'" >Edit</a >';
+                                        //newRowContent += '<label>Change Payment Type</label>';
+                                        //newRowContent += '<select id="select_' + payments.docEntry + '" onchange="changePaymentType(this.id)" data-docentry="' + payments.docEntry + '" class="form-control">';
+                                        //newRowContent += '<option disabled selected value> -- select an option -- </option>';
+                                        //$.each(paymentstype, function (i, paymenttype2) {
+                                        //    if (paymenttype2.id == payments.paymentType) {
+                                        //        newRowContent += '<option selected value="' + paymenttype2.id + '">' + paymenttype2.text + '</option>';
+                                        //    } else {
+                                        //        newRowContent += '<option value="' + paymenttype2.id + '">' + paymenttype2.text + '</option>';
+                                        //    }
+
+
+                                        //});
+
+
+                                        //newRowContent += '</select>';
+
+                                        newRowContent += '</div>';
+                                        newRowContent += '</div> </div>';
+                                        newRowContent += '</div>';
+                                         //****
+                                        newRowContent += '<div class="col-auto d-flex align-items-center" style="min-width: 140px;">';
+                                        //newRowContent += '<div class="custom-control custom-checkbox-toggle custom-control-inline mr-1">';
+                                        //if (products.received == true) { newRowContent += '<input onchange="checkCredit(this.id)" checked=""  type="checkbox" id="' + products.itemCode + 'chk_' + products.docEntry + '" data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">'; }
+                                        //else {
+                                        //    newRowContent += '<input type="checkbox" onchange="checkCredit(this.id)" id="' + products.itemCode + 'chk_' + products.docEntry + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">';
+                                        //    flagcheck = 0;
+                                        //}
+
+                                        //newRowContent += '<label class="custom-control-label" for="' + products.itemCode + 'chk_' + products.docEntry + '"></label>';
+                                        //newRowContent += ' </div>';
+                                        newRowContent += '</div></div></div></div></div></div>';
+                                        $("#divCreditsproduct").append(newRowContent);
+                                    }
+
+
+                                });
+
+                               
+
+                            });
+
+                        }
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+                        document.getElementById("loadertable").style.display = "none";
+                    },
+
+                });
+        })
+    })(jQuery);
+
+
+
+
+    function convertDraft(entry, docnum) {
+
+
+        Swal.fire({
+            title: 'Are you sure to submit this Payment?',
+            text: "You won't be able to revert this.",
+            icon: 'warning',
+            showCancelButton: true,
+
+            confirmButtonText: 'Yes, submit it',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.value) {
+
+                var docentry = entry;
+                var docnuminv = docnum;
+
+                $.ajax
+                    ({
+                        url: '/Payments/Transform_payment',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            docentry: docentry,
+                            docentryinvoice: docnuminv
+                        }),
+                        success: function (result) {
+                            if (result == "SUCCESS") {
+
+                                Swal.fire(
+                                    'Payment submitted',
+                                    'Payment was successfully submitted.',
+                                    'success'
+                                )
+                                
+                                $('#modalPayIndividual').modal('hide')
+                                //window.location.reload(true);
+                            } else {
+                                alert("Payment was not submitted");
+                            }
+
+                        },
+                        error: function () {
+                            alert("Whooaaa! Something went wrong..")
+                        },
+                    });
+
+
+            }
+        })
+
+    }
+    $('#modalPayIndividual').on('shown.bs.modal', function () {
+        $(document).off('focusin.modal');
+    });
+
+    $('#modalEditPay').on('shown.bs.modal', function (event) {
+        $(document).off('focusin.modal');
+
+
+        var button = $(event.relatedTarget);// Button that triggered the modal
+
+        var docentry = button.data("docentry");// Extract info from data-* attributes
+        var docentryInv = button.data("factdoc");
+        var docnum = button.data("docnum");
+     
+
+
+        // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+        // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+        var modal = $(this);
+        //modal.find('.modal-title').text('Edit data: ' + recipient)
+
+        $("#docnumedit").html("#" + docnum);
+        $("#docentry").val(docentry);
+        $("#docentryInv").val(docentryInv);
+
+        $("#divCheckMoneyorder").hide()
+        $("#divCreditCard").hide()
+        $("#divWireACH").hide()
+
+        $.ajax
+            ({
+                url: '/Payments/Get_Paymentsinfo',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    docenty: docentry
+                }),
+                success: function (result) {
+                    if (result.error == "Error") {
+
+                    } else {
+                        var lstdetails = result.details;
+                        $.each(lstdetails, function (i, payment) {
+                            
+                            $("#paymenttypeedit").val(payment.paymentType);
+                   
+                            switch (payment.paymentType) {
+                                case 1://cash
+
+                                    break;
+                                case 2://check
+                            
+                                    $("#divCheckMoneyorder").show()
+                                    $("#checkmoneyorder_fullnameedit").val(payment.check.fullName);
+                                    $("#check_numberedit").val(payment.check.checkNum);
+                                    $("#check_bankedit").val(payment.check.bankCode);
+                                    break;
+                                case 3://money order
+                                    $("#divCheckMoneyorder").show()
+                                    $("#checkmoneyorder_fullnameedit").val(payment.moneyOrder.fullName);
+                                    $("#check_numberedit").val(payment.moneyOrder.checkNum);
+                                    $("#check_bankedit").val(payment.moneyOrder.bankCode);
+                                    break;
+                                case 4://credit card
+                                    $("#divCreditCard").show()
+                                    $("#creditcard_voucheredit").val(payment.creditCard.voucherNum);
+                                    break;
+                                case 5://ach
+                                    $("#divWireACH").show()
+                                    $("#wireach_fullnameedit").val(payment.ach.fullName);
+                                    break;
+                                case 6://wire
+                                    $("#divWireACH").show()
+                                    $("#wireach_fullnameedit").val(payment.wire.fullName);
+                                    break;
+
+                            } 
+                           
+
+                        });
+                     
+
+                    }
+                },
+                error: function () {
+                    alert("Whooaaa! Something went wrong..")
+                 
+                },
+
+            });
+
+
+
+    });
+
+    function reportIssue(entry, docnum, cardcode) {
+
+        Swal.fire({
+            title: 'Enter amount to report',
+            input: 'number',
+            showCancelButton: true,
+            inputValidator: (value) => {
+                if (!value || value < 0.01) {
+                    return 'You need to enter a valid amount'
+                } else {
+
+                    Swal.fire({
+                        title: 'Are you sure to create a Journal for this Payment?',
+                        text: "You won't be able to revert this. Amount to report: $" + value,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, create it',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+
+                        if (result.value) {
+
+                            var docentry = entry;
+                            var docnuminv = docnum;
+                            var valueamount = value;
+                            var Cardcd = cardcode;
+                            $.ajax
+                                ({
+                                    url: '/Payments/addJournalEntry',
+                                    type: 'POST',
+                                    datatype: 'application/json',
+                                    contentType: 'application/json',
+                                    data: JSON.stringify({
+                                        docentry: docentry,
+                                        docentryinvoice: docnuminv,
+                                        amount: valueamount,
+                                        cardcode: Cardcd
+                                    }),
+                                    success: function (result) {
+                                        if (result == "SUCCESS") {
+
+                                            Swal.fire(
+                                                'Journal created',
+                                                'The Journal was successfully created.',
+                                                'success'
+                                            )
+
+                                            $('#modalPayIndividual').modal('hide')
+                                            //window.location.reload(true);
+                                        } else if (result =="Saldosnocuadran") {
+                                     
+                                            toastr.info('Please complete all payments before report a difference');
+                                        }else {
+
+                                            toastr.warning('Journal was not submitted');
+                                        }
+
+                                    },
+                                    error: function () {
+                                        alert("Whooaaa! Something went wrong..")
+                                    },
+                                });
+
+                        }
+
+                    });
+
+
+
+                }
+            }
+        });
+    }
+
+
+
+    window.onload = function () {
+
+
+
+
+
+        $(document).on('hidden.bs.modal', '.modal', function () {
+            $('.modal:visible').length && $(document.body).addClass('modal-open');
+        });
+
+        var table = $('#myTablecustomers').DataTable({
+            dom: 'rtip'
+        });
+
+        // #myInput is a <input type="text"> element
+        $('#filter_customerstb').on('keyup', function () {
+            table.search(this.value).draw();
+        });
+
+
+        $('#paymenttypeedit').on('change', function () {
+            $("#divCheckMoneyorder").hide()
+            $("#divCreditCard").hide()
+            $("#divWireACH").hide()
+        
+            switch (this.value) {
+                case "1"://cash
+
+                    break;
+                case "2"://check
+
+                    $("#divCheckMoneyorder").show()
+
+                    break;
+                case "3"://money order
+                    $("#divCheckMoneyorder").show()
+                    break;
+                case "4"://credit card
+                    $("#divCreditCard").show()
+
+                    break;
+                case "5"://ach
+                    $("#divWireACH").show()
+  
+                    break;
+                case "6"://wire
+                    $("#divWireACH").show()
+ 
+                    break;
+
+            } 
+        });
+
+        $('#filter_date').on('change', function () {
+
+            var st = new Date($('#filter_date').data('daterangepicker').startDate);
+            var ed = new Date($('#filter_date').data('daterangepicker').endDate);
+
+
+            var today = st;
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            st = mm + '/' + dd + '/' + yyyy;
+
+            var today2 = ed;
+            var dd2 = today2.getDate();
+            var mm2 = today2.getMonth() + 1; //January is 0!
+
+            var yyyy2 = today2.getFullYear();
+            if (dd2 < 10) {
+                dd2 = '0' + dd2;
+            }
+            if (mm2 < 10) {
+                mm2 = '0' + mm2;
+            }
+            ed = mm2 + '/' + dd2 + '/' + yyyy2;
+
+
+
+
+            var tipo_actividad = $('#filter_type').val();
+            var prioridad = $('#filter_prioridad').val();
+
+            var url = '@Url.Action("ReceivePayments", "Payments", new { fstartd = "START", fendd = "FINISH"})';
+
+
+            url = url.replace('START', st);
+            url = url.replace('FINISH', ed);
+            var newurl = url;
+
+            newurl = newurl.replace(/&amp;/g, "&");
+            window.location.href = newurl;
+
+        });
+
+
+        $(document).ready(function () {
+            oTable = $('#tbpayments').DataTable({
+                dom: 'rtip',
+                select: true,
+                "bPaginate": false
+            });
+
+            $('#filter_name').keyup(function(){
+                  oTable.search($(this).val()).draw() ;
+            })
+
+
+
+        });
+    }
+
+    function changePaymentType() {
+        var docentry = $("#docentry").val();
+        var paymenttype = $("#paymenttypeedit").val();
+
+        var checkmoney_name = $("#checkmoneyorder_fullnameedit").val();
+        var checkmoney_number = $("#check_numberedit").val();
+        var checkmoney_bank = $("#check_bankedit").val();
+
+        var creditcard_voucher = $("#creditcard_voucheredit").val();
+
+        var achwire_name = $("#wireach_fullnameedit").val();
+        var flag = 0;
+        if (paymenttype == 2 || paymenttype == 3) {
+            if (checkmoney_name == "" || checkmoney_number == "" || checkmoney_bank == "") {
+                flag = 1;
+            }
+        }
+        if (paymenttype == 4) {
+            if (creditcard_voucher == "" ) {
+                flag = 1;
+            }
+        }
+        if (paymenttype == 5 || paymenttype == 6) {
+            if (achwire_name == "") {
+                flag = 1;
+            }
+        }
+
+        if (flag == 0) {
+            Swal.fire({
+                title: 'Are you sure to update this Payment?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+
+                confirmButtonText: 'Yes, update it',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.value) {
+                    if (paymenttype == 1) {
+                        var payment_putDraft = {
+                            "paymentType": 1,
+                            "docDate": null,
+                            "remarks": null,
+                            "journalRemarks": null,
+                            "hasIssue": null,
+                            "webStatus": null,
+                            "appliedBy": null,
+                            "cash": {
+                                "cashAccount": null,
+                                "denominations": null
+                            },
+                            "check": null,
+                            "moneyOrder": null,
+                            "creditCard": null,
+                            "ach": null,
+                            "wire": null
+                        };
+                    }
+                    if (paymenttype == 2) {
+                        var payment_putDraft = {
+                            "paymentType": 2,
+                            "cash": null,
+                            "check": {
+                                "bankCode": checkmoney_bank,
+                                "trnsfrable":null,
+                                "checkAccount": null,
+                                "endorse": null,
+                                "fullName": checkmoney_name,
+                                "checkNumber": checkmoney_number
+                            },
+                            "moneyOrder": null,
+                            "creditCard": null,
+                            "ach": null,
+                            "wire": null
+                        };
+                    }
+                    if (paymenttype == 3) {
+                        var payment_putDraft = {
+                            "paymentType": 3,
+                            "cash": null,
+                            "check": null,
+                            "moneyOrder": {
+                                "bankCode": checkmoney_bank,
+                                "trnsfrable": null,
+                                "checkAccount": null,
+                                "endorse": null,
+                                "fullName": checkmoney_name,
+                                "checkNumber": checkmoney_number
+                            },
+                            "creditCard": null,
+                            "ach": null,
+                            "wire": null
+                        };
+                    }
+                    if (paymenttype == 4) {
+                        var payment_putDraft = {
+                            "paymentType": 4,
+                            "cash": null,
+                            "check": null,
+                            "moneyOrder": null,
+                            "creditCard": {
+                                "voucherNum": creditcard_voucher,
+                                "transaction": null,
+                                "account": null
+                            },
+                            "ach": null,
+                            "wire": null
+                        };
+                    }
+
+                    if (paymenttype == 5) {
+                        var payment_putDraft = {
+                            "paymentType": 5,  
+                            "cash": null,
+                            "check": null,
+                            "moneyOrder": null,
+                            "creditCard": null,
+                            "ach": {
+                                "fullName": achwire_name,
+                                "transferAccount": null,
+                                "idTransaction": null
+                            },
+                            "wire":null
+                        };
+                    }
+                    if (paymenttype == 6) {
+                        var payment_putDraft = {
+                            "paymentType": 6,
+                            "cash": null,
+                            "check": null,
+                            "moneyOrder": null,
+                            "creditCard": null,
+                            "ach":null,
+                            "wire": {
+                                "fullName": achwire_name,
+                                "transferAccount": null,
+                                "idTransaction": null
+                            }
+                        };
+                    }
+
+
+                    console.log(payment_putDraft)
+
+                    $.ajax({
+                        url: '/Payments/Put_payment',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            Item: payment_putDraft,
+                            docentry: docentry
+                        })
+                        ,
+                        success: function (result) {
+                            if (result == "SUCCESS") {
+
+                                toastr.success('Payment updated successfully');
+
+
+                            } else {
+                                alert("Payment was not updated");
+                            }
+                        },
+                        error: function (err) {
+
+                        }
+                    });
+                }
+            });
+
+        } else {
+
+            toastr.info('Please, complete all fields');
+        }
+        
+    };
+
+</script>

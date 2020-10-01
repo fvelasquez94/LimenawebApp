@@ -20,12 +20,12 @@
                                 <li class="nav-item">
                                     <a class="nav-link active" data-toggle="tab" href="#tab-p-i_1"><i class="icon-calendar pr-2"></i> Scheduled Routes</a>
                                 </li>
-                                <li class="nav-item">
+                                @*<li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tab-p-i_2"><i class="icon-chart pr-2"></i>Stats</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" data-toggle="tab" href="#tab-p-i_3"><i class="icon-organization pr-2"></i>Map</a>
-                                </li>
+                                </li>*@
                             </ul>
 
                             <div class="tab-content">
@@ -227,16 +227,14 @@ else
                                         </div>
                                     </div>
                                 </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Repeat</h5>
-                                </p>
-                                <div class="row">
+                       
+                                <div class="row" style="display:none;">
                                     <div class="col-md-12">
                                         <div class="form-group row">
                                             <div class="col-sm-12">
 
                                                 <select name="cust" class="form-control">
-                                                    <option value="NA">Never</option>
+                                                    <option selected value="NA">Never</option>
                                                     <option value="FW">First week of every month</option>
                                                     <option value="OW">Once a week</option>
                                                     <option value="OTW">Once every two weeks</option>

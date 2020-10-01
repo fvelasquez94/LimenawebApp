@@ -12,8 +12,9 @@
 
             <div class="navbar-collapse collapse" id="navbarsExample03">
                 <ul class="nav navbar-nav">
-                    @if (ViewData["Page"].ToString() == "Authorizations for Drivers") { <li class="nav-item active"><a href="@Url.Action("Authorizations","Finance")" class="nav-link">Authorizations for Drivers</a></li> }else{  <li class="nav-item"><a href="@Url.Action("Authorizations","Finance")" class="nav-link">Authorizations</a></li>}
-                    @if(ViewData["Page"].ToString() == "Receive Payments") {<li class="nav-item active"><a href="@Url.Action("ReceivePayment","Finance")" class="nav-link">Receive Payments</a></li> }else{<li class="nav-item "><a href="@Url.Action("ReceivePayment","Finance")" class="nav-link">Receive Payments</a></li>}</ul>
+                   
+                    @if(ViewData["Page"].ToString() == "Receive Payments") {<li class="nav-item active"><a href="@Url.Action("ReceivePayments","Payments")" class="nav-link">Payments</a></li> }else{<li class="nav-item "><a href="@Url.Action("ReceivePayments","Payments")" class="nav-link">Payments</a></li>}
+                    @if(ViewData["Page"].ToString() == "Received Payments") {<li class="nav-item active"><a href="@Url.Action("ReceivedPayment","Payments")" class="nav-link">Received Payments</a></li> }else{<li class="nav-item "><a href="@Url.Action("ReceivedPayment","Payments")" class="nav-link">Received Payments</a></li>}</ul>
             </div>
         </div>
     </div>

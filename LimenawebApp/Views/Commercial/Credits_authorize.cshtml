@@ -286,7 +286,11 @@ else
 
 
         var table = $('#data_tableEditor2').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                'excelHtml5'
 
+            ],
             initComplete: function () {
 
                 this.api().columns([4]).every(function () {

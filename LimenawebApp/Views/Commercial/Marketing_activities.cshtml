@@ -12,8 +12,8 @@
             <div class="row">
                 <div class="col-12">
                     @if (ViewBag.isAdmin == 1)
-    {
-                <a href="@Url.Action("Routes_details", "Commercial", new { id = ViewBag.id_route })" class="btn btn-sm btn-info mb-2">Back</a>}
+                    {
+                        <a href="@Url.Action("Routes_details", "Commercial", new { id = ViewBag.id_route })" class="btn btn-sm btn-info mb-2">Back</a>}
                     <div class="card card-shadow mb-4">
                         <div class="card-header border-0">
                             <div class="custom-title-wrap bar-turquoise">
@@ -30,7 +30,7 @@
                         <div class="card-body">
                             <div class="row">
 
-                                <div class="col-xl-5 col-md-5">
+                                <div class="col-xl-6 col-md-6">
                                     <div class="card card-shadow mb-4">
                                         <div class="card-body">
 
@@ -43,41 +43,45 @@
                                                 <p class="text-muted mb-0" id="storeDate">STORE DATE </p>
                                                 <div class="rattings mb-4">
                                                     @*<i class="fa fa-star-o text-warning"></i>
-                            <i class="fa fa-star-o text-warning"></i>
-                            <i class="fa fa-star-o text-warning"></i>
-                            <i class="fa fa-star-o text-warning"></i>
-                            <i class="fa fa-star-o text-warning"></i>*@
+                                                        <i class="fa fa-star-o text-warning"></i>
+                                                        <i class="fa fa-star-o text-warning"></i>
+                                                        <i class="fa fa-star-o text-warning"></i>
+                                                        <i class="fa fa-star-o text-warning"></i>*@
                                                 </div>
 
                                                 <div class="mb-2">
                                                     <a id="getdirections" href="#" class="btn btn-sm btn-pill btn-primary pl-4 pr-4"><i class="fa fa-map-o"></i> Get directions</a>
                                                     @if (ViewBag.isAdmin == 1)
-                        {
-                            if (ViewBag.estadovisita != 4)
-                            {
-                                <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
-}
-}
-else
-{
-if (ViewBag.estadovisita == 3)
-{
-                            <a href="#" onclick="checkinVisit()" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-user-times"></i> Check in</a>
-}
-else if (ViewBag.estadovisita == 2)
-{
-                            <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
-}
+                                                    {
+                                                        if (ViewBag.estadovisita != 4)
+                                                        {
+                                                            <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-plus"></i> Add activity</a>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        if (ViewBag.estadovisita == 3)
+                                                        {
+                                                            <a href="#" onclick="checkinVisit()" class="btn btn-sm btn-pill btn-success pl-4 pr-4"><i class="fa fa-user-times"></i> Check in</a>
+                                                            <a href="#" onclick="cancelVisit()" class="btn btn-sm btn-pill btn-warning pl-4 pr-4"><i class="fa fa-times"></i> Cancel Visit</a>
+                                                        }
+                                                        else if (ViewBag.estadovisita == 2)
+                                                        {
+                                                            <a href="#" onclick="checkoutVisit()" class="btn btn-sm btn-pill btn-danger pl-4 pr-4"><i class="fa fa-clock-o"></i> Check out</a>
+                                                        }else if (ViewBag.estadovisita == 1)
+                                                        {
+                                                            <span class="badge badge-warning form-pill px-3 py-1">Visit Canceled</span>
+                                                        }
 
 
-}
+                                                    }
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="col-xl-4 col-md-4">
+                                <div class="col-xl-4 col-md-4" style="display:none;">
                                     <div class="card card-shadow">
                                         <div class="card-body">
                                             <div class="mb-4">
@@ -120,7 +124,7 @@ else if (ViewBag.estadovisita == 2)
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-xl-3 col-md-3">
+                                <div class="col-xl-6 col-md-6">
                                     <div class="card card-shadow mb-4">
                                         <div class="card-body">
                                             <div class="form-group">
@@ -128,7 +132,7 @@ else if (ViewBag.estadovisita == 2)
 
                                                 <div class="col-md-12">
                                                     <textarea style="font-size:11px;" id="visitComment" placeholder="There are no comments yet..." rows="5" class="form-control"></textarea><br />
-                                                    <button class="btn btn-sm btn-primary" onclick="saveComment()">Save</button>
+                                                    <button class="btn btn-sm btn-success" onclick="saveComment()">Save</button>
                                                 </div>
                                             </div>
                                         </div>
@@ -160,11 +164,12 @@ else if (ViewBag.estadovisita == 2)
 
                                             <th scope="col">DESCRIPTION</th>
                                             <th scope="col">BRAND</th>
+                                            <th scope="col">SUBCATEGORY</th>
                                             @if (ViewBag.isAdmin == 1)
-    {
-                                        <th scope="col">REPS</th>}
+                                            {
+                                                <th scope="col">REPS</th>}
 
-                                            <th scope="col">STATE</th>
+                                            <th scope="col">STATUS</th>
                                             <th scope="col">ACTIONS</th>
                                         </tr>
                                     </thead>
@@ -187,32 +192,32 @@ else if (ViewBag.estadovisita == 2)
 
 <!-- contact form start -->
 @*<div class="floating-form card card-shadow" id="contact_form">
-    <div class="contact-opener custom-title">Settings</div>
-    <div class="floating-form-heading  custom-title">Filters</div>
-    <hr />
-    <div id="contact_body">
-        <div class="form-group row">
-            <label class="col-sm-12 col-form-label col-form-label-sm">Date</label>
-            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
-                <i class="mdi mdi-calendar"></i>&nbsp;
-                <span></span> <i class="fa fa-caret-down"></i>
+        <div class="contact-opener custom-title">Settings</div>
+        <div class="floating-form-heading  custom-title">Filters</div>
+        <hr />
+        <div id="contact_body">
+            <div class="form-group row">
+                <label class="col-sm-12 col-form-label col-form-label-sm">Date</label>
+                <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                    <i class="mdi mdi-calendar"></i>&nbsp;
+                    <span></span> <i class="fa fa-caret-down"></i>
+                </div>
             </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-sm-12 col-form-label col-form-label-sm">User</label>
-            <div class="col-sm-12">
-                <select class="form-control" id="option_Users" name="option_Users" onchange="getStores()"></select>
+            <div class="form-group row">
+                <label class="col-sm-12 col-form-label col-form-label-sm">User</label>
+                <div class="col-sm-12">
+                    <select class="form-control" id="option_Users" name="option_Users" onchange="getStores()"></select>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group row">
-            <label class="col-sm-12 col-form-label col-form-label-sm">Store</label>
-            <div class="col-sm-12">
-                <select class="form-control" id="option_Stores" name="option_Stores" onchange="getVisitData()"></select>
+            <div class="form-group row">
+                <label class="col-sm-12 col-form-label col-form-label-sm">Store</label>
+                <div class="col-sm-12">
+                    <select class="form-control" id="option_Stores" name="option_Stores" onchange="getVisitData()"></select>
+                </div>
             </div>
         </div>
-    </div>
-</div>*@
+    </div>*@
 <!-- contact form end -->
 <!--CREATE ACTIVITY STARTS-->
 <div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
@@ -234,64 +239,64 @@ else if (ViewBag.estadovisita == 2)
                             <option value="0">Select an activity</option>
                             <optgroup label="Demos">
                                 @foreach (var form in ViewBag.activeforms)
-        {
-            if (form.ID_activity == 4)
-            {
-                        <option value="@form.ID_form">@form.name</option>
-}
-}
+                                {
+                                    if (form.ID_activity == 4)
+                                    {
+                                        <option value="@form.ID_form">@form.name</option>
+                                    }
+                                }
                             </optgroup>
                             <optgroup label="Forms"></optgroup>
                             @foreach (var form in ViewBag.activeforms)
-    {
-        if (form.ID_activity == 1)
-        {
+                            {
+                                if (form.ID_activity == 1)
+                                {
 
-                        <option value="@form.ID_form">@form.name</option>
+                                    <option value="@form.ID_form">@form.name</option>
 
 
-}
-}
+                                }
+                            }
                             <optgroup label="Audits"></optgroup>
                             @foreach (var form in ViewBag.activeforms)
-    {
-        if (form.ID_activity == 2)
-        {
-                        <option value="@form.ID_form">@form.name</option>
-}
-}
+                            {
+                                if (form.ID_activity == 2)
+                                {
+                                    <option value="@form.ID_form">@form.name</option>
+                                }
+                            }
                             <optgroup label="Sales Order">
                                 @foreach (var form in ViewBag.activeforms)
-        {
-            if (form.ID_activity == 3)
-            {
-                        <option value="@form.ID_form">@form.name</option>
-}
-}
+                                {
+                                    if (form.ID_activity == 3)
+                                    {
+                                        <option value="@form.ID_form">@form.name</option>
+                                    }
+                                }
                             </optgroup>
                         </select>
                     </div>
                     @*<div class="form-group">
-            <label for="recipient-name" class="col-form-label">Set start date:</label>
-            <input type="datetime-local" class="form-control" name="time" id="time" />
-        </div>*@
+                            <label for="recipient-name" class="col-form-label">Set start date:</label>
+                            <input type="datetime-local" class="form-control" name="time" id="time" />
+                        </div>*@
                     @*<div class="form-group">
-                        <label for="recipient-name" class="col-form-label">User:</label>
-                        <select name="ID_rep" id="ID_rep" class="form-control" style="width:100%">
-                            <option value="0">Select an user</option>
-                        </select>
-                    </div>*@
+                            <label for="recipient-name" class="col-form-label">User:</label>
+                            <select name="ID_rep" id="ID_rep" class="form-control" style="width:100%">
+                                <option value="0">Select an user</option>
+                            </select>
+                        </div>*@
 
                     @*<div class="form-group">
-                        <label for="recipient-name" class="col-form-label">Customer:</label>
-                        <select name="ID_customer" id="ID_customer" class="form-control" style="width:100%" >
-                            <option value="0">Select a Customer</option>
-                        </select>
-                    </div>*@
+                            <label for="recipient-name" class="col-form-label">Customer:</label>
+                            <select name="ID_customer" id="ID_customer" class="form-control" style="width:100%" >
+                                <option value="0">Select a Customer</option>
+                            </select>
+                        </div>*@
                     <div class="form-group">
                         <label for="recipient-name" class="col-form-label">Brand:</label>
                         <select name="ID_brand" id="ID_brand" class="form-control" style="width:100%" onchange="getCategories()">
-                          <option value="0">Select a Brand</option>
+                            <option value="0">Select a Brand</option>
                         </select>
                     </div>
                     <div id="moreoptions" style="display:none;">
@@ -319,6 +324,37 @@ else if (ViewBag.estadovisita == 2)
     </div>
 </div>
 <!--CREATE ACTIVITY ENDS-->
+<!--CANCEL DATA STARTS-->
+<div class="modal fade" id="cancelModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-5"><i class="mdi mdi-delete"></i> Cancel Activity</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Are you sure you want to cancel this activity?</label><br />
+                        <strong><label id="descriptionC" class="col-form-label"></label></strong>
+                        <input type="text" id="ID_activityC" name="ID_activityC" hidden />
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="cancelActivity()" class="btn btn-danger">Yes</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">No</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--CANCEL DATA ENDS-->
 <!--DELETE DATA STARTS-->
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -389,7 +425,7 @@ else if (ViewBag.estadovisita == 2)
 
         getVisitData();
 
-        
+
         @*var _scroll = true, _timer = false, _floatbox = $("#contact_form"), _floatbox_opener = $(".contact-opener");
         _floatbox.css("right", "-322px"); //initial contact form position
 
@@ -482,7 +518,7 @@ else if (ViewBag.estadovisita == 2)
             placeholder: "Select a Brand",
             data: dataBrands
         });
-        
+
         //USERS
         var dataUsers = @Html.Raw(ViewBag.lstUsers);
 
@@ -573,7 +609,7 @@ else if (ViewBag.estadovisita == 2)
         //}
 
 
-        
+
 
     }
 </script>

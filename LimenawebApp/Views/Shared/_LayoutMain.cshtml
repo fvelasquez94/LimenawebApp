@@ -4,8 +4,8 @@
     @Html.Partial("~/Views/Shared/New_design/Head.cshtml")
 
     <style>
-        .DTFC_Cloned thead > tr:first-child {
-            height: 48px !important;
+        .swal2-input[type=number] {
+            max-width: 100% !important; 
         }
         .dataTables_wrapper.no-footer .dataTables_scrollBody {
         border-bottom:none !important;
@@ -13,11 +13,36 @@
         table.dataTable.no-footer {
             border-bottom: none !important;
         }
+
+        /*Mostrar y ocultar botones de accion en Quality Control*/
+        span.treegrid-expander {
+            display: none;
+        }
+        span[class="treegrid-expander treegrid-expander-collapsed"] {
+            display: inline-block !important;
+        }
+        span[class="treegrid-expander treegrid-expander-expanded"] {
+            display: inline-block !important;
+        }
+
+        span[class="treegrid-expander treegrid-expander-collapsed"]:after {
+            content: 'Show Details';
+        } 
+            span[class="treegrid-expander treegrid-expander-expanded"]:after {
+                content: 'Hide Details';
+            }
+
     </style>
+
+
+
+
+
 
 </head>
 <body class="layout-fluid layout-sticky-subnav">
-    <div class="preloader"></div>
+    <div id="loader" class="preloader"><div class="form-group"><img src="~/Content/appcontent/assets/img/Logo-limeña-web-blanco-p-500x192.png" style="width:200px" /><br /><br /><br /><label style="color:white;font-size:15px;margin-left:80px">Loading..</label></div></div>
+    <div class="loading"></div>
     <!-- Header Layout -->
     <div class="mdk-header-layout js-mdk-header-layout">
         <!-- Header -->
@@ -32,6 +57,19 @@
     </div>
     <!-- // END header-layout -->
     <!-- //.modal -->
+    <!--Open Sales Orders-->
+    @Html.Partial("~/Views/Shared/New_design/Sidebar.cshtml")
+
+    @Html.Partial("~/Views/Shared/New_design/Scripts.cshtml")
+
+    <!--DASHBOARD-->
+    <!--FREEZER QUICK ACTION-->
+    @if (ViewBag.Title == "Dashboard")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/FreezerDashboardScripts.cshtml")
+
+    }
+    <!--/DASHBOARD-->
     @if (ViewBag.Title == "Authorizations")
     {
         @Html.Partial("~/Views/Shared/New_design/Modals/Authorizations.cshtml")
@@ -40,24 +78,49 @@
     {
         @Html.Partial("~/Views/Shared/New_design/Modals/ReceiveCredits.cshtml")
     }
+    @if (ViewBag.Title == "ReceivedCredits")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Modals/ReceivedCredits.cshtml")
+    }
     @if (ViewBag.Title == "ReceivePayment")
     {
         @Html.Partial("~/Views/Shared/New_design/Modals/ReceivePayment.cshtml")
     }
+    @if (ViewBag.Title == "ReceivePayments")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Modals/ReceivePayments.cshtml")
+    }
 
+    @if (ViewBag.Title == "ReceivedPayment")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Modals/ReceivedPayment.cshtml")
+    }
     <!-- // END .modal -->
 
-    @Html.Partial("~/Views/Shared/New_design/Sidebar.cshtml")
 
-    @Html.Partial("~/Views/Shared/New_design/Scripts.cshtml")
 
 
     @if (ViewBag.Title == "ReceiveCredits")
     {
         @Html.Partial("~/Views/Shared/New_design/Scripts/ReceiveCreditsScript.cshtml")
     }
-
-   <!--Authorizations-->
+    @if (ViewBag.Title == "ReceivedCredits")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/ReceivedCreditsScript.cshtml")
+    }
+    @if (ViewBag.Title == "ReceivePayment")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PaymentsScript.cshtml")
+    }
+    @if (ViewBag.Title == "ReceivePayments")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PaymentsnewScript.cshtml")
+    }
+    @if (ViewBag.Title == "ReceivedPayment")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/ReceivedPaymentsScript.cshtml")
+    }
+    <!--Authorizations-->
 
     @if (ViewBag.Title == "Authorizations")
     {
@@ -66,8 +129,363 @@
     <!--Purchases-->
     @if (ViewBag.Title == "Distribuidora Limeña - New Data")
     {@Html.Partial("~/Views/Shared/Scripts_newData.cshtml")
+}
+    <!--OPERATIONS-->
+    <!--Quality Control-->
+    @if (ViewBag.Title == "Distribuidora Limeña - Quality Control")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/QualityControl_Script.cshtml")
+
+    }
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Quality Control ST")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/QualityControlStorage_Script.cshtml")
+
+    }
 
 
+    @if (ViewBag.Title == "Distribuidora Limeña - Quality Control planning")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/QualityControlmain_Script.cshtml")
+
+    }
+
+    <!-- / Quality Control-->
+    <!--Freezers-->
+    @if (ViewBag.Title == "Distribuidora Limeña - Freezers")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/FreezerScripts.cshtml")
+
+    }
+    <!--Planning-->
+    @if (ViewBag.Title == "Distribuidora Limeña - Planning")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningScripts.cshtml")
+
+    }
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Planning Routes")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningRoutesScripts.cshtml")
+
+    }
+
+    <!--Planning Order-->
+    @if (ViewBag.Title == "Distribuidora Limeña - Planning order")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningOrder_Scripts.cshtml")
+    }
+    @if (ViewBag.Title == "Price Request History")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/RequesthistoryScript.cshtml")
+    }
+
+
+
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Activity")
+    {
+        <script>
+
+
+            $(document).on('click', '.clear', function () {
+                var $input = $(this).closest(".input-outer").find('input.code');
+                $input.val('');
+
+                var idsel = $($input).attr('id');
+                idsel = idsel.substring(14);
+
+                try {
+                    document.getElementById("loader").style.display = "none";
+                    var idvisita = "";
+                    idvisita = document.getElementById('idvisita').value;
+                    //GUARDAMOS OBJETOS
+                    var objects = [];
+                    //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
+
+                    objects.push({
+                        id: idsel,
+                        value: "",
+                        text: ""
+                    });
+
+                    $.ajax({
+                        url: '/FormsActions/Save_activityByitem',
+                        type: 'POST',
+                        data: { 'id': idvisita, 'objects': objects },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result.Result == "Success") {
+                                document.getElementById("loader").style.display = "none";
+
+                            } else {
+                                document.getElementById("loader").style.display = "none";
+
+
+                            }
+
+
+                        },
+                        error: function (request) {
+                            document.getElementById("loader").style.display = "none";
+
+
+
+                        }
+                    });
+                } catch{ }
+
+                //$(this).closest(".codec").find('input.codebar').val('');
+            });
+
+
+
+
+        </script>
+
+        @Html.Partial("~/Views/Shared/ActivityScripts.cshtml")
+    }
+
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Open Sales Orders")
+    {
+        <script>
+            $(".filterTable").select2({
+                multiple: true
+            });
+
+
+            var table = $('#data_tableEditor').DataTable({
+
+                initComplete: function () {
+                    this.api().columns([2]).every(function () {
+                        var column = this;
+                        var select = $("#numSOfilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([3]).every(function () {
+                        var column = this;
+                        var select = $("#dateFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([4]).every(function () {
+                        var column = this;
+                        var select = $("#customerFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([5]).every(function () {
+                        var column = this;
+                        var select = $("#routeFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([6]).every(function () {
+                        var column = this;
+                        var select = $("#salesFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([7]).every(function () {
+                        var column = this;
+                        var select = $("#printFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    //this.api().columns('.selectfilter').every(function () {
+                    //    var column = this;
+                    //    var select = $('<select><option value=""></option></select>')
+                    //        .appendTo($(column.header()))
+                    //        .on('change', function () {
+                    //            var val = $.fn.dataTable.util.escapeRegex(
+                    //                $(this).val()
+                    //            );
+
+                    //            column
+                    //                .search(val ? '^' + val + '$' : '', true, false)
+                    //                .draw();
+                    //        });
+
+                    //    column.data().unique().sort().each(function (d, j) {
+                    //        select.append('<option value="' + d + '">' + d + '</option>')
+                    //    });
+
+                    //});
+
+
+
+                }
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            //filters
+            $('#numSOfilter').on('change', function () {
+                var search = [];
+
+                $.each($('#numSOfilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(2).search(search, true, false).draw();
+            });
+            $('#dateFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#dateFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(3).search(search, true, false).draw();
+            });
+            $('#customerFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#customerFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(4).search(search, true, false).draw();
+            });
+            $('#routeFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#routeFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(5).search(search, true, false).draw();
+            });
+            $('#salesFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#salesFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(6).search(search, true, false).draw();
+            });
+            $('#printFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#printFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(7).search(search, true, false).draw();
+            });
+            //filters
+
+
+            $('#chk_all').change(function () {
+                if (this.checked) {
+                    $('input.selectchk').prop("checked", true);
+                } else {
+                    $('input.selectchk').prop("checked", false);
+                }
+
+            });
+
+            // Handle form submission event
+            function PrintResume() {
+                var objects = [];
+
+                $.each($('input.selectchk'), function () {
+
+                    if ($(this).prop('checked')) {
+                        objects.push({
+                            NumSO: $(this).attr('id')
+                        });
+                    }
+
+
+                });
+
+                if (objects.length > 0) {
+                    //console.log(objects);
+                    swal.fire({
+                        title: 'Are you sure to print this sales orders?',
+                        text: "",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3dba6f',
+                        cancelButtonColor: '#aaa',
+                        confirmButtonText: 'Yes'
+                    }).then((result) => {
+                        if (result.value) {
+
+                            $.ajax({
+                                url: '/Invoices/Print_OpenSalesOrders',
+                                type: 'POST',
+                                data: { 'objects': objects },
+                                cache: false,
+                                global: false,
+                                success: function (result) {
+
+
+                                    if (result == "success") {
+
+                                        Swal.fire(
+                                            'Sales Orders Printed!',
+                                            'The Sales Orders has been printed.',
+                                            'success'
+                                        )
+                                        window.location.reload(true);
+                                    } else {
+                                        alert("Something went wrong..");
+                                    }
+
+
+
+
+                                },
+                                error: function (request) {
+
+                                    alert("Something went wrong..");
+
+
+                                }
+                            });
+
+                        }
+                    })
+
+
+                } else {
+
+                    toastr.info("Select at least one activity");
+                }
+
+            };
+        </script>
+
+
+
+
+    }
+
+    <!--/ Open Sales Orders-->
     <!-- Modal -->
     <div class="modal fade" id="large-modal" tabindex="-1" role="dialog"
          aria-labelledby="model-4"
@@ -130,7 +548,7 @@
         </div>
     </div>
     <!-- /modal -->
-}
+
 
     @if (ViewBag.Title == "Distribuidora Limeña - New Data OTB")
     {@Html.Partial("~/Views/Shared/Scripts_newDataOTB.cshtml")}
@@ -143,6 +561,13 @@
 
     <script>
         $(document).ready(function () {
+            $('.modal').on("hidden.bs.modal", function (e) {
+                if ($('.modal:visible').length) {
+                    $('body').addClass('modal-open');
+                }
+            });
+
+
             $('#myTable').DataTable({
                 pageLength: 15,
                 "dom": 'rtip',
@@ -155,6 +580,7 @@
             $('#filter_customers').keyup(function () {
                 $('#myTable').DataTable().search($(this).val()).draw();
             });
+
 
         });
 

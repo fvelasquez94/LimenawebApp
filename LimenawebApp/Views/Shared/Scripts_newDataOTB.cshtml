@@ -5,6 +5,7 @@
 
 
 <script type="text/javascript">
+    window.onload = function () {
         $(document).ready(function () {
 
             table = $('#data_tableEditor2').DataTable({
@@ -235,123 +236,123 @@
 
 
 
-    $("#btnsaveproducts").click(function () {
+        $("#btnsaveproducts").click(function () {
 
-                swal.fire({
-                    title: 'Save changes',
-                    text: "Are you sure you want to save this changes?",
-                    type: 'info',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3dba6f',
-                    cancelButtonColor: '#aaa',
-                    confirmButtonText: 'Yes'
-                }).then(function (result) {
-                    if (result.value) {
-                        //Guardamos
+            swal.fire({
+                title: 'Save changes',
+                text: "Are you sure you want to save this changes?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    //Guardamos
 
-                        $("#btnsaveproducts").attr("disabled", true);
+                    $("#btnsaveproducts").attr("disabled", true);
 
-                        var data;
-                        data = Array();
+                    var data;
+                    data = Array();
 
-                                    var dataCategory = [];
+                    var dataCategory = [];
 
-            if ($("#lstCategory").select2('data').length) {
+                    if ($("#lstCategory").select2('data').length) {
 
-                $.each($("#lstCategory").select2('data'), function (key, item) {
+                        $.each($("#lstCategory").select2('data'), function (key, item) {
 
-                    dataCategory.push(item.text);
+                            dataCategory.push(item.text);
 
-                });
+                        });
 
-            }
-
-
-
-            var dataSubCategory = [];
-
-            if ($("#lstSubCategory").select2('data').length) {
-
-                $.each($("#lstSubCategory").select2('data'), function (key, item) {
-
-                    dataSubCategory.push(item.text);
-
-                });
-
-            }
+                    }
 
 
 
-            var dataProvider = [];
+                    var dataSubCategory = [];
 
-            if ($("#lstProvider").select2('data').length) {
+                    if ($("#lstSubCategory").select2('data').length) {
 
-                $.each($("#lstProvider").select2('data'), function (key, item) {
+                        $.each($("#lstSubCategory").select2('data'), function (key, item) {
 
-                    dataProvider.push(item.text);
+                            dataSubCategory.push(item.text);
 
-                });
+                        });
 
-            }
+                    }
 
 
 
-            var dataBrands = [];
+                    var dataProvider = [];
 
-            if ($("#lstBrands").select2('data').length) {
+                    if ($("#lstProvider").select2('data').length) {
 
-                $.each($("#lstBrands").select2('data'), function (key, item) {
+                        $.each($("#lstProvider").select2('data'), function (key, item) {
 
-                    dataBrands.push(item.text);
+                            dataProvider.push(item.text);
 
-                });
+                        });
 
-            }
+                    }
 
-                        $("#data_tableEditor2 tr").each(function (i, v) {
-                            data[i] = Array();
-                            $(this).children('td').each(function (ii, vv) {
-                                if (ii == 0) {
-                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
-                                        data[i][ii] = true;
 
-                                    } else {
-                                        data[i][ii] = false;
-                                    }
+
+                    var dataBrands = [];
+
+                    if ($("#lstBrands").select2('data').length) {
+
+                        $.each($("#lstBrands").select2('data'), function (key, item) {
+
+                            dataBrands.push(item.text);
+
+                        });
+
+                    }
+
+                    $("#data_tableEditor2 tr").each(function (i, v) {
+                        data[i] = Array();
+                        $(this).children('td').each(function (ii, vv) {
+                            if (ii == 0) {
+                                if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                    data[i][ii] = true;
+
                                 } else {
-                                    data[i][ii] = $(this).text();
+                                    data[i][ii] = false;
                                 }
+                            } else {
+                                data[i][ii] = $(this).text();
+                            }
 
-                            });
-                        })
+                        });
+                    })
 
-                        var objects = [];
-                        for (var i = 0, len = data.length; i < len; i++) {
+                    var objects = [];
+                    for (var i = 0, len = data.length; i < len; i++) {
 
-                            if (i != 0) {
-                                if (data[i][0] == true) {
-                                    objects.push({
-                                        ItemCode: data[i][1],
-                                        Description: data[i][2],
-                                        Vendor: data[i][3],
-                                        Brand: data[i][4],
-                                        Category: data[i][5],
-                                        Subcategory: data[i][6]
+                        if (i != 0) {
+                            if (data[i][0] == true) {
+                                objects.push({
+                                    ItemCode: data[i][1],
+                                    Description: data[i][2],
+                                    Vendor: data[i][3],
+                                    Brand: data[i][4],
+                                    Category: data[i][5],
+                                    Subcategory: data[i][6]
 
-                                    });
-                                }
-
+                                });
                             }
 
                         }
 
-                        if (objects.length > 0) {
+                    }
 
-                            $.ajax
+                    if (objects.length > 0) {
+
+                        $.ajax
                             ({
-                                    url: '/Operations/Save_DataProcessOTB',
+                                url: '/Operations/Save_DataProcessOTB',
                                 type: 'POST',
-                                    data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString()},
+                                data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString() },
                                 success: function (result) {
 
                                     if (result == "SUCCESS") {
@@ -362,7 +363,7 @@
                                             function () {
                                                 var url = '@Url.Action("OTB", "OTB", null)';
                                                 url = url.replace('amp;', '');
-                                                 window.location.href = url;
+                                                window.location.href = url;
                                             }, 2000);
 
                                     } else {
@@ -376,20 +377,20 @@
                                 },
                             });
 
-                        } else {
-                            $("#btnsaveproducts").attr("disabled", false);
-                            toastr.warning('Please select at least one product');
-                           
+                    } else {
+                        $("#btnsaveproducts").attr("disabled", false);
+                        toastr.warning('Please select at least one product');
 
-                        }
-
-
-
-                    } else if (result.dismiss == 'cancel') {
 
                     }
 
-                });
+
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
 
 
 
@@ -397,6 +398,6 @@
         });
 
 
-
+    }
 
 </script>

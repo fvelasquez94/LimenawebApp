@@ -13,10 +13,12 @@ namespace LimenawebApp.Controllers.Finance
 {
     public class AuthorizationsController : Controller
     {
-
+        private dbLimenaEntities dblim = new dbLimenaEntities();
         private Cls_session cls_session = new Cls_session();
         private Cls_Authorizations cls_Authorizations = new Cls_Authorizations();
+        private Cls_alerts cls_alerts = new Cls_alerts();
         // GET: Authorizations
+   
         public ActionResult Index(string fstartd, string fendd)
         {
             if (cls_session.checkSession())
@@ -65,7 +67,121 @@ namespace LimenawebApp.Controllers.Finance
             }
         }
 
-        public ActionResult Put_Authorization(string commentsfinance, string id_authorization, int status)
+        public ActionResult checkAuthorization(string idauth)
+        {
+            var authorizations = cls_Authorizations.GetAuthorizationbyID(idauth);
+
+            if (authorizations != null)
+            {
+                if (authorizations.data != null)
+                {
+                    if (authorizations.data.status == 0)
+                    {
+                        return View(authorizations.data);
+                    }
+                    else
+                    {
+                        return RedirectToAction("AuthAlert", "Authorizations");
+                    }
+                }
+                else {
+                    return RedirectToAction("AuthAlert", "Authorizations");
+                }
+
+            }
+            else
+            {
+
+                return RedirectToAction("AuthAlert", "Authorizations");
+
+            }
+        }
+
+        public ActionResult ApproveAuthQA(string idauth)
+        {
+            var authactual = cls_Authorizations.GetAuthorizationbyID(idauth);
+
+
+                PutAuthorization_api updateauth = new PutAuthorization_api();
+      
+                updateauth.commentsFinance = "";
+                updateauth.idFinanceUser = "0";
+                updateauth.status = 1;
+
+                var response = cls_Authorizations.PutAuthorization(updateauth, idauth);
+
+                if (response.IsSuccessful == true)
+                {
+                    var iduser = (from a in dblim.Sys_Users where (a.IDSAP == authactual.data.idDriver) select a).FirstOrDefault();
+                    if (iduser != null)
+                    {
+
+                            cls_alerts.New_alert(iduser.ID_User, "Approved Authorization", "for route " + authactual.data.idRoute);
+                   
+
+                    }
+
+
+                return RedirectToAction("AuthMessage", "Authorizations", new { status = 1 });
+                }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult DenyAuthQA(string idauth)
+        {
+            var authactual = cls_Authorizations.GetAuthorizationbyID(idauth);
+
+
+            PutAuthorization_api updateauth = new PutAuthorization_api();
+   
+            updateauth.commentsFinance = "";
+            updateauth.idFinanceUser = "0";
+            updateauth.status = 2;
+
+            var response = cls_Authorizations.PutAuthorization(updateauth, idauth);
+
+            if (response.IsSuccessful == true)
+            {
+                var iduser = (from a in dblim.Sys_Users where (a.IDSAP == authactual.data.idDriver) select a).FirstOrDefault();
+                if (iduser != null)
+                {
+
+                    cls_alerts.New_alert(iduser.ID_User, "Denied Authorization", "for route " + authactual.data.idRoute);
+
+
+                }
+
+
+                return RedirectToAction("AuthMessage", "Authorizations", new { status = 0 });
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult AuthMessage(int status)
+        {
+            if (status == 0) { ViewBag.alert = "Authorization denied"; } else { ViewBag.alert = "Authorization approved"; }
+            return View();
+
+        }
+
+        public ActionResult AuthAlert()
+        {
+  
+            return View();
+
+        }
+
+        public ActionResult Put_Authorization(string commentsfinance, string id_authorization, int status, string iddriver, string route)
         {
             try
             {
@@ -74,16 +190,29 @@ namespace LimenawebApp.Controllers.Finance
                 updateauth.commentsFinance = commentsfinance;
                 updateauth.idFinanceUser = activeuser.IDSAP;
                 updateauth.status = status;
+              
                 var response = cls_Authorizations.PutAuthorization(updateauth, id_authorization);
 
                 if (response.IsSuccessful == true)
                 {
+                    var iduser = (from a in dblim.Sys_Users where (a.IDSAP == iddriver) select a).FirstOrDefault();
+                    if (iduser != null) {
+                        if (status == 1)
+                        {
+                            cls_alerts.New_alert(iduser.ID_User, "Approved Authorization", "for route " + route);
+                        }
+                        else {
+                            cls_alerts.New_alert(iduser.ID_User, "Denied Authorization", "for route " + route);
+                        }
+                       
+                    }
+                   
                     var result = "SUCCESS";
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
                 else
                 {
-                    var result = "Error";
+                    var result = "Error: " + response.StatusDescription;
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
 

@@ -1141,6 +1141,25 @@ else
         })
     })(jQuery);
 
+    (function ($) {
+        'use strict';
+        $('#cancelModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget);// Button that triggered the modal
+
+            var IDAct = button.data("id");// Extract info from data-* attributes
+            var DesAct = button.data("description");
+
+
+            // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+            // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+            var modal = $(this);
+            //modal.find('.modal-title').text('Edit data: ' + recipient)
+            modal.find('.modal-body input[name="ID_activityC"]').val(IDAct);
+            $("#descriptionC").text(DesAct);
+
+        })
+    })(jQuery);
 </script>
 @if (ViewBag.Title == "Distribuidora Limeña - DSD Order")
 {
@@ -2183,6 +2202,92 @@ else
                 console.log('Geolocation is not supported');
             }
         }
+        function initGeolocationCancel() {
+            if (navigator && navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(success3, error3, options);
+            } else {
+                console.log('Geolocation is not supported');
+            }
+        }
+
+
+                function success3(pos) {
+            var crd = pos.coords;
+            $("#loading").show();
+
+            var lat = crd.latitude;
+            var lng = crd.longitude;
+
+            var idvisita = "";
+            idvisita ='@ViewBag.id_visit';
+            var now = new Date();
+            //console.log(now.toLocaleString("en-US", { hour12: true }));
+            $.ajax({
+                url: '/Commercial/cancelVisit',
+                type: 'POST',
+                data: { 'ID_visit': idvisita, 'check_in': now.toLocaleString("en-US", { hour12: true }), 'lat': lat, 'lng': lng },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        //showSuccessToast();
+
+                        window.location.reload(true);
+                        $("#loading").hide();
+                    } else {
+                        toastr.warning(result.Result, "Warning");
+
+                        $("#loading").hide();
+                    }
+
+
+                },
+                error: function (request) {
+                    //showWarning2Toast();
+
+                }
+            });
+
+
+
+
+        };
+
+        function error3(err) {
+            console.warn('ERROR(' + err.code + '): ' + err.message);
+            $("#loading").show();
+            var idvisita = "";
+            idvisita = '@ViewBag.id_visit';
+            var now = new Date();
+
+            $.ajax({
+                url: '/Commercial/cancelVisit',
+                type: 'POST',
+                data: { 'ID_visit': idvisita, 'check_in': now.toLocaleString("en-US", { hour12: true }), 'lat': "", 'lng': "" },
+                cache: false,
+                global: false,
+                success: function (result) {
+
+                    if (result.Result == "Success") {
+                        //showSuccessToast();
+
+                        window.location.reload(true);
+                        $("#loading").hide();
+                    } else {
+                        toastr.warning(result.Result, "Warning");
+
+                        $("#loading").hide();
+                    }
+
+
+                },
+                error: function (request) {
+                    //showWarning2Toast();
+
+                }
+            });
+        };
 
         //CHECK IN
         function checkinVisit() {
@@ -2198,6 +2303,27 @@ else
             }).then(function (result) {
                 if (result.value) {
                     initGeolocation();
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+
+        }
+        function cancelVisit() {
+
+            swal.fire({
+                title: 'Cancel Visit',
+                text: "Are you sure you want to cancel the visit to the store?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then(function (result) {
+                if (result.value) {
+                    initGeolocationCancel();
                 } else if (result.dismiss == 'cancel') {
 
                 }
@@ -2379,7 +2505,7 @@ else
             var Idact = $("#ID_form").val();
             var FormName = $("#ID_form option:selected").text();
 
-            if (FormName == "MARKETING ACTIVITY") {
+            if (FormName == "MARKETING ACTIVITY" || FormName == "Marketing Activity 2.0"){
                 $("#moreoptions").show();
                 //$("#ID_customer").show();
 
@@ -2679,9 +2805,15 @@ else
                         var dcom = 0;
                         var dpor = 0.0;
 
+                        if (estadovisita != 1) {
+
+
+
                         if (obj.length > 0) {
                             try {
                                 $("#tbodyid").empty();
+
+
                                 for (var i = 0; i < obj.length; i++) {
 
                                     var url = '@Url.Action("Activityon", "Commercial", new { id = "ID_ACT"})';
@@ -2692,6 +2824,7 @@ else
 
                                     tr += "<td>" + obj[i]["description"] + "</td>";
                                     tr += "<td>" + obj[i]["Customer"] + "</td>";
+                                    tr += "<td>" + obj[i]["ID_usuarioEndString"] + "</td>";
                                     if (flag == 1) {
                                     tr += "<td>" + obj[i]["comments"] + "</td>";
                                 }
@@ -2699,15 +2832,32 @@ else
 
                                                             var url2 = '@Url.Action("Activityon_preview", "Commercial", new { id = "ID_ACT"})';
                                     url2 = url2.replace('ID_ACT', obj[i]["ID_activity"]);
+                                        if (obj[i]["query1"]== 'cancel') {
+                                            tr += "<td>" + '<span class="badge badge-danger form-pill px-3 py-1">Canceled</span>' + "</td>";
+                                        } else {
+                                            tr += "<td>" + '<span class="badge badge-success form-pill px-3 py-1">Finished</span>' + "</td>";
+                                            tr += '<td><a  href="' + url2 + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-eye mr-2"></i>Preview</a>'
+                                        }
 
-                                        tr += "<td>" + '<span class="badge badge-info form-pill px-3 py-1">Finished</span>' + "</td>";
-                                        tr += '<td><a  href="' + url2 + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-eye mr-2"></i>Preview</a>'
+
                                     } else {
-                                        tr += "<td>" + '<span class="badge badge-warning form-pill px-3 py-1">Not finished</span>' + "</td>";
+                                        if (obj[i]["query1"] == 'cancel') {
+                                            tr += "<td>" + '<span class="badge badge-danger form-pill px-3 py-1">Canceled</span>' + "</td>";
+                                        } else {
+                                            tr += "<td>" + '<span class="badge badge-warning form-pill px-3 py-1">Not finished</span>' + "</td>";
+                                        }
+
+
                                         if (estadovisita == '3') {
                                             tr += '<td>'
                                         } else {
-                                            tr += '<td><a  href="' + url + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a>'
+                                            tr += '<td>'
+                                            if (obj[i]["query1"] == 'cancel') {
+
+                                            } else {
+                                                tr += '<a  href="' + url + '" class="btn btn-outline-info btn-sm form-pill"><i class="fa fa-folder-open-o mr-2"></i>Open</a><button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#cancelModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Cancel</button>'
+                                            }
+
                                         }
 
                                     }
@@ -2726,6 +2876,7 @@ else
                                             }
                                             if (estadovisita != 4) {
                                                 tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#deleteModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Delete</button>'
+                                                tr += '<button class="btn btn-outline-danger btn-sm form-pill" data-toggle="modal" data-target="#cancelModal" data-ID="' + obj[i]["ID_activity"] + '" data-description="' + obj[i]["description"] + "  -  " + obj[i]["Customer"] + '"><i class="fa fa-close mr-2"></i>Cancel</button>'
 
                                             }
 
@@ -2735,59 +2886,59 @@ else
 
                                         $("#data_table").append(tr);
 
-                                        if (obj[i]["ID_activitytype"] == 1) {
-                                            ftot++;
+                                        //if (obj[i]["ID_activitytype"] == 1) {
+                                        //    ftot++;
 
-                                            if (obj[i]["isfinished"] == true) {
-                                                fcom++;
-                                            }
-                                        }
-                                        if (obj[i]["ID_activitytype"] == 2) {
-                                            atot++;
+                                        //    if (obj[i]["isfinished"] == true) {
+                                        //        fcom++;
+                                        //    }
+                                        //}
+                                        //if (obj[i]["ID_activitytype"] == 2) {
+                                        //    atot++;
 
-                                            if (obj[i]["isfinished"] == true) {
-                                                acom++;
-                                            }
-                                        }
-                                        if (obj[i]["ID_activitytype"] == 3) {
-                                            stot++;
+                                        //    if (obj[i]["isfinished"] == true) {
+                                        //        acom++;
+                                        //    }
+                                        //}
+                                        //if (obj[i]["ID_activitytype"] == 3) {
+                                        //    stot++;
 
-                                            if (obj[i]["isfinished"] == true) {
-                                                scom++;
-                                            }
-                                        }
-                                        if (obj[i]["ID_activitytype"] == 4) {
-                                            dtot++;
+                                        //    if (obj[i]["isfinished"] == true) {
+                                        //        scom++;
+                                        //    }
+                                        //}
+                                        //if (obj[i]["ID_activitytype"] == 4) {
+                                        //    dtot++;
 
-                                            if (obj[i]["isfinished"] == true) {
-                                                dcom++;
-                                            }
-                                        }
+                                        //    if (obj[i]["isfinished"] == true) {
+                                        //        dcom++;
+                                        //    }
+                                        //}
 
                                     }
 
-                                    if (ftot > 0) {
-                                        fpor = Math.round(((fcom / ftot) * 100));
-                                    }
-                                    if (atot > 0) {
-                                        apor = Math.round(((acom / atot) * 100));
-                                    }
-                                    if (stot > 0) {
-                                        spor = Math.round(((scom / stot) * 100));
-                                    }
-                                    if (dtot > 0) {
-                                        dpor = Math.round(((dcom / dtot) * 100));
-                                    }
+                                    //if (ftot > 0) {
+                                    //    fpor = Math.round(((fcom / ftot) * 100));
+                                    //}
+                                    //if (atot > 0) {
+                                    //    apor = Math.round(((acom / atot) * 100));
+                                    //}
+                                    //if (stot > 0) {
+                                    //    spor = Math.round(((scom / stot) * 100));
+                                    //}
+                                    //if (dtot > 0) {
+                                    //    dpor = Math.round(((dcom / dtot) * 100));
+                                    //}
 
                                     //STATS
-                                    $("#forms_p1").html(fpor + "%" + " (" + fcom + "/" + ftot + ")");
-                                    $('#forms_d1').css('width', '' + fpor + '%');
-                                    $("#audits_p1").html(apor + "%" + " (" + acom + "/" + atot + ")");
-                                    $("#audits_d1").css('width', '' + apor + '%');
-                                    $("#sales_p1").html(spor + "%" + " (" + scom + "/" + stot + ")");
-                                    $("#sales_d1").css('width', '' + spor + '%');
-                                    $("#demos_p1").html(dpor + "%" + " (" + dcom + "/" + dtot + ")");
-                                    $("#demos_d1").css('width', '' + dpor + '%');
+                                    //$("#forms_p1").html(fpor + "%" + " (" + fcom + "/" + ftot + ")");
+                                    //$('#forms_d1').css('width', '' + fpor + '%');
+                                    //$("#audits_p1").html(apor + "%" + " (" + acom + "/" + atot + ")");
+                                    //$("#audits_d1").css('width', '' + apor + '%');
+                                    //$("#sales_p1").html(spor + "%" + " (" + scom + "/" + stot + ")");
+                                    //$("#sales_d1").css('width', '' + spor + '%');
+                                    //$("#demos_p1").html(dpor + "%" + " (" + dcom + "/" + dtot + ")");
+                                    //$("#demos_d1").css('width', '' + dpor + '%');
                                 }
 
                             catch (err) {
@@ -2805,6 +2956,7 @@ else
                             table
                                 .clear()
                                 .draw();
+                            }
                         }
                     },
                     error: function () {
@@ -2857,7 +3009,48 @@ else
 
 
         }
+        function cancelActivity() {
 
+            var ActivityId = $("#ID_activityC").val();
+
+            if (ActivityId === null || ActivityId == "") { toastr.warning("Please, select an activity", "Warning"); } else {
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Commercial/CancelActivity',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            ID_activity: ActivityId
+
+                        }),
+                        success: function (data) {
+                            document.getElementById("loader").style.display = "none";
+                            if (data == "Success") {
+
+                                toastr.success("Activity canceled successfully.", "Success");
+                                $('#cancelModal').modal('hide');
+                                getVisitData()
+
+
+
+
+                            } else {
+                                toastr.warning(data, "Warning");
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            document.getElementById("loader").style.display = "none";
+                            var err = eval("(" + xhr.responseText + ")");
+                            toastr.error(err.Message, "Error");
+                        },
+                    });
+            }
+
+
+
+        }
     </script>
 }
 
@@ -4075,6 +4268,7 @@ Configure tooltips globally
 
             } else {
                 alert("Select at least one activity");
+
             }
 
         };
@@ -4814,7 +5008,7 @@ Configure tooltips globally
                         if (willDelete) {
                                        swal({
                         title: "Responsible Department",
-                      
+
                         icon: "info",
                         buttons: true,
                                            buttons: ['Commercial Manager', 'Supervisors']
@@ -4830,7 +5024,7 @@ Configure tooltips globally
 
                             } else {
                                 //Commercial Manager
-                                
+
                                 var url = '@Url.Action("SendToSharepoint", "Management", new { id = "AUREQ", emailresp = "johan_madriz@limenainc.net" })';
                             url = url.replace('AUREQ', id);
                             var newurl = url;
@@ -5466,7 +5660,8 @@ Configure tooltips globally
 
 
 
-
+                            var iduser = '@ViewBag.idusertemp';
+                            var nameuser = '@ViewBag.nameuser';
                             //Mandamos informacion adicional
                             fileData.append('ItemCode', productId);
                             fileData.append('ItemName', productName);
@@ -5480,6 +5675,8 @@ Configure tooltips globally
                             fileData.append('returnProductName', returnProductName);
                             fileData.append('UoMCode', uomlst);
                             fileData.append('uomlstName', uomlstName);
+                            fileData.append('userid', iduser);
+                            fileData.append('nameuser', nameuser);
 
 
                             $.ajax({
@@ -5782,6 +5979,211 @@ Configure tooltips globally
 
                             if (result == "SUCCESS") {
                                 var url = '@Url.Action("Prices_requestpdo", "Commercial", new { docnum = "ID_SO"})';
+                                url = url.replace('ID_SO', codigo);
+                                window.location.href = url;
+                            } else if (result == "NO EXIST") {
+                                toastr.warning("Sales order not found", "Warning");
+
+                            }
+
+                            else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+
+                            }
+
+
+                        },
+                        error: function () {
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+            } else {
+                toastr.warning("Sales order not found", "Warning");
+            }
+            }
+
+
+
+    </script>
+
+
+
+}
+
+
+@if (ViewBag.Title == "Distribuidora Limeña - Prices Request Temp")
+{
+    <script type="text/javascript">
+
+
+
+        function filter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(0).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            brandfilter_clear();
+            subfilter_clear();
+
+            $("#mainbrands > *").css('display', 'none')
+
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#subfilter").css('display', 'block')
+        }
+
+        function filter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+            table.columns(0).search("").draw();
+            table.columns(1).search("").draw();
+            table.columns(2).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+            $('.btnsl').removeClass('brandsbtnsl');
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(1).search("").draw();
+            $('.subbtnsl').removeClass('btnsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(1).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainbrands > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            $('.brandbtnsl').removeClass('btnsubsel');
+            brandfilter_clear();
+        }
+
+        function brandfilter(clicked_id) {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            table.columns(2).search("" + clicked_id + "", true, false, true).draw();
+            //$('.subbtnsl').removeClass('btnsubsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+        function brandfilter_clear() {
+            var table = $('#data_tableEditor').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table.columns(2).search("").draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        $(document).ready(function () {
+
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+
+
+            $('.btnsl').on('click', function () {
+                $('.btnsl').removeClass('brandsbtnsl');
+                $(this).addClass('brandsbtnsl');
+            });
+
+            $('.subbtnsl').on('click', function () {
+                $('.subbtnsl').removeClass('btnsel');
+                $(this).addClass('btnsel');
+            });
+
+
+            $('.brandbtnsl').on('click', function () {
+                $('.brandbtnsl').removeClass('btnsubsel');
+                $(this).addClass('btnsubsel');
+            });
+
+
+
+
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+
+            $('.uompricemin').on('change', function () {
+                var minpricedef = parseFloat($(this).closest('tr').find('.PriceminDef').text());
+                var minpricenew = parseFloat(minpricedef * this.value);
+
+                $(this).closest('tr').find('.PriceminChange').text(minpricenew.toFixed(4))
+            });
+            var table = $('#data_tableEditor').DataTable();
+
+
+                var json = JSON.parse('@Html.Raw(ViewBag.pedidos)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+            $("#docnum").select2({
+            multiple: false,
+            placeholder: "Select...",
+            data: data,
+                templateResult: function (data) {
+                    if (data.printed == 'N') {
+                        if (data.status == 1) {
+                            return $('<span style="color:green">' + data.text + '<span>');
+                        } else if (data.status == 0) {
+                            return $('<span>' + data.text + '<span>');
+                        } else if (data.status == 2) {
+                            return $('<span style="color:red">' + data.text + '<span>');
+                        }
+                    } else {
+                        return $('<span style="color:red">' + data.text + ' (PRINTED)<span>');
+                    }
+
+
+                }
+            });
+
+
+
+
+        });
+
+
+
+        function buscarPedido() {
+                var codigo = $('#docnum').val();
+            if (codigo != '') {
+                $.ajax
+                    ({
+                        url: '/Commercial/PedidoExiste',
+                        type: 'POST',
+                        data: { 'docnum': codigo },
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                var url = '@Url.Action("Prices_requestpdoTemp", "Commercial", new { docnum = "ID_SO"})';
                                 url = url.replace('ID_SO', codigo);
                                 window.location.href = url;
                             } else if (result == "NO EXIST") {
@@ -7494,7 +7896,7 @@ Configure tooltips globally
         $('.selcustomerstatus').on('change', function () {
             var id = this.value;
             var customer = this.id;
-            
+
 
             document.getElementById("loader").style.display = "block";
             $.ajax
@@ -7505,7 +7907,7 @@ Configure tooltips globally
                     contentType: 'application/json',
                     data: JSON.stringify({
                         id: id,
-                        cardcode: customer 
+                        cardcode: customer
                     }),
                     success: function (result) {
 
@@ -7515,11 +7917,11 @@ Configure tooltips globally
                             document.getElementById("loader").style.display = "none";
 
                         } else {
-                         
+
                             toastr.warning("Something went wrong.." + result, "Warning");
                             document.getElementById("loader").style.display = "none";
                         }
-                   },
+                    },
                     error: function () {
                         toastr.warning("Something went wrong..", "Warning");
                         document.getElementById("loader").style.display = "none";
@@ -7531,6 +7933,1242 @@ Configure tooltips globally
     </script>
 }
 
+
+
+@if (ViewBag.Title == "Distribuidora Limeña - Prices Request (Pedidos) Temp")
+{
+    ///<script src="~/Content/appcontent/assets/vendor/inputnumber/bootstrap-input-spinner.js"></script>
+    <script src="~/Content/appcontent/assets/vendor/js-init/bootstrap-number-input.js"></script>
+    <script type="text/javascript">
+        function volverPriceRequest() {
+                        swal.fire({
+                title: 'Exit Order',
+                text: "Do you want to close this order?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, close this order',
+                cancelButtonText: 'No, just go back to main menu'
+            }).then(function (result) {
+                if (result.value) {
+
+                    var docnumi='@ViewBag.docnum';
+                    var closedTimes = @ViewBag.contadorClosed;
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/Prices_requestCerrarOrden',
+                                type: 'POST',
+                                data: { 'docnum': docnumi, 'timesClosed': closedTimes },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+
+                                    var url = '@Url.Action("Prices_requestTemp", "Commercial", null)';
+                                        window.location.href = url;
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+                           var url2 = '@Url.Action("Prices_requestTemp", "Commercial", null)';
+                                        window.location.href = url2;
+                }
+
+            });
+        }
+
+        function openClosedOrder() {
+                        swal.fire({
+                title: 'Open closed Order',
+                text: "Do you want to open again this order?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, open again this order',
+                cancelButtonText: 'Cancel'
+            }).then(function (result) {
+                if (result.value) {
+
+                    var docnumi='@ViewBag.docnum';
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/OpenClosedOrder',
+                                type: 'POST',
+                                data: { 'docnum': docnumi },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        window.location.reload(true);
+
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+        }
+
+        function filter(clicked_id) {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            table2.columns(0).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainsub > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            brandfilter_clear();
+            subfilter_clear();
+
+            $("#mainbrands > *").css('display', 'none')
+
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#subfilter").css('display', 'block')
+        }
+
+        function filter_clear() {
+            var table2 = $('#data_tableEditor2').DataTable();
+            table2.columns(0).search("").draw();
+            table2.columns(1).search("").draw();
+            table2.columns(2).search("").draw();
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+            $('.btnsl').removeClass('brandsbtnsl');
+            $('.subbtnsl').removeClass('btnsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+        function subfilter_clear() {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table2.columns(1).search("").draw();
+            $('.subbtnsl').removeClass('btnsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        function subfilter(clicked_id) {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            table2.columns(1).search("" + clicked_id + "", true, false, true).draw();
+            $("#mainbrands > *").css('display', 'none')
+            var x = document.getElementById(clicked_id);
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
+            }
+            $('.brandbtnsl').removeClass('btnsubsel');
+            brandfilter_clear();
+        }
+
+        function brandfilter(clicked_id) {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            table2.columns(2).search("" + clicked_id + "", true, false, true).draw();
+            //$('.subbtnsl').removeClass('btnsubsel');
+            $('.brandbtnsl').removeClass('btnsubsel');
+        }
+
+        function brandfilter_clear() {
+            var table2 = $('#data_tableEditor2').DataTable();
+
+            //table.columns(4).search("").draw();
+            //table.columns(3).search("").draw();
+            table2.columns(2).search("").draw();
+            $('.brandbtnsl').removeClass('btnsubsel');
+            //$("#mainsub > *").css('display', 'none')
+        }
+
+        $(document).ready(function () {
+
+            $("#mainsub > *").css('display', 'none')
+            $("#mainbrands > *").css('display', 'none')
+
+
+            $('.btnsl').on('click', function () {
+                $('.btnsl').removeClass('brandsbtnsl');
+                $(this).addClass('brandsbtnsl');
+            });
+
+            $('.subbtnsl').on('click', function () {
+                $('.subbtnsl').removeClass('btnsel');
+                $(this).addClass('btnsel');
+            });
+
+
+            $('.brandbtnsl').on('click', function () {
+                $('.brandbtnsl').removeClass('btnsubsel');
+                $(this).addClass('btnsubsel');
+            });
+            var table2 = $('#data_tableEditor2').DataTable({
+                "pageLength": 5
+            });
+
+
+            //$("#docnum").select2();
+        });
+    </script>
+
+    <script>
+        var amountpriceglobal = parseFloat(0);
+        var waseditonfocus = 0;
+        var actualline;
+                var bolsaGeneral = parseFloat(@ViewBag.bolsa);
+                    $(function () {
+
+
+                $('input.filternumbers').on('focus', function () {
+                    amountpriceglobal = parseFloat($(this).val());
+                    var wasediteditem = $(this).closest('tr').find('.wasedited').text();
+                    actualline = $(this).closest('tr').find('.linenum').text();
+
+                    if (wasediteditem == 1) {
+                        waseditonfocus = 1;
+                    } else { waseditonfocus = 0; }
+                });
+
+
+
+                $('input.filternumbers').on('blur', function () {
+                    var objects = [];
+                    var bolsa = parseFloat($('#bolsaValoractual').val()); //parseFloat("ViewBag.bolsa");
+                    $.each($('input.filternumbers[type = "text"]'), function () {
+
+                        //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
+                        var priceEach = parseFloat($(this).closest('tr').find('.price').text());
+                        var priceEachMin = parseFloat($(this).closest('tr').find('.minprice').text());
+                        var actuallineEach = $(this).closest('tr').find('.linenum').text();
+                        var qtyRow = $(this).closest('tr').find('.qtyRow').text();
+                        var newprice = parseFloat($(this).val());
+
+                        //console.log(priceEach);
+                        //console.log(newprice);
+                        //Evaluando si fue editado
+                        var wasedited = $(this).closest('tr').find('.wasedited').text();
+                        //console.log(wasedited);
+                        if (wasedited == 1) {//fue editado
+                            //console.log("es editado");
+                            if (waseditonfocus == 0) {
+
+                            } else if (waseditonfocus == 1 && actualline == actuallineEach) {
+                                waseditonfocus = 0;
+
+                                if (priceEach > amountpriceglobal) {
+                                    bolsaGeneral = bolsaGeneral + (priceEach - amountpriceglobal);
+                                }
+
+                                $(this).closest('tr').find('.wasedited').text("0");
+
+                                if (newprice > priceEach || newprice < priceEachMin) {
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: 0,
+                                        text: ""
+                                    });
+
+                                } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: parseFloat((priceEach - newprice) * qtyRow),
+                                        text: ""
+                                    });
+
+                                }
+                            }
+
+                        } else {
+
+                            if (newprice > priceEach || newprice < priceEachMin) {
+                                objects.push({
+                                    id: $(this).attr('id'),
+                                    value: 0,
+                                    text: ""
+                                });
+
+                            } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: parseFloat((priceEach - newprice) * qtyRow),
+                                        text: ""
+                                    });
+
+                            }
+
+
+
+                        }
+
+
+
+                    });
+                    //console.log(objects);
+                    //Configuramos el precio
+
+                    var total = 0, row;
+
+                    $.each(objects, function (i, row) {
+
+                            total = parseFloat(total) + parseFloat(row.value);
+
+
+                    });
+
+
+                    //console.log("total: " + total);
+                    //console.log("hola, soy: " + this.id);
+                    var nuevoprecio = parseFloat($(this).val());
+                    //console.log(nuevoprecio);
+
+                    //console.log(bolsa);
+                    var price = parseFloat($(this).closest('tr').find('.price').text());
+                    var minprice = $(this).closest('tr').find('.minprice').text();
+
+                    var descuento = parseFloat(nuevoprecio - minprice);
+
+                    //var descuentoAnterior = parseFloat(amountpriceglobal - minprice);
+                    //console.log(price);
+                    console.log(total);
+                    var flag = 0
+
+                    if (nuevoprecio > 0) {
+                        if (bolsaGeneral < total) {
+                            flag = 0;
+                            //toastr.warning("No tienes suficientes fondos en la bolsa", "Warning");
+                            //$(this).val('0');
+
+                            //$(this).removeClass('border-success');
+                            //$(this).addClass('border-warning');
+
+
+                        } else {
+                            flag = 0;
+                        }
+                        if (nuevoprecio < minprice) {
+                            //flag = 1;
+                            //toastr.warning("Nuevo precio no puede ser menor al precio minimo", "Warning");
+                            //$(this).val('0');
+
+                            //$(this).removeClass('border-success');
+                            //$(this).addClass('border-warning');
+
+                            flag = 0;
+
+                        } else {
+                            flag = 0;
+                        }
+
+                        if (nuevoprecio < minprice || bolsaGeneral < total) {
+                            flag = 1; //total = parseFloat(total - descuento);
+                        } else { flag = 0; }
+
+
+                        if (flag == 0) { //Ejecutamos el codigo
+
+                                $(this).removeClass('border-warning');
+                                $(this).addClass('border-success');
+
+
+                        }
+
+                        //Se evalua si el precio a colocar no excede los precios de venta
+                        var precioalto = parseFloat((price * 0.25) + price);
+
+                        if (nuevoprecio > precioalto) {
+                            flag = 0;
+                            //toastr.warning("Esta excediendo el limite del nuevo precio a colocar, por favor valide antes de continuar", "Warning");
+                            ////$(this).val('0');
+
+                            //$(this).removeClass('border-success');
+                            //$(this).addClass('border-warning');
+                        } else { flag = 0; }
+
+
+                    } else {
+                        $(this).removeClass('border-warning');
+                        $(this).removeClass('border-success');
+                        $(this).val(0);
+
+
+
+                    }
+
+
+                    var bolsaantes = parseFloat($('#bolsaValoractual').val());
+
+
+                    var bolsafinal = parseFloat(bolsaGeneral - total);
+
+                    if (bolsafinal == null) { bolsafinal = 0; }
+                    if (isNaN(bolsafinal)) { bolsafinal = bolsaGeneral; }
+
+                    if (bolsafinal < 0) {
+                        $('#bolsaValoractual').val(parseFloat(bolsaantes).toFixed(2));
+                    } else {
+                        $('#bolsaValoractual').val(parseFloat(bolsafinal).toFixed(2));
+                    }
+                    //console.log(bolsaGeneral);
+
+                })
+
+            });
+
+
+        $(document).ready(function () {
+            var table = $('#data_tableEditor').DataTable({
+                paging: false,
+                sort: false,
+                searching:true
+
+            });
+
+
+
+            $('#totalso').html(Number(table.column(9).data().sum()).toFixed(4));
+
+
+            var table2 = $('#tbBonificaciones').DataTable();
+            $('#totalsoQty').html(Number(table2.column(3).data().sum()).toFixed(2));
+            $('#totalsoPrice').html(Number(table2.column(4).data().sum()).toFixed(2));
+            var table3 = $('#tbDeudas').DataTable();
+
+                   @*var json = JSON.parse('Html.Raw(ViewBag.lstproducts)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#lstproducts").select2({
+            multiple: false,
+            placeholder: "Select...",
+            data: data
+
+        });*@
+
+           $("#cantidadBonificar").bootstrapNumber();
+
+            $(function () {
+                $('input.filternumbers').on('input', function () {
+                    this.value = this.value
+                        .replace(/[^\d.]/g, '')             // numbers and decimals only
+                        //.replace(/(^[\d]{2})[\d]/g, '$1')   // not more than 2 digits at the beginning
+                        .replace(/(\..*)\./g, '$1')         // decimal can't exist more than once
+                        .replace(/(\.[\d]{4})./g, '$1');    // not more than 4 digits after decimal
+                });
+
+
+            });
+        });
+
+
+
+
+        function saveAutorizaciones() {
+
+            swal.fire({
+                title: 'Save changes',
+                text: "Are you sure you want to save this changes?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    //Guardamos
+
+                    $("#btnSaveAut1").attr("disabled", true);
+                    $("#btnSaveAut2").attr("disabled", true);
+
+                     var closedTimes = @ViewBag.contadorClosed;
+
+                    var table = $('#data_tableEditor').DataTable();
+                        // var oTable = $('#htmlgrid').dataTable();
+                        //console.log(oTable.fnGetData());
+
+                        oSettings = table.settings();
+                        oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
+                        table.search('').columns().search('').draw();
+
+
+                        var data;
+                        data = Array();
+
+
+
+                    $("#data_tableEditor tr").each(function (i, v) {
+                            data[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data[i][ii] = true;
+                                    } else {
+                                        data[i][ii] = false;
+                                    }
+                                }
+                                else if (ii == 8) {
+                                    data[i][ii] = $(this).eq(0).find('input').val();
+                                }  else {
+                                    data[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+                        var objects = [];
+                        for (var i = 0, len = data.length; i < len; i++) {
+
+                            if (i != 0) {
+                                objects.push({
+                                    deleted: data[i][0],
+                                    lineNumber: data[i][1],
+                                    ItemCode: data[i][2],
+                                    Description: data[i][3],
+                                    uom: data[i][4],
+                                    Qty: data[i][5],
+                                    Price: data[i][6],
+                                    MinPrice: data[i][7],
+                                    NewPrice: data[i][8]
+                                });
+                            }
+
+                        }
+                        var pedido = '@ViewBag.docnum';
+                        var bolsa = 0;
+
+                   //console.log(objects);
+
+
+                    var objectsfinal = objects.filter(function (object) {
+                        return (object.NewPrice >0 || object.deleted==true);
+                    });
+                    //console.log(objectsfinal);
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/Save_SODetails',
+                                type: 'POST',
+                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa, 'timesClosed': closedTimes },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+                                        $("#btnSaveAut1").attr("disabled", false);
+                                        $("#btnSaveAut2").attr("disabled", false);
+
+                                        $("#btnAsk").show();
+                                        $("#btnbackno").hide();
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                        $("#btnSaveAut1").attr("disabled", false);
+                                        $("#btnSaveAut2").attr("disabled", false);
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                    $("#btnSaveAut1").attr("disabled", false);
+                                    $("#btnSaveAut2").attr("disabled", false);
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+
+        }
+
+
+        function saveAutorizacionesAfterOrderClosed() {
+
+            swal.fire({
+                title: 'Save changes',
+                text: "Are you sure you want to save this changes?",
+                type: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then(function (result) {
+                if (result.value) {
+                    //Guardamos
+                    $("#btnSaveAutAfClo1").attr("disabled", true);
+                    $("#btnSaveAutAfClo2").attr("disabled", true);
+
+
+                    var closedTimes = @ViewBag.contadorClosed;
+
+                    var table = $('#data_tableEditor').DataTable();
+                        // var oTable = $('#htmlgrid').dataTable();
+                        //console.log(oTable.fnGetData());
+
+                        oSettings = table.settings();
+                        oSettings[0]._iDisplayLength = oSettings[0].fnRecordsTotal();
+                        table.search('').columns().search('').draw();
+
+
+                        var data;
+                        data = Array();
+
+
+
+                    $("#data_tableEditor tr").each(function (i, v) {
+                            data[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data[i][ii] = true;
+                                    } else {
+                                        data[i][ii] = false;
+                                    }
+                                }
+                                else if (ii == 8) {
+                                    data[i][ii] = $(this).eq(0).find('input').val();
+                                }  else {
+                                    data[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+                        var objects = [];
+                        for (var i = 0, len = data.length; i < len; i++) {
+
+                            if (i != 0) {
+                                objects.push({
+                                    deleted: data[i][0],
+                                    lineNumber: data[i][1],
+                                    ItemCode: data[i][2],
+                                    Description: data[i][3],
+                                    uom: data[i][4],
+                                    Qty: data[i][5],
+                                    Price: data[i][6],
+                                    MinPrice: data[i][7],
+                                    NewPrice: data[i][8]
+                                });
+                            }
+
+                        }
+                        var pedido = '@ViewBag.docnum';
+                        var bolsa = 0;
+
+                   //console.log(objects);
+
+
+                    var objectsfinal = objects.filter(function (object) {
+                        return object.deleted==true;
+                    });
+                    //console.log(objectsfinal);
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/Save_SODetailsAfterOrderClosed',
+                                type: 'POST',
+                                data: { 'objects': objectsfinal, 'pedido': pedido, 'bolsa': bolsa, 'timesClosed': closedTimes},
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+                                        //$("#btnAsk").show();
+                                        //$("#btnbackno").hide();
+                                        $("#btnSaveAutAfClo1").attr("disabled", false);
+                                        $("#btnSaveAutAfClo2").attr("disabled", false);
+
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                        $("#btnSaveAutAfClo1").attr("disabled", false);
+                                        $("#btnSaveAutAfClo2").attr("disabled", false);
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                    $("#btnSaveAutAfClo1").attr("disabled", false);
+                                    $("#btnSaveAutAfClo2").attr("disabled", false);
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+
+                }
+
+            });
+
+        }
+
+
+        function delProduct(id) {
+            var idlineN = "";
+            idlineN = id.substring(4);
+
+            var idcheckbox = "deleted_" + idlineN;
+
+
+
+
+                swal.fire({
+                    title: 'Delete product',
+                    text: "Are you sure you want to delete this product? This may affect the bonification list.",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        document.getElementById(idcheckbox).checked = true;
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').prop('disabled', 'disabled');
+
+                        //escondemos boton
+                        document.getElementById("btn_" + idlineN).style.display = "none";
+                        try {
+                            document.getElementById("btnr_" + idlineN).style.display = "block";
+                        } catch{
+
+                        }
+
+
+                        //label y boton bonificacion(colocamos un try-catch porque no siempre saldra disponible esta opcion)
+                        try {
+                            document.getElementById("labelbonif_" + idlineN).style.display = "block";
+                            document.getElementById("btnbonif_" + idlineN).style.display = "none";
+                        } catch{
+
+                        }
+
+                        ///
+                        amountpriceglobal = parseFloat($('#' + idcheckbox).closest('tr').find('.filternumbers').val());
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').val(0);
+                        var wasediteditem = $('#' + idcheckbox).closest('tr').find('.wasedited').text();
+                        actualline = $('#' + idcheckbox).closest('tr').find('.linenum').text();
+
+                        if (wasediteditem == 1) {
+                            waseditonfocus = 1;
+                        } else { waseditonfocus = 0; }
+
+                        var objects = [];
+                        var bolsa = parseFloat($('#bolsaValoractual').val()); //parseFloat("ViewBag.bolsa");
+                        $.each($('input.filternumbers[type = "text"]'), function () {
+
+                            //alert("ID:" + $(this).attr('id') + "value: " + $(this).val());
+                            var priceEach = parseFloat($(this).closest('tr').find('.price').text());
+                            var priceEachMin = parseFloat($(this).closest('tr').find('.minprice').text());
+                            var actuallineEach = $(this).closest('tr').find('.linenum').text();
+                            var qtyRow = $(this).closest('tr').find('.qtyRow').text();
+                            var newprice = parseFloat($(this).val());
+
+                            //console.log(priceEach);
+                            //console.log(newprice);
+                            //Evaluando si fue editado
+                            var wasedited = $(this).closest('tr').find('.wasedited').text();
+
+                            if (wasedited == 1) {//fue editado
+
+                                if (waseditonfocus == 0) {
+
+                                } else if (waseditonfocus == 1 && actualline == actuallineEach) {
+                                    waseditonfocus = 0;
+                                    //SOLO PARA ELIMINAR, PERO PROBAR EN PROCESO NORMAL
+                                    if (priceEach > amountpriceglobal) {
+                                        bolsaGeneral = bolsaGeneral + ((priceEach - amountpriceglobal) * qtyRow);
+                                    }
+
+                                    $(this).closest('tr').find('.wasedited').text("0");
+
+                                    if (newprice > priceEach || newprice < priceEachMin) {
+                                        objects.push({
+                                            id: $(this).attr('id'),
+                                            value: 0,
+                                            text: ""
+                                        });
+
+                                    } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                        objects.push({
+                                            id: $(this).attr('id'),
+                                            value: parseFloat((priceEach - newprice) * qtyRow),
+                                            text: ""
+                                        });
+
+                                    }
+                                }
+
+                            } else {
+                                if (newprice > priceEach || newprice < priceEachMin) {
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: 0,
+                                        text: ""
+                                    });
+
+                                } else if (newprice != 0 && isNaN(newprice) != true) {
+
+                                    objects.push({
+                                        id: $(this).attr('id'),
+                                        value: parseFloat((priceEach - newprice) * qtyRow),
+                                        text: ""
+                                    });
+
+                                }
+
+
+
+                            }
+
+
+
+                        });
+                        //console.log(objects);
+
+                        var total = 0, row;
+
+                        $.each(objects, function (i, row) {
+
+                            total = parseFloat(total) + parseFloat(row.value);
+
+
+                        });
+
+
+                        //console.log("total: " + total);
+                        //console.log("hola, soy: " + this.id);
+                        var nuevoprecio = 0;
+                        //console.log(nuevoprecio);
+
+                        //console.log(bolsa);
+                        var price = parseFloat($(this).closest('tr').find('.price').text());
+                        var minprice = $(this).closest('tr').find('.minprice').text();
+
+                        var descuento = parseFloat(nuevoprecio - minprice);
+
+                        //var descuentoAnterior = parseFloat(amountpriceglobal - minprice);
+                        //console.log(price);
+                        //console.log(minprice);
+                        var flag = 0
+
+                        if (nuevoprecio > 0) {
+                            if (bolsaGeneral < total) {
+                                flag = 1;
+                                toastr.warning("No tienes suficientes fondos en la bolsa", "Warning");
+                                $(this).val('0');
+
+                                $(this).removeClass('border-success');
+                                $(this).addClass('border-warning');
+
+
+                            } else {
+                                flag = 0;
+                            }
+                            if (nuevoprecio < minprice) {
+                                flag = 1;
+                                toastr.warning("Nuevo precio no puede ser menor al precio minimo", "Warning");
+                                $(this).val('0');
+
+                                $(this).removeClass('border-success');
+                                $(this).addClass('border-warning');
+
+
+
+                            } else {
+                                flag = 0;
+                            }
+
+                            if (nuevoprecio < minprice || bolsaGeneral < total) {
+                                flag = 1; //total = parseFloat(total - descuento);
+                            } else { flag = 0; }
+
+
+                            if (flag == 0) { //Ejecutamos el codigo
+
+                                $(this).removeClass('border-warning');
+                                $(this).addClass('border-success');
+
+
+                            }
+
+                            //Se evalua si el precio a colocar no excede los precios de venta
+                            var precioalto = parseFloat((price * 0.25) + price);
+
+                            if (nuevoprecio > precioalto) {
+                                flag = 1;
+                                toastr.warning("Esta excediendo el limite del nuevo precio a colocar, por favor valide antes de continuar", "Warning");
+                                //$(this).val('0');
+
+                                $(this).removeClass('border-success');
+                                $(this).addClass('border-warning');
+                            } else { flag = 0; }
+
+
+                        } else {
+                            $(this).removeClass('border-warning');
+                            $(this).removeClass('border-success');
+                            $(this).val(0);
+
+
+
+                        }
+
+
+                        var bolsaantes = parseFloat($('#bolsaValoractual').val());
+
+                        //console.log(bolsaantes);
+
+
+
+                        var bolsafinal = parseFloat(bolsaGeneral - total);
+
+                        if (bolsafinal == null) { bolsafinal = 0; }
+                        if (isNaN(bolsafinal)) { bolsafinal = bolsaGeneral; }
+
+                        if (bolsafinal < 0) {
+                            $('#bolsaValoractual').val(parseFloat(bolsaantes).toFixed(2));
+                        } else {
+                            $('#bolsaValoractual').val(parseFloat(bolsafinal).toFixed(2));
+                        }
+
+                        //console.log(bolsafinal);
+
+
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+
+
+
+
+        }
+        function restoreProduct(id) {
+            var idlineN = "";
+            idlineN = id.substring(5);
+
+            var idcheckbox = "deleted_" + idlineN;
+
+                swal.fire({
+                    title: 'Restore product',
+                    text: "Are you sure you want to restore this product? This may affect the bonification list after save",
+                    type: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        document.getElementById(idcheckbox).checked = false;
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').prop('disabled', false);
+                        $('#' + idcheckbox).closest('tr').find('.filternumbers').val(0);
+
+                        //escondemos boton
+                        document.getElementById("btn_" + idlineN).style.display = "block";
+                        document.getElementById("btnr_" + idlineN).style.display = "none";
+
+                        //label y boton bonificacion(colocamos un try-catch porque no siempre saldra disponible esta opcion)
+                        try {
+                            document.getElementById("labelbonif_" + idlineN).style.display = "none";
+                            document.getElementById("btnbonif_" + idlineN).style.display = "block";
+                        } catch{
+
+                        }
+
+                        ///
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+
+
+
+
+        }
+
+
+
+
+        var cantidadActualBon = 0;
+
+        function nuevaBonificacion(idproduct, product, uom, lineNum, cantidadOrden, factorbonif, cantbonif) {
+
+            if (factorbonif == 0 || factorbonif == null || factorbonif == "") {
+                toastr.warning("Por favor solicite al Administrador del Catálogo que ingrese los Factores de Bonificación para este Producto", "Warning");
+            } else {
+                setTimeout(function () { $('#nuevabonificacion').modal('show') }, 500);
+                $('#tbbonificaciones').modal('hide');
+
+                $('#idproductoBon').val(idproduct);
+                $('#productBon').val(product);
+                $('#lineNumBon').val(lineNum);
+                //UOM
+                $('#tipoUOM').find('option').remove();
+                cantidadActualBon = cantidadOrden;
+                console.log(parseInt(cantidadOrden));
+
+                var maxCantidad = parseInt((cantidadOrden / factorbonif) * cantbonif);
+                //console.log(maxCantidad);
+                $(function () {
+                    //$elem = $("#cantidadBonificar");
+                    //var destroyCrappyPlugin = function ($elem, eventNamespace) {
+                    //    var isInstantiated = !!$.data($elem.get(0));
+
+                    //    if (isInstantiated) {
+                    //        $.removeData($elem.get(0));
+                    //        $elem.off(eventNamespace);
+                    //        $elem.unbind('.' + eventNamespace);
+                    //    }
+                    //};
+
+                    //$('#cantidadBonificar').html($('#cantidadBonificar').html());
+
+
+                    //$('#cantidadBonificar').html($('#ri-').html());
+                    $("#cantidadBonificar").prop('max', parseInt(maxCantidad));
+                    $("#cantidadBonificar").bootstrapNumber();
+
+
+                });
+
+                //if (uom != "EACH") {
+                $.ajax
+                    ({
+                        url: '/Commercial/GetUOM',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            product: idproduct
+                        }),
+                        success: function (result) {
+                            $.each($.parseJSON(result), function (i, uomtype) {
+                                if (uomtype.UOM == uom) {//si esta seleccionado
+                                    $("#tipoUOM").append
+                                        ($('<option selected></option>').val(uomtype.UOM).html(uomtype.UOM));
+
+
+                                } else {
+                                    $("#tipoUOM").append
+                                        ($('<option></option>').val(uomtype.UOM).html(uomtype.UOM));
+                                }
+                            });
+
+
+                        },
+                        error: function () {
+                            var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('tipoUOM').appendChild(o);
+
+                        },
+                    });
+
+                //} else {
+                //    var ou = new Option(uom, uom); ou.innerHTML = uom; document.getElementById('tipoUOM').appendChild(ou);
+                //}
+
+
+
+                $("#tipobonificacion").val(0);
+                $("#tipobonificacion").trigger("change");
+
+            }
+
+
+
+
+
+
+        }
+        $("#tipobonificacion").on('change', function () {
+            var value = $(this).val();
+
+            if (value == 1) {
+                $('#typeUnits').show();
+                $('#typeCurrency').hide();
+                $('#cantidadBonificar').val(0);
+                $('#pricebon').val(0);
+            } else if (value == 2) {
+                $('#typeUnits').hide();
+                $('#typeCurrency').show();
+                $('#cantidadBonificar').val(0);
+                $('#pricebon').val(0);
+            }else if (value == 0) {
+                $('#typeUnits').hide();
+                $('#typeCurrency').hide();
+                $('#cantidadBonificar').val(0);
+                $('#pricebon').val(0);
+            }
+
+
+        });
+
+
+        function guardarBonificacion() {
+
+
+            $("#savebonbtn").attr("disabled", true);
+            var pedido = "@ViewBag.docnum";
+            var producto = $('#idproductoBon').val();
+            var lineNum = $("#lineNumBon").val();
+            var unidades = $('#cantidadBonificar').val();
+            var tipobonificacion = $("#tipobonificacion").val();
+            var precio = $('#pricebon').val();
+            var userID = "@ViewBag.userID";
+            var userName = "@ViewBag.userName";
+            var uombon = $("#tipoUOM").val();
+            var now = new Date();
+            var nombreProducto = $('#productBon').val();
+            var tipo = "";
+            var closedTimes = @ViewBag.contadorClosed;
+            var validando = 0;
+
+            if (tipobonificacion == 1) {
+                tipo = '<span class="badge text-success">QUANTITY</span>'
+
+                if (unidades < 1) {
+                    validando = 1;//No paso el filtro por lo tanto mandamos alerta
+                }
+            }
+            else if (tipobonificacion == 2)
+            {
+                if (precio < 1) {
+                    validando = 1;//No paso filtro de precio
+                }
+                tipo = '<span class="badge text-info">CURRENCY</span>'
+            }
+
+            if (validando == 1) {
+                toastr.warning("Something went wrong. You must to set a valid value.", "Warning");
+                $('#savebonbtn').attr("disabled", false);
+            } else {
+
+                document.getElementById("loader").style.display = "block";
+                $.ajax
+                    ({
+                        url: '/Commercial/Save_bonification',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            pedido: pedido,
+                            producto: producto,
+                            tipobonificacion: tipobonificacion,
+                            lineNum: lineNum,
+                            precio: precio,
+                            unidades: unidades,
+                            date: now.toLocaleString("en-US", { hour12: true }),
+                            userID: userID,
+                            userName: userName,
+                            uom: uombon,
+                            timesClosed: closedTimes
+                        }),
+                        success: function (result) {
+
+                            if (result == "SUCCESS") {
+                                toastr.success("Data saved successfully.", "Success");
+                                document.getElementById("loader").style.display = "none";
+                                $('#savebonbtn').attr("disabled", false);
+
+                                var t = $('#tbBonificaciones').DataTable();
+
+                                t.row.add(["-",
+                                    nombreProducto, tipo,
+                                    unidades, precio, uombon,
+                                    '<span class="badge text-warning">WAITING FOR APPROVAL</span>', '<span class="badge text-warning">TO VIEW ACTIONS, PLEASE REFRESH THE PAGE</span>'
+                                ]).draw(false);
+
+                                setTimeout(function () { $('#tbbonificaciones').modal('show') }, 500);
+                                $('#nuevabonificacion').modal('hide');
+                                $("#btnAsk").show();
+                                $("#btnbackno").hide();
+
+
+                            } else {
+                                toastr.warning("Something went wrong.." + result, "Warning");
+                                document.getElementById("loader").style.display = "none";
+                                $('#savebonbtn').attr("disabled", false);
+
+                            }
+
+
+                        },
+                        error: function () {
+                            $('#savebonbtn').attr("disabled", false);
+
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        },
+                    });
+            }
+
+
+
+
+
+
+        }
+    </script>
+
+
+
+}
 
 
 @if (ViewBag.Title == "Distribuidora Limeña - Prices Request Micro")

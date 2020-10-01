@@ -122,6 +122,11 @@
             <!--header nav links-->
 
             <ul class="navbar-nav header-links">
+                <li class="nav-item dropdown" id="new">
+                    <a class="nav-link mr-lg-3" href="@Url.Action("Dashboard", "Main")" aria-haspopup="true" aria-expanded="false">
+                        New Dashboard
+                    </a>
+                </li>
                 <li class="nav-item dropdown" id="home_menuSales" style="display:none">
                     <a class="nav-link mr-lg-3" href="@Url.Action("Dashboard_sales", "Main")" aria-haspopup="true" aria-expanded="false">
                         Home
@@ -154,7 +159,7 @@
                         @*<a id="markact_submenu" class="dropdown-item" href="@Url.Action("Marketing_activities", "Commercial")">Marketing Activities</a>*@
                         @*<a id="markact_submenu" class="dropdown-item" href="#">Marketing Activities</a>*@
                         <a style="display:none" id="routes_submenu" class="dropdown-item" href="@Url.Action("Routes", "Commercial")">Marketing Activities</a>
-                       
+
                         <a style="display:none" id="tasks_submenu2" class="dropdown-item" href="@Url.Action("Customer_contactdata", "Commercial")">Customers Contact Data</a>
                         @*<a id="routes_submenu" class="dropdown-item" href="#">Routes</a>*@
                         <a style="display:none" id="drop1" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu">Reports</a>
@@ -180,14 +185,17 @@
                                 <a href="@Url.Action("Credits_request", "Commercial")" class="dropdown-item">Credits Request</a>
                             </li>
                             <li id="ss3_submenu" style="display:none">
-                                <a href="@Url.Action("Prices_requestHistory", "Commercial")" class="dropdown-item">History</a>
+                                <a href="@Url.Action("Prices_requestHistory", "Commercial")" class="dropdown-item">Price Change History</a>
                             </li>
                             <li id="ss1_submenu" style="display:none">
-                                <a href="@Url.Action("Prices_request", "Commercial")" class="dropdown-item">Prices Request</a>
+                                <a href="@Url.Action("Prices_request", "Commercial")" class="dropdown-item">Prices Change Request</a>
+                            </li>        
+                            <li id="ss6_submenu" style="display:none">
+                                <a href="@Url.Action("Prices_requestTemp", "Commercial")" class="dropdown-item">(Temp) Prices Change Request </a>
                             </li>
 
                             <li style="display:none" id="ss2_submenu">
-                                <a href="@Url.Action("Prices_requestmicro", "Commercial")" class="dropdown-item">Prices Request Settings</a>
+                                <a href="@Url.Action("Requesthistory", "Pricerequest")" class="dropdown-item">Price Change Conf</a>
                             </li>
                         </ul>
                     </div>
@@ -212,7 +220,7 @@
                         <a id="drop3" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu3">Invoices</a>
                         <ul class="collapse" id="multi_menu3" data-parent="#accordion">
                             <li id="invo1_submenu" style="display:none">
-                                <a href="@Url.Action("Planning", "Invoices")" class="dropdown-item">Planning</a>
+                                <a href="@Url.Action("PlanningRoutes", "Invoices")" class="dropdown-item">Planning</a>
                             </li>
                             <li id="invo2_submenu" style="display:none">
                                 <a href="@Url.Action("QualityControl_planning", "Invoices")" class="dropdown-item">Quality Control</a>

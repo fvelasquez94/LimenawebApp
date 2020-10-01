@@ -1,0 +1,685 @@
+﻿@model IEnumerable<LimenawebApp.Models.Pedidos_precios>
+@{
+    ViewBag.Title = "Distribuidora Limeña - Prices Request (Pedidos) Temp";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-xl-12">
+                    @if (ViewBag.mostrarOrdenEditar == 1)
+                    {
+                    <a href="#" onclick="volverPriceRequest()" class="btn btn-sm btn-info mb-2">Back</a>
+                    }
+                    else if (ViewBag.mostrarOrdenEditar == 0) {
+                        <a href="@Url.Action("Prices_request", "Commercial")" class="btn btn-sm btn-info mb-2">Back</a>
+                    }
+                    else if (ViewBag.mostrarOrdenEditar == 2) {
+                        <a style="display:none;" id="btnAsk" href="#" onclick="volverPriceRequest()" class="btn btn-sm btn-info mb-2">Back</a>
+                        <a id="btnbackno" href="@Url.Action("Prices_request", "Commercial")" class="btn btn-sm btn-info mb-2">Back</a>
+                    } 
+                        <div class="card card-shadow mb-4">
+
+                            <div class="card-body">
+                                <div class="custom-title-wrap bar-primary">
+                                    <div class="custom-title">Sales Order: @ViewBag.docnum</div>
+                                    <div class=" widget-action-link">
+                                        <div class="dropdown">
+
+
+
+
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row col-md-12">
+                                    <div class="col-md-8 mb-3">
+
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text" style="font-size:14px;">Customer</span>
+                                            </div>
+                                            <input type="text" style="font-size:14px;width:130px;" value="@ViewBag.cliente" readonly class="form-control">
+
+                                        <button  onclick="openClosedOrder()"  class="btn btn-warning">Open Order</button>
+
+                                        </div>
+
+
+                                    </div>
+     
+                                   
+                                </div>
+                                <ul class="nav nav-tabs nav-fill mb-4" role="tablist">
+                                    <li class="nav-item">
+                                        <a class="nav-link active" data-toggle="tab" href="#tab-j_1"> <i class="fa fa-dollar pr-2"></i>Price Request</a>
+                                    </li>
+
+                                    @*<li class="nav-item">
+                                        <a class="nav-link" data-toggle="tab" href="#tab-j_2"><i class="fa fa-box pr-2"></i> Bonifications</a>
+                                    </li>*@
+
+                                </ul>
+
+                                <div class="tab-content">
+                                    <div class="tab-pane active" id="tab-j_1" role="tabpanel">
+
+
+
+
+                                        <div class="row col-md-12">
+                                            <div class="col-md-6">
+                                                
+
+
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" style="font-size:14px;"> Debt</span>
+                                                        <input type="text" value="$ @Math.Round(ViewBag.deudaMonto, 2)" style="font-size:15px;width:130px;" readonly class="form-control">
+                                                        <a href="#" class="btn btn-sm btn-info " data-toggle="modal" data-target=".bd-example-modal-lg-historial">History</a>
+                                                    </div>
+
+                                                    <div class="modal fade bd-example-modal-lg-historial" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                                        <div class="modal-dialog modal-lg">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title" id="myLargeModalLabel">Debt History | Customer: @ViewBag.cliente</h5>
+                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                        <span aria-hidden="true">&times;</span>
+                                                                    </button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <table id="tbDeudas" class="table table-striped">
+                                                                        <thead>
+                                                                            <tr>
+                                                                                <th>DOCNUM</th>
+                                                                                <th>DATE</th>
+                                                                                <th>EXPIRY DATE</th>
+                                                                                <th style="text-align:right;">AMOUNT ($)</th>
+                                                                            </tr>
+                                                                        </thead>
+                                                                        <tbody>
+                                                                            @foreach (var item in ViewBag.deuda)
+                                {
+                                            <tr>
+                                                <td>@item.DocNum</td>
+                                                <td>@Convert.ToDateTime(item.DocDate).ToShortDateString()</td>
+                                                <td>
+                                                    @if (item.Antiguedad == 1)
+        {
+                                            <label>COD</label>
+}
+else if (item.Antiguedad == 2)
+{
+                                            <label>CURRENT</label>
+}
+else if (item.Antiguedad == 3)
+{
+                                            <label>1 - 7 DAYS</label>
+}
+else if (item.Antiguedad == 4)
+{
+                                            <label>8 - 14 DAYS</label>
+}
+else if (item.Antiguedad == 5)
+{
+                                            <label>15- 21 DAYS</label>
+}
+else if (item.Antiguedad == 6)
+{
+                                            <label>22 - 28 DAYS</label>
+}
+else if (item.Antiguedad == 7)
+{
+                                            <label>> 28 DAYS</label>
+}
+else if (item.Antiguedad == 8)
+{
+                                            <label>COD</label>
+}
+
+                                                </td>
+                                                <td style="text-align:right;">@Math.Round(item.Saldo, 4)</td>
+                                            </tr>
+}
+                                                                        </tbody>
+                                                                    </table>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="card-body pt-3 pb-4">
+                                            <div class="table-responsive">
+                                                <table id="data_sales" class="vertical table table-bordered" style="width:100%; font-family: 'Open Sans' !important">
+
+                                                    <tr>
+                                                        <th>PERIODO</th>
+                                                        <th>VENTA</th>
+                                                        <th>SKUs</th>
+                                                    </tr>
+                                                    @foreach (var item in ViewBag.historialVentas)
+                                                    {
+                            <tr>
+                                <td>PERIODO @item.PreviousPeriod</td>
+                                <td style="text-align:right;">$@Math.Round(item.Invoices, 2)</td>
+                                <td style="text-align:right;">@item.SKUs</td>
+                            </tr>
+}
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-5">
+         
+                                        </div>
+                                        <div class="col-md-2 float-right">
+                                            @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
+                {
+                            <button onclick="saveAutorizaciones()" id="btnSaveAut1" class="btn btn-success">Save</button>
+}
+else if (ViewBag.mostrarOrdenEditar == 0)
+{
+                            <button onclick="saveAutorizacionesAfterOrderClosed()" id="btnSaveAutAfClo1" class="btn btn-success">Save</button>                
+}
+                                        </div>
+
+
+
+                                        <div class="card-body">
+                                            <div class="table-responsive">
+                                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="font-size:8px;width:5px !important;"></th>
+                                                            <th style="font-size:8px;width:8px;">LN</th>
+                                                            <th style="font-size:10px;width:25px">ITEM CODE</th>
+                                                            <th style="font-size:10px;">DESCRIPTION</th>
+                                                            <th style="font-size:10px;">UOM</th>
+                                                            <th style="font-size:10px;">QTY</th>
+                                                            <th style="font-size:10px;">PRICE ($)</th>
+                                                            <th style="font-size:10px;">MIN PRICE ($)</th>
+                                                            <th style="font-size:10px;width:45px;">NEW PRICE ($)</th>
+                                                            <th style="display:none">TOTAL</th>
+                                                            <th style="display:none">WAS EDITED</th>
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var product in Model)
+                            {
+                                <tr>
+                                    <td style="font-size:8px;width:8px;">
+                                        @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
+    {
+
+        if (product.deleted == true)
+        {
+                                    <input id="deleted_@product.LineNum" type="checkbox" hidden checked />
+                                    <button id="btnr_@product.LineNum" onclick="restoreProduct(this.id)" class="btn btn-sm btn-outline-success"><i class="fa fa-rotate-left"></i></button>
+                                    <button style="display:none;" id="btn_@product.LineNum" onclick="delProduct(this.id)" class="btn btn-sm btn-outline-danger">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+}
+else
+{
+                                    <input id="deleted_@product.LineNum" type="checkbox" hidden />
+                                    <button style="display:none;" id="btnr_@product.LineNum" onclick="restoreProduct(this.id)" class="btn btn-sm btn-outline-success"><i class="fa fa-rotate-left"></i></button>
+                                    <button id="btn_@product.LineNum" onclick="delProduct(this.id)" class="btn btn-sm btn-outline-danger">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+}
+
+}
+else if (ViewBag.mostrarOrdenEditar == 0)
+{
+if (product.deleted == true)
+{
+                                    <input id="deleted_@product.LineNum" type="checkbox" hidden />
+                                    <label class="text-danger">Deleted</label>
+}
+else
+{
+                                    <input id="deleted_@product.LineNum" type="checkbox" hidden />
+                                    <button id="btn_@product.LineNum" onclick="delProduct(this.id)" class="btn btn-sm btn-outline-danger">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+}
+
+}
+
+
+
+                                    </td>
+                                    <td style="font-size:8px;" class="linenum">@product.LineNum</td>
+                                    <td style="font-size:10px;">@product.ItemCode</td>
+                                    <td style="font-size:10px;">@product.ItemName</td>
+                                    <td style="font-size:10px;">@product.UomCode</td>
+                                    <td style="text-align:right;font-size:10px;" class="qtyRow">@product.Quantity.Value.ToString("0")</td>
+                                    <td style="text-align:right;font-size:10px;" class="price">
+                                        @if (product.Price == null)
+            {@Html.Raw("0") }
+else
+{@product.Price.Value.ToString("0.0000")}
+                                    </td>
+                                    <td style="text-align:right;font-size:10px;" class="minprice">
+                                        @if (product.MinPrice == null)
+            {@Html.Raw("0") }
+else
+{@product.MinPrice.Value.ToString("0.0000")}
+                                    </td>
+                                    <td style="text-align:right;font-size:10px;">
+                                        @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
+    {
+        if (product.NewPrice != 0)
+        {
+            if (product.deleted == true)
+            {
+                                    <input placeholder="0.00" style="text-align:right;font-size:13px;" type="text" id="newprice_@product.LineNum" value="@product.NewPrice.Value.ToString("0.00")" class="form-control filternumbers" disabled/>
+}
+else
+{
+                                    <input placeholder="0.00" style="text-align:right;font-size:13px;" type="text" id="newprice_@product.LineNum" value="@product.NewPrice.Value.ToString("0.00")" class="form-control filternumbers" />
+                                                }
+
+                                            }
+                                            else
+                                            {
+                                                if (product.deleted == true)
+                                                {
+<input placeholder="0.00" style="text-align:right;font-size:13px;" type="text" id="newprice_@product.LineNum" value="0" class="form-control filternumbers" disabled/>
+}
+                                                
+                                                else {
+<input placeholder="0.00" style="text-align:right;font-size:13px;" type="text" id="newprice_@product.LineNum" value="0" class="form-control filternumbers" />
+}
+                                                }
+                                    
+}
+else if (ViewBag.mostrarOrdenEditar == 0)
+{
+if (product.NewPrice != 0)
+{
+                                    <input placeholder="0.00" style="text-align:right;font-size:13px;" type="text" id="newprice_@product.LineNum" value="@product.NewPrice.Value.ToString("0.00")" class="form-control filternumbers" disabled />
+}
+else
+{
+                                    <input placeholder="0.00" style="text-align:right;font-size:13px;" type="text" id="newprice_@product.LineNum" value="@product.NewPrice.Value.ToString("0.00")" class="form-control filternumbers" disabled />
+}
+}
+
+
+
+                                    </td>
+                                    <td style="display:none">@product.Total</td>
+                                    <td class="wasedited" style="display:none">
+                                        @if (product.NewPrice != 0)
+            {@Html.Raw("1");
+}
+else
+{ @Html.Raw("0");
+}
+                                    </td>
+                                </tr>
+}
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th colspan="6" style="text-align:right">Total Order:</th>
+                                                            <th style="text-align:right;"><span id="totalso"></span></th>
+                                                            <th></th>
+                                                            <th style="text-align:right">
+                                                                @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
+    {
+                                                            <button onclick="saveAutorizaciones()" id="btnSaveAut2" class="btn btn-success">Save</button>
+}
+else if (ViewBag.mostrarOrdenEditar == 0)
+{
+                                                            <button onclick="saveAutorizacionesAfterOrderClosed()" id="btnSaveAutAfClo2" class="btn btn-success">Save</button>
+}
+
+
+                                                            </th>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="tab-pane" id="tab-j_2" role="tabpanel">
+                                        <div class="custom-post-title">
+                                            <div class=" mt-2">
+
+                                                @foreach (var itemc in ViewBag.lstCategories)
+                    {
+                            <button id="btn_@itemc" type="button" style="margin-top: 10px;" class="btn btn-outline-primary form-pill btnsl" onclick="filter('@itemc')">@itemc</button>
+}
+                                                <button type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="filter_clear()">Clear filters</button>
+
+                                            </div><hr />
+                                            <div id="mainsub">
+
+                                                @foreach (var itemc in ViewBag.lstCategories)
+                    {
+                            <div class="mt-2" id="@itemc">
+                                @foreach (var itemsc in ViewBag.lstsubCategories)
+    {
+        if (itemsc.category == itemc)
+        {
+                            <button id="subbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-outline-warning form-pill subbtnsl" onclick="subfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+
+}
+                                @*<button id="subfilter" type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="subfilter_clear()">Clear Sub filters</button>*@
+                            </div>}
+
+                                            </div><hr />
+                                            <div id="mainbrands">
+
+                                                @foreach (var itemc in ViewBag.lstsubCategories)
+                    {
+                            <div class="mt-2" id="@itemc.name">
+                                @foreach (var itemsc in ViewBag.lstBrands)
+    {
+        if (itemsc.category == itemc.name)
+        {
+                            <button id="brandbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-light form-pill brandbtnsl" onclick="brandfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+
+}
+
+                            </div>}
+
+                                            </div>
+                                        </div>
+                                        <div class="card-body pt-3 pb-4">
+                                            <div class="table-responsive">
+                                                <table id="data_tableEditor2" class="table table-bordered table-striped" style="width:100%;" cellspacing="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="font-size:12px;">CATEGORY</th>
+                                                            <th style="font-size:12px;">SUBCATEGORY</th>
+                                                            <th style="font-size:12px;">BRAND</th>
+
+                                                            <th style="font-size:12px;display:none">ID</th>
+                                                            <th style="font-size:12px;">PRODUCT</th>
+                                                            <th style="font-size:12px;">UOM</th>
+                                                            <th style="font-size:12px;">SO QTY</th>
+                                                            <th style="font-size:12px;">GIFT STOCK</th>
+                                                            <th style="font-size:12px;">FACTOR</th>
+
+                                                            <th style="font-size:12px;">ACTIONS</th>
+
+
+                                                        </tr>
+                                                    </thead>
+                                                    <tfoot>
+                                                    </tfoot>
+                                                    <tbody>
+                                                        @foreach (var product in ViewBag.products)
+                            {
+                                <tr style="font-size:12px;">
+                                    <td>@product.category_name</td>
+                                    <td>@product.subcategory_name</td>
+                                    <td>@product.Brand_Name.Replace("'", "")</td>
+
+                                    <td style="display:none;">@product.ItemCode</td>
+                                    <td>
+                                        @if (product.LineNum == 10000)
+    {
+                                        <label>@product.ItemName</label>
+}
+else
+{
+                                        <label>@product.ItemCode - @product.ItemName</label>
+}
+                                       
+                                    </td>
+                                    <td>@product.UomCode</td>
+                                    <td>
+                                        @if (product.LineNum == 10000)
+                                        {
+                                            <label>0</label>
+                                        }
+                                        else {
+                                            <label> @Math.Round(product.Quantity, 0)</label>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (product.LineNum == 10000)
+    {
+                                        <label>@Math.Round(product.Quantity, 0)</label>
+}
+else
+{
+                                    <label> 0</label>
+}
+                                    </td>
+                                    <td>@Math.Round(product.FactorBonif,0)</td>
+
+                                    <td>
+                                        @if (ViewBag.mostrarOrdenEditar == 1 || ViewBag.mostrarOrdenEditar == 2)
+    {
+        if (product.deleted == true)
+        {
+                                    <label id="labelbonif_@product.LineNum" class="text-danger">Product deleted from Sales Order</label>
+                                    <button id="btnbonif_@product.LineNum" style="display:none;" onclick="nuevaBonificacion('@product.ItemCode','@product.ItemName.Replace("'", "")','@product.UomCode','@product.LineNum','@product.Quantity','@product.FactorBonif', '@product.CantBonif')" class="btn btn-sm btn-outline-success">New bonification</button>
+}
+else
+{
+                                    <label style="display:none" id="labelbonif_@product.LineNum" class="text-danger">Product deleted from Sales Order</label>
+                                    <button id="btnbonif_@product.LineNum" onclick="nuevaBonificacion('@product.ItemCode','@product.ItemName.Replace("'", "")','@product.UomCode','@product.LineNum','@product.Quantity','@product.FactorBonif', '@product.CantBonif')" class="btn btn-sm btn-outline-success">New bonification</button>
+}
+
+}
+else if (ViewBag.mostrarOrdenEditar == 0)
+{
+
+}
+
+                                    </td>
+                                </tr>
+}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+
+                                        </div>
+                                        <button class="btn btn-sm btn-success mb-2 float-right" data-toggle="modal" data-target="#tbbonificaciones">Bonifications List</button>
+                                        <div class="modal fade bd-example-modal-lg" id="tbbonificaciones" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-lg">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="myLargeModalLabel">Bonifications</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+
+                                                    </div>
+                                                    @*<button onclick="nuevaBonificacion()" class="btn btn-smn btn-outline-success">New bonification</button>*@
+                                                    <div class="modal-body">
+                                                        <div class="table-responsive">
+                                                            <table id="tbBonificaciones" class="table table-striped">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID</th>
+                                                                        <th>PRODUCT</th>
+                                                                        <th>TYPE</th>
+                                                                        <th>QTY</th>
+                                                                        <th>DISCOUNT($)</th>
+                                                                        <th>UOM</th>
+                                                                        <th>STATUS</th>
+                                                                        <th>ACTIONS</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @foreach (var bon in ViewBag.bonificaciones)
+                                        {
+                                            <tr>
+                                                <td>@bon.ID_bonificacion</td>
+                                                <td>@bon.Producto</td>
+                                                <td>
+                                                    @if (bon.TipoIngreso == 1)
+                        {<span class="badge text-success">QUANTITY</span>}
+else if (bon.TipoIngreso == 2)
+{ <span class="badge text-info">CURRENCY</span>}
+                                                </td>
+                                                <td style="text-align:right;">@bon.CantidadFinal</td>
+
+                                                <td style="text-align:right;">@bon.CurrencyFinal</td>
+                                                <td>@bon.CodUOM</td>
+                                                <td>
+                                                    @if (bon.deleted == true)
+    {
+                                                <span class="badge text-danger">PRODUCT DELETED FROM SALES ORDER</span>
+                                                    }
+                                                    else
+                                                    {
+
+                                                        if (bon.Estado == 1)
+                                                        {
+                                                <span class="badge text-warning">WAITING FOR APPROVAL</span>
+}
+else if (bon.Estado == 2)
+{
+                                                <span class="badge text-info">APPROVED</span>
+}
+else if (bon.Estado == 3)
+{
+                                                <span class="badge text-success">ON SAP</span>
+}
+else if (bon.Estado == 4)
+{
+                                                <span class="badge text-danger">CANCELED</span>
+}
+else if (bon.Estado == 5)
+{
+                                                <span class="badge text-danger">REFUSED</span>
+}
+else if (bon.Estado == 6)
+{
+                                                <span class="badge badge-warning">BILLED WITHOUT CHANGES</span>
+}
+else if (bon.Estado == 7)
+{
+                                                <span class="badge badge-warning">IN ROUTE</span>
+}
+}
+                                                </td>
+                                                <td>
+                                                    @if(bon.Estado == 2 || bon.Estado == 3 || bon.Estado == 6)
+                                                    {
+
+                                                    }
+                                                    else {
+                                                          <a href="@Url.Action("DelBonification","Commercial", new { id=bon.ID_bonificacion})" class="btn btn-sm btn-outline-danger">DELETE</a>
+                                                    }</td>
+                                            </tr>
+            }
+                                                                </tbody>
+
+                                                                <tfoot>
+                                                                    <tr>
+                                                                        <th colspan="3" style="text-align:right">Total:</th>
+                                                                        <th style="text-align:right;"><span id="totalsoQty"></span></th>
+                                                                        <th style="text-align:right;"><span id="totalsoPrice"></span></th>
+                                                                        <th></th>
+                                                                        <th></th>
+                                                                        <th></th>
+
+
+                                                                    </tr>
+                                                                </tfoot>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+
+<div class="modal fade" id="nuevabonificacion" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">New Bonification</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    Product:
+                    <input type="text" hidden id="idproductoBon" value="" class="form-control" />
+                    <input type="text" hidden id="lineNumBon" value="" class="form-control" />
+                    <input type="text" id="productBon" readonly value="" class="form-control" />
+                </div>
+                <div class="form-group">
+                    UOM:
+                    <select id="tipoUOM" class="form-control">
+                        
+                    </select>
+                </div>
+                <div class="form-group">
+                    Bonification type:
+                    <select id="tipobonificacion" class="form-control">
+                        <option value="0">Select type...</option>
+                        <option value="1">Quantity</option>
+                        <option value="2">Currency</option>
+                    </select>
+                </div>
+                <div class="form-group" id="typeUnits" style="display:none;">
+                    Units:
+                    <input class="form-control" type="number" id="cantidadBonificar" min="0" max="100" value="0" />
+                </div>
+                <div class="form-group" id="typeCurrency" style="display:none;">
+                    Price:
+                    <input class="form-control" id="pricebon" type="number" min="0" value="0" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="savebonbtn" onclick="guardarBonificacion()" class="btn btn-success">Save</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>

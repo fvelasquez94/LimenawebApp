@@ -53,8 +53,8 @@
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B2"]) + "</td>");
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["B1"]) + "</td>");
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Promedio_AA"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["VentaB1"]) + "</td>");
-                        myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["Variacion"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right;display:none">' + Math.round(objects[i]["VentaB1"]) + "</td>");
+                        myArray.push('<td  style="padding: .25rem;text-align:right;display:none">' + Math.round(objects[i]["Variacion"]) + "</td>");
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["TendenciaPeriodoActual"]) + "</td>");
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoSiguiente1"]) + "</td>");
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + Math.round(objects[i]["PronosticoSiguiente2"]) + "</td>");
@@ -67,7 +67,7 @@
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["OTB"].toFixed(2) + "</td>");
                         myArray.push('<td  style="padding: .25rem;text-align:right">' + objects[i]["Cobertura_OTB"].toFixed(2) + "</td>");
 
-                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers'  style='text-align: right;width:120px' type='text' />" + "</td>");
+                        myArray.push('<td  style="padding: .25rem;">' + "<input class='editPedido form-control filternumbers' value='" + objects[i]["Pedido"] + "'  style='text-align: right;width:120px' type='text' />" + "</td>");
 
 
                         myArray.push('<td style="padding: .25rem;text-align:right">' + (new Date(parseInt(objects[i]["DeliveryDate"].substr(6)))).toLocaleDateString('en-US') + "</td>");
@@ -163,33 +163,38 @@
             $('input.editPedido[type = "text"]').on('focusout', function () {
                 //CUANDO SE EDITA PEDIDO ESTE CAMBIA: (  CoberturaProyectadaNume + PEDIDO  )  /  CoberturaProyectadaDeno
                 var pedido = parseFloat($(this).val());
-                var coberturaProyectadaNume = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaNumeOriginal').text());
-                var coberturaProyectadaDeno = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaDeno').text());
-                var total = 0.0;
-                if (coberturaProyectadaDeno > 0) {
-                    total = ((coberturaProyectadaNume + pedido) / coberturaProyectadaDeno);
+                if (isNaN(pedido)) {
 
+                } else {
+                    var coberturaProyectadaNume = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaNumeOriginal').text());
+                    var coberturaProyectadaDeno = parseFloat($(this).closest('tr').find('.editCoberturaProyectadaDeno').text());
+                    var total = 0.0;
+                    if (coberturaProyectadaDeno > 0) {
+                        total = ((coberturaProyectadaNume + pedido) / coberturaProyectadaDeno);
+
+                    }
+
+                    $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
+                    //            //$(this).html('DEL');
+
+                    ///Monto PO
+                    var desc = 0;
+
+                    desc = $(this).closest('tr').find('.editCostoDescuento').text();
+
+                    var monto = desc * pedido;
+                    if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
+
+                    //Pallet de orden editPalletOrden
+                    var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
+                    var palletstotal = (pedido / casesPallet);
+
+                    if (casesPallet == 0) { palletstotal = 0; }
+                    if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
+
+                    $(this).closest('tr').find('.editCoberturaProyectadaNume').html(pedido + coberturaProyectadaNume);
                 }
 
-                $(this).closest('tr').find('.editCobertura_dePO').html(total.toFixed(2))
-                //            //$(this).html('DEL');
-
-                ///Monto PO
-                var desc = 0;
-
-                desc = $(this).closest('tr').find('.editCostoDescuento').text();
-
-                var monto = desc * pedido;
-                if (monto != 0) { $(this).closest('tr').find('.editMontoPO').html(monto.toFixed(2)); } else { $(this).closest('tr').find('.editMontoPO').html(0); }
-
-                //Pallet de orden editPalletOrden
-                var casesPallet = $(this).closest('tr').find('.editCasesPerPallet').text();
-                var palletstotal = (pedido / casesPallet);
-
-                if (casesPallet == 0) { palletstotal = 0; }
-                if (palletstotal != 0) { $(this).closest('tr').find('.editPalletOrden').html(palletstotal.toFixed(2)); } else { $(this).closest('tr').find('.editPalletOrden').html(0); }
-
-                $(this).closest('tr').find('.editCoberturaProyectadaNume').html(pedido + coberturaProyectadaNume);
 
             });
 

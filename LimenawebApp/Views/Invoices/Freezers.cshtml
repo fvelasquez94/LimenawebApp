@@ -1,0 +1,97 @@
+﻿@model IEnumerable<LimenawebApp.Models.Tb_logContainers>
+
+@{
+    ViewBag.Title = "Distribuidora Limeña - Freezers";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Containers</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Containers in Route</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Operations.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="row">
+
+        <div class="col-md-12 card">
+            <div class="card-header card-header-large bg-white">
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Manage and receive all assigned Containers</label>
+
+
+                    </div>
+                    <div class="col-md-3"></div>  
+                    <div class="col-md-2"></div>  
+                    
+                    <div class="col-md-3">
+                  
+                            @*<button type="button" class="btn btn-success " data-toggle="modal" data-target="#modal-containers" style="font-size:12px !important;"><i></i>Add Container</button>*@
+                        
+                    </div>
+                </div>
+
+           
+            </div>
+                <div class="card-body pt-3 pb-4">
+                    <div class="table-responsive">
+                        <table id="data_tableEditor" class="table table-bordered " cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>CONTAINER</th>
+                                    <th>WHS</th>
+                                    <th>ASSIGNED BY</th>
+                                    <th>ROUTE</th>
+                                    <th>DRIVER</th>
+                                    <th>TRUCK</th>
+                                    <th>ASSIGNED ON</th>
+                                    <th>ACTIONS</th>
+
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                            </tfoot>
+                            <tbody>
+                               @foreach (var item in Model) {
+                                   <tr>
+                                       <td>@item.ID_reg</td>
+                                       <td>@item.Barcode - @item.Container</td>
+                                       <td>@item.Whs</td>
+                                       <td>@item.AssignerUser</td>
+                                       <td>@item.Route</td>
+                                       <td>@item.Driver</td>
+                                       <td>@item.Truck</td>
+                                       <td>@item.DateAssigned.ToShortDateString()</td>
+                                       <td>
+                                           <div class="button-list">
+                                                <button type="button" class="btn btn-warning" onclick="delassigned(@item.ID_reg)">
+                                                    <i class="material-icons mr-1">delete</i> Delete
+                                                </button>
+    
+                                            </div>
+                                       </td>
+                                   </tr>
+                               }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                </div>
+                </div>
+                </div>
+            

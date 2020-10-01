@@ -9,11 +9,6 @@ namespace LimenawebApp.Controllers
     public class FinanceController : Controller
     {
 
-        public ActionResult ReceivePayment()
-        {
-            ViewData["Menu"] = "Finance";
-            ViewData["Page"] = "Receive Payments";
-            return View();
-        }
+
     }
 }

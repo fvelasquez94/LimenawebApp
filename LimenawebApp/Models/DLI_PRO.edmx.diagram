@@ -12,7 +12,6 @@
         <EntityTypeShape EntityType="DLI_PROModel.ITM1" Width="1.5" PointX="5.375" PointY="6.75" />
         <EntityTypeShape EntityType="DLI_PROModel.Dsd_Products" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="DLI_PROModel.View_dsd_suggestedinventory" Width="1.5" PointX="7.375" PointY="4.75" />
-        <EntityTypeShape EntityType="DLI_PROModel.OpenSalesOrders" Width="1.5" PointX="7.375" PointY="8.75" />
         <EntityTypeShape EntityType="DLI_PROModel.C_DROUTE" Width="1.5" PointX="9.375" PointY="0.75" />
         <EntityTypeShape EntityType="DLI_PROModel.C_HELPERS" Width="1.5" PointX="9.375" PointY="4.75" />
         <EntityTypeShape EntityType="DLI_PROModel.C_TRUCKS" Width="1.5" PointX="9.375" PointY="7.75" />
@@ -32,6 +31,7 @@
         <EntityTypeShape EntityType="DLI_PROModel.PlanningUoMInfo" Width="1.5" PointX="15.375" PointY="7.75" />
         <EntityTypeShape EntityType="DLI_PROModel.OBIN" Width="1.5" PointX="15.375" PointY="12.75" />
         <EntityTypeShape EntityType="DLI_PROModel.BI_Contact_Person" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="DLI_PROModel.OpenSalesOrders" Width="1.5" PointX="17.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

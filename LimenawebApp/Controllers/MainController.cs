@@ -534,7 +534,15 @@ namespace LimenawebApp.Controllers
                 ViewBag.activeuser = activeuser;
                 //FIN HEADER
                 //FILTROS VARIABLES
-    
+                ViewBag.showfreezermessage = "N";
+
+                if (activeuser.Departments.Contains("Operations") || activeuser.Roles.Contains("Super Admin")) {
+                    var freezersactive = (from a in dblim.Tb_logContainers where (a.inRoute == true) select a).Count();
+                    if (freezersactive > 0) {
+                        ViewBag.showfreezermessage = "Y";
+                    }
+                    
+                }
 
                 return View();
 

@@ -319,6 +319,28 @@
           <Property Name="ID_Company" Type="int" Nullable="false" />
           <Property Name="docNum_SAP" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="Tb_logContainers">
+          <Key>
+            <PropertyRef Name="ID_reg" />
+          </Key>
+          <Property Name="ID_reg" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_container" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Container" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Whs" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="AssignerUser" Type="varchar" MaxLength="3150" Nullable="false" />
+          <Property Name="ReceivedUser" Type="varchar" MaxLength="350" Nullable="false" />
+          <Property Name="DateAssigned" Type="datetime" Nullable="false" />
+          <Property Name="DateReceived" Type="datetime" Nullable="false" />
+          <Property Name="Barcode" Type="varchar" MaxLength="250" Nullable="false" />
+          <Property Name="Route" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Driver" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="Truck" Type="varchar" MaxLength="150" Nullable="false" />
+          <Property Name="inRoute" Type="bit" Nullable="false" />
+          <Property Name="ID_Route" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Comments" Type="varchar(max)" Nullable="false" />
+          <Property Name="Img" Type="varchar(max)" Nullable="false" />
+        </EntityType>
         <EntityType Name="Tb_NewCustomers">
           <Key>
             <PropertyRef Name="ID_customer" />
@@ -445,6 +467,9 @@
           <Property Name="Doc_key" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="Printed" Type="bit" Nullable="false" />
           <Property Name="Module" Type="varchar" MaxLength="150" />
+          <Property Name="Created_on" Type="datetime" />
+          <Property Name="Printed_on" Type="datetime" />
+          <Property Name="ID_user" Type="int" />
         </EntityType>
         <EntityType Name="Tb_PlanningSO">
           <Key>
@@ -657,6 +682,7 @@
           <EntitySet Name="Tb_CreditsRequest" EntityType="Self.Tb_CreditsRequest" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_InventoryDetailsTRDSD" EntityType="Self.Tb_InventoryDetailsTRDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_InventoryTRDSD" EntityType="Self.Tb_InventoryTRDSD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_logContainers" EntityType="Self.Tb_logContainers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_NewCustomers" EntityType="Self.Tb_NewCustomers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_OrdersDetailsDSD" EntityType="Self.Tb_OrdersDetailsDSD" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_OrdersDSD" EntityType="Self.Tb_OrdersDSD" Schema="dbo" store:Type="Tables" />
@@ -885,6 +911,7 @@
           <EntitySet Name="Inv_Projects_BinLoc" EntityType="dbLimenaModel.Inv_Projects_BinLoc" />
           <EntitySet Name="Inv_Projects_Task" EntityType="dbLimenaModel.Inv_Projects_Task" />
           <EntitySet Name="Inv_Project_products" EntityType="dbLimenaModel.Inv_Project_products" />
+          <EntitySet Name="Tb_logContainers" EntityType="dbLimenaModel.Tb_logContainers" />
         </EntityContainer>
         <EntityType Name="Tb_Alerts">
           <Key>
@@ -1241,6 +1268,9 @@
           <Property Name="Doc_key" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Printed" Type="Boolean" Nullable="false" />
           <Property Name="Module" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Created_on" Type="DateTime" Precision="3" />
+          <Property Name="Printed_on" Type="DateTime" Precision="3" />
+          <Property Name="ID_user" Type="Int32" />
         </EntityType>
         <EntityType Name="Tb_NewCustomers">
           <Key>
@@ -1414,6 +1444,28 @@
           <Property Name="ID_project" Type="Int32" Nullable="false" />
           <Property Name="Used" Type="Boolean" Nullable="false" />
           <Property Name="Bin_locations" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_logContainers">
+          <Key>
+            <PropertyRef Name="ID_reg" />
+          </Key>
+          <Property Name="ID_reg" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_container" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Container" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Whs" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="AssignerUser" Type="String" Nullable="false" MaxLength="3150" FixedLength="false" Unicode="false" />
+          <Property Name="ReceivedUser" Type="String" Nullable="false" MaxLength="350" FixedLength="false" Unicode="false" />
+          <Property Name="DateAssigned" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateReceived" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Barcode" Type="String" Nullable="false" MaxLength="250" FixedLength="false" Unicode="false" />
+          <Property Name="Route" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Driver" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="Truck" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="inRoute" Type="Boolean" Nullable="false" />
+          <Property Name="ID_Route" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Comments" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Img" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1824,6 +1876,9 @@
           <EntitySetMapping Name="Tb_planning_print">
             <EntityTypeMapping TypeName="dbLimenaModel.Tb_planning_print">
               <MappingFragment StoreEntitySet="Tb_planning_print">
+                <ScalarProperty Name="ID_user" ColumnName="ID_user" />
+                <ScalarProperty Name="Printed_on" ColumnName="Printed_on" />
+                <ScalarProperty Name="Created_on" ColumnName="Created_on" />
                 <ScalarProperty Name="Module" ColumnName="Module" />
                 <ScalarProperty Name="Printed" ColumnName="Printed" />
                 <ScalarProperty Name="Doc_key" ColumnName="Doc_key" />
@@ -2008,6 +2063,29 @@
                 <ScalarProperty Name="ItemName" ColumnName="ItemName" />
                 <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
                 <ScalarProperty Name="ID_detail" ColumnName="ID_detail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_logContainers">
+            <EntityTypeMapping TypeName="dbLimenaModel.Tb_logContainers">
+              <MappingFragment StoreEntitySet="Tb_logContainers">
+                <ScalarProperty Name="Img" ColumnName="Img" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ID_Route" ColumnName="ID_Route" />
+                <ScalarProperty Name="inRoute" ColumnName="inRoute" />
+                <ScalarProperty Name="Truck" ColumnName="Truck" />
+                <ScalarProperty Name="Driver" ColumnName="Driver" />
+                <ScalarProperty Name="Route" ColumnName="Route" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="DateReceived" ColumnName="DateReceived" />
+                <ScalarProperty Name="DateAssigned" ColumnName="DateAssigned" />
+                <ScalarProperty Name="ReceivedUser" ColumnName="ReceivedUser" />
+                <ScalarProperty Name="AssignerUser" ColumnName="AssignerUser" />
+                <ScalarProperty Name="Whs" ColumnName="Whs" />
+                <ScalarProperty Name="Container" ColumnName="Container" />
+                <ScalarProperty Name="ID_container" ColumnName="ID_container" />
+                <ScalarProperty Name="ID_reg" ColumnName="ID_reg" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

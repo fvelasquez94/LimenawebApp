@@ -1,0 +1,334 @@
+﻿@model LimenawebApp.Models.Payments.GetPayments_api
+@{
+    ViewBag.Title = "ReceivedPayment";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+
+    DateTime fecha = new DateTime(2000, 01, 01);
+    var ruta = "";
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Finance</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Received Payments</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Received Payments</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Finance.cshtml")
+
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_name">Search</label>
+                        <input id="filter_name" type="text" class="form-control" placeholder="Enter keyword">
+                    </div>
+                </div>
+                @*<div class="col-sm-auto">
+                        <div class="form-group">
+                            <label for="filter_buckets">Routes</label><br>
+                            <select id="filter_buckets" class="custom-select" style="width: 150px;">
+                                <option value="all">Any</option>
+                                <option value="S000474">ID - Route Name</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-auto">
+                        <div class="form-group">
+                            <label for="filter_assigned">Driver</label><br>
+                            <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                                <option value="all">Any</option>
+                                <option value="1">Driver 1</option>
+                                <option value="2">Driver 2</option>
+                                <option value="3">Driver 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-auto">
+                        <div class="form-group">
+                            <label for="filter_assigned">Status</label><br>
+                            <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                                <option value="all">Any</option>
+                                <option value="2">Finished</option>
+                                <option value="1">Waiting for Driver</option>
+                                <option value="3">Waiting for submit</option>
+                            </select>
+                        </div>
+                    </div>*@
+                <div class="col-sm-auto">
+                    <div class="form-group" style="width: 200px;">
+                        <label for="filter_date">Daterange</label>
+                        <input id="filter_date" type="text" class="form-control" placeholder="Range example" data-toggle="daterangepicker" data-daterangepicker-start-date="@Convert.ToDateTime(ViewBag.filtrofechastart).ToString("yyyy/MM/dd")" data-daterangepicker-end-date="@Convert.ToDateTime(ViewBag.filtrofechaend).ToString("yyyy/MM/dd")">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+            <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                <li class="nav-item">
+                    <a href="#tab-21" class="nav-link active" data-toggle="tab" role="tab" aria-controls="tab-21" aria-selected="true">
+                        <span class="nav-link__count">01</span>
+                        History
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#tab-22" class="nav-link" data-toggle="tab" role="tab" aria-controls="tab-22" aria-selected="false">
+                        <span class="nav-link__count">02</span>
+                        Checks
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#tab-23" class="nav-link" data-toggle="tab" role="tab" aria-controls="tab-23" aria-selected="false">
+                        <span class="nav-link__count">03</span>
+                        In research
+                    </a>
+                </li>
+            </ul>
+            <div class="card">
+                <div class="card-body tab-content">
+                    <div class="tab-pane active show fade" id="tab-21">
+                        @if (Model != null)
+    {
+        if (Model.data != null)
+        {
+
+
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="card">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Docnum</th>
+                                            <th>Date</th>
+                                            <th>CardCode</th>
+                                            <th>Payment Type</th>
+                                            <th>Sum Applied</th>
+                                            <th>Route</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.data)
+                    {
+                        <tr>
+                            <td>@item.docNumInv</td>
+                            <td>@item.docDate</td>
+                            <td>@item.cardCode</td>
+                            <td>@item.paymentType</td>
+                            <td>@item.sumApplied</td>
+                            <td>@item.idRoute</td>
+                            <td>
+                                @if (item.hasIssue == 1)
+            {<label class="badge badge-warning">In Research</label>}
+                                @if (item.webStatus == 0 && item.hasIssue == 0)
+            {<label class="badge badge-success">Received</label>}
+                                @if (item.webStatus == 1 && item.hasIssue == 0)
+            {<button class="btn btn-warning" onclick="evaluatecheck(@item.docEntry, @item.docEntryInv)">Waiting for funds</button>}
+                                @if (item.webStatus == 2 && item.hasIssue == 0)
+            {<label class="badge badge-success">Validated funds</label>}
+                                @if (item.webStatus == 3 && item.hasIssue == 0)
+            {<label class="badge badge-danger">Insufficient funds</label>}
+
+                            </td>
+                        </tr>
+}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+}
+else
+{
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+}
+
+
+}
+else
+{
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+}
+                    </div>
+                    <div class="tab-pane  show fade" id="tab-22">
+                        @if (Model != null)
+    {
+        if (Model.data != null)
+        {
+
+
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="card">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Docnum</th>
+                                            <th>Date</th>
+                                            <th>CardCode</th>
+                                            <th>Payment Type</th>
+                                            <th>Sum Applied</th>
+                                            <th>Route</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.data.Where(c => c.webStatus == 1 || c.webStatus == 2 || c.webStatus == 3))
+                                        {
+                        <tr>
+                            <td>@item.docNumInv</td>
+                            <td>@item.docDate</td>
+                            <td>@item.cardCode</td>
+                            <td>@item.paymentType</td>
+                            <td>@item.sumApplied</td>
+                            <td>@item.idRoute</td>
+                            <td>
+
+                                @if (item.webStatus == 1 && item.hasIssue == 0)
+    {<button class="btn btn-warning" onclick="evaluatecheck(@item.docEntry, @item.docEntryInv)">Waiting for funds</button>}
+                                @if (item.webStatus == 2 && item.hasIssue == 0)
+    {<label class="badge badge-success">Validated funds</label>}
+                                @if (item.webStatus == 3 && item.hasIssue == 0)
+    {<label class="badge badge-danger">Insufficient funds</label>}
+
+      
+
+
+                            </td>
+                        </tr>
+}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+}
+else
+{
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+}
+
+
+}
+else
+{
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+}
+                    </div>
+                    <div class="tab-pane  show fade" id="tab-23">
+                        @if (Model != null)
+    {
+        if (Model.data != null)
+        {
+
+
+
+                    <div class="row">
+
+                        <div class="col-md-12">
+                            <div class="card">
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>Docnum</th>
+                                            <th>Date</th>
+                                            <th>CardCode</th>
+                                            <th>Payment Type</th>
+                                            <th>Sum Applied</th>
+                                            <th>Route</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.data.Where(c => c.hasIssue == 1))
+                                        {
+                        <tr>
+                            <td>@item.docNumInv</td>
+                            <td>@item.docDate</td>
+                            <td>@item.cardCode</td>
+                            <td>@item.paymentType</td>
+                            <td>@item.sumApplied</td>
+                            <td>@item.idRoute</td>
+                            <td>
+                                @if (item.hasIssue == 1)
+    {<label class="badge badge-warning">In Research</label>}
+
+
+                            </td>
+                        </tr>
+}
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+}
+else
+{
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+}
+
+
+}
+else
+{
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+}
+                    </div>
+                </div>
+            </div>
+   
+
+
+
+
+</div>

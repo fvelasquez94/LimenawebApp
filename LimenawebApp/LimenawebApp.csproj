@@ -207,8 +207,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.79.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.79\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.96.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.96\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -239,12 +239,20 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\API\Cls_Authorizations.cs" />
+    <Compile Include="Controllers\API\Cls_Banks.cs" />
     <Compile Include="Controllers\API\Cls_Creditmemos.cs" />
+    <Compile Include="Controllers\API\Cls_Frezzers.cs" />
+    <Compile Include="Controllers\API\cls_invoices.cs" />
+    <Compile Include="Controllers\API\Cls_Journals.cs" />
+    <Compile Include="Controllers\API\cls_payments.cs" />
     <Compile Include="Controllers\API\Cls_Returnreasons.cs" />
     <Compile Include="Controllers\clsGeneral.cs" />
+    <Compile Include="Controllers\Commercial\Price_request\PricerequestController.cs" />
     <Compile Include="Controllers\DSDController.cs" />
     <Compile Include="Controllers\FinanceController.cs" />
     <Compile Include="Controllers\Finance\AuthorizationsController.cs" />
+    <Compile Include="Controllers\Finance\JournalController.cs" />
+    <Compile Include="Controllers\Finance\PaymentsController.cs" />
     <Compile Include="Controllers\FormsActionsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\InventoryController.cs" />
@@ -253,10 +261,12 @@
     <Compile Include="Controllers\ManagementController.cs" />
     <Compile Include="Controllers\CommercialController.cs" />
     <Compile Include="Controllers\OperationsController.cs" />
+    <Compile Include="Controllers\Operations\Cls_planning.cs" />
     <Compile Include="Controllers\Purchases\OTBController.cs" />
     <Compile Include="Controllers\Purchases\PurchasesController.cs" />
     <Compile Include="Controllers\Purchases\SOPController.cs" />
     <Compile Include="Controllers\ReportsController.cs" />
+    <Compile Include="Controllers\Session\Cls_alerts.cs" />
     <Compile Include="Controllers\Session\Cls_API.cs" />
     <Compile Include="Controllers\Session\Cls_cookies.cs" />
     <Compile Include="Controllers\Session\Cls_session.cs" />
@@ -386,6 +396,7 @@
     <Compile Include="Models\form_resource_type.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Frezzers\Mdl_Frezzers.cs" />
     <Compile Include="Models\Interna_DLI.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -406,6 +417,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Invoices\Invoices_api.cs" />
     <Compile Include="Models\Invoices_api\Mdl_Invoices.cs" />
     <Compile Include="Models\Inv_Projects.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -425,6 +437,7 @@
     <Compile Include="Models\ITT1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Journal\Mdl_Journal.cs" />
     <Compile Include="Models\Matriz_Formato.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
@@ -449,12 +462,17 @@
     <Compile Include="Models\OpenSalesOrders_DetailsUOM.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Operations\Mdl_planning.cs" />
     <Compile Include="Models\OSLP.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Payments\Mdl_Banks.cs" />
+    <Compile Include="Models\Payments\Mdl_Payments.cs" />
+    <Compile Include="Models\Payments\Mdl_PaymentsPOSTPUT.cs" />
     <Compile Include="Models\PlanningUoMInfo.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Price_request\Mdl_PriceChangeHistory.cs" />
     <Compile Include="Models\PurchaseData_byReps.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
@@ -488,6 +506,12 @@
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_genericDailyPaymentsCrossDock_Result.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_genericInvoiceV2_kit_Result.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\sp_genericInvoiceV2_Result.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\sp_genericInvoice_Result.cs">
@@ -541,6 +565,9 @@
     <Compile Include="Models\Tb_InventoryTRDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Tb_logContainers.cs">
+      <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Tb_MaestroPorcentajes.cs">
       <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
@@ -573,6 +600,9 @@
     </Compile>
     <Compile Include="Models\Tb_PreOrdersDSD.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Tb_registroBolsa.cs">
+      <DependentUpon>Interna_DLI.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Tb_Resources.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
@@ -623,6 +653,24 @@
       <DependentUpon>Inventory_DSD.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Invoces Nuevo Subreport.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Invoces Nuevo Subreport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Invoces Nuevo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Invoces Nuevo.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\InvocesNuevooriginal.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>InvocesNuevooriginal.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Invoice Storage Type %28RR%29.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -646,6 +694,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>rptMarketingActivity.rpt</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\rptRoadmaporiginal.cs">
+      <DependentUpon>rptRoadmaporiginal.rpt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <SubType>Component</SubType>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Reports\rptRoadmap.cs">
       <AutoGen>True</AutoGen>
@@ -1046,6 +1100,7 @@
     <Content Include="Content\appcontent\assets\vendor\amcharts\themes\light.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\themes\patterns.js" />
     <Content Include="Content\appcontent\assets\vendor\amcharts\xy.js" />
+    <Content Include="Content\appcontent\assets\vendor\barcode\barcode_freezer.js" />
     <Content Include="Content\appcontent\assets\vendor\barcode\barcode_scan.js" />
     <Content Include="Content\appcontent\assets\vendor\barcode\css\colors.css" />
     <Content Include="Content\appcontent\assets\vendor\barcode\css\fonts.css" />
@@ -1727,8 +1782,10 @@
     <Content Include="Content\appcontent\assets\vendor\weather-icons\font\weathericons-regular-webfont.svg" />
     <Content Include="Content\assets\css\app.css" />
     <Content Include="Content\assets\css\app.rtl.css" />
+    <Content Include="Content\assets\css\bootstrap.css" />
     <Content Include="Content\assets\css\choose.css" />
     <Content Include="Content\assets\css\choose.rtl.css" />
+    <Content Include="Content\assets\css\theme.css" />
     <Content Include="Content\assets\css\vendor-dropzone.css" />
     <Content Include="Content\assets\css\vendor-dropzone.rtl.css" />
     <Content Include="Content\assets\css\vendor-flatpickr-airbnb.css" />
@@ -1769,11 +1826,13 @@
     <Content Include="Content\assets\images\choose\demo6.png" />
     <Content Include="Content\assets\images\choose\demo7.png" />
     <Content Include="Content\assets\images\choose\demo8.png" />
+    <Content Include="Content\assets\images\choose\freezersReceive.png" />
     <Content Include="Content\assets\images\choose\header.png" />
     <Content Include="Content\assets\images\dashboard\authorizations.jpg" />
     <Content Include="Content\assets\images\dashboard\credits.jpg" />
     <Content Include="Content\assets\images\dashboard\customercare.png" />
     <Content Include="Content\assets\images\dashboard\marketingact.jpg" />
+    <Content Include="Content\assets\images\dashboard\opesalesorders.png" />
     <Content Include="Content\assets\images\dashboard\paymentfinance.jpg" />
     <Content Include="Content\assets\images\dashboard\paymentfinance.png" />
     <Content Include="Content\assets\images\dashboard\planning.jpg" />
@@ -1790,7 +1849,12 @@
     <Content Include="Content\assets\images\frontted-logo-white.svg" />
     <Content Include="Content\assets\images\login\alexandre-godreau-431553-unsplash.jpg" />
     <Content Include="Content\assets\images\logos\paypal.svg" />
+    <Content Include="Content\assets\images\marker\bars.png" />
     <Content Include="Content\assets\images\marker\blue.png" />
+    <Content Include="Content\assets\images\marker\congelador.png" />
+    <Content Include="Content\assets\images\marker\delivery-man.png" />
+    <Content Include="Content\assets\images\marker\driver.png" />
+    <Content Include="Content\assets\images\marker\truck.png" />
     <Content Include="Content\assets\images\stack-logo-blue.svg" />
     <Content Include="Content\assets\images\stack-logo-white.svg" />
     <Content Include="Content\assets\images\stories\256_rsz_clem-onojeghuo-193397-unsplash.jpg" />
@@ -1801,6 +1865,9 @@
     <Content Include="Content\assets\js\app-icons.js" />
     <Content Include="Content\assets\js\app-settings.js" />
     <Content Include="Content\assets\js\app.js" />
+    <Content Include="Content\assets\js\app\calendar - Copy.js" />
+    <Content Include="Content\assets\js\app\calendar.js" />
+    <Content Include="Content\assets\js\app\calendarbitacoras.js" />
     <Content Include="Content\assets\js\chartjs-rounded-bar.js" />
     <Content Include="Content\assets\js\charts.js" />
     <Content Include="Content\assets\js\check-selected-row.js" />
@@ -1812,12 +1879,17 @@
     <Content Include="Content\assets\js\flatpickr.js" />
     <Content Include="Content\assets\js\fullcalendar.js" />
     <Content Include="Content\assets\js\ion-rangeslider.js" />
+    <Content Include="Content\assets\js\lazyload.config.js" />
+    <Content Include="Content\assets\js\lazyload.js" />
+    <Content Include="Content\assets\js\lazyload2.config.js" />
     <Content Include="Content\assets\js\list.js" />
     <Content Include="Content\assets\js\page.analytics.js" />
     <Content Include="Content\assets\js\page.dashboard.js" />
     <Content Include="Content\assets\js\page.staff.js" />
     <Content Include="Content\assets\js\page.ui-charts.js" />
     <Content Include="Content\assets\js\page.ui-vector-maps.js" />
+    <Content Include="Content\assets\js\plugin.js" />
+    <Content Include="Content\assets\js\plugins\notie.js" />
     <Content Include="Content\assets\js\preloader.js" />
     <Content Include="Content\assets\js\quill.js" />
     <Content Include="Content\assets\js\select2.js" />
@@ -1825,6 +1897,7 @@
     <Content Include="Content\assets\js\sidebar-mini.js" />
     <Content Include="Content\assets\js\sidebar.js" />
     <Content Include="Content\assets\js\stack-app-settings-mixin.js" />
+    <Content Include="Content\assets\js\theme.js" />
     <Content Include="Content\assets\js\toastr.js" />
     <Content Include="Content\assets\js\toggle-check-all.js" />
     <Content Include="Content\assets\js\vector-maps.js" />
@@ -1890,6 +1963,16 @@
     <Content Include="Content\assets\vendor\toastr.min.css" />
     <Content Include="Content\assets\vendor\toastr.min.js" />
     <Content Include="Content\assets\vendor\vue.min.js" />
+    <Content Include="Content\assets_login\css\bootstrap.css" />
+    <Content Include="Content\assets_login\css\custom.css" />
+    <Content Include="Content\assets_login\css\flickity.css" />
+    <Content Include="Content\assets_login\css\iconsmind.css" />
+    <Content Include="Content\assets_login\css\socicon.css" />
+    <Content Include="Content\assets_login\css\theme.css" />
+    <Content Include="Content\assets_login\img\inner-7.jpg" />
+    <Content Include="Content\assets_login\img\landing-5.jpg" />
+    <Content Include="Content\assets_login\js\jquery-3.1.1.min.js" />
+    <Content Include="Content\assets_login\js\scripts.js" />
     <Content Include="Content\images\Logo_watermark.png" />
     <Content Include="Content\landingpage\css\dlimena.webflow.css" />
     <Content Include="Content\landingpage\css\ionicons.css" />
@@ -2074,6 +2157,93 @@
     <Content Include="Content\landingpage\images\WhyUs-MissionSVG.svg" />
     <Content Include="Content\landingpage\images\WhyUs-TeamSVG.svg" />
     <Content Include="Content\landingpage\js\webflow.js" />
+    <Content Include="Content\libs\bootstrap\dist\css\bootstrap.min.css" />
+    <Content Include="Content\libs\bootstrap\dist\js\bootstrap.min.js" />
+    <Content Include="Content\libs\fullcalendar\dist\fullcalendar.css" />
+    <Content Include="Content\libs\fullcalendar\dist\fullcalendar.js" />
+    <Content Include="Content\libs\fullcalendar\dist\fullcalendar.min.css" />
+    <Content Include="Content\libs\fullcalendar\dist\fullcalendar.min.js" />
+    <Content Include="Content\libs\fullcalendar\dist\fullcalendar.print.css" />
+    <Content Include="Content\libs\fullcalendar\dist\fullcalendar.print.min.css" />
+    <Content Include="Content\libs\fullcalendar\dist\gcal.js" />
+    <Content Include="Content\libs\fullcalendar\dist\gcal.min.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale-all.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\af.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar-dz.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar-kw.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar-ly.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar-ma.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar-sa.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar-tn.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ar.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\bg.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ca.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\cs.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\da.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\de-at.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\de-ch.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\de.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\el.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\en-au.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\en-ca.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\en-gb.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\en-ie.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\en-nz.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\es-do.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\es.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\et.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\eu.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\fa.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\fi.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\fr-ca.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\fr-ch.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\fr.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\gl.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\he.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\hi.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\hr.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\hu.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\id.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\is.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\it.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ja.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\kk.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ko.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\lb.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\lt.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\lv.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\mk.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ms-my.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ms.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\nb.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\nl-be.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\nl.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\nn.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\pl.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\pt-br.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\pt.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ro.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\ru.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\sk.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\sl.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\sr-cyrl.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\sr.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\sv.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\th.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\tr.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\uk.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\vi.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\zh-cn.js" />
+    <Content Include="Content\libs\fullcalendar\dist\locale\zh-tw.js" />
+    <Content Include="Content\libs\jquery\dist\jquery.min.js" />
+    <Content Include="Content\libs\jquery\dist\jquery.slim.min.js" />
+    <Content Include="Content\libs\moment\min\locales.js" />
+    <Content Include="Content\libs\moment\min\locales.min.js" />
+    <Content Include="Content\libs\moment\min\moment-with-locales.js" />
+    <Content Include="Content\libs\moment\min\moment-with-locales.min.js" />
+    <Content Include="Content\libs\moment\min\moment.min.js" />
+    <Content Include="Content\libs\notie\dist\notie.min.js" />
+    <Content Include="Content\libs\scrollreveal\dist\scrollreveal.min.js" />
     <Content Include="Content\login\css\main.css" />
     <Content Include="Content\login\css\style.css" />
     <Content Include="Content\login\css\stylespinner.css" />
@@ -15328,6 +15498,96 @@
     <Content Include="Content\assets\images\choose\.DS_Store" />
     <Content Include="Content\assets\vendor\bootstrap.min.js.map" />
     <Content Include="Content\assets\vendor\popper.min.js.map" />
+    <Content Include="Content\libs\bootstrap\scss\bootstrap-grid.scss" />
+    <Content Include="Content\libs\bootstrap\scss\bootstrap-reboot.scss" />
+    <Content Include="Content\libs\bootstrap\scss\bootstrap.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_alert.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_background-variant.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_badge.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_border-radius.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_box-shadow.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_breakpoints.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_buttons.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_caret.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_clearfix.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_deprecate.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_float.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_forms.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_gradients.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_grid-framework.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_grid.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_hover.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_image.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_list-group.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_lists.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_nav-divider.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_navbar-align.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_pagination.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_reset-text.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_resize.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_screen-reader.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_size.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_table-row.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_text-emphasis.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_text-hide.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_text-truncate.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_transition.scss" />
+    <Content Include="Content\libs\bootstrap\scss\mixins\_visibility.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_align.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_background.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_borders.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_clearfix.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_display.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_embed.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_flex.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_float.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_overflow.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_position.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_screenreaders.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_shadows.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_sizing.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_spacing.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_stretched-link.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_text.scss" />
+    <Content Include="Content\libs\bootstrap\scss\utilities\_visibility.scss" />
+    <Content Include="Content\libs\bootstrap\scss\vendor\_rfs.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_alert.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_badge.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_breadcrumb.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_button-group.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_buttons.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_card.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_carousel.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_close.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_code.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_custom-forms.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_dropdown.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_forms.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_functions.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_grid.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_images.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_input-group.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_jumbotron.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_list-group.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_media.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_mixins.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_modal.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_nav.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_navbar.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_pagination.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_popover.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_print.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_progress.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_reboot.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_root.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_spinners.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_tables.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_toasts.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_tooltip.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_transitions.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_type.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_utilities.scss" />
+    <Content Include="Content\libs\bootstrap\scss\_variables.scss" />
     <None Include="Models\Reports.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -15396,7 +15656,7 @@
     <Content Include="Views\Invoices\Planning.cshtml" />
     <Content Include="Views\Shared\Planning_calendarScript.cshtml" />
     <Content Include="Views\Invoices\QualityControl.cshtml" />
-    <Content Include="Views\Shared\QualityControl_Script.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\QualityControl_Script.cshtml" />
     <Content Include="Views\Invoices\QualityControl_planning.cshtml" />
     <Content Include="Views\Main\Dashboard_operations.cshtml" />
     <Content Include="Views\Main\Dashboard_dsd.cshtml" />
@@ -15505,6 +15765,41 @@
     <Content Include="Views\OTB\new_purchaseData.cshtml" />
     <Content Include="Views\OTB\edit_purchaseData.cshtml" />
     <Content Include="Views\Shared\New_design\Scripts\ReceiveCreditsScript.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\QualityControl_main.cshtml" />
+    <Content Include="Views\Shared\New_design\Menus\Operations.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\QualityControlmain_Script.cshtml" />
+    <Content Include="Views\Shared\QualityControl_Script.cshtml" />
+    <Content Include="Views\Invoices\Freezers.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\FreezerScripts.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\FreezerDashboardScripts.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PlanningScripts.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PlanningOrder_Scripts.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\QualityControlStorage_Script.cshtml" />
+    <Content Include="Views\Pricerequest\Requesthistory.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\RequesthistoryScript.cshtml" />
+    <Content Include="Views\Payments\ReceivePayment.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PaymentsScript.cshtml" />
+    <Content Include="Views\Emails\email_creditrequestDenied.cshtml" />
+    <Content Include="Views\Invoices\PlanningRoutes.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PlanningRoutesScripts.cshtml" />
+    <Content Include="Views\Invoices\Route_details.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PlanningRoutes_calendarScript.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\ReceivedCreditsScript.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\ReceivedPayment.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\ReceivedPaymentsScript.cshtml" />
+    <Content Include="Views\Payments\ReceivedPayment.cshtml" />
+    <Content Include="Views\Journal\Balance_control.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\ReceivedCredits.cshtml" />
+    <Content Include="Views\Shared\_LayoutLogin.cshtml" />
+    <Content Include="Views\Home\App.cshtml" />
+    <Content Include="Views\Authorizations\checkAuthorization.cshtml" />
+    <Content Include="Views\Authorizations\AuthMessage.cshtml" />
+    <Content Include="Views\Commercial\Prices_requestTemp.cshtml" />
+    <Content Include="Views\Commercial\Prices_requestpdoTemp.cshtml" />
+    <Content Include="Views\Payments\ReceivePayments.cshtml" />
+    <Content Include="Views\Shared\New_design\Modals\ReceivePayments.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PaymentsnewScript.cshtml" />
+    <Content Include="Views\Authorizations\AuthAlert.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -15515,6 +15810,7 @@
     <Folder Include="Content\images\temp_sign\" />
     <Folder Include="Reports\pdf\" />
     <Folder Include="Views\FormsActions\" />
+    <Folder Include="Views\Shared\New_login\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -15546,6 +15842,18 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Inventory_DSD.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Invoces Nuevo Subreport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Invoces Nuevo Subreport.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Invoces Nuevo.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Invoces Nuevo.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\InvocesNuevooriginal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>InvocesNuevooriginal.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Invoice Storage Type %28RR%29.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Invoice Storage Type %28RR%29.cs</LastGenOutput>
@@ -15561,6 +15869,10 @@
     <EmbeddedResource Include="Reports\rptMarketingActivity.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptMarketingActivity.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptRoadmaporiginal.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptRoadmaporiginal.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\rptRoadmap.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

@@ -2,52 +2,39 @@
 using CrystalDecisions.Shared;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using LimenawebApp.Controllers.API;
+using LimenawebApp.Controllers.Operations;
+using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
+using LimenawebApp.Models.Invoices;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Transactions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
+using static LimenawebApp.Models.Operations.Mdl_planning;
+
 namespace LimenawebApp.Controllers
 {
     public class InvoicesController : Controller
     {
         private dbLimenaEntities dblim = new dbLimenaEntities();
         private DLI_PROEntities dlipro = new DLI_PROEntities();
-
+        private Cls_session cls_session = new Cls_session();
+        private Cls_Frezzers cls_Frezzers = new Cls_Frezzers();
+        private Cls_planning cls_planning = new Cls_planning();
+        private cls_invoices cls_invoices = new cls_invoices();
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
         // GET: Invoices
-        public class Routes_calendar
-        {
-            public string title { get; set; }
-            public string url { get; set; }
-            public string start { get; set; }
-            public string route_leader { get; set; }
-            public string className { get; set; }
-            public string driver { get; set; }
-            public string truck { get; set; }
-            public string departure { get; set; }
-            public string amount { get; set; }
-            public string orderscount { get; set; }
-            public string customerscount { get; set; }
-            public string isfinished { get; set; }
-            public string extra { get; set; }
-            public string totalEach { get; set; }
-            public string totalCase { get; set; }
-            public string totalPack { get; set; }
-            public string totalLbs { get; set; }
-            public string AVGEach { get; set; }
-            public string Warehouse { get; set; }
-            public string driver_WHS { get; set; }
-            public string truck_WHS { get; set; }
-        }
+
         public class orderSO
         {
             public int sort { get; set; }
@@ -55,29 +42,28 @@ namespace LimenawebApp.Controllers
             public string SO { get; set; }
             public string comment { get; set; }
         }
+
+
         public ActionResult Planning_order(int id)
         {
-            if (generalClass.checkSession())
+            if (cls_session.checkSession())
             {
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
-                //PAGINAS ACTIVAS
+                //ACTIVE PAGES
                 ViewData["Menu"] = "Operations";
-                ViewData["Page"] = "Invoices";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "drop3";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                ViewData["Page"] = "Planning";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
                 //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
                 var company_bodega = "0";
                 if (activeuser.ID_Company == 1)
@@ -90,12 +76,24 @@ namespace LimenawebApp.Controllers
                 }
 
                 var orders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id && a.Warehouse==company_bodega) select a).OrderBy(a => a.query3).ToList();
-                ViewBag.orders = orders;
+     
                 //FIN HEADER
+                DateTime filterdate = DateTime.Today.AddDays(-31);
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.SODate > filterdate && obj.WareHouse==company_bodega) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
 
+                ViewBag.opensalesOrders = lstOpenSales;
                 ViewBag.id_route = id;
+                List<Invoices_api> invoices = new List<Invoices_api>();
+                var apiinvoices = cls_invoices.GetInvoices("", "", "",8,false, null, null, false);
+                if (apiinvoices != null) {
+                    if (apiinvoices.data != null && apiinvoices.data.Count > 0) {
+                        invoices = apiinvoices.data;
+                    }
+                }
 
-                return View();
+                ViewBag.invoices = invoices;
+
+                return View(orders);
 
             }
             else
@@ -121,216 +119,222 @@ namespace LimenawebApp.Controllers
             return rv;
         }
 
-        public ActionResult Planning()
+        public ActionResult Planning(string whssel,string fstartd, string fendd)
         {
-            if (generalClass.checkSession())
+            if (cls_session.checkSession())
             {
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
-                //PAGINAS ACTIVAS
+                //ACTIVE PAGES
                 ViewData["Menu"] = "Operations";
-                ViewData["Page"] = "Invoices";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "drop3";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                ViewData["Page"] = "Planning";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-
-
-                var company_bodega = "0";
-                if (activeuser.ID_Company == 1) {
-                    company_bodega = "01";
-                }
-                else if (activeuser.ID_Company == 2)
-                {
-                    company_bodega = "02";
-                }
-
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
                 DateTime filtrostartdate;
                 DateTime filtroenddate;
-
-                //filtros de fecha //SEMANAL
+                ////filtros de fecha (SEMANAL 2 semanas por la planeacion de Viernes a Lunes)
                 var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
-                var saturday = sunday.AddDays(6).AddHours(23);
+                var saturday = sunday.AddDays(13).AddHours(23);
                 //filtros de fecha //MENSUAL
                 //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
                 //var saturday = sunday.AddMonths(1).AddDays(-1);
-                //FILTROS**************
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
 
-                filtrostartdate = sunday;
-                filtroenddate = saturday;
-                //FIN FILTROS*******************
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                ////////
 
-                ///////////////////////////////
-                List<Tb_Planning> rutaslst = new List<Tb_Planning>();
-                //Nuevo filtro por bodega
-
-                //si es limena podremos ver las rutas de otras pero minimizadas
-                if (company_bodega == "01")
-                {
-                    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
-                    //verificamos si hay rutas maestras deKY
-
-                    foreach (DateTime date in GetDateRange(filtrostartdate, filtroenddate))
+                var company_bodega = "0";
+                if (whssel == null || whssel == "") {
+             
+                    if (activeuser.ID_Company == 1)
                     {
-                        var date23h = date.AddHours(23);
-
-                        var existeMasterRoute= (from a in dblim.Tb_Planning where ((a.Departure >= date && a.Departure <=date23h) && a.Warehouse != company_bodega) select a).Take(1).ToList();
-                        if (existeMasterRoute.Count > 0) {
-                            rutaslst.AddRange(existeMasterRoute);
-                        }
+                        company_bodega = "01";
                     }
-                    //
+                    else if (activeuser.ID_Company == 2)
+                    {
+                        company_bodega = "02";
+                    }
                 }
                 else {
-                    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
+                    company_bodega = whssel;
                 }
+
+
+                ///////////////////////////////
+                //List<Tb_Planning> rutaslst = new List<Tb_Planning>();
+                //Nuevo filtro por bodega
+                List<Routes_calendarPlanning> rutas = new List<Routes_calendarPlanning>();
+                //si es limena podremos ver las rutas de otras pero minimizadas
+                //if (company_bodega == "01")
+                //{
+                    rutas = cls_planning.GetRoutes(company_bodega, filtrostartdate, filtroenddate);
+                    //rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
+                    ////verificamos si hay rutas maestras deKY
+
+                    //foreach (DateTime date in GetDateRange(filtrostartdate, filtroenddate))
+                    //{
+                    //    var date23h = date.AddHours(23);
+
+                    //    var existeMasterRoute= (from a in dblim.Tb_Planning where ((a.Departure >= date && a.Departure <=date23h) && a.Warehouse != company_bodega) select a).Take(1).ToList();
+                    //    if (existeMasterRoute.Count > 0) {
+                    //        rutaslst.AddRange(existeMasterRoute);
+                    //    }
+                    //}
+                    ////
+                //}
+                //else {
+                //    rutaslst = (from a in dblim.Tb_Planning where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega) select a).ToList();
+                //}
                 
 
-                var rtids = rutaslst.Select(c => c.ID_Route).ToArray();
-                //Cargamos todos los datos maestros a utilizar
-                //Nuevo filtro por bodega
-                var solist = (from j in dblim.Tb_PlanningSO where (rtids.Contains(j.ID_Route)) select new { IDinterno = j.ID_salesorder, SAPDOC = j.SAP_docnum, IDRoute=j.ID_Route, amount=j.Amount, customerName=j.Customer_name }).ToList();
-                var solMaestro = solist.Select(c => c.IDinterno).ToArray();
-                //Nuevo filtro por bodega(AQUI NO APLICAR)
-                var detallesMaestroSo = (from f in dblim.Tb_PlanningSO_details where (solMaestro.Contains(f.ID_salesorder)) select f).ToList();
+                //var rtids = rutaslst.Select(c => c.ID_Route).ToArray();
+                ////Cargamos todos los datos maestros a utilizar
+                ////Nuevo filtro por bodega
+                //var solist = (from j in dblim.Tb_PlanningSO where (rtids.Contains(j.ID_Route)) select new { IDinterno = j.ID_salesorder, SAPDOC = j.SAP_docnum, IDRoute=j.ID_Route, amount=j.Amount, customerName=j.Customer_name }).ToList();
+                //var solMaestro = solist.Select(c => c.IDinterno).ToArray();
+                ////Nuevo filtro por bodega(AQUI NO APLICAR)
+                //var detallesMaestroSo = (from f in dblim.Tb_PlanningSO_details where (solMaestro.Contains(f.ID_salesorder)) select f).ToList();
 
-                List<Routes_calendar> rutas = new List<Routes_calendar>();
+      
 
-                foreach (var item in rutaslst)
-                {
-                    Routes_calendar rt = new Routes_calendar();
+                //foreach (var item in rutaslst)
+                //{
+                //    Routes_calendar rt = new Routes_calendar();
 
-                    rt.title = item.ID_Route + " - " + item.Route_name;
-                    rt.url = "";
-                    rt.start = item.Departure.ToString("yyyy-MM-dd");
-                    //rt.end = item.Departure.AddDays(1).ToString("yyyy-MM-dd");
-                    rt.route_leader = item.Routeleader_name.ToUpper();
-                    rt.className = ".fc-event";
-                    rt.driver = item.Driver_name.ToUpper();
-                    rt.driver_WHS = item.Driver_name_whs.ToUpper();
-                    rt.truck = item.Truck_name;
-                    rt.truck_WHS = item.Truck_name_whs;
-                    rt.departure = item.Departure.ToShortTimeString();
-                    rt.Warehouse = item.Warehouse;
-                    try {
-                        var extra = (from a in dblim.Tb_Planning_extra where (a.ID_Route == item.ID_Route) select a);
-                        if (extra.Count() > 0) {
-                            rt.extra = extra.Sum(x => x.Value).ToString();
-                        }
-                        else
-                        {
-                            rt.extra = "0.00";
+                //    rt.title = item.ID_Route + " - " + item.Route_name;
+                //    rt.url = "";
+                //    rt.start = item.Departure.ToString("yyyy-MM-dd");
+                //    //rt.end = item.Departure.AddDays(1).ToString("yyyy-MM-dd");
+                //    rt.route_leader = item.Routeleader_name.ToUpper();
+                //    rt.className = ".fc-event";
+                //    rt.driver = item.Driver_name.ToUpper();
+                //    rt.driver_WHS = item.Driver_name_whs.ToUpper();
+                //    rt.truck = item.Truck_name;
+                //    rt.truck_WHS = item.Truck_name_whs;
+                //    rt.departure = item.Departure.ToShortTimeString();
+                //    rt.Warehouse = item.Warehouse;
+                //    try {
+                //        var extra = (from a in dblim.Tb_Planning_extra where (a.ID_Route == item.ID_Route) select a);
+                //        if (extra.Count() > 0) {
+                //            rt.extra = extra.Sum(x => x.Value).ToString();
+                //        }
+                //        else
+                //        {
+                //            rt.extra = "0.00";
 
-                        }
+                //        }
 
-                    }
-                    catch {
-                        rt.extra = "0.00";
-                    }
-
-
-                    //INFO UOM
-                    var listafinalSO = solist.Where(c => c.IDRoute == item.ID_Route).ToList();
-                    var sol = listafinalSO.Select(c => c.IDinterno).ToArray();
-                    //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
-                    var detallesSo = (from f in detallesMaestroSo where (sol.Contains(f.ID_salesorder)) select f).ToList();
-
-                    var totalCantEach = 0;
-                    var totalCantCases = 0;
-                    var totalCantPack = 0;
-                    var totalCantLbs = 0;
-                    decimal promedioEachxCases = 0;
-                    //Para calcular el promedio lo hacemos diviendo
-                    try
-                    {
-                        if (detallesSo.Count() > 0)
-                        {
-                            totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
-                            totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
-                            totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
-                            totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
-
-                            foreach (var soitem in listafinalSO)
-                            {
-                                //devolvemos ID externo
-                                var docnum = Convert.ToInt32(soitem.SAPDOC);
-
-                                //Devolvemos todos los detalles(itemcode) de esa SO
-                                var itemscode = detallesSo.Where(c => c.ID_salesorder == soitem.IDinterno).Select(c => c.ItemCode).ToArray();
-
-                                //Buscamos en la vista creada 9/24/2019
-                                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity >0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
-
-                                if (sumatotal > 0 && sumatotal != null)
-                                {
-                                    promedioEachxCases += Convert.ToDecimal(sumatotal);
-                                }
-
-                            }
-                        }
-                        else
-                        {
-                            totalCantEach = 0;
-                            totalCantCases = 0;
-                            totalCantPack = 0;
-                            totalCantLbs = 0;
-                            promedioEachxCases = 0;
-
-                        }
-                    }
-                    catch
-                    {
-                        totalCantEach = 0;
-                        totalCantCases = 0;
-                        totalCantPack = 0;
-                        totalCantLbs = 0;
-                        promedioEachxCases = 0;
-                    }
-                    ///
-
-                    rt.totalEach = totalCantEach.ToString();
-                    rt.totalCase = totalCantCases.ToString();
-                    rt.totalPack = totalCantPack.ToString();
-                    rt.totalLbs = totalCantLbs.ToString();
-                    rt.AVGEach = promedioEachxCases.ToString();
+                //    }
+                //    catch {
+                //        rt.extra = "0.00";
+                //    }
 
 
+                //    //INFO UOM
+                //    var listafinalSO = solist.Where(c => c.IDRoute == item.ID_Route).ToList();
+                //    var sol = listafinalSO.Select(c => c.IDinterno).ToArray();
+                //    //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+                //    var detallesSo = (from f in detallesMaestroSo where (sol.Contains(f.ID_salesorder)) select f).ToList();
+
+                //    var totalCantEach = 0;
+                //    var totalCantCases = 0;
+                //    var totalCantPack = 0;
+                //    var totalCantLbs = 0;
+                //    decimal promedioEachxCases = 0;
+                //    //Para calcular el promedio lo hacemos diviendo
+                //    try
+                //    {
+                //        if (detallesSo.Count() > 0)
+                //        {
+                //            totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
+                //            totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
+                //            totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
+                //            totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
+
+                //            foreach (var soitem in listafinalSO)
+                //            {
+                //                //devolvemos ID externo
+                //                var docnum = Convert.ToInt32(soitem.SAPDOC);
+
+                //                //Devolvemos todos los detalles(itemcode) de esa SO
+                //                var itemscode = detallesSo.Where(c => c.ID_salesorder == soitem.IDinterno).Select(c => c.ItemCode).ToArray();
+
+                //                //Buscamos en la vista creada 9/24/2019
+                //                var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity >0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
+
+                //                if (sumatotal > 0 && sumatotal != null)
+                //                {
+                //                    promedioEachxCases += Convert.ToDecimal(sumatotal);
+                //                }
+
+                //            }
+                //        }
+                //        else
+                //        {
+                //            totalCantEach = 0;
+                //            totalCantCases = 0;
+                //            totalCantPack = 0;
+                //            totalCantLbs = 0;
+                //            promedioEachxCases = 0;
+
+                //        }
+                //    }
+                //    catch
+                //    {
+                //        totalCantEach = 0;
+                //        totalCantCases = 0;
+                //        totalCantPack = 0;
+                //        totalCantLbs = 0;
+                //        promedioEachxCases = 0;
+                //    }
+                //    ///
+
+                //    rt.totalEach = totalCantEach.ToString();
+                //    rt.totalCase = totalCantCases.ToString();
+                //    rt.totalPack = totalCantPack.ToString();
+                //    rt.totalLbs = totalCantLbs.ToString();
+                //    rt.AVGEach = promedioEachxCases.ToString();
 
 
-                    if (item.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
 
-                    var sum = (from e in solist where (e.IDRoute == item.ID_Route) select e);
-                    if (sum != null)
-                    {
-                        try
-                        {
-                            rt.amount = sum.Select(c => c.amount).Sum().ToString();
-                        }
-                        catch {
-                            rt.amount = "0.0";
-                        }
 
-                        rt.customerscount = sum.Select(c => c.customerName).Distinct().Count().ToString();
-                        rt.orderscount = sum.Count().ToString();
-                    }
-                    else
-                    {
-                        rt.amount = "0.0";
-                        rt.customerscount = "";
-                        rt.orderscount = "";
-                    }
+                //    if (item.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
 
-                    rutas.Add(rt);
-                }
+                //    var sum = (from e in solist where (e.IDRoute == item.ID_Route) select e);
+                //    if (sum != null)
+                //    {
+                //        try
+                //        {
+                //            rt.amount = sum.Select(c => c.amount).Sum().ToString();
+                //        }
+                //        catch {
+                //            rt.amount = "0.0";
+                //        }
+
+                //        rt.customerscount = sum.Select(c => c.customerName).Distinct().Count().ToString();
+                //        rt.orderscount = sum.Count().ToString();
+                //    }
+                //    else
+                //    {
+                //        rt.amount = "0.0";
+                //        rt.customerscount = "";
+                //        rt.orderscount = "";
+                //    }
+
+                //    rutas.Add(rt);
+                //}
                 JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
                 string result = javaScriptSerializer.Serialize(rutas.ToArray());
                 ViewBag.calroutes = result;
@@ -430,6 +434,169 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+        public ActionResult PlanningRoutes(string whssel, string fstartd, string fendd)
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Planning";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                ////filtros de fecha (SEMANAL 2 semanas por la planeacion de Viernes a Lunes)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(13).AddHours(23);
+                //filtros de fecha //MENSUAL
+                //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                //var saturday = sunday.AddMonths(1).AddDays(-1);
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                ////////
+
+                var company_bodega = "0";
+                if (whssel == null || whssel == "")
+                {
+
+                    if (activeuser.ID_Company == 1)
+                    {
+                        company_bodega = "01";
+                    }
+                    else if (activeuser.ID_Company == 2)
+                    {
+                        company_bodega = "02";
+                    }
+                }
+                else
+                {
+                    company_bodega = whssel;
+                }
+
+
+                ///////////////////////////////
+                //List<Tb_Planning> rutaslst = new List<Tb_Planning>();
+                //Nuevo filtro por bodega
+                List<Routes_calendarPlanning> rutas = new List<Routes_calendarPlanning>();
+
+                rutas = cls_planning.GetRoutes(company_bodega, filtrostartdate, filtroenddate);
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result = javaScriptSerializer.Serialize(rutas.ToArray());
+                ViewBag.calroutes = result;
+                ///
+
+                //SELECTS
+
+                var drivers = dlipro.C_DRIVERS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListDrivers = new ArrayList();
+                myArrListDrivers.AddRange((from p in drivers
+                                           select new
+                                           {
+                                               id = p.Code,
+                                               text = p.Name.ToUpper().Replace("'", ""),
+                                           }).ToList());
+
+                ViewBag.drivers = JsonConvert.SerializeObject(myArrListDrivers);
+
+
+
+                //DRIVERS OTRAS BODEGAS
+                var driversOTROS = dlipro.C_DRIVERS.Where(a => a.U_Whs != company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListDriversOTROS = new ArrayList();
+                myArrListDriversOTROS.AddRange((from p in driversOTROS
+                                                select new
+                                                {
+                                                    id = p.Code,
+                                                    text = p.Name.ToUpper().Replace("'", ""),
+                                                }).ToList());
+
+                ViewBag.driversOtros = JsonConvert.SerializeObject(myArrListDriversOTROS);
+
+
+                //LISTADO DE Routes Leader
+                var routeleader = dlipro.C_HELPERS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListrouteleader = new ArrayList();
+                myArrListrouteleader.AddRange((from p in routeleader
+                                               select new
+                                               {
+                                                   id = p.Code,
+                                                   text = p.Name.ToUpper().Replace("'", ""),
+                                               }).ToList());
+
+                ViewBag.routeleaders = JsonConvert.SerializeObject(myArrListrouteleader);
+                //LISTADO DE Trucks
+                var trucks = dlipro.C_TRUCKS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListtruck = new ArrayList();
+                myArrListtruck.AddRange((from p in trucks
+                                         select new
+                                         {
+                                             id = p.Code,
+                                             text = p.Name.ToUpper().Replace("'", ""),
+                                         }).ToList());
+
+                ViewBag.trucks = JsonConvert.SerializeObject(myArrListtruck);
+
+                var trucksOTRASBODEGAS = dlipro.C_TRUCKS.Where(a => a.U_Whs != company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListtruckOTRAS = new ArrayList();
+                myArrListtruckOTRAS.AddRange((from p in trucksOTRASBODEGAS
+                                              select new
+                                              {
+                                                  id = p.Code,
+                                                  text = p.Name.ToUpper().Replace("'", ""),
+                                              }).ToList());
+
+                ViewBag.trucksOtros = JsonConvert.SerializeObject(myArrListtruckOTRAS);
+
+                //LISTADO DE Rutas
+                var mainroutes = dlipro.C_DROUTE.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListmainroutes = new ArrayList();
+                myArrListmainroutes.AddRange((from p in mainroutes
+                                              select new
+                                              {
+                                                  id = p.Code,
+                                                  text = p.Name
+                                              }).ToList());
+
+                ViewBag.mainroutes = JsonConvert.SerializeObject(myArrListmainroutes);
+
+                //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
+                ViewBag.warehousesel = company_bodega;
+
+                //FIN HEADER
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
         public class OpenSO
         {
             public int NumSO { get; set; }
@@ -460,12 +627,28 @@ namespace LimenawebApp.Controllers
                 }
                 List<Tb_planning_print> lsttosave = new List<Tb_planning_print>();
                 foreach (var save in list) {
+                    var docnum = Convert.ToInt32(save);
                     Tb_planning_print print = new Tb_planning_print();
-
+                    var order = (from a in dlipro.OpenSalesOrders where (a.NumSO == docnum) select a).FirstOrDefault();
                     print.IsRoute = false;
                     print.Printed = false;
                     print.Doc_key = save;
                     print.Module = "OpenSalesOrders";
+
+                    print.Printed_on = DateTime.UtcNow;
+
+                    var hh = 0;
+                    var mm = 0;
+
+
+                        hh = Convert.ToInt32(order.DocTime.ToString().Substring(0, 2));
+                        mm = Convert.ToInt32(order.DocTime.ToString().Substring(2,2));
+                    
+
+                    var datecreate = new DateTime(order.CreateDate.Value.Year, order.CreateDate.Value.Month, order.CreateDate.Value.Day, hh, mm, 0);
+
+                    print.Created_on = datecreate;
+
                     lsttosave.Add(print);                  
 
                 }
@@ -482,26 +665,24 @@ namespace LimenawebApp.Controllers
         }
         public ActionResult OpenSalesOrders(string fstartd, string fendd)
         {
-            if (generalClass.checkSession())
+            if (cls_session.checkSession())
             {
+
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
-                //PAGINAS ACTIVAS
-                ViewData["Menu"] = "Operation";
-                ViewData["Page"] = "Invoices";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "drop3";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Open Sales Orders";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
                 DateTime filtrostartdate;
                 DateTime filtroenddate;
@@ -554,53 +735,96 @@ namespace LimenawebApp.Controllers
 
             }
         }
-
-
-
-        public ActionResult QualityControl_planning(string fstartd, string fendd)
+        public ActionResult Freezers(string fstartd, string fendd)
         {
-            if (generalClass.checkSession())
+            if (cls_session.checkSession())
             {
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
-                //PAGINAS ACTIVAS
-                ViewData["Menu"] = "Operation";
-                ViewData["Page"] = "Invoices";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "drop3";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Freezers";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
+                //FILTROS VARIABLES
                 DateTime filtrostartdate;
                 DateTime filtroenddate;
-
-                //filtros de fecha //SEMANAL
-                //var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
-                //var saturday = sunday.AddDays(6).AddHours(23);
-                //filtros de fecha //MENSUAL
-                //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
-                //var saturday = sunday.AddMonths(1).AddDays(-1);
-                //filtros de fecha (DIARIO)
+                ////filtros de fecha (DIARIO)
                 var sunday = DateTime.Today;
                 var saturday = sunday.AddDays(1).AddHours(20);
-                //FILTROS**************
 
                 if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
                 if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
 
                 ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
-                //FIN FILTROS*******************
+                ////////
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
 
+                var getfrezzers = (from a in dblim.Tb_logContainers where(a.inRoute==true) select a);
+
+                return View(getfrezzers);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+
+        public ActionResult QualityControl_planning(string fstartd, string fendd)
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Quality Control";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                ////filtros de fecha (DIARIO)
+                var sunday = DateTime.Today;
+                var saturday = sunday.AddDays(1).AddHours(20);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                ////////
                 var company_bodega = "0";
                 if (activeuser.ID_Company == 1)
                 {
@@ -612,7 +836,8 @@ namespace LimenawebApp.Controllers
                 }
 
                 List<QualityControl_SO> lstPlanning = new List<QualityControl_SO>();
-
+                //Verificamos Freezers 07/13/2020
+                var lstfreezersinroute = (from a in dblim.Tb_logContainers where (a.inRoute == true) select a).ToList();
 
                 if (company_bodega == "01")
                 {
@@ -644,10 +869,12 @@ namespace LimenawebApp.Controllers
                                        ID_userValidate = a.ID_userValidate,
                                        Warehouse = a.Warehouse,
                                        transferred = 0,
-                                       existendeOtraBodega = 0
+                                       existendeOtraBodega = 0,
+                                       freezers = (from y in dblim.Tb_logContainers where (y.ID_Route == a.ID_Route) select new lst_Freezer { id=y.ID_container, name=y.Container }).ToList()
                                    }).ToList();
                 }
-                else {
+                else
+                {
                     lstPlanning = (from a in dblim.Tb_Planning
                                    where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega)
                                    select new QualityControl_SO
@@ -674,9 +901,10 @@ namespace LimenawebApp.Controllers
                                        DateCheckIn = a.DateCheckIn,
                                        DateCheckOut = a.DateCheckOut,
                                        ID_userValidate = a.ID_userValidate,
-                                       Warehouse = a.Warehouse,        
+                                       Warehouse = a.Warehouse,
                                        transferred = 0,
-                                         existendeOtraBodega = 0
+                                       existendeOtraBodega = 0,
+                                       freezers = (from y in dblim.Tb_logContainers where (y.ID_Route == a.ID_Route) select new lst_Freezer { id = y.ID_container, name = y.Container }).ToList()
                                    }).ToList();
                 }
 
@@ -688,7 +916,7 @@ namespace LimenawebApp.Controllers
                 List<Tb_PlanningSO> SalesOrder = new List<Tb_PlanningSO>();
 
 
-                    SalesOrder = (from b in dblim.Tb_PlanningSO where (ArrayPlanning.Contains(b.ID_Route)) select b).ToList();
+                SalesOrder = (from b in dblim.Tb_PlanningSO where (ArrayPlanning.Contains(b.ID_Route)) select b).ToList();
 
 
 
@@ -700,11 +928,11 @@ namespace LimenawebApp.Controllers
                 decimal totalRutas_bodega = lstPlanning.Count();
                 foreach (var rutait in lstPlanning)
                 {
-                    var arrso = SalesOrder.Where(c=> c.ID_Route == rutait.ID_Route).Select(c => c.ID_salesorder).ToArray();
-                    var count = SalesOrder.Where(c=> c.ID_Route == rutait.ID_Route).Select(c => c).Count();
+                    var arrso = SalesOrder.Where(c => c.ID_Route == rutait.ID_Route).Select(c => c.ID_salesorder).ToArray();
+                    var count = SalesOrder.Where(c => c.ID_Route == rutait.ID_Route).Select(c => c).Count();
                     var allvalidated = (from f in SalesOrder where (f.isfinished == true && f.ID_Route == rutait.ID_Route) select f).Count();
                     //int finishedorCanceled = (from e in visitas where ((e.ID_visitstate == 4 || e.ID_visitstate==1) && e.ID_route == rutait.ID_route) select e).Count();
-                    decimal finishedorCanceled = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated==true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count == e.QC_totalCount) select e).Count();
+                    decimal finishedorCanceled = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated == true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.QC_count == e.QC_totalCount) select e).Count();
                     //DATOS EN OTRA BODEGA
                     decimal finishedorCanceled_bodega = 0;
 
@@ -718,7 +946,8 @@ namespace LimenawebApp.Controllers
                     {
                         finishedorCanceled_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated == true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse == company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
                     }
-                    else {
+                    else
+                    {
                         finishedorCanceled_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && e.isvalidated == true && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse != company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
                     }
 
@@ -726,9 +955,10 @@ namespace LimenawebApp.Controllers
                     //sabes si ya estan transferidas
                     if (company_bodega == "01")
                     {
-                        trans = SalesOrder.Where(a => a.Warehouse != company_bodega && a.Transferred ==1 && a.ID_Route == rutait.ID_Route).Count();
+                        trans = SalesOrder.Where(a => a.Warehouse != company_bodega && a.Transferred == 1 && a.ID_Route == rutait.ID_Route).Count();
 
-                        if (trans > 0) {
+                        if (trans > 0)
+                        {
                             rutait.transferred = 1;
                         }
                         trans = 0;
@@ -745,23 +975,24 @@ namespace LimenawebApp.Controllers
                     {
                         totalRutas_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse == company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
                     }
-                    else {
+                    else
+                    {
                         totalRutas_bodega = (from e in dblim.Tb_PlanningSO_details where (arrso.Contains(e.ID_salesorder) && !e.query1.Contains("DEL") && e.Quantity > 0 && !e.type.Contains("I") && e.Warehouse != company_bodega && e.QC_totalCount != e.QC_count) select e).Count();
                     }
-                        
+
 
                     if (totalRutas != 0)
                     {
-                       if (finishedorCanceled != 0)
+                        if (finishedorCanceled != 0)
                         {
 
                             rutait.query1 = (((Convert.ToDecimal(finishedorCanceled) / totalRutas) * 100)).ToString();
-                       
+
                         }
 
                         else
                         {
-                           
+
                             rutait.query1 = (Convert.ToDecimal(0)).ToString();
                         }
                         rutait.query2 = "(" + finishedorCanceled + " / " + totalRutas + ")";
@@ -793,10 +1024,11 @@ namespace LimenawebApp.Controllers
                         {
                             rutait.query6 = existemibodega;
                         }
-                        else {
+                        else
+                        {
                             rutait.query6 = totalRutas_bodega;
                         }
-                     
+
                     }
                     else
                     {
@@ -813,34 +1045,78 @@ namespace LimenawebApp.Controllers
                     }
 
 
-                    if (count == allvalidated && totalRutas_bodega==0) {
+                    if (count == allvalidated && totalRutas_bodega == 0)
+                    {
                         rutait.query3 = 1;
                     }
-                        
-                   
+
+
                 }
                 //Verificamos si rutas estan finalizadas en bodega distinta(eliminado)
                 //Se verificara si todas las rutas cumplen el porcentaje de finalizacion
                 var mostrarbilloflading = 0;
-                var rutas="";
-                if (company_bodega == "01") {
-                    var lstotrabod = lstPlanning.Where(a => a.Warehouse != company_bodega && a.transferred==0).ToList();
+                var rutas = "";
+                if (company_bodega == "01")
+                {
+                    var lstotrabod = lstPlanning.Where(a => a.Warehouse != company_bodega && a.transferred == 0).ToList();
                     rutas = String.Join(",", lstotrabod.Select(o => o.ID_Route.ToString()).ToArray());
 
-                    foreach (var subruta in lstotrabod) {
+                    foreach (var subruta in lstotrabod)
+                    {
                         mostrarbilloflading = 0;
                         if (Convert.ToDecimal(subruta.query4) >= 100)
                         {
                             mostrarbilloflading = 1;
                         }
-        
+
                     }
                 }
                 ViewBag.rutasids = rutas;
                 ViewBag.mostrarBOF = mostrarbilloflading;
                 //ViewBag.lstPlanning = lstPlanning;
                 ViewBag.company = company_bodega;
+
+                //Routes
+                //Convertimos la lista a array
+                ArrayList myArrListRoutes = new ArrayList();
+                myArrListRoutes.AddRange((from p in lstPlanning
+                                           select new
+                                           {
+                                               id = p.ID_Route,
+                                               text = p.Route_name.ToUpper().Replace("'", ""),
+                                           }).ToList());
+
+                ViewBag.routes = JsonConvert.SerializeObject(myArrListRoutes);
+
+                //Convertimos la lista a array
+
+                var getfrezzers = cls_Frezzers.GetFrezzers();
+
+       
+                var freezersinroute = lstfreezersinroute.Select(c => c.ID_container).ToArray();
+                ArrayList myArrListFrezzers = new ArrayList();
+
+                if (getfrezzers != null) {
+                    if (getfrezzers.data != null) {
+                        myArrListFrezzers.AddRange((from p in getfrezzers.data
+                                                    where (!freezersinroute.Contains(p.code))
+                                                    select new
+                                                    {
+                                                        id = p.code,
+                                                        text = p.name.ToUpper().Replace("'", ""),
+                                                    }).ToList());
+                    }
+
+                }
+
+
+                ViewBag.frezzers = JsonConvert.SerializeObject(myArrListFrezzers);
+
+
                 return View(lstPlanning);
+
+
+
 
             }
             else
@@ -885,24 +1161,45 @@ namespace LimenawebApp.Controllers
 
         }
 
-        public ActionResult Print_so(int id, string docentry )
+        public ActionResult Print_so(int id, int docentry )
         {
             try {
                 Tb_planning_print print = new Tb_planning_print();
 
+                var order = (from a in dlipro.OpenSalesOrders where (a.NumSO == docentry) select a).FirstOrDefault();
+
                 print.IsRoute = false;
                 print.Printed = false;
-                print.Doc_key = docentry;
+                print.Doc_key = docentry.ToString();
                 print.Module = "QualityControl";
+                print.Printed_on = DateTime.UtcNow;
+
+                var hh = 0;
+                var mm = 0;
+
+                if (order.DocTime.ToString().Length == 3) {
+                    hh = Convert.ToInt32(order.DocTime.ToString().Substring(0));
+                    mm = Convert.ToInt32(order.DocTime.ToString().Substring(1,2));
+                }
+                else {
+                    hh = Convert.ToInt32(order.DocTime.ToString().Substring(0,1));
+                    mm = Convert.ToInt32(order.DocTime.ToString().Substring(2, 3));
+                }
+
+                var datecreate = new DateTime(order.CreateDate.Value.Year,order.CreateDate.Value.Month,order.CreateDate.Value.Day, hh,mm,0);
+                
+                print.Created_on = datecreate;
+                
+
 
                 dblim.Tb_planning_print.Add(print);
                 dblim.SaveChanges();
 
                 return Json("success", JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch (Exception ex)
             {
-                return Json("Error", JsonRequestBehavior.AllowGet);
+                return Json("Error: " +ex.Message, JsonRequestBehavior.AllowGet);
             }
 
 
@@ -912,29 +1209,28 @@ namespace LimenawebApp.Controllers
 
         public ActionResult QualityControl(int id)
         {
-            if (generalClass.checkSession())
+            if (cls_session.checkSession())
             {
+
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
-                //HEADER
-                //PAGINAS ACTIVAS
-                ViewData["Menu"] = "Operation";
-                ViewData["Page"] = "Invoices";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "drop3";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
-                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                    //HEADER
+                    //ACTIVE PAGES
+                    ViewData["Menu"] = "Operations";
+                    ViewData["Page"] = "Quality Control";
+                    List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                    ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                    List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                    ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                    //NOTIFICATIONS
+                    DateTime now = DateTime.Today;
+                    //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                    //ViewBag.notifications = lstAlerts;
+                    ViewBag.activeuser = activeuser;
+                    //FIN HEADER
+                  
 
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
-                //NOTIFICATIONS
-                DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
-                //FIN HEADER
-
-                var company_bodega = "0";
+                    var company_bodega = "0";
                 if (activeuser.ID_Company == 1)
                 {
                     company_bodega = "01";
@@ -1176,26 +1472,24 @@ namespace LimenawebApp.Controllers
 
         public ActionResult QualityControl_storagetype(int id)
         {
-            if (generalClass.checkSession())
+            if (cls_session.checkSession())
             {
+
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
-                //PAGINAS ACTIVAS
-                ViewData["Menu"] = "Operation";
-                ViewData["Page"] = "Invoices";
-                ViewBag.menunameid = "oper_menu";
-                ViewBag.submenunameid = "drop3";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Quality Control";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
                 //FIN HEADER
 
                 var company_bodega = "0";
@@ -1705,6 +1999,7 @@ namespace LimenawebApp.Controllers
 
 
         }
+
         public ActionResult closeSO(string id_sales)
         {
             try
@@ -1714,7 +2009,39 @@ namespace LimenawebApp.Controllers
                 Tb_PlanningSO selSO = dblim.Tb_PlanningSO.Find(ID);
 
                 selSO.isfinished = true;
+                selSO.DateCheckOut = DateTime.UtcNow;
                 dblim.Entry(selSO).State = EntityState.Modified;
+                dblim.SaveChanges();
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+
+            }
+            catch
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+
+        public ActionResult deleteSO(int id_salesorder)
+        {
+            try
+            {
+
+                Tb_PlanningSO selSO = dblim.Tb_PlanningSO.Find(id_salesorder);
+
+                if (selSO.query5 == "Invoice") {
+                    //Actualizamos
+                    PUT_Invoices_api newput = new PUT_Invoices_api();
+                    newput.stateSd = 8;
+
+                    var response2 = cls_invoices.PutInvoice(Convert.ToInt32(selSO.DocEntry), newput);
+                }
+                var detailstodel = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == selSO.ID_salesorder) select a).ToList();
+                dblim.Tb_PlanningSO_details.BulkDelete(detailstodel);
+                dblim.SaveChanges();
+                dblim.Tb_PlanningSO.Remove(selSO);
                 dblim.SaveChanges();
 
                 return Json("success", JsonRequestBehavior.AllowGet);
@@ -1737,6 +2064,7 @@ namespace LimenawebApp.Controllers
                 Tb_Planning route = dblim.Tb_Planning.Find(ID);
 
                 route.isfinished = true;
+                route.DateCheckOut = DateTime.UtcNow;
                 dblim.Entry(route).State = EntityState.Modified;
                 dblim.SaveChanges();
 
@@ -1756,8 +2084,11 @@ namespace LimenawebApp.Controllers
             {
                 Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
-
                 var ID = Convert.ToInt32(id_route);
+
+                var headerroute= dblim.Tb_Planning.Where(a => a.ID_Route == ID).Select(a => a).FirstOrDefault();
+                headerroute.DateCheckOut = DateTime.UtcNow;
+                dblim.Entry(headerroute).State = EntityState.Modified;
 
                 var route = dblim.Tb_PlanningSO.Where(a=> a.ID_Route==ID).Select(a=>a).ToList();
                
@@ -1785,6 +2116,65 @@ namespace LimenawebApp.Controllers
 
         }
 
+
+        public ActionResult addContainer(int id_route, string containers)
+        {
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                List<string> idContainers = containers.Split(',').ToList();
+
+                var route = (from a in dblim.Tb_Planning where (a.ID_Route == id_route) select a).FirstOrDefault();
+
+                if (route != null)
+                {
+                    foreach (var item in idContainers)
+                    {
+                        var container = cls_Frezzers.GetFrezze(item).data;
+
+                        if (container != null)
+                        {
+                            Tb_logContainers newlog = new Tb_logContainers();
+                            newlog.ID_container = container.code;
+                            newlog.Whs = container.whs;
+                            newlog.AssignerUser = activeuser.Name + " " + activeuser.Lastname;
+                            newlog.ReceivedUser = "";
+                            newlog.DateAssigned = DateTime.UtcNow;
+                            newlog.DateReceived = DateTime.UtcNow;
+                            newlog.Barcode = container.code;
+                            newlog.Route = route.Route_name;
+                            newlog.Driver = route.Driver_name;
+                            newlog.Truck = route.Truck_name;
+                            newlog.ID_Route = id_route;
+                            newlog.inRoute = true;
+                            newlog.Comments = "";
+                            newlog.Img = "";
+                            newlog.Container = container.name;
+
+                            newlog.Status = 0;
+
+                            dblim.Tb_logContainers.Add(newlog);
+                        
+                        }
+
+                    }
+                    dblim.SaveChanges();
+                    return Json("success", JsonRequestBehavior.AllowGet);
+
+                }
+                else {
+                    return Json("error", JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch(Exception ex)
+            {
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
 
         public ActionResult transferItems(string id_route)
         {
@@ -1837,7 +2227,6 @@ namespace LimenawebApp.Controllers
 
 
         }
-
         public ActionResult GetSalesOrders(string id, DateTime date)
         {
 
@@ -1858,19 +2247,24 @@ namespace LimenawebApp.Controllers
             DateTime selDate = Convert.ToDateTime(date).AddDays(1);
             DateTime filterdate = DateTime.Today.AddDays(-31);
 
-            var tbplanningSO = (from obj in dblim.Tb_PlanningSO where(obj.SAP_docdate > filterdate && obj.Warehouse==company_bodega) select obj).ToList();
+            var tbplanningSO = (from obj in dblim.Tb_PlanningSO where (obj.SAP_docdate > filterdate && obj.Warehouse == company_bodega) select obj).ToList();
 
 
-            var rt = (from a in dblim.Tb_Planning where (a.ID_Route == idr && a.Warehouse==company_bodega) select new { id=a.ID_Route, isfinished=a.isfinished,
-                transf = (from c in dblim.Tb_PlanningSO where (c.ID_Route == idr && c.Transferred > 0) select c).Count()
-            }).ToList();
+            var rt = (from a in dblim.Tb_Planning
+                      where (a.ID_Route == idr && a.Warehouse == company_bodega)
+                      select new
+                      {
+                          id = a.ID_Route,
+                          isfinished = a.isfinished,
+                          transf = (from c in dblim.Tb_PlanningSO where (c.ID_Route == idr && c.Transferred > 0) select c).Count()
+                      }).ToList();
             //Solo IDSO interno
-            var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr && j.Warehouse==company_bodega) select j.ID_salesorder).ToList();
+            var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr && j.Warehouse == company_bodega) select j.ID_salesorder).ToList();
 
-       
+
 
             //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
-            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (solist.Contains(f.ID_salesorder) && f.Warehouse==company_bodega) select f).ToList();
+            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (solist.Contains(f.ID_salesorder) && f.Warehouse == company_bodega) select f).ToList();
 
             var totalCantEach = 0;
             var totalCantCases = 0;
@@ -1882,22 +2276,23 @@ namespace LimenawebApp.Controllers
             {
                 if (detallesSo.Count() > 0)
                 {
-                    totalCantEach = detallesSo.Where(c=>c.UomCode.Contains("EACH")).Count();
-                    totalCantCases = detallesSo.Where(c=>c.UomCode.Contains("CASE")).Count();
-                    totalCantPack = detallesSo.Where(c=>c.UomCode.Contains("PACK")).Count();
-                    totalCantLbs = detallesSo.Where(c=>c.UomCode.Contains("LBS")).Count();
+                    totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
+                    totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
+                    totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
+                    totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
 
-                    foreach (var item in solist) {
+                    foreach (var item in solist)
+                    {
                         //devolvemos ID externo
-                        var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder==item && j.Warehouse==company_bodega).Select(c => c.SAP_docnum).FirstOrDefault());
+                        var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder == item && j.Warehouse == company_bodega).Select(c => c.SAP_docnum).FirstOrDefault());
 
                         //Devolvemos todos los detalles(itemcode) de esa SO
-                        var itemscode = detallesSo.Where(c=>c.ID_salesorder==item).Select(c => c.ItemCode).ToArray();
+                        var itemscode = detallesSo.Where(c => c.ID_salesorder == item).Select(c => c.ItemCode).ToArray();
 
                         //Buscamos en la vista creada 9/24/2019
                         var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity > 0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
 
-                        promedioEachxCases += Math.Round(Convert.ToDecimal(sumatotal),2, MidpointRounding.ToEven);                      
+                        promedioEachxCases += Math.Round(Convert.ToDecimal(sumatotal), 2, MidpointRounding.ToEven);
 
                     }
                 }
@@ -1923,8 +2318,8 @@ namespace LimenawebApp.Controllers
 
 
             //salesOrders = (from obj in dbcmk.VisitsM where (obj.ID_route == idr) select obj).ToList();
-            var lst = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr && obj.Warehouse==company_bodega) select new { id = obj.ID_salesorder, NumSO=obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name , DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight= obj.Weight, Volume = obj.Volume, Printed= obj.Printed, Remarks = obj.Remarks, Order=obj.query3 }).OrderBy(c=>c.Order).ToArray();
-            var lstArray = (from obj in lst select  obj.NumSO).ToArray();
+            var lst = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr && obj.Warehouse == company_bodega) select new { id = obj.ID_salesorder, NumSO = obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name, DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight = obj.Weight, Volume = obj.Volume, Printed = obj.Printed, Remarks = obj.Remarks, Order = obj.query3 }).OrderBy(c => c.Order).ToArray();
+            var lstArray = (from obj in lst select obj.NumSO).ToArray();
             var totalextra = "";
             try
             {
@@ -1946,9 +2341,9 @@ namespace LimenawebApp.Controllers
             }
 
 
-            if (rt[0].isfinished == true || rt[0].transf>0)
+            if (rt[0].isfinished == true || rt[0].transf > 0)
             {
-                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.NumSO==11938023) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.NumSO == 11938023) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
                 //estaesbuenasinfiltro//var lstOpenSales = (from obj in dlipro.OpenSalesOrders select new OpenSO { NumSO=obj.NumSO,CardCode = obj.CardCode, CustomerName = obj.CustomerName , DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed= obj.Printed }).ToArray();
                 //var lstOpenSales = (List<OpenSO>)Session["opensalesOrders"];
 
@@ -1970,13 +2365,27 @@ namespace LimenawebApp.Controllers
 
                 //RESULT 8-12 para UOM INFO
 
-                var result = new { result = result2, result2 = result3, result3 = result4, result4 = result5, result5 = result6, result6 = result7, result7=result8, result8= totalCantEach.ToString(), result9= totalCantCases,
-                result10=totalCantPack, result11=totalCantLbs, result12=promedioEachxCases};
+                var result = new
+                {
+                    result = result2,
+                    result2 = result3,
+                    result3 = result4,
+                    result4 = result5,
+                    result5 = result6,
+                    result6 = result7,
+                    result7 = result8,
+                    result8 = totalCantEach.ToString(),
+                    result9 = totalCantCases,
+                    result10 = totalCantPack,
+                    result11 = totalCantLbs,
+                    result12 = promedioEachxCases
+                };
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
-            else {
+            else
+            {
 
-                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where(obj.SODate > filterdate && obj.WareHouse== company_bodega) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount =obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.SODate > filterdate && obj.WareHouse == company_bodega) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
                 List<int> myCollection = new List<int>();
 
                 foreach (var saleOrder in lstOpenSales)
@@ -2014,7 +2423,16 @@ namespace LimenawebApp.Controllers
                 string result6 = javaScriptSerializer.Serialize(lstCustomers);
                 string result7 = javaScriptSerializer.Serialize(rt);
                 decimal result8 = Convert.ToDecimal(totalextra);
-                var result = new { result = result2, result2 = result3, result3 = result4, result4 = result5, result5 = result6, result6 = result7, result7=result8,result8 = totalCantEach.ToString(),
+                var result = new
+                {
+                    result = result2,
+                    result2 = result3,
+                    result3 = result4,
+                    result4 = result5,
+                    result5 = result6,
+                    result6 = result7,
+                    result7 = result8,
+                    result8 = totalCantEach.ToString(),
                     result9 = totalCantCases,
                     result10 = totalCantPack,
                     result11 = totalCantLbs,
@@ -2026,6 +2444,331 @@ namespace LimenawebApp.Controllers
 
 
         }
+        public class sodocnum {
+            public int id_salesorder { get; set; }
+            public string docnum { get; set; }
+        }
+        public ActionResult Getextradetails(string id)
+        {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
+
+
+            int idr = Convert.ToInt32(id);
+
+            //Solo IDSO interno
+            var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr && j.Warehouse==company_bodega) select new sodocnum { id_salesorder=j.ID_salesorder, docnum=j.SAP_docnum}).ToList();
+
+            var arrso = solist.Select(c => c.id_salesorder).ToArray();
+
+            //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+            var detallesSo = (from f in dblim.Tb_PlanningSO_details where (arrso.Contains(f.ID_salesorder) && f.Warehouse==company_bodega) select f).ToList();
+
+            var totalCantEach = 0;
+            var totalCantCases = 0;
+            var totalCantPack = 0;
+            var totalCantLbs = 0;
+            decimal promedioEachxCases = 0;
+            //Para calcular el promedio lo hacemos diviendo
+            try
+            {
+                if (detallesSo.Count() > 0)
+                {
+                    totalCantEach = detallesSo.Where(c=>c.UomCode.Contains("EACH")).Count();
+                    totalCantCases = detallesSo.Where(c=>c.UomCode.Contains("CASE")).Count();
+                    totalCantPack = detallesSo.Where(c=>c.UomCode.Contains("PACK")).Count();
+                    totalCantLbs = detallesSo.Where(c=>c.UomCode.Contains("LBS")).Count();
+
+                    foreach (var item in solist) {
+                        //devolvemos ID externo
+                        // var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder==item && j.Warehouse==company_bodega).Select(c => c.SAP_docnum).FirstOrDefault());
+                        var intdoc = Convert.ToInt32(item.docnum);
+                        //Devolvemos todos los detalles(itemcode) de esa SO
+                        var itemscode = detallesSo.Where(c=>c.ID_salesorder==item.id_salesorder).Select(c => c.ItemCode).ToArray();
+
+                        //Buscamos en la vista creada 9/24/2019
+                        var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == intdoc && a.Quantity > 0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
+
+                        promedioEachxCases += Math.Round(Convert.ToDecimal(sumatotal),2, MidpointRounding.ToEven);                      
+
+                    }
+                }
+                else
+                {
+                    totalCantEach = 0;
+                    totalCantCases = 0;
+                    totalCantPack = 0;
+                    totalCantLbs = 0;
+                    promedioEachxCases = 0;
+
+                }
+            }
+            catch
+            {
+                totalCantEach = 0;
+                totalCantCases = 0;
+                totalCantPack = 0;
+                totalCantLbs = 0;
+                promedioEachxCases = 0;
+            }
+
+
+            var totalextra = "0.00";
+
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+
+
+                var result = new { result = Convert.ToDecimal(totalextra), totalEach = totalCantEach.ToString(), totalCases= totalCantCases,
+                totalPack=totalCantPack, totalLBS=totalCantLbs, grantotal=promedioEachxCases};
+                return Json(result, JsonRequestBehavior.AllowGet);
+            
+        }
+
+        public ActionResult GetSalesOrdersNew(string id, DateTime date)
+        {
+
+            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+            var company_bodega = "0";
+            if (activeuser.ID_Company == 1)
+            {
+                company_bodega = "01";
+            }
+            else if (activeuser.ID_Company == 2)
+            {
+                company_bodega = "02";
+            }
+
+
+            int idr = Convert.ToInt32(id);
+            //var salesOrders = new List<Tb_PlanningSO>();
+            DateTime selDate = Convert.ToDateTime(date).AddDays(1);
+            DateTime filterdate = DateTime.Today.AddDays(-31);
+
+            //var tbplanningSO = (from obj in dblim.Tb_PlanningSO where (obj.SAP_docdate > filterdate && obj.Warehouse == company_bodega) select obj).ToList();
+
+
+            var rt = (from a in dblim.Tb_Planning
+                      where (a.ID_Route == idr && a.Warehouse == company_bodega)
+                      select new
+                      {
+                          id = a.ID_Route,
+                          isfinished = a.isfinished,
+                          transf = (from c in dblim.Tb_PlanningSO where (c.ID_Route == idr && c.Transferred > 0) select c).Count()
+                      }).ToList();
+            //Solo IDSO interno
+            //var solist = (from j in dblim.Tb_PlanningSO where (j.ID_Route == idr && j.Warehouse == company_bodega) select j.ID_salesorder).ToList();
+
+
+
+            //Verificamos detalles para sacar CASE y EACH totales y luego promediar todal de EACH en base a CASES
+            //var detallesSo = (from f in dblim.Tb_PlanningSO_details where (solist.Contains(f.ID_salesorder) && f.Warehouse == company_bodega) select f).ToList();
+
+            var totalCantEach = 0;
+            var totalCantCases = 0;
+            var totalCantPack = 0;
+            var totalCantLbs = 0;
+            decimal promedioEachxCases = 0;
+            //Para calcular el promedio lo hacemos diviendo
+            //try
+            //{
+            //    if (detallesSo.Count() > 0)
+            //    {
+            //        totalCantEach = detallesSo.Where(c => c.UomCode.Contains("EACH")).Count();
+            //        totalCantCases = detallesSo.Where(c => c.UomCode.Contains("CASE")).Count();
+            //        totalCantPack = detallesSo.Where(c => c.UomCode.Contains("PACK")).Count();
+            //        totalCantLbs = detallesSo.Where(c => c.UomCode.Contains("LBS")).Count();
+
+            //        foreach (var item in solist)
+            //        {
+            //            //devolvemos ID externo
+            //            var docnum = Convert.ToInt32(dblim.Tb_PlanningSO.Where(j => j.ID_Route == idr && j.ID_salesorder == item && j.Warehouse == company_bodega).Select(c => c.SAP_docnum).FirstOrDefault());
+
+            //            //Devolvemos todos los detalles(itemcode) de esa SO
+            //            var itemscode = detallesSo.Where(c => c.ID_salesorder == item).Select(c => c.ItemCode).ToArray();
+
+            //            //Buscamos en la vista creada 9/24/2019
+            //            var sumatotal = dlipro.PlanningUoMInfo.Where(a => itemscode.Contains(a.ItemCode) && a.DocNum == docnum && a.Quantity > 0 && !a.unitMsr.Contains("LBS")).Sum(c => c.TotalCases);
+
+            //            promedioEachxCases += Math.Round(Convert.ToDecimal(sumatotal), 2, MidpointRounding.ToEven);
+
+            //        }
+            //    }
+            //    else
+            //    {
+            //        totalCantEach = 0;
+            //        totalCantCases = 0;
+            //        totalCantPack = 0;
+            //        totalCantLbs = 0;
+            //        promedioEachxCases = 0;
+
+            //    }
+            //}
+            //catch
+            //{
+            //    totalCantEach = 0;
+            //    totalCantCases = 0;
+            //    totalCantPack = 0;
+            //    totalCantLbs = 0;
+            //    promedioEachxCases = 0;
+            //}
+
+
+
+            //salesOrders = (from obj in dbcmk.VisitsM where (obj.ID_route == idr) select obj).ToList();
+            var lst = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr && obj.Warehouse == company_bodega && obj.query5!="Invoice") select new { id = obj.ID_salesorder, NumSO = obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name, DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight = obj.Weight, Volume = obj.Volume, Printed = obj.Printed, Remarks = obj.Remarks, Order = obj.query3 }).OrderBy(c => c.Order).ToArray();
+            var lstInvoices = (from obj in dblim.Tb_PlanningSO where (obj.ID_Route == idr && obj.Warehouse == company_bodega && obj.query5=="Invoice") select new { id = obj.ID_salesorder, NumSO = obj.SAP_docnum, CardCode = obj.ID_customer, CustomerName = obj.Customer_name, DeliveryRoute = obj.query2, SalesPerson = obj.Rep_name, SODate = obj.SAP_docdate, OpenAmount = obj.Amount, Weight = obj.Weight, Volume = obj.Volume, Printed = obj.Printed, Remarks = obj.Remarks, Order = obj.query3 }).OrderBy(c => c.Order).ToArray();
+            var lstArray = (from obj in lst select obj.NumSO).ToArray();
+            var totalextra = "0.00";
+            //try
+            //{
+            //    var extra = (from a in dblim.Tb_Planning_extra where (a.ID_Route == idr) select a);
+            //    if (extra.Count() > 0)
+            //    {
+            //        totalextra = extra.Sum(x => x.Value).ToString();
+            //    }
+            //    else
+            //    {
+            //        totalextra = "0.00";
+
+            //    }
+
+            //}
+            //catch
+            //{
+            //    totalextra = "0.00";
+            //}
+
+
+            if (rt[0].isfinished == true || rt[0].transf > 0)
+            {
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.NumSO == 11938023) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
+                //estaesbuenasinfiltro//var lstOpenSales = (from obj in dlipro.OpenSalesOrders select new OpenSO { NumSO=obj.NumSO,CardCode = obj.CardCode, CustomerName = obj.CustomerName , DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed= obj.Printed }).ToArray();
+                //var lstOpenSales = (List<OpenSO>)Session["opensalesOrders"];
+
+                var lstRoutes = (from a in lstOpenSales select a.DeliveryRoute).OrderBy(a => a).Distinct().ToArray();
+                var lstReps = (from a in lstOpenSales select a.SalesPerson).OrderBy(a => a).Distinct().ToArray();
+                var lstCustomers = (from a in lstOpenSales select new { CustomerName = a.CardCode + " - " + a.CustomerName }).OrderBy(a => a.CustomerName).Distinct().ToArray();
+                //var lstCustomers = (from a in lstOpenSales select new { CardCode=a.CardCode, CustomerName = a.CustomerName  }).OrderBy(a=>a.CardCode).Distinct().ToArray();
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result2 = javaScriptSerializer.Serialize(lst);
+                string result9 = javaScriptSerializer.Serialize(lstInvoices);
+                string result3 = javaScriptSerializer.Serialize(lstOpenSales);
+                string result4 = javaScriptSerializer.Serialize(lstRoutes);
+                string result5 = javaScriptSerializer.Serialize(lstReps);
+                string result6 = javaScriptSerializer.Serialize(lstCustomers);
+                string result7 = javaScriptSerializer.Serialize(rt);
+                decimal result8 = Convert.ToDecimal(totalextra);
+
+
+
+                //RESULT 8-12 para UOM INFO
+
+                var result = new
+                {
+                    result = result2,
+                    result2 = result3,
+                    result3 = result4,
+                    result4 = result5,
+                    result5 = result6,
+                    result6 = result7,
+                    result7 = result8,
+                    result8 = totalCantEach.ToString(),
+                    result9 = totalCantCases,
+                    result10 = totalCantPack,
+                    result11 = totalCantLbs,
+                    result12 = promedioEachxCases,
+                    result13 = result9
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.NumSO == 11938023) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
+
+                //estaesbuenasinfiltro//var lstOpenSales = (from obj in dlipro.OpenSalesOrders select new OpenSO { NumSO=obj.NumSO,CardCode = obj.CardCode, CustomerName = obj.CustomerName , DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed= obj.Printed }).ToArray();
+                //var lstOpenSales = (List<OpenSO>)Session["opensalesOrders"];
+
+                var lstRoutes = (from a in lstOpenSales select a.DeliveryRoute).OrderBy(a => a).Distinct().ToArray();
+                var lstReps = (from a in lstOpenSales select a.SalesPerson).OrderBy(a => a).Distinct().ToArray();
+                var lstCustomers = (from a in lstOpenSales select new { CustomerName = a.CardCode + " - " + a.CustomerName }).OrderBy(a => a.CustomerName).Distinct().ToArray();
+                //var lstCustomers = (from a in lstOpenSales select new { CardCode=a.CardCode, CustomerName = a.CustomerName  }).OrderBy(a=>a.CardCode).Distinct().ToArray();
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result2 = javaScriptSerializer.Serialize(lst);
+                string result9 = javaScriptSerializer.Serialize(lstInvoices);
+                string result3 = javaScriptSerializer.Serialize(lstOpenSales);
+                string result4 = javaScriptSerializer.Serialize(lstRoutes);
+                string result5 = javaScriptSerializer.Serialize(lstReps);
+                string result6 = javaScriptSerializer.Serialize(lstCustomers);
+                string result7 = javaScriptSerializer.Serialize(rt);
+                decimal result8 = Convert.ToDecimal(totalextra);
+                var result = new
+                {
+                    result = result2,
+                    result2 = result3,
+                    result3 = result4,
+                    result4 = result5,
+                    result5 = result6,
+                    result6 = result7,
+                    result7 = result8,
+                    result8 = totalCantEach.ToString(),
+                    result9 = totalCantCases,
+                    result10 = totalCantPack,
+                    result11 = totalCantLbs,
+                    result12 = promedioEachxCases,
+                    result13 = result9
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+
+
+
+        }
+
+        public ActionResult GetOpenSOs()
+        {
+            DateTime filterdate = DateTime.Today.AddDays(-31);
+            var lstOpenSales = (from obj in dlipro.OpenSalesOrders where(obj.SODate > filterdate) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToArray();
+                //estaesbuenasinfiltro//var lstOpenSales = (from obj in dlipro.OpenSalesOrders select new OpenSO { NumSO=obj.NumSO,CardCode = obj.CardCode, CustomerName = obj.CustomerName , DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed= obj.Printed }).ToArray();
+                //var lstOpenSales = (List<OpenSO>)Session["opensalesOrders"];
+
+                var lstRoutes = (from a in lstOpenSales select a.DeliveryRoute).OrderBy(a => a).Distinct().ToArray();
+                var lstReps = (from a in lstOpenSales select a.SalesPerson).OrderBy(a => a).Distinct().ToArray();
+                var lstCustomers = (from a in lstOpenSales select new { CustomerName = a.CardCode + " - " + a.CustomerName }).OrderBy(a => a.CustomerName).Distinct().ToArray();
+                //var lstCustomers = (from a in lstOpenSales select new { CardCode=a.CardCode, CustomerName = a.CustomerName  }).OrderBy(a=>a.CardCode).Distinct().ToArray();
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+      
+                string result3 = javaScriptSerializer.Serialize(lstOpenSales);
+                string result4 = javaScriptSerializer.Serialize(lstRoutes);
+                string result5 = javaScriptSerializer.Serialize(lstReps);
+                string result6 = javaScriptSerializer.Serialize(lstCustomers);
+
+                var result = new
+                {
+                    result2 = result3,
+                    result3 = result4,
+                    result4 = result5,
+                    result5 = result6,
+                };
+                return Json(result, JsonRequestBehavior.AllowGet);
+            
+        }
+
+
+
         public class UomLst
         {
             public string UomCode { get; set; }
@@ -2252,7 +2995,7 @@ namespace LimenawebApp.Controllers
         }
 
 
-        public ActionResult CreateRoutePlanning(string routeName, string lstMasterCode, string lstMasterName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure, DateTime preparationdate)
+        public ActionResult CreateRoutePlanning(string routeName, string lstMasterCode, string lstMasterName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure, DateTime preparationdate, string otherwhs)
         {
 
             try
@@ -2288,6 +3031,11 @@ namespace LimenawebApp.Controllers
                     newPlanning.Departure = departure;
                     newPlanning.isfinished = false;
                     newPlanning.query1 = "";
+                    if (otherwhs == "YES") {
+                        newPlanning.query1 = "from";
+                    }
+
+                   
                     newPlanning.query2 = "";
                     newPlanning.query3 = 0;
                     newPlanning.Invoiced = false;
@@ -2511,49 +3259,106 @@ namespace LimenawebApp.Controllers
 
 
 
-                    List<Routes_calendar> rutaslst = new List<Routes_calendar>();
+                    //List<Routes_calendar> rutaslst = new List<Routes_calendar>();
 
 
-                    Routes_calendar rt = new Routes_calendar();
+                    //Routes_calendar rt = new Routes_calendar();
 
-                    rt.title = newPlanning.ID_Route + " - " + newPlanning.Route_name;
-                    rt.url = "";
-                    rt.start = newPlanning.Departure.ToString("yyyy-MM-dd");
-                    //rt.end = item.Departure.AddDays(1).ToString("yyyy-MM-dd");
-                    rt.route_leader = newPlanning.Routeleader_name;
-                    rt.className = ".fc-event";
-                    rt.driver = newPlanning.Driver_name;
-                    rt.truck = newPlanning.Truck_name;
-                    rt.departure = newPlanning.Departure.ToShortTimeString();
-                    if (newPlanning.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
-                    var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == newPlanning.ID_Route && e.Warehouse==company_bodega) select e);
-                    if (sum != null && sum.Count() > 0)
-                    {
-                        rt.amount = sum.Select(c => c.Amount).Sum().ToString();
-                        rt.customerscount = sum.Select(c => c.Customer_name).Distinct().Count().ToString();
-                        rt.orderscount = sum.Count().ToString();
-                    }
-                    else
-                    {
-                        rt.amount = "0.0";
-                        rt.customerscount = "";
-                        rt.orderscount = "";
-                    }
-
-
-                    rutaslst.Add(rt);
+                    //rt.title = newPlanning.ID_Route + " - " + newPlanning.Route_name;
+                    //rt.url = "";
+                    //rt.start = newPlanning.Departure.ToString("yyyy-MM-dd");
+                    ////rt.end = item.Departure.AddDays(1).ToString("yyyy-MM-dd");
+                    //rt.route_leader = newPlanning.Routeleader_name;
+                    //rt.className = ".fc-event";
+                    //rt.driver = newPlanning.Driver_name;
+                    //rt.truck = newPlanning.Truck_name;
+                    //rt.departure = newPlanning.Departure.ToShortTimeString();
+                    //if (newPlanning.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
+                    //var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == newPlanning.ID_Route && e.Warehouse==company_bodega) select e);
+                    //if (sum != null && sum.Count() > 0)
+                    //{
+                    //    rt.amount = sum.Select(c => c.Amount).Sum().ToString();
+                    //    rt.customerscount = sum.Select(c => c.Customer_name).Distinct().Count().ToString();
+                    //    rt.orderscount = sum.Count().ToString();
+                    //}
+                    //else
+                    //{
+                    //    rt.amount = "0.0";
+                    //    rt.customerscount = "";
+                    //    rt.orderscount = "";
+                    //}
 
 
-                    JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
-                    string result = javaScriptSerializer.Serialize(rutaslst);
-                    return Json(result, JsonRequestBehavior.AllowGet);
+                    //rutaslst.Add(rt);
+
+
+                    //JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                    //string result = javaScriptSerializer.Serialize(rutaslst);
+                    return Json("success", JsonRequestBehavior.AllowGet);
 
                 }
-                return Json("error", JsonRequestBehavior.AllowGet);
+                return Json("Error trying saving new route", JsonRequestBehavior.AllowGet);
             }
-            catch
+            catch (Exception ex)
             {
-                return Json("error", JsonRequestBehavior.AllowGet);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult deleteAssignedFreezer(int id_reg)
+        {
+
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var log = (from a in dblim.Tb_logContainers where (a.ID_reg == id_reg) select a).FirstOrDefault();
+                log.inRoute = false;
+                log.Comments = "Deleted by " + activeuser.ID_User + "-" + activeuser.Name + " " + activeuser.Lastname + " on " + DateTime.UtcNow;
+
+                dblim.Entry(log).State = EntityState.Modified;
+                dblim.SaveChanges();
+                var rrresult = "success";
+                    return Json(rrresult, JsonRequestBehavior.AllowGet);
+
+
+            }
+            catch (Exception ex)
+            {
+                string result = "Error: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+        public ActionResult receiveAssignedFreezer(string code, string comments)
+        {
+
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var log = (from a in dblim.Tb_logContainers where (a.ID_container == code && a.inRoute==true) select a).FirstOrDefault();
+
+                if (log != null)
+                {
+                    log.inRoute = false;
+                    if (comments == "" || comments == null) { comments = ""; }
+                    log.Comments = comments;
+                    log.ReceivedUser = activeuser.Name + " " + activeuser.Lastname;
+                    log.DateReceived = DateTime.UtcNow;
+
+                    dblim.Entry(log).State = EntityState.Modified;
+                    dblim.SaveChanges();
+                    var rrresult = "success";
+                    return Json(rrresult, JsonRequestBehavior.AllowGet);
+                }
+                else {
+                    var rrresult = "Freezer not found";
+                    return Json(rrresult, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                string result = "Error: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
 
@@ -2623,19 +3428,19 @@ namespace LimenawebApp.Controllers
                 }
                 if (salesOrders == null)
                 {
-                    var id = Convert.ToInt32(id_route);
-                    var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id);
+                    //var id = Convert.ToInt32(id_route);
+                    //var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id);
 
-                    var todelete = (from f in vp select f.ID_salesorder).ToArray();
-                    var vpdet = dblim.Tb_PlanningSO_details.Where(a => todelete.Contains(a.ID_salesorder));
-                    //dblim.Tb_PlanningSO_details.RemoveRange(vpdet);
-                    dblim.BulkDelete(vpdet);
-
-
+                    //var todelete = (from f in vp select f.ID_salesorder).ToArray();
+                    //var vpdet = dblim.Tb_PlanningSO_details.Where(a => todelete.Contains(a.ID_salesorder));
+                    ////dblim.Tb_PlanningSO_details.RemoveRange(vpdet);
+                    //dblim.BulkDelete(vpdet);
 
 
-                    dblim.Tb_PlanningSO.RemoveRange(vp);
-                    dblim.SaveChanges();
+
+
+                    //dblim.Tb_PlanningSO.RemoveRange(vp);
+                    //dblim.SaveChanges();
 
                     var rrresult = "SUCCESS";
                     return Json(rrresult, JsonRequestBehavior.AllowGet);
@@ -2655,15 +3460,15 @@ namespace LimenawebApp.Controllers
                         if (fincoll.Length > 0)
                         {
 
-                            var todelete = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id && fincoll.Contains(f.SAP_docnum)) select f.ID_salesorder).ToArray();
-                            var vpdet = dblim.Tb_PlanningSO_details.Where(a => todelete.Contains(a.ID_salesorder));
+                            //var todelete = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id && fincoll.Contains(f.SAP_docnum)) select f.ID_salesorder).ToArray();
+                            //var vpdet = dblim.Tb_PlanningSO_details.Where(a => todelete.Contains(a.ID_salesorder));
                             //dblim.Tb_PlanningSO_details.RemoveRange(vpdet);
-                            dblim.BulkDelete(vpdet);
+                            //dblim.BulkDelete(vpdet);
 
 
-                            var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id && fincoll.Contains(a.SAP_docnum));
-                            dblim.Tb_PlanningSO.RemoveRange(vp);
-                            dblim.SaveChanges();
+                            //var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id && fincoll.Contains(a.SAP_docnum));
+                            //dblim.Tb_PlanningSO.RemoveRange(vp);
+                            //dblim.SaveChanges();
                         }
 
                         salesOrders = (from a in salesOrders where (!soexist.Contains(a)) select a).ToArray();
@@ -2895,6 +3700,123 @@ namespace LimenawebApp.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
+
+
+        public ActionResult SaveInvoices(string[] invoices, string id_route)
+        {
+
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+            
+                    if (invoices.Length > 0 || invoices != null)
+                    {
+                        var id = Convert.ToInt32(id_route);
+                        var soexist = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id && f.query5=="Invoice") select f.SAP_docnum).ToArray();
+
+                        var fincoll = (from a in soexist where (!invoices.Contains(a)) select a).ToArray();
+
+
+                        Tb_Planning planning = new Tb_Planning();
+                        planning = dblim.Tb_Planning.Find(id);
+
+
+                        invoices = (from a in invoices where (!soexist.Contains(a)) select a).ToArray();
+
+
+                        List<int> myCollection = new List<int>();
+
+                        foreach (var item in invoices)
+                        {
+                            myCollection.Add(Convert.ToInt32(item));
+                        }
+
+                        foreach (string value in invoices)
+                        {
+                        int inv = Convert.ToInt32(value);
+                        var invoice = cls_invoices.GetInvoice(0, inv, false).data[0];
+                            if (invoice != null)
+                            {
+                                Tb_PlanningSO newSO = new Tb_PlanningSO();
+                                newSO.SAP_docnum = invoice.docNum.ToString();
+                                newSO.SAP_docdate = Convert.ToDateTime(invoice.docDate);
+                                newSO.ID_customer = invoice.cardCode;
+                                newSO.Customer_name = invoice.cardName.ToUpper();
+                                newSO.ID_rep = invoice.slpCode.ToString();
+                                newSO.Rep_name = invoice.slpName.ToUpper();
+                                newSO.ID_SAPRoute = planning.ID_SAPRoute;
+                                newSO.Amount = Convert.ToDecimal(invoice.docTotal);
+                                newSO.isfinished = false;
+                                newSO.query1 = "";
+                                newSO.query2 = invoice.deliveryRoute;
+                                newSO.query3 = 0;
+                                newSO.query4 = "";
+                                newSO.query5 = "Invoice"; //Se agrego pra validar facturas retornadas
+                                newSO.Weight = "";
+                                newSO.Volume = "";
+                                newSO.Printed = "Y"; //Ya que es factura
+                                newSO.ID_Route = planning.ID_Route;
+                                newSO.DocEntry = invoice.docEntry.ToString();
+                                newSO.DateCheckIn = DateTime.UtcNow;
+                                newSO.DateCheckOut = DateTime.UtcNow;
+                                newSO.ID_userValidate = 0;
+                                newSO.Transferred = 0;
+                                newSO.Warehouse = "01";
+                                newSO.MensajeError = "";
+                                newSO.Error = 0;
+                                newSO.QC_count = 1;
+
+                                newSO.Remarks = ""; 
+                                dblim.Tb_PlanningSO.Add(newSO);
+                                dblim.SaveChanges();
+
+                            //Actualizamos invoice
+                            PUT_Invoices_api newput = new PUT_Invoices_api();
+                            newput.idDriver = planning.ID_driver;
+                            newput.idHelper = planning.ID_routeleader;
+                            newput.idTruck = planning.ID_truck;
+                            newput.deliveryDate = planning.Departure;
+                            newput.stateSd = 1;
+                            newput.id_Delivery = planning.ID_Route.ToString();
+
+                            var response2 = cls_invoices.PutInvoice(invoice.docEntry, newput);
+                        }
+
+                        }
+
+
+
+
+                        string ttresult = "SUCCESS";
+                        return Json(ttresult, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        string result = "NO DATA";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                
+
+
+
+            }
+            catch (Exception ex)
+            {
+                string result = "ERROR: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         public ActionResult SortSalesOrders(string[] salesOrders, string id_route)
         {
        
@@ -2965,6 +3887,19 @@ namespace LimenawebApp.Controllers
                                 saUp.query3 = item.sort;
                             saUp.query4 = item.comment;
                                 dblim.Entry(saUp).State = EntityState.Modified;
+
+                            //Actualizamos orden en ruta
+                            try
+                            {
+                                //PUT_Invoices_api newput = new PUT_Invoices_api();
+                                //newput.ord = 8;
+
+                                //var response2 = cls_invoices.PutInvoice(Convert.ToInt32(selSO.DocEntry), newput);
+
+                            }
+                            catch {
+
+                            }
                                 count++;
 
 
@@ -3191,7 +4126,7 @@ namespace LimenawebApp.Controllers
                         if (newDet.type == "S")
                         {
                             //llamamos los hijos
-                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I") select b).ToList();
+                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I" && b.ID_salesorder == idf) select b).ToList();
                             if (hijos.Count > 0)
                             {
                                 foreach (var item in hijos)
@@ -3206,7 +4141,6 @@ namespace LimenawebApp.Controllers
                                     item.QC_totalCount = newDet.QC_totalCount;
                                     item.Transferred = newDet.Transferred;
                                 }
-
                                 dblim.BulkUpdate(hijos);
 
                             }
@@ -3479,7 +4413,7 @@ namespace LimenawebApp.Controllers
                         if (newDet.type == "S")
                         {
                             //llamamos los hijos
-                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I") select b).ToList();
+                            var hijos = (from b in dblim.Tb_PlanningSO_details where (b.parent == newDet.ItemCode && b.type == "I" && b.ID_salesorder == idf) select b).ToList();
                             if (hijos.Count > 0)
                             {
                                 foreach (var item in hijos)
@@ -4259,6 +5193,8 @@ namespace LimenawebApp.Controllers
         {
             try
             {
+                //Se actualizo formato de reporte el 07/23/2020 
+
                 var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route && a.DocEntry !="--") select a).ToList();
 
                 //var quemadosSO = new List<string>();
@@ -4275,18 +5211,29 @@ namespace LimenawebApp.Controllers
                     {
                         //Buscamos datos en la vista maestra de facturas
                         var sqlQueryText = dlipro.sp_genericInvoice(item.DocEntry.ToString()).ToList();
+                        //var sqlQueryText = dlipro.sp_genericInvoiceV2(item.DocEntry.ToString()).ToList();
+                        //List<sp_genericInvoiceV2_kit_Result> lstkit = new List<sp_genericInvoiceV2_kit_Result>();
                         foreach (var iteminterno in sqlQueryText)
                         {
                             iteminterno.UomCode = "";
+                            //var sqlQuerySubReport = dlipro.sp_genericInvoiceV2_kit(item.DocEntry.ToString(), iteminterno.ItemCode).ToList();
+                            //if (sqlQuerySubReport.Count > 0)
+                            //{
+                            //    lstkit.AddRange(sqlQuerySubReport);
+                            //}
                         }
+
+                        //Buscamos en subreporte kit (07/23/2020)
 
                         ReportDocument rd = new ReportDocument();
 
+                        //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
                         rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoice Storage Type (RR).rpt"));
-
+                        rd.DataSourceConnections.Clear();
+                        //rd.Subreports[0].SetDataSource(lstkit);
                         rd.SetDataSource(sqlQueryText);
-                        //rd.DataSourceConnections.Clear();
-                  
+                        
+             
                         //ConnectionInfo connectInfo = new ConnectionInfo()
                         //{
                         //    //ServerName = ".",
@@ -4451,7 +5398,9 @@ namespace LimenawebApp.Controllers
                 var dateshor = so.Departure.ToShortDateString();
                 var sqlQueryText = dlipro.sp_genericDailyPaymentsCrossDock(so.ID_truck, dateshor).ToList();
 
+                var containers = (from c in dblim.Tb_logContainers where (c.ID_Route == so.ID_Route) select c.ID_container).ToArray();
 
+                var result = string.Join(",", containers);
 
                 if (sqlQueryText.Count > 0)
                 {
@@ -4488,6 +5437,7 @@ namespace LimenawebApp.Controllers
 
                    
                     rd.SetParameterValue("Date", so.Departure);
+                    rd.SetParameterValue("Containers", result);
                     rd.SetParameterValue("Truck", so.ID_truck);
                     rd.SetParameterValue("DRoute", so.Route_name);
                     rd.SetParameterValue("IDrouteazure", so.ID_Route);

@@ -31,186 +31,191 @@
 
     </div>
 </div>
+
+@if (activeuser.Roles.Contains("Super Admin"))
+{
+    
 <div class="container-fluid page__container">
-    <div class="alert alert-soft-warning d-flex align-items-center card-margin" role="alert">
+    <div class="alert alert-soft-success d-flex align-items-center card-margin" role="alert">
         <i class="material-icons mr-3">error_outline</i>
-        <div class="text-body"><strong>API gateways are now Offline.</strong> Please try the API later. If you want to stay up to date check our <a href="#">Status Page </a></div>
+        <div class="text-body"><strong>API gateways are now Online.</strong> If you want to stay up to date check our <a href="#">Status Page </a></div>
+    </div>
+ 
+        @if (ViewBag.showfreezermessage == "Y")
+        {
+            <div class="alert alert-soft-warning d-flex align-items-center card-margin" role="alert">
+                <i class="material-icons mr-3">error_outline</i>
+                <div class="text-body"><strong>Assigned Containers.</strong> Please receive and validate them using the quick action  <a href="#" data-toggle="modal" data-target="#modal-freezerReceive">Receive a Container</a></div>
+            </div>
+        }
+    
+
+
+
+    <div class="col-lg-12 py-3 px-0 bg-white border-left d-flex flex-column">
+        <div class="form-group px-3">
+            <div class="input-group input-group-merge input-group-rounded">
+                <input type="text" class="form-control form-control-prepended" placeholder="Filter modules">
+                <div class="input-group-prepend">
+                    <div class="input-group-text">
+                        <span class="material-icons">filter_list</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="flex d-flex flex-column">
+            <div data-simplebar class="h-100">
+                <div class="list-group list-group-flush" style="position: relative; z-index: 0;">
+
+                 
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("Index","Authorizations")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/authorizations.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("Index","Authorizations")" class="text-body"><strong>Authorizations</strong></a><br>
+                                    <span class="text-muted">Smart Delivery</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("ReceivePayments","Payments")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/paymentfinance.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("ReceivePayments","Payments")" class="text-body"><strong>Payments</strong></a><br>
+                                    <span class="text-muted">Smart Delivery</span>
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("ReceiveCredits","Warehouse")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/routes2.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("ReceiveCredits","Warehouse")" class="text-body"><strong>Credits / Returned Products</strong></a><br>
+                                    <span class="text-muted">Smart Deliver</span>
+                                </p>
+                            </div>
+                        </div>
+                
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("PlanningRoutes","Invoices")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/planning.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("PlanningRoutes","Invoices")" class="text-body"><strong>Planning</strong></a><br>
+                                    <span class="text-muted">Operations</span>
+                                </p>
+                            </div>
+                        </div>
+                 
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("QualityControl_planning","Invoices")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/qualitycontrol1.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("QualityControl_planning","Invoices")" class="text-body"><strong>Quality Control</strong></a><br>
+                                    <span class="text-muted">Operations</span>
+                                </p>
+                            </div>
+                        </div>
+              
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("OpenSalesOrders","Invoices")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/opesalesorders.png" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("OpenSalesOrders","Invoices")" class="text-body"><strong>Sales Orders Print</strong></a><br>
+                                    <span class="text-muted">Operations</span>
+                                </p>
+                            </div>
+                        </div>
+           
+                                                <div class="list-group-item d-flex media align-items-center">
+                            <a href="#" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/choose/freezersReceive.png" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("Freezers","Invoices")"  class="text-body"><strong>Containers</strong></a><br>
+                                    <span class="text-muted">Warehouse</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="#" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/choose/freezersReceive.png" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="#" data-toggle="modal" data-target="#modal-freezerReceive" class="text-body"><strong>Receive a Containers</strong></a><label class="badge badge-success" style="margin-left:5px;">Quick Action</label><br>
+                                    <span class="text-muted">Warehouse</span>
+                                </p>
+                            </div>
+                        </div>
+                  
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("Credits_authorize", "Commercial")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/credits.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("Credits_authorize", "Commercial")" class="text-body"><strong>Credits Authorize</strong></a><br>
+                                    <span class="text-muted">Commercial / Sales Support</span>
+                                </p>
+                            </div>
+                        </div>
+                   
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("Credits_request", "Commercial")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/credits.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("Credits_request", "Commercial")" class="text-body"><strong>Credits Request</strong></a><br>
+                                    <span class="text-muted">Commercia / Sales Support</span>
+                                </p>
+                            </div>
+                        </div>
+                 
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("Customer_contactdata", "Commercial")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/customercare.png" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("Customer_contactdata", "Commercial")" class="text-body"><strong>Customers Contact Data</strong></a><br>
+                                    <span class="text-muted">Commercia</span>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="list-group-item d-flex media align-items-center">
+                            <a href="@Url.Action("New_customers", "Management")" class="avatar avatar-sm media-left mr-3">
+                                <img src="~/Content/assets/images/dashboard/customercare.png" alt="Avatar" class="avatar-img rounded-circle">
+                            </a>
+                            <div class="media-body">
+                                <p class="m-0">
+                                    <a href="@Url.Action("New_customers", "Management")" class="text-body"><strong>New customers</strong></a><br>
+                                    <span class="text-muted">Management</span>
+                                </p>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+        </div>
     </div>
 
-    @if (!activeuser.Roles.Contains("Purchases"))
-    {
-        <p class="text-dark-gray d-flex align-items-center mt-3">
-            <strong>Finance</strong><hr />
-        </p>
-
-        <div class="row card-group-row  pt-2">
-            <div class="col-md-3">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:89px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="@Url.Action("Index","Authorizations")" class="btn btn-success mt-auto">Driver's Authorizations</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/paymentfinance.jpg" style="width:100px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="@Url.Action("ReceivePayment","Finance")" class="btn btn-success mt-auto">Receive Payments</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-
-        <p class="text-dark-gray d-flex align-items-center mt-3">
-            <strong>Warehouse</strong><hr />
-        </p>
-
-        <div class="row card-group-row  pt-2">
-            <div class="col-md-4 col-lg-3">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:89px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="@Url.Action("ReceiveCredits","Warehouse")" class="btn btn-success mt-auto">Receive Credits</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    }
-
-
-    @*<p class="text-dark-gray d-flex align-items-center mt-3">
-            <strong>Commercial</strong><hr />
-        </p>
-
-        <div class="row card-group-row  pt-2">
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/routes2.jpg" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="#" class="btn btn-success mt-auto">Marketing Activities</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/pricerequest3.png" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="#" class="btn btn-success mt-auto">Price Request</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/credits.jpg" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="#" class="btn btn-success mt-auto">Credits Request</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row card-group-row  pt-2">
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/customercare.png" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="#" class="btn btn-success mt-auto">Customer Care</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
-
-
-    @*<p class="text-dark-gray d-flex align-items-center mt-3">
-            <strong>Operations</strong><hr />
-        </p>
-
-        <div class="row card-group-row  pt-2">
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/planning.jpg" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="@Url.Action("Authorizations","Finance")" class="btn btn-success mt-auto">Planning</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/qualitycontrol1.jpg" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="@Url.Action("ReceivePayment","Finance")" class="btn btn-success mt-auto">Quality Control</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 col-lg-4 col-sm-6 card-group-row__col">
-                <div class="card card-group-row__card pricing__card">
-                    <div class="card-body d-flex flex-column">
-                        <div class="text-center">
-                            <img src="~/Content/assets/images/dashboard/qc.jpg" style="width:200px;" />
-
-                        </div>
-                        <div class="card-body d-flex flex-column">
-                            <a href="@Url.Action("ReceivePayment","Finance")" class="btn btn-success mt-auto">Warehouse Control</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>*@
-
-
-
-    @if (activeuser.Roles.Contains("Purchases"))
-    {
-
+ 
         <p class="text-dark-gray d-flex align-items-center mt-3">
             <strong>Purchases</strong><hr />
         </p>
@@ -230,7 +235,7 @@
                 </div>
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card card-group-row__card pricing__card">
                     <div class="card-body d-flex flex-column">
                         <div class="text-center">
@@ -243,7 +248,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card card-group-row__card pricing__card">
                     <div class="card-body d-flex flex-column">
                         <div class="text-center">
@@ -258,7 +263,294 @@
             </div>
         </div>
 
-    }
+    
+
+
 
 
 </div>
+}
+else
+{
+
+    <div class="container-fluid page__container">
+        <div class="alert alert-soft-success d-flex align-items-center card-margin" role="alert">
+            <i class="material-icons mr-3">error_outline</i>
+            <div class="text-body"><strong>API gateways are now Online.</strong> If you want to stay up to date check our <a href="#">Status Page </a></div>
+        </div>
+        @if (activeuser.Roles.Contains("Receive Containers"))
+        {
+            if (ViewBag.showfreezermessage == "Y")
+            {
+                <div class="alert alert-soft-warning d-flex align-items-center card-margin" role="alert">
+                    <i class="material-icons mr-3">error_outline</i>
+                    <div class="text-body"><strong>Assigned Containers.</strong> Please receive and validate them using the quick action  <a href="#" data-toggle="modal" data-target="#modal-freezerReceive">Receive a Container</a></div>
+                </div>
+            }
+        }
+
+
+
+        <div class="col-lg-12 py-3 px-0 bg-white border-left d-flex flex-column">
+            <div class="form-group px-3">
+                @*<div class="input-group input-group-merge input-group-rounded">
+                        <input type="text" class="form-control form-control-prepended" placeholder="Filter modules (coming soon)">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="material-icons">filter_list</span>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+            <div class="flex d-flex flex-column">
+                <div data-simplebar class="h-100">
+                    <div class="list-group list-group-flush" style="position: relative; z-index: 0;">
+
+                                   @if (activeuser.Roles.Contains("Sales Representative"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("App","Home")" class="text-body"><strong>Change Application</strong></a><br>
+                                        <span class="text-muted">Smart Delivery</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        @if (activeuser.Departments.Contains("SD"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("Index","Authorizations")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/authorizations.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("Index","Authorizations")" class="text-body"><strong>Authorizations</strong></a><br>
+                                        <span class="text-muted">Smart Delivery</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("ReceivePayments","Payments")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/paymentfinance.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("ReceivePayments","Payments")" class="text-body"><strong>Payments</strong></a><br>
+                                        <span class="text-muted">Smart Delivery</span>
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("ReceiveCredits","Warehouse")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/routes2.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("ReceiveCredits","Warehouse")" class="text-body"><strong>Credits / Returned Products</strong></a><br>
+                                        <span class="text-muted">Smart Deliver</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        @if (activeuser.Roles.Contains("Planning"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("PlanningRoutes","Invoices")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/planning.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("PlanningRoutes","Invoices")" class="text-body"><strong>Planning</strong></a><br>
+                                        <span class="text-muted">Operations</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }                        
+                        @if (activeuser.Roles.Contains("CreditsQC"))
+                        {
+                   <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("ReceiveCredits","Warehouse")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/routes2.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("ReceiveCredits","Warehouse")" class="text-body"><strong>Credits / Returned Products</strong></a><br>
+                                        <span class="text-muted">Smart Deliver</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        @if (activeuser.Roles.Contains("Quality Control"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("QualityControl_planning","Invoices")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/qualitycontrol1.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("QualityControl_planning","Invoices")" class="text-body"><strong>Quality Control</strong></a><br>
+                                        <span class="text-muted">Operations</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
+                        @if (activeuser.Roles.Contains("SO Print"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("OpenSalesOrders","Invoices")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/opesalesorders.png" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("OpenSalesOrders","Invoices")" class="text-body"><strong>Sales Orders Print</strong></a><br>
+                                        <span class="text-muted">Operations</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        @if (activeuser.Roles.Contains("Receive Containers"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="#" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/choose/freezersReceive.png" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("Freezers","Invoices")" class="text-body"><strong>Containers</strong></a><br>
+                                        <span class="text-muted">Warehouse</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="#" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/choose/freezersReceive.png" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="#" data-toggle="modal" data-target="#modal-freezerReceive" class="text-body"><strong>Receive a Containers</strong></a><label class="badge badge-success" style="margin-left:5px;">Quick Action</label><br>
+                                        <span class="text-muted">Warehouse</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+
+                        @if (activeuser.Roles.Contains("Credits Authorizer"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("Credits_authorize", "Commercial")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/credits.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("Credits_authorize", "Commercial")" class="text-body"><strong>Credits Authorize</strong></a><br>
+                                        <span class="text-muted">Commercial / Sales Support</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        @if (activeuser.Roles.Contains("Credits Authorizer"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("Credits_request", "Commercial")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/credits.jpg" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("Credits_request", "Commercial")" class="text-body"><strong>Credits Request</strong></a><br>
+                                        <span class="text-muted">Commercia / Sales Support</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                        @if (activeuser.Roles.Contains("Contacts"))
+                        {
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("Customer_contactdata", "Commercial")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/customercare.png" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("Customer_contactdata", "Commercial")" class="text-body"><strong>Customers Contact Data</strong></a><br>
+                                        <span class="text-muted">Commercia</span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="list-group-item d-flex media align-items-center">
+                                <a href="@Url.Action("New_customers", "Management")" class="avatar avatar-sm media-left mr-3">
+                                    <img src="~/Content/assets/images/dashboard/customercare.png" alt="Avatar" class="avatar-img rounded-circle">
+                                </a>
+                                <div class="media-body">
+                                    <p class="m-0">
+                                        <a href="@Url.Action("New_customers", "Management")" class="text-body"><strong>New customers</strong></a><br>
+                                        <span class="text-muted">Management</span>
+                                    </p>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (activeuser.Departments.Contains("Purchases"))
+        {
+
+            <p class="text-dark-gray d-flex align-items-center mt-3">
+                <strong>Purchases</strong><hr />
+            </p>
+
+            <div class="row card-group-row  pt-2">
+                <div class="col-md-3">
+                    <div class="card card-group-row__card pricing__card">
+                        <div class="card-body d-flex flex-column">
+                            <div class="text-center">
+                                <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:100px;" />
+
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <a href="@Url.Action("OTB","OTB")" class="btn btn-success mt-auto">OTB</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card card-group-row__card pricing__card">
+                        <div class="card-body d-flex flex-column">
+                            <div class="text-center">
+                                <img src="~/Content/assets/images/dashboard/authorizations.jpg" style="width:100px;" />
+
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <a href="@Url.Action("SOP","SOP")" class="btn btn-success mt-auto">S&OP</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-group-row__card pricing__card">
+                        <div class="card-body d-flex flex-column">
+                            <div class="text-center">
+                                <img src="~/Content/appcontent/assets/img/badge/logoIBM-Cognos-Analytics.png" style="width:111px;" />
+
+                            </div>
+                            <div class="card-body d-flex flex-column">
+                                <a href="http://cognos.limenainc.net/" target="_blank" class="btn btn-success mt-auto">COGNOS</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        }
+
+
+
+
+    </div>
+}
+

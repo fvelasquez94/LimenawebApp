@@ -56,25 +56,25 @@ namespace LimenawebApp.Models.Invoices_api
         public string itemCode { get; set; }
         public string itemName { get; set; }
         public decimal quantity { get; set; }
-        public decimal openQty { get; set; }
+        public decimal? openQty { get; set; }
         public int uomEntry { get; set; }
         public string unitMsr { get; set; }
-        public decimal numPerMsr { get; set; }
-        public decimal priceBefDi { get; set; }
-        public decimal discPrcnt { get; set; }
-        public decimal unitPrice { get; set; }
-        public decimal unitCost { get; set; }
-        public decimal unitProfit { get; set; }
-        public decimal totalSale { get; set; }
-        public decimal totalCost { get; set; }
-        public decimal totalProfit { get; set; }
+        public decimal? numPerMsr { get; set; }
+        public decimal? priceBefDi { get; set; }
+        public decimal? discPrcnt { get; set; }
+        public decimal? unitPrice { get; set; }
+        public decimal? unitCost { get; set; }
+        public decimal? unitProfit { get; set; }
+        public decimal? totalSale { get; set; }
+        public decimal? totalCost { get; set; }
+        public decimal? totalProfit { get; set; }
         public string whsCode { get; set; }
         public string treeType { get; set; }
-        public int lineNum { get; set; }
-        public int visOrder { get; set; }
-        public int baseType { get; set; }
-        public int baseLine { get; set; }
-        public int targetType { get; set; }
+        public int? lineNum { get; set; }
+        public int? visOrder { get; set; }
+        public int? baseType { get; set; }
+        public int? baseLine { get; set; }
+        public int? targetType { get; set; }
         public int? trgetEntry { get; set; }
         public string docSubType { get; set; }
         public decimal returnsDraftQty { get; set; }

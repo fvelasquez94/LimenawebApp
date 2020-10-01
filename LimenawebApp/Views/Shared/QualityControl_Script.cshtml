@@ -13,7 +13,7 @@
     function getuomdata(control) {
 
         $('#UOMshow').modal('show');
-        
+
     }
 
     function getSOdataByStorage(control) {
@@ -59,7 +59,7 @@
         var sapdoc = $(control).data('saledoc');
         var sapdocstorage = $(control).data('salestorage');
         var sapdocpicker = $(control).data('picker');
-   
+
         if (sapdocpicker == "") {
             $("#pickerlst").val("0").change();
         } else {
@@ -77,7 +77,7 @@
         } else {
             $("#storageselso").html("STORAGE TYPE: " + sapdocstorage);
         }
-       
+
 
         $("#loading").show();
         $.ajax({
@@ -109,7 +109,7 @@
                 chtml += "    <th>" + "BIN LOC" + "</th>";
                 chtml += "    <th>" + "UOM" + "</th>";
                 chtml += "    <th >" + "QTY" + "</th>";
-                
+
                 chtml += "    <th>" + "ITEM CODE" + "</th>";
                 chtml += "    <th>" + "ITEM NAME" + "</th>";
 
@@ -133,7 +133,7 @@
 
                 chtml = "";
 
-           
+
                 $.each($.parseJSON(result.result), function (i, selSO) {
 
                     if (selSO.query1 == "DEL") {
@@ -151,7 +151,7 @@
                     chtml += "    <td>" + selSO.ID_storagetype + "</td>";
                     chtml += "    <td>" + selSO.Bin_loc + "</td>";
 
-                    
+
                     chtml += '    <td><select class="form-control seluoms" style="width:100px">';
                     $.each(selSO.lstuom, function (i, uom) {
                         if (uom.UomEntry == selSO.UomEntry) {
@@ -159,16 +159,16 @@
                         } else {
                             chtml += '    <option val="' + uom.UomEntry + '">' + uom.UomCode + '</option>';
                         }
-                        
+
                     });
-                   
+
                     chtml += '</select ></td > ';
                     if (selSO.query2 == "3") {
                         chtml += '    <td><input readonly style="padding:0;width: 60px;" class="form-control numord" type="number" min="1" value="' + selSO.Quantity + '" /></td>';
                     } else {
                         chtml += '    <td><input min="1" type="number"  style="padding:0;width: 60px;" class="form-control numord" value="' + selSO.Quantity + '" /></td>';
                     }
-        
+
                     //chtml += '    <td><input style="padding:0;" class="form-control units" type="number" min="-9999" value="' + selSO.Quantity + '" /></td>'; con botones
                     chtml += "    <td>" + selSO.ItemCode + "</td>";
                     chtml += "    <td>" + selSO.ItemName + "</td>";
@@ -182,7 +182,7 @@
                         } else {
                             chtml += "    <td>" + '<a><i style="cursor: pointer;font-size:22px;" class="fa fa-trash itemDelete"></i></a>' + "</td>";
                         }
-                        
+
                     }
 
                     chtml += " </tr>";
@@ -432,7 +432,7 @@
                     }
                 }
 
-                
+
 
             }
 
@@ -471,14 +471,14 @@
 
         }
 
-       
+
 
     }
 
     function saveData_StorageType() {
         var idpicker = "AA";//$('#pickerlst').val();
         var pickername = "ANDRES SOTO";//$("#pickerlst option:selected").text();
-        
+
         var storage = $('#selectStoragetype').val();
         if (idpicker == "0") {
             $("#savebtns").show()
@@ -486,35 +486,35 @@
             $("#pickerlst").focus();
         } else {
 
-                var idt = $("#selectSOd").val();
-                //console.log(idt + objects + idpicker + pickername);
-                //console.log(objects);
-                document.getElementById("loader").style.display = "block";
-                $.ajax
-                    ({
-                        url: '/Invoices/Save_SODetailsByStorage',
-                        type: 'POST',
-                        data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
-                        success: function (result) {
+            var idt = $("#selectSOd").val();
+            //console.log(idt + objects + idpicker + pickername);
+            //console.log(objects);
+            document.getElementById("loader").style.display = "block";
+            $.ajax
+                ({
+                    url: '/Invoices/Save_SODetailsByStorage',
+                    type: 'POST',
+                    data: { 'id': idt, 'storage': storage, 'idPicker': idpicker, 'pickername': pickername },
+                    success: function (result) {
 
-                            if (result == "SUCCESS") {
-                                toastr.success("Data saved successfully.", "Success");
-                                document.getElementById("loader").style.display = "none";
-                                window.location.reload(true);
-                            } else {
-                                toastr.warning("Something went wrong.." + result, "Warning");
-                                document.getElementById("loader").style.display = "none";
-                            }
-
-
-                        },
-                        error: function () {
-
-                            toastr.warning("Something went wrong..", "Warning");
+                        if (result == "SUCCESS") {
+                            toastr.success("Data saved successfully.", "Success");
                             document.getElementById("loader").style.display = "none";
-                        },
-                    });
-            
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong.." + result, "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
 
         }
 
@@ -637,7 +637,7 @@
             })
 
 
-            
+
             //$(this).closest('tr').find("input,button,select").attr("disabled", true);
             //$(this).closest('tr').children('td, th').css('background-color', '#dee2e6');
             //$(this).closest('tr').children('td, th').css('color', '#cdcfd2');
@@ -654,7 +654,7 @@
     }
 
     function closeSO(id_so) {
-      
+
         swal.fire({
             title: 'Are you sure to close this sales order?',
             text: "You won't be able to revert this",
@@ -698,4 +698,75 @@
         })
     }
 
+</script>
+
+
+<script type="text/javascript">
+    $('#data_tableEditor2').treegrid();
+    $('#data_tableEditor2').treegrid('collapseAll');
+</script>
+
+<script>
+
+        function PrintSO(id, docentry) {
+
+            swal.fire({
+                title: 'Are you sure to print this sales order?',
+                text: "",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+
+                    $.ajax({
+                        url: '/Invoices/Print_so',
+                        type: 'POST',
+                        data: { 'id': id, 'docentry':docentry },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "success") {
+
+                                Swal.fire(
+                                    'Sales Order printed',
+                                    '',
+                                    'success'
+                                )
+                                //window.location.reload(true);
+                            } else {
+                                alert("Something went wrong..");
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Something went wrong..");
+
+                        }
+                    });
+
+                }
+            })
+        }
+
+    $(document).ready(function () {
+        var json = JSON.parse('@Html.Raw(ViewBag.pickers)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+        $("#pickerlst").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+
+    });
 </script>

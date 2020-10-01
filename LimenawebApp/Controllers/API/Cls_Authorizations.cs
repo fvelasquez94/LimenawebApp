@@ -73,7 +73,7 @@ namespace LimenawebApp.Controllers.API
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
             var request = new RestRequest("/api/Authorizations", Method.GET);
             //request.AddParameter("pageNumber", 1);
-            request.AddParameter("pageSize", 30);
+            request.AddParameter("pageSize", 250);
 
             if (DocentryInv != 0)
             {
@@ -118,6 +118,25 @@ namespace LimenawebApp.Controllers.API
 
             var result = client.Execute(request);
             var jsonResponse = JsonConvert.DeserializeObject<GetAuthorizations_api>(result.Content);
+
+            return jsonResponse;
+        }
+        public GetAuthorizationsSingle_api GetAuthorizationbyID(string idauthorization)
+        {
+
+            var settings = clsapi.GetAPI();
+            //Si se necesitan DETALLES de las invoices,hay que activar FullMode=true
+            string bearerToken = settings.token;
+            var client = new RestClient(settings.IP);
+            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
+            var request = new RestRequest("/api/Authorizations/" + idauthorization, Method.GET); //mandar iddocentry por url
+    
+
+            request.AddHeader("cache-control", "no-cache");
+
+
+            var result = client.Execute(request);
+            var jsonResponse = JsonConvert.DeserializeObject<GetAuthorizationsSingle_api>(result.Content);
 
             return jsonResponse;
         }

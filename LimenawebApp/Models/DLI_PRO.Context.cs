@@ -34,7 +34,6 @@ namespace LimenawebApp.Models
         public virtual DbSet<ITM1> ITM1 { get; set; }
         public virtual DbSet<Dsd_Products> Dsd_Products { get; set; }
         public virtual DbSet<View_dsd_suggestedinventory> View_dsd_suggestedinventory { get; set; }
-        public virtual DbSet<OpenSalesOrders> OpenSalesOrders { get; set; }
         public virtual DbSet<C_DROUTE> C_DROUTE { get; set; }
         public virtual DbSet<C_HELPERS> C_HELPERS { get; set; }
         public virtual DbSet<C_TRUCKS> C_TRUCKS { get; set; }
@@ -54,6 +53,7 @@ namespace LimenawebApp.Models
         public virtual DbSet<PlanningUoMInfo> PlanningUoMInfo { get; set; }
         public virtual DbSet<OBIN> OBIN { get; set; }
         public virtual DbSet<BI_Contact_Person> BI_Contact_Person { get; set; }
+        public virtual DbSet<OpenSalesOrders> OpenSalesOrders { get; set; }
     
         public virtual ObjectResult<sp_genericInvoice_Result> sp_genericInvoice(string dockey)
         {
@@ -75,6 +75,28 @@ namespace LimenawebApp.Models
                 new ObjectParameter("Date", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_genericDailyPaymentsCrossDock_Result>("sp_genericDailyPaymentsCrossDock", truckParameter, dateParameter);
+        }
+    
+        public virtual ObjectResult<sp_genericInvoiceV2_Result> sp_genericInvoiceV2(string dockey)
+        {
+            var dockeyParameter = dockey != null ?
+                new ObjectParameter("dockey", dockey) :
+                new ObjectParameter("dockey", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_genericInvoiceV2_Result>("sp_genericInvoiceV2", dockeyParameter);
+        }
+    
+        public virtual ObjectResult<sp_genericInvoiceV2_kit_Result> sp_genericInvoiceV2_kit(string docEntry, string kitcode)
+        {
+            var docEntryParameter = docEntry != null ?
+                new ObjectParameter("docEntry", docEntry) :
+                new ObjectParameter("docEntry", typeof(string));
+    
+            var kitcodeParameter = kitcode != null ?
+                new ObjectParameter("kitcode", kitcode) :
+                new ObjectParameter("kitcode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_genericInvoiceV2_kit_Result>("sp_genericInvoiceV2_kit", docEntryParameter, kitcodeParameter);
         }
     }
 }

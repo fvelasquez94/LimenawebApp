@@ -1,0 +1,145 @@
+﻿@model LimenawebApp.Models.Journal.Mdl_Journal.GET_Journals_api
+@{
+    ViewBag.Title = "Balance_control";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+
+    DateTime fecha = new DateTime(2000, 01, 01);
+    var ruta = "";
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Finance</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Balance Control</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Balance Control</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Finance.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_name">Search</label>
+                        <input id="filter_name" type="text" class="form-control" placeholder="Enter keyword">
+                    </div>
+                </div>
+                @*<div class="col-sm-auto">
+                        <div class="form-group">
+                            <label for="filter_buckets">Routes</label><br>
+                            <select id="filter_buckets" class="custom-select" style="width: 150px;">
+                                <option value="all">Any</option>
+                                <option value="S000474">ID - Route Name</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-auto">
+                        <div class="form-group">
+                            <label for="filter_assigned">Driver</label><br>
+                            <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                                <option value="all">Any</option>
+                                <option value="1">Driver 1</option>
+                                <option value="2">Driver 2</option>
+                                <option value="3">Driver 3</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-sm-auto">
+                        <div class="form-group">
+                            <label for="filter_assigned">Status</label><br>
+                            <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                                <option value="all">Any</option>
+                                <option value="2">Finished</option>
+                                <option value="1">Waiting for Driver</option>
+                                <option value="3">Waiting for submit</option>
+                            </select>
+                        </div>
+                    </div>*@
+                <div class="col-sm-auto">
+                    <div class="form-group" style="width: 200px;">
+                        <label for="filter_date">Daterange</label>
+                        <input id="filter_date" type="text" class="form-control" placeholder="Range example" data-toggle="daterangepicker" data-daterangepicker-start-date="@Convert.ToDateTime(ViewBag.filtrofechastart).ToString("yyyy/MM/dd")" data-daterangepicker-end-date="@Convert.ToDateTime(ViewBag.filtrofechaend).ToString("yyyy/MM/dd")">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    @if (Model != null)
+    {
+        if (Model.data != null)
+        {
+
+
+
+            <div class="row">
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Docentry</th>
+                                    <th>Actions</th>
+    
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.data.Where(c=>c.docEntryInv !=null))
+                                {
+                                    <tr>
+                                        <td>@item.transId</td>
+                                        <td>@item.docEntryInv</td>
+                                        <td>
+                                            <button class="btn btn-success btn-sm">Generate new credit</button>
+                                            <button class="btn btn-success btn-sm">Charge employee</button>
+                                            <button class="btn btn-success btn-sm">Charge customer</button>
+                                        </td>
+
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+        }
+        else
+        {
+            <div>
+                <label>No data to show</label>
+            </div>
+        }
+
+
+    }
+    else
+    {
+        <div>
+            <label>No data to show</label>
+        </div>
+    }
+
+
+</div>

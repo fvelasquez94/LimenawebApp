@@ -230,6 +230,11 @@ namespace LimenawebApp.Models
 
     }
 
+    public class lst_Freezer
+    {
+        public string id { get; set; }
+        public string name { get; set; }
+    }
 
     public class QualityControl_SO {
         public int ID_Route { get; set; }
@@ -257,5 +262,6 @@ namespace LimenawebApp.Models
         public string Warehouse { get; set; }
         public int transferred { get; set; }
         public int existendeOtraBodega { get; set; }
+        public List<lst_Freezer> freezers { get; set; }
     }
 }

@@ -63,7 +63,10 @@
 <link rel="stylesheet" type="text/css" href="~/Content/appcontent/assets/vendor/jstreegrid/jquery.treegrid.css" />
 
 <link rel="stylesheet" href="~/Content/appcontent/assets/vendor/contextmeu/jquery.contextMenu.css">
-
+@if (ViewBag.Title == "Distribuidora Limeña - Credits authorize")
+{
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.2/css/buttons.dataTables.min.css">
+}
 @if (ViewBag.Title == "Distribuidora Limeña - New Purchase Data")
 {
     <link rel="stylesheet" href="~/Content/appcontent/assets/css/fixedColumns.dataTables.css">

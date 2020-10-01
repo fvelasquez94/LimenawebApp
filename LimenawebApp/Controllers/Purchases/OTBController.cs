@@ -71,7 +71,7 @@ namespace LimenawebApp.Controllers.Purchases
                 //HEADER
                 //ACTIVE PAGES
                 ViewData["Menu"] = "Purchases";
-                ViewData["Page"] = "SOP";
+                ViewData["Page"] = "OTB";
                 List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));

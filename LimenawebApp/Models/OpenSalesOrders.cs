@@ -27,12 +27,15 @@ namespace LimenawebApp.Models
         public Nullable<decimal> GProfitPer { get; set; }
         public Nullable<decimal> TotalInvoice { get; set; }
         public Nullable<decimal> OpenAmount { get; set; }
+        public Nullable<int> IDSalesPerson { get; set; }
         public string SalesPerson { get; set; }
         public string Classification { get; set; }
         public string Remarks { get; set; }
-        public Nullable<int> IDSalesPerson { get; set; }
         public string BonifPendientes { get; set; }
         public string WareHouse { get; set; }
         public Nullable<int> NoWhs { get; set; }
+        public Nullable<System.DateTime> CreateDate { get; set; }
+        public string DocTime { get; set; }
+        public string SOType { get; set; }
     }
 }

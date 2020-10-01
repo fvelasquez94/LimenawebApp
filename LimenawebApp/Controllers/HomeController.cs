@@ -13,6 +13,8 @@ using System.Drawing;
 using System.IO;
 using System.Drawing.Imaging;
 using System.Net;
+using Newtonsoft.Json;
+using LimenawebApp.Controllers.Session;
 
 namespace LimenawebApp.Controllers
 {
@@ -20,6 +22,7 @@ namespace LimenawebApp.Controllers
     {
         private dbLimenaEntities dblim = new dbLimenaEntities();
         private DLI_PROEntities dlipro = new DLI_PROEntities();
+        private Cls_session cls_session = new Cls_session();
         /// <summary>
         /// 
         /// </summary>
@@ -219,10 +222,108 @@ namespace LimenawebApp.Controllers
 
             return View();
         }
-        public ActionResult Log_in(string email, string password, string date, bool rememberme)
-        {
- 
 
+
+        public ActionResult App()
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Login";
+                ViewData["Page"] = "App";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+
+                List<string> t = new List<string>(activeuser.Truck_name.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstapps = JsonConvert.SerializeObject(t);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+              
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+                ViewBag.company_bodega = company_bodega;
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+
+        public ActionResult RedirectToMainApp() {
+
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+
+            if (activeuser.Departments.Contains("Sales"))
+            {
+                return RedirectToAction("Dashboard_sales", "Main", null);
+            }
+            else if (activeuser.Departments.Contains("DSD"))
+            {
+                return RedirectToAction("Dashboard_dsd", "Main", null);
+
+            }
+            else if (activeuser.Departments.Contains("Operations"))
+            {
+
+                return RedirectToAction("Dashboard", "Main", null);
+
+
+
+            }
+            else if (activeuser.Departments.Contains("Purchases"))
+            {
+
+                return RedirectToAction("Dashboard", "Main", null);
+
+
+
+            }
+            else if (activeuser.Departments.Contains("Customer"))
+            {
+                return RedirectToAction("Dashboard_customers", "Main", null);
+
+            }
+            else if (activeuser.Departments.Contains("Inventory"))
+            {
+                return RedirectToAction("Dashboard_Inventory", "Main", null);
+
+            }
+            else if (activeuser.Departments.Contains("ExternalApps"))
+            {
+                return RedirectToAction("Dashboard_ExternalApps", "Main", null);
+            }
+
+            return RedirectToAction("Apps", "Home", null);
+
+
+        }
+
+
+        public ActionResult Log_in(string email, string password, string date, bool rememberme=true)
+        {
+
+            rememberme = true;
             Session["activeUser"] = (from a in dblim.Sys_Users where (a.Email == email && a.Password == password && a.Active == true) select a).FirstOrDefault();
             if (Session["activeUser"] != null)
             {
@@ -339,42 +440,8 @@ namespace LimenawebApp.Controllers
 
                 //}
 
+                    return RedirectToAction("App", "Home", null);
 
-                if (activeuser.Departments.Contains("Sales")) {
-                    return RedirectToAction("Dashboard_sales", "Main", null);
-                }
-                else if (activeuser.Departments.Contains("DSD"))
-                {
-                    return RedirectToAction("Dashboard_dsd", "Main", null);
-
-                }
-                else if (activeuser.Departments.Contains("Operations"))
-                {
-                    if (activeuser.Roles.Contains("Purchases"))
-                    {
-                        return RedirectToAction("Dashboard", "Main", null);
-                    }
-                    else {
-                        return RedirectToAction("Dashboard_operations", "Main", null);
-                    }
-                  
-
-                }
-                else if (activeuser.Departments.Contains("Customer"))
-                {
-                    return RedirectToAction("Dashboard_customers", "Main", null);
-
-                }
-                else if (activeuser.Departments.Contains("Inventory"))
-                {
-                    return RedirectToAction("Dashboard_Inventory", "Main", null);
-
-                }
-                else if (activeuser.Departments.Contains("ExternalApps"))
-                {
-                    return RedirectToAction("Dashboard_ExternalApps", "Main", null);
-
-                }
 
             }
 

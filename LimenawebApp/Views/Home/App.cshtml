@@ -1,0 +1,80 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+    ViewBag.Title = "Distribuidora Limeña - Login";
+    string permisos = @ViewBag.lstapps;
+    LimenawebApp.Models.Sys_Users user = (LimenawebApp.Models.Sys_Users)ViewBag.activeuser;
+}
+
+
+
+<div class="main-container">
+    <section>
+        <div class="container">
+            <div class="row" style="margin-bottom:10px">
+                <div class="col-md-6">
+                    <img alt="Image" class="" src="~/Content/landingpage/images/LogoLimenaWebIcono.png" style="width:30%" />
+
+                </div>
+                <div class="col-md-6 text-right text-center-xs">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="heading-block">
+                        <h3>Hello, <strong>@user.Name  @user.Lastname</strong>!</h3>
+                        <h2>Current Applications</h2>
+                    </div>
+                </div>
+                @if (permisos.Contains("Limena_app")) {
+                <div class="col-md-4">
+                    <div class="feature feature-1 boxed boxed--border">
+                        <span class="label">Distribuidora Limena</span>
+                        <h5>Internal</h5>
+                        <p>
+                            Manage all tasks and process of our company
+                        </p>
+                        <a href="@Url.Action("RedirectToMainApp", "Home")" class="btn btn-secondary btn-small">
+                            Enter
+                        </a>
+                    </div>
+                    <!--end feature-->
+                </div>
+                }
+                  @if (permisos.Contains("SD")) {
+                <div class="col-md-4">
+                    <div class="feature feature-1 boxed boxed--border">
+                        <span class="label bg--primary-2">Comercia Logistics</span>
+                        <h5>Smart Delivery App</h5>
+                        <p>
+                            Manage all your customer's accounts receivables
+                        </p>
+                        <a href="https://app.comercialogistics.com/App/Log_in?email=@user.Email&password=@user.Password" target="_blank" class="btn btn-secondary btn-small">
+                            Enter
+                        </a>
+                    </div>
+                    <!--end feature-->
+                </div>
+              }
+            </div>
+            <!--end of row-->
+        </div>
+        <!--end of container-->
+    </section>
+
+    <footer class="footer-3 space--xs ">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="" href="@Url.Action("Log_out", "Home")">
+                        Log out
+                    </a>
+                </div>
+
+            </div>
+            <!--end of row-->
+        </div>
+        <!--end of container-->
+    </footer>
+</div>

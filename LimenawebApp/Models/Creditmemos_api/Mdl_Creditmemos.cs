@@ -36,17 +36,19 @@ namespace LimenawebApp.Models.Creditmemos_api
         public System.DateTime deliveryDate { get; set; }
         public int slpCode { get; set; }
         public string slpName { get; set; }
-        public int docEntryInv { get; set; }
+        public int? docEntryInv { get; set; }
         public List<Creditmemos_Details> details { get; set; }
     }
 
     public class Creditmemos_Details : InvoiceDetails
     {
         //No pertenecen
-        public int baseEntry { get; set; }
+        public int? baseEntry { get; set; }
         public string returnReasonCode { get; set; }
         public string returnReasonName { get; set; }
         public bool received { get; set; }
+        public bool noShow { get; set; }
+        public decimal? originalQty { get; set; }
     }
 
     public class PostCreditmemos_api
@@ -69,6 +71,18 @@ namespace LimenawebApp.Models.Creditmemos_api
         public int? visOrder { get; set; }
         public bool deleted { get; set; }
         public bool received { get; set; }
+        public bool noShow { get; set; }
 
     }
+
+    public class PutDetailsCreditmemos_apiNOSHOW
+    {
+        public string itemCode { get; set; }
+        public int quantity { get; set; }
+        public int uomEntry { get; set; }
+        public string returnReasonCode { get; set; }
+        public decimal price { get; set; }
+
+    }
+
 }

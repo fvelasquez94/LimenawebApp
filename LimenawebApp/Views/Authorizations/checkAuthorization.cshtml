@@ -1,0 +1,54 @@
+﻿
+@model LimenawebApp.Models.Authorizations.Authorizations_api
+@{
+    ViewBag.Title = "Authorization";
+    Layout = "~/Views/Shared/_LayoutLogin.cshtml";
+
+
+}
+
+
+<div class="main-container">
+    <section>
+        <div class="container">
+            <div class="row" style="margin-bottom:10px">
+                <div class="col-md-6">
+                    <img alt="Image" class="" src="~/Content/landingpage/images/LogoLimenaWebIcono.png" style="width:30%" />
+
+                </div>
+                <div class="col-md-6 text-right text-center-xs">
+
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="heading-block">
+ 
+                        <h2>Authorization id: @Model.idAuthorization</h2>
+                    </div>
+                </div>
+        
+                    <div class="col-md-6">
+                        <div class="feature feature-1 boxed boxed--border">
+                            <span class="label">Waiting for answer</span>
+                            <h5>@Model.reason</h5>
+                            <p>@Model.cardCode - @Model.cardName</p>
+                            <p>@Model.date.Value.ToShortDateString()</p><br />
+                            <p>Comments:<br /> @Model.comments</p>
+                            <hr />
+                           
+                                <a href="@Url.Action("ApproveAuthQA", "Authorizations", new { idauth=Model.idAuthorization})" class="btn btn-success">Approve</a><br />
+                                <a href="@Url.Action("DenyAuthQA", "Authorizations",new { idauth=Model.idAuthorization})" class="btn btn-danger">Deny Auth</a>
+                          
+                        
+                        </div>
+                        <!--end feature-->
+                    </div>
+
+            </div>
+            <!--end of row-->
+        </div>
+        <!--end of container-->
+    </section>
+
+</div>

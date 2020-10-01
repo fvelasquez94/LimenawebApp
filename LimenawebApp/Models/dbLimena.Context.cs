@@ -51,5 +51,6 @@ namespace LimenawebApp.Models
         public virtual DbSet<Inv_Projects_BinLoc> Inv_Projects_BinLoc { get; set; }
         public virtual DbSet<Inv_Projects_Task> Inv_Projects_Task { get; set; }
         public virtual DbSet<Inv_Project_products> Inv_Project_products { get; set; }
+        public virtual DbSet<Tb_logContainers> Tb_logContainers { get; set; }
     }
 }

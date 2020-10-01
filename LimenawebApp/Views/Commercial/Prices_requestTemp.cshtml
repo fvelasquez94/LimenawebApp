@@ -1,0 +1,171 @@
+﻿@model IQueryable<LimenawebApp.Models.BI_Dim_ProductsUOM>
+
+@{
+    ViewBag.Title = "Distribuidora Limeña - Prices Request Temp";
+}
+
+<!--main content wrapper-->
+<div class="content-wrapper">
+    <div class="box-container">
+        <div class="container-fluid">      
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="card card-shadow mb-4">
+                        <div class="card-header border-0">
+                            <div class="custom-title-wrap bar-primary">
+                                <div class="custom-title"></div>
+                            </div>
+
+                        </div>
+                        <div class="row col-md-12">
+
+
+                            <div class="col-md-12">
+
+                                <div class="col-12" style="float:right">
+
+                                    @*<a href="#" class="btn btn-sm btn-success mb-2">Autorizaciones</a>*@
+    
+                                    <div class="input-group">
+
+
+                                        <select name="docnum" id="docnum" class="form-control">
+                                            <option value="0"></option>
+                                            @*@foreach (var item in ViewBag.pedidos)
+    {
+        if (item.status == 2)
+        {
+                                        <option class="optred" value="@item.docnum">@item.cardcode - @item.cardname | #@item.docnum</option>
+}
+else if (item.status == 1)
+{
+                                        <option class="optgreen" value="@item.docnum">@item.cardcode - @item.cardname | #@item.docnum</option>
+}
+else if (item.status == 0)
+{
+                                        <option value="@item.docnum">@item.cardcode - @item.cardname | #@item.docnum</option>
+}
+
+}*@
+                                        </select>
+
+                                        @*<input type="text" name="docnum" id="docnum" onkeypress='return event.charCode >= 48 && event.charCode <= 57' required class="form-control">*@
+                                        <input type="button" onclick="buscarPedido()" id="subpedido" class="btn btn-sm btn-info" value="View Order" />
+
+                                    </div>
+
+
+                                </div>
+                            </div>
+                        </div><hr />
+                              <div class="custom-post-title">
+                                  <div class=" mt-2">
+
+                                      @foreach (var itemc in ViewBag.lstCategories)
+        {
+                              <button id="btn_@itemc" type="button" style="margin-top: 10px;" class="btn btn-outline-primary form-pill btnsl" onclick="filter('@itemc')">@itemc</button>
+}
+                                      <button type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="filter_clear()">Clear filters</button>
+
+                                  </div><hr />
+                                  <div id="mainsub">
+
+                                      @foreach (var itemc in ViewBag.lstCategories)
+        {
+                              <div class="mt-2" id="@itemc">
+                                  @foreach (var itemsc in ViewBag.lstsubCategories)
+    {
+        if (itemsc.category == itemc)
+        {
+                              <button id="subbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-outline-warning form-pill subbtnsl" onclick="subfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+
+}
+                                  @*<button id="subfilter" type="button" class="btn btn-light form-pill" style="margin-top: 10px;" onclick="subfilter_clear()">Clear Sub filters</button>*@
+                              </div>}
+
+                                  </div><hr />
+                                  <div id="mainbrands">
+
+                                      @foreach (var itemc in ViewBag.lstsubCategories)
+        {
+                              <div class="mt-2" id="@itemc.name">
+                                  @foreach (var itemsc in ViewBag.lstBrands)
+    {
+        if (itemsc.category == itemc.name)
+        {
+                              <button id="brandbtn_@itemsc.id" type="button" style="margin-top: 10px;" class="btn btn-light form-pill brandbtnsl" onclick="brandfilter('@Convert.ToString(itemsc.name).Replace("'", "")')">@itemsc.name</button>
+}
+
+}
+                                  
+                              </div>}
+
+                                  </div>
+                              </div>
+                        <div class="card-body pt-3 pb-4">
+                            <div class="table-responsive">
+                                <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>CATEGORY</th>
+                                            <th>SUBCAT</th>
+                                            <th>BRAND</th>
+
+                                            <th>PRODUCT</th>
+                                            <th style="width:80px !important;">UOM</th>
+
+                                            <th>MIN PRICE</th>
+
+
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                    </tfoot>
+                                    <tbody>
+                                        @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td>@product.category_name</td>
+                            <td>@product.subcategory_name.Replace("'", "")</td>
+                            <td>@product.Brand_Name.Replace("'", "")</td>
+
+                            <td>@product.Product</td>
+                            <td style="width:120px !important;">
+                                <select style="font-size:12px;" id="sel_@product.id" class="form-control uompricemin">
+                       
+                                    @foreach (var item in product.lstuom)
+    {
+
+                                <option value="@item.Units">@item.UomCode</option>
+}
+
+                                </select>
+</td>
+
+                            <td>
+                                @if (product.MinPrice == null)
+    {
+                            <label class="PriceminDef" style="display:none;">@Html.Raw("0")</label>
+                            <label class="PriceminChange">@Html.Raw("0")</label>
+}
+else
+{
+                            <label class="PriceminDef" style="display:none">@product.MinPrice.Value.ToString("0.0000")</label>
+                            <label class="PriceminChange">@product.MinPrice.Value.ToString("0.0000")</label>
+                            }
+                            </td>
+                    </tr>
+}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+</div>

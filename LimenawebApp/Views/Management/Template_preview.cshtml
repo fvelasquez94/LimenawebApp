@@ -1,6 +1,7 @@
 ﻿@{
-    Layout = null;
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
     ViewBag.Title = "Distribuidora Limeña - Activity";
+
 }
 
 
@@ -22,8 +23,8 @@
             if (objeto.id_resource == 11)
             {
 
-                <div class="card" style="border:none !important;">
-                    <div class="">
+               
+                 
                         <div class="form-group">
                             <p class="control-label col-md-10">@objeto.fdescription</p>
                             <div class="col-md-12">
@@ -38,8 +39,8 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+                    
+              
 
             }
             <!--PARA SUBTITULOS -->
@@ -49,8 +50,7 @@
                 {
                     if (objeto.children[0].id_resource == 19)
                     {
-                        <div class="card" style="border:none !important;">
-                            <div class="card-body">
+                      
                                 <div class="form-group">
                                     <p class="control-label">@objeto.fsource</p>
                                     <!--VERIFICAMOS SI TIENE HIJOS-->
@@ -58,13 +58,11 @@
                                         @OrderedList(objeto.children, objeto.idkey)
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                        
                     }
                     else
                     {
-                        <div class="card" style="border:none !important;">
-                            <div class="card-body">
+                     
                                 <div class="form-group">
                                     <p class="control-label">@objeto.fsource</p>
                                     <!--VERIFICAMOS SI TIENE HIJOS-->
@@ -72,8 +70,7 @@
                                         @OrderedList(objeto.children, objeto.idkey)
                                     </div>
                                 </div>
-                            </div>
-                        </div>
+                        
                     }
                 }
                 else
@@ -120,7 +117,7 @@
             if (objeto.id_resource == 28)
             {
 
-                <div class="card" style="border:none !important;">
+            
                     <div class="" id="barcodecontainer">
                         <div class="form-group codec original">
 
@@ -145,7 +142,7 @@
 
                     </div>
                     <button class="btn btn-sm btn-outline-success" id="copyContainer">ADD NEW +</button>
-                </div>
+              
 
             }
 
@@ -153,46 +150,40 @@
             if (objeto.id_resource == 3)
             {
 
-                <div class="card" style="border:none !important;">
-                    <div class="">
+             
                         <div class="form-group">
                             <p class="control-label col-md-10">@objeto.fdescription (*)</p>
                             <div class="col-md-12">
                                 <input type="number" onClick="this.select();" min="0" inputmode="numeric" pattern="[0-9]*" value="@objeto.fvalue" class="form-control" id="@objeto.idkey" disabled />
                             </div>
                         </div>
-                    </div>
-                </div>
+                
 
             }
 
             <!--PARA MUESTRAS -->
             if (objeto.id_resource == 4)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+             
                         <div class="form-group">
                             <p class="control-label col-md-10">@objeto.fdescription (*)</p>
                             <div class="col-md-12">
                                 <input type="number" onClick="this.select();" min="0" inputmode="numeric" pattern="[0-9]*" value="@objeto.fvalue" class="form-control" id="@objeto.idkey" />
                             </div>
                         </div>
-                    </div>
-                </div>
+                
             }
             <!--PARA GIFT -->
             if (objeto.id_resource == 10)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+         
                         <div class="form-group">
                             <p class="control-label col-md-10">@objeto.fdescription (*)</p>
                             <div class="col-md-12">
                                 <input type="number" min="0" inputmode="numeric" pattern="[0-9]*" value="@objeto.fvalue" class="form-control" id="@objeto.idkey" required disabled />
                             </div>
                         </div>
-                    </div>
-                </div>
+               
             }
             <!--RADIO SELECCION UNICA -->
             if (objeto.id_resource == 19)
@@ -237,8 +228,7 @@
                 }
                 else
                 {
-                    <div class="card" style="border:none !important;">
-                        <div class="">
+                  
                             <div class="form-group">
                                 <div class="form-radio">
                                     <label class="form-check-label">
@@ -254,8 +244,7 @@
                                     </label>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                   
                 }
             }
             <!--CHECK SELECCION MULTIPLE -->
@@ -299,8 +288,7 @@
                 }
                 else
                 {
-                    <div class="card" style="border:none !important;">
-                        <div class="">
+                
                             <!--card-body-->
                             <div class="form-group">
                                 <div class="form-check">
@@ -318,30 +306,21 @@
                                 </div>
 
                             </div>
-                        </div>
-                    </div>
+                    
                 }
             }
             <!--PARA IMAGENES DE REFERENCIA -->
             if (objeto.id_resource == 29)
             {
+       
+                        <p class="control-label col-md-10">@objeto.fdescription</p>
+                        <div class="col-md-12">
 
-   
-                    <div class="card" style="border:none !important;">
-                        <div class="">
-                            <p class="control-label col-md-10">@objeto.fdescription</p>
-                            <div class="col-md-12">
+                            <img class="form-control" id="@objeto.idkey">
 
-                                    <img class="form-control" id="@objeto.idkey">
-     
-                                
-                            </div>
+
                         </div>
-                    </div>
-
-                
-
-
+            
 
             }
             <!--PARA IMAGENES -->
@@ -371,8 +350,7 @@
                 }
                 else
                 {
-                    <div class="card" style="border:none !important;">
-                        <div class="">
+                
                             <p class="control-label col-md-10">@objeto.fdescription</p>
                             <div class="col-md-12">
                                 @if (objeto.fsource != "")
@@ -388,8 +366,7 @@
                                     <img id="@("resultimg_" + objeto.idkey)" src="#" alt="your image" hidden />
                                 }
                             </div>
-                        </div>
-                    </div>
+                 
 
                 }
 
@@ -400,8 +377,7 @@
             <!--PARA INPUT TEXT -->
             if (objeto.id_resource == 6)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+           
                         <div class="form-group">
                             @if (objeto.fvalue == 0)
                             {
@@ -431,8 +407,7 @@
                                 <textarea id="@objeto.idkey" class="form-control" onkeypress='return ((event.charCode >= 65 && event.charCode <= 90) || (event.charCode >= 97 && event.charCode <= 122) || (event.charCode == 32))' disabled>@objeto.fsource</textarea>
                             </div>
                         </div>
-                    </div>
-                </div>
+          
 
             }
             <!--PARA DATE -->
@@ -459,8 +434,7 @@
                 }
                 else
                 {
-                    <div class="card" style="border:none !important;">
-                        <div class="">
+                
                             <div class="form-group">
                                 <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                                 <div class="col-md-12">
@@ -475,8 +449,7 @@
 
                                 </div>
                             </div>
-                        </div>
-                    </div>
+               
                 }
 
 
@@ -500,8 +473,7 @@
                 }
                 else
                 {
-                    <div class="card" style="border:none !important;">
-                        <div class="">
+                  
                             <div class="form-group">
                                 <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                                 <div class="col-md-12">
@@ -509,8 +481,7 @@
 
                                 </div>
                             </div>
-                        </div>
-                    </div>
+                  
                 }
 
 
@@ -518,8 +489,7 @@
             <!--PARA INPUT NUMBER (CURRENCY)-->
             if (objeto.id_resource == 21)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+              
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -527,15 +497,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+               
 
             }
             <!--PARA CUSTOMERS -->
             if (objeto.id_resource == 12)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+              
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -565,15 +533,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+               
 
             }
             <!--PARA CATEGORIES-->
             if (objeto.id_resource == 30)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+              
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -583,15 +549,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+            
 
             }
             <!--PARA SUBCATEGORIA-->
             if (objeto.id_resource == 31)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+                
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -601,15 +565,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+               
 
             }
             <!--PARA BRANDS-->
             if (objeto.id_resource == 13)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+            
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -619,15 +581,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+             
 
             }
             <!--PARA PRODUCT LINE -->
             if (objeto.id_resource == 14)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+               
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -637,15 +597,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+              
 
             }
             <!--PARA SELECT GENERAL -->
             if (objeto.id_resource == 17)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+          
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -659,8 +617,7 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+            
 
             }
             <!--PARA ITEMS DE SELECT GENERAL -->
@@ -698,8 +655,7 @@
             <!--PARA BRAND COMPETITORS -->
             if (objeto.id_resource == 15)
             {
-                <div class="card" style="border:none !important;">
-                    <div class="">
+               
                         <div class="form-group">
                             <p class="control-label col-md-10"> @objeto.fsource (*)</p>
                             <div class="col-md-12">
@@ -709,15 +665,13 @@
 
                             </div>
                         </div>
-                    </div>
-                </div>
+             
 
             }
             <!--PARA FIRMA ELECTRONICA -->
             if (objeto.id_resource == 9)
             {
-                <div class="card">
-                    <div class="card-body">
+          
                         <p class="control-label col-md-10">@objeto.fdescription</p>
 
                         <!-- Content -->
@@ -755,9 +709,7 @@
                         </div>
 
 
-                    </div>
-                </div>
-
+     
 
 
 
@@ -765,118 +717,43 @@
 
         }
 }
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, shrink-to-fit=no">
-    <title>Distribuidora Limena - @ViewBag.Title</title>
-    @Html.Partial("~/Views/Shared/Style_main.cshtml")
 
-</head>
-<body class="fixed-nav top-nav">
-    <div id="loader" class="vertical-centered-box">
-        <div class="content">
-            <div class="loader-circle"></div>
-            <div class="loader-line-mask one">
-                <div class="loader-line"></div>
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Management</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Form Builder</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Preview</h1>
+                <button action="action" onclick="window.history.go(-1); return false;" class="navbar-toggler  btn btn-outline-dark btn-sm">Back</button>
             </div>
-            <div class="loader-line-mask two">
-                <div class="loader-line"></div>
-            </div>
-            <div class="loader-line-mask three">
-                <div class="loader-line"></div>
-            </div>
-            <div class="loader-line-mask four">
-                <div class="loader-line"></div>
-            </div>
+
         </div>
     </div>
-    <!--header-->
-    <nav class="navbar navbar-expand-lg fixed-top navbar-light" id="mainNav">
-        <div class="box-container">
-            <!--brand name for responsive-->
-            <a class="navbar-brand navbar-brand-responsive" href="#">
-                <img class="pr-3 float-left" src="~/Content/appcontent/assets/img/ico.png" srcset="/Content/appcontent/assets/img/ico.png 2x" alt="" />
-                <div class="float-left">
-                    <div>Limeña</div>
-                    <span class="page-direction f12 weight300">
-                        <span>Commercial</span>
+</div> <!-- // END page__header -->
 
-                        <i class="fa fa-angle-right"></i>
-                        <span>Marketing Activities</span>
-
-                    </span>
-                </div>
-            </a>
-            <!--/brand name for responsive-->
-            <!--responsive navigation list toggle-->
-            <button action="action" onclick="window.history.go(-1); return false;" class="navbar-toggler  btn btn-outline-dark btn-sm">Back</button>
-            <!--/responsive nav notification toggle-->
-            <div class="collapse navbar-collapse" id="navbarResponsive">
-                <!--brand name-->
-                <a class="navbar-brand navbar-hide-responsive" href="#">
-                    <img class="pr-3 float-left" src="~/Content/appcontent/assets/img/ico.png" srcset="/Content/appcontent/assets/img/ico.png 2x" alt="" />
-                    <div class="float-left">
-                        <div>Distribuidora Limeña</div>
-                        <span class="page-direction f12 weight300">
-                            <span>Commercial</span>
-                            <i class="fa fa-angle-right"></i>
-                            <span>Marketing Activities</span>
-
-                        </span>
-                    </div>
-                </a>
-                <!--/brand name-->
-            </div>
-        </div>
-    </nav>
-    <!--/header-->
-    <!--main content wrapper-->
-    <div class="content-wrapper">
-        <!--/creative states-->
-        <div class="box-container">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="form-group">
-                        <div class="col-md-offset-2 col-md-10 text-right">
-
-                        </div>
-                    </div>
-                </div>
+<div class="container-fluid page__container">
+    <div class=" card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+           
 
                 <input type="text" id="idvisita" hidden value="@ViewBag.idvisita" />
-                <!--sales monitor-->
-                <div class="row">
-                    <div class="col-12">
-                        <div class="card card-shadow mb-4">
-                            <div class="card-header border-0">
-                                @*<div class="custom-title-wrap bar-turquoise">
-                                        <div class="custom-title">&nbsp;</div>
-                                        <div class=" widget-action-link">
-                                            <button action="action" onclick="window.history.go(-1); return false;" class="btn btn-info">Back</button>
-                                        </div>
-                                    </div>*@
-                            </div>
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-md-12 grid-margin">
 
-                                        @OrderedList(ViewBag.details)
+           
+                        <div class="row card">
+                            <div class="col-md-12 grid-margin">
+                            <br />
+                                @OrderedList(ViewBag.details)
 
-                                    </div><br />
-                                </div>
-                            </div>
+                            </div><br />
                         </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10 text-right">
-
-                        <!--<a href="Url.Action("Index", "Demos")" class="btn btn-default">Back</a>-->
-                    </div>
-                </div>
+                 
+            
 
             </div>
             <!-- content-wrapper ends -->
@@ -885,70 +762,6 @@
         </div>
         <!-- main-panel ends -->
     </div>
-    <!-- page-body-wrapper ends -->
-    @Html.Partial("~/Views/Shared/Footer_main.cshtml")
-
-    @*<div class="controls" hidden>
-        <fieldset class="input-group">
-
-            <button>Rerun</button>
-        </fieldset>
-        <fieldset class="reader-config-group">
-            <label>
-                <span>Barcode-Type</span>
-                <select name="decoder_readers">
-                    <option value="code_128">Code 128</option>
-                    <option value="code_39">Code 39</option>
-                    <option value="code_39_vin">Code 39 VIN</option>
-                    <option value="ean">EAN</option>
-                    <option value="ean_extended">EAN-extended</option>
-                    <option value="ean_8">EAN-8</option>
-                    <option value="upc">UPC</option>
-                    <option value="upc_e">UPC-E</option>
-                    <option value="codabar" selected="selected">Codabar</option>
-                    <option value="i2of5">Interleaved 2 of 5</option>
-                    <option value="2of5">Standard 2 of 5</option>
-                    <option value="code_93">Code 93</option>
-                </select>
-            </label>
-            <label>
-                <span>Resolution (long side)</span>
-                <select name="input-stream_size">
-                    <option value="320">320px</option>
-                    <option value="640">640px</option>
-                    <option selected="selected" value="800">800px</option>
-                    <option value="1280">1280px</option>
-                    <option value="1600">1600px</option>
-                    <option value="1920">1920px</option>
-                </select>
-            </label>
-            <label>
-                <span>Patch-Size</span>
-                <select name="locator_patch-size">
-                    <option value="x-small">x-small</option>
-                    <option value="small">small</option>
-                    <option value="medium">medium</option>
-                    <option selected="selected" value="large">large</option>
-                    <option value="x-large">x-large</option>
-                </select>
-            </label>
-            <label>
-                <span>Half-Sample</span>
-                <input type="checkbox" name="locator_half-sample" />
-            </label>
-            <label>
-                <span>Single Channel</span>
-                <input type="checkbox" name="input-stream_single-channel" />
-            </label>
-            <label>
-                <span>Workers</span>
-                <select name="numOfWorkers">
-                    <option value="0">0</option>
-                    <option selected="selected" value="1">1</option>
-                </select>
-            </label>
-        </fieldset>
-    </div>*@
 
 
     <div class="modal" id="livestream_scanner">
@@ -966,38 +779,35 @@
                 </div>
                 <div class="modal-footer">
                     @*<label class="btn btn-default pull-left">
-            <i class="fa fa-camera"></i> Use camera app
-            <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden" />
-        </label>*@
+                            <i class="fa fa-camera"></i> Use camera app
+                            <input type="file" accept="image/*;capture=camera" capture="camera" class="hidden" />
+                        </label>*@
                     <button type="button" id="vertbtn" class="btn btn-default" data-dismiss="modal">Rotate</button>
                     <button type="button" id="closebtn" class="btn btn-primary" data-dismiss="modal">Close</button>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-</body>
-@Html.Partial("~/Views/Shared/Scripts_main.cshtml")
 
 
-</html>
-<script>
-    var count = 1000;
+    <script>
+        var count = 1000;
 
-    $(document).on('click', '.clear', function () {
-        $(this).closest(".input-outer").find('input.code').val('');
-        //$(this).closest(".codec").find('input.codebar').val('');
-    });
+        $(document).on('click', '.clear', function () {
+            $(this).closest(".input-outer").find('input.code').val('');
+            //$(this).closest(".codec").find('input.codebar').val('');
+        });
 
-    $('#copyContainer').click(function () {
-        var clone = $('.codec.original').clone().appendTo('#barcodecontainer');
-        //clone.find('input[type=file].codebar').attr('id', 'scan_' + count);
-        //clone.find('input[type=file].codebar').val('');
-        clone.find('input[type=text].code').attr('id', 'scanner_input_' + count);
-        clone.find('input[type=text].code').val('');
-        clone.find('button.codebtn').attr('id', count);
-        clone.removeClass('original');
-        count++;
-    });
+        $('#copyContainer').click(function () {
+            var clone = $('.codec.original').clone().appendTo('#barcodecontainer');
+            //clone.find('input[type=file].codebar').attr('id', 'scan_' + count);
+            //clone.find('input[type=file].codebar').val('');
+            clone.find('input[type=text].code').attr('id', 'scanner_input_' + count);
+            clone.find('input[type=text].code').val('');
+            clone.find('button.codebtn').attr('id', count);
+            clone.removeClass('original');
+            count++;
+        });
 
 
-</script>
+    </script>

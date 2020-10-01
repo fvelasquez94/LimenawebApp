@@ -11,6 +11,7 @@ using System.Web.Script.Serialization;
 using Microsoft.SharePoint.Client;
 using System.Security;
 using System.Data.SqlClient;
+using LimenawebApp.Controllers.Session;
 
 namespace LimenawebApp.Controllers
 {
@@ -20,6 +21,7 @@ namespace LimenawebApp.Controllers
         private dbComerciaEntities dbcmk = new dbComerciaEntities();
         private DLI_PROEntities dlipro = new DLI_PROEntities();
         private Interna_DLIEntities internadli = new Interna_DLIEntities();
+        private Cls_session cls_session = new Cls_session();
         public class repsU {
             public int id_Sales_Rep { get; set; }
             public string Slp_name { get; set; }
@@ -899,26 +901,24 @@ namespace LimenawebApp.Controllers
         public ActionResult Template_preview(int? id)
         {
 
-            Sys_Users activeuser = Session["activeUser"] as Sys_Users;
-            if (activeuser != null)
+            if (cls_session.checkSession())
             {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
 
                 //HEADER
-                //PAGINAS ACTIVAS
+                //ACTIVE PAGES
                 ViewData["Menu"] = "Management";
-                ViewData["Page"] = "Forms (Preview)";
-                ViewBag.menunameid = "manag_menu";
-                ViewBag.submenunameid = "forms_submenu";
-                List<string> d = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
-                ViewBag.lstDepartments = JsonConvert.SerializeObject(d);
+                ViewData["Page"] = "Form Builder Preview";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
                 List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
-
-                ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
-                List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
-                ViewBag.lstAlerts = lstAlerts;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
 
                 FormsM formsM = dbcmk.FormsM.Find(id);
 
@@ -1004,6 +1004,7 @@ namespace LimenawebApp.Controllers
                 return RedirectToAction("Login", "Home", new { access = false });
 
             }
+
         }
 
         [HttpPost]

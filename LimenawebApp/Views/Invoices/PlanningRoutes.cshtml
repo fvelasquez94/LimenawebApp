@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "Distribuidora Limeña - Planning Routes";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Planning</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Planning</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Operations.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_prioridad">By Warehouse (coming soon)</label><br>
+                        <select id="filter_prioridad" class="custom-select" style="width: 200px;" disabled>
+                            <option value="">Show All</option>
+                            <option value="01">01 - TN</option>
+                            <option value="02">02 - KY</option>
+
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-sm-auto">
+                    <div class="form-group" style="width: 200px;">
+                        <label for="filter_date">By Date</label>
+                        <input id="filter_date" type="text" class="form-control" placeholder="Range example" data-toggle="daterangepicker" data-daterangepicker-start-date="@Convert.ToDateTime(ViewBag.filtrofechastart).ToString("yyyy/MM/dd")" data-daterangepicker-end-date="@Convert.ToDateTime(ViewBag.filtrofechaend).ToString("yyyy/MM/dd")">
+
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+
+                        <div class="custom-control custom-checkbox mt-sm-2">
+                            <button id="click_filterMain" class="btn btn-primary">Apply Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+              
+            </div>
+        </div>
+        <button class="btn btn-success border-left border-top border-top-sm-0 rounded-top-0 rounded-top-sm rounded-left-sm-0" data-toggle="modal" data-target="#createModal">New Route</button>
+    </div>
+</div>
+<div id="divcalendar" class="container-fluid page__container">
+
+    <div class="nav-active-border b-success px-3">
+        <ul class="nav text-sm" role="tablist">
+
+            <li class="nav-item">
+                <a class="nav-link active" id="weekview" data-toggle="tab">Weekly View</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="monthview" data-toggle="tab">Month View</a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- modal -->
+    <!-- / .modal -->
+    <div id="fullcalendar" data-plugin="fullCalendar">
+        <div class="loading m-4"></div>
+    </div>
+
+</div>  <!-- ############ Main END-->

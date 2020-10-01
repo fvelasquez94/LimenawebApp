@@ -137,6 +137,23 @@
           <Property Name="id_item" Type="varchar" MaxLength="50" />
           <Property Name="item" Type="varchar" MaxLength="500" />
         </EntityType>
+        <EntityType Name="Tb_registroBolsa">
+          <Key>
+            <PropertyRef Name="ID_regBolsa" />
+          </Key>
+          <Property Name="ID_regBolsa" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ID_SalesRepresentative" Type="int" Nullable="false" />
+          <Property Name="SalesRepresentative" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="Last_value" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="New_value" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Value" Type="decimal" Precision="18" Scale="2" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="AssignedBy" Type="varchar" MaxLength="500" Nullable="false" />
+          <Property Name="AssignedBy_ID" Type="int" Nullable="false" />
+          <Property Name="Active" Type="bit" Nullable="false" />
+          <Property Name="Comments" Type="varchar(max)" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="Interna_DLIModelStoreContainer">
           <EntitySet Name="Tb_Autorizaciones" EntityType="Self.Tb_Autorizaciones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_Bonificaciones" EntityType="Self.Tb_Bonificaciones" Schema="dbo" store:Type="Tables" />
@@ -144,6 +161,7 @@
           <EntitySet Name="Tb_customerscontacts" EntityType="Self.Tb_customerscontacts" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_customerstatus" EntityType="Self.Tb_customerstatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Tb_MaestroPorcentajes" EntityType="Self.Tb_MaestroPorcentajes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Tb_registroBolsa" EntityType="Self.Tb_registroBolsa" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -172,6 +190,7 @@
           <EntitySet Name="Tb_Bonificaciones" EntityType="Interna_DLIModel.Tb_Bonificaciones" />
           <EntitySet Name="Tb_customerscontacts" EntityType="Interna_DLIModel.Tb_customerscontacts" />
           <EntitySet Name="Tb_customerstatus" EntityType="Interna_DLIModel.Tb_customerstatus" />
+          <EntitySet Name="Tb_registroBolsa" EntityType="Interna_DLIModel.Tb_registroBolsa" />
         </EntityContainer>
         <EntityType Name="Tb_ConfigBolsa">
           <Key>
@@ -288,6 +307,23 @@
           <Property Name="DocEntry" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Error" Type="Int32" Nullable="false" />
           <Property Name="ErrorMsg" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Tb_registroBolsa">
+          <Key>
+            <PropertyRef Name="ID_regBolsa" />
+          </Key>
+          <Property Name="ID_regBolsa" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ID_SalesRepresentative" Type="Int32" Nullable="false" />
+          <Property Name="SalesRepresentative" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="Last_value" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="New_value" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Value" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="AssignedBy" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <Property Name="AssignedBy_ID" Type="Int32" Nullable="false" />
+          <Property Name="Active" Type="Boolean" Nullable="false" />
+          <Property Name="Comments" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -430,6 +466,24 @@
                 <ScalarProperty Name="Active_customer" ColumnName="Active_customer" />
                 <ScalarProperty Name="CardCode" ColumnName="CardCode" />
                 <ScalarProperty Name="ID_transaction" ColumnName="ID_transaction" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Tb_registroBolsa">
+            <EntityTypeMapping TypeName="Interna_DLIModel.Tb_registroBolsa">
+              <MappingFragment StoreEntitySet="Tb_registroBolsa">
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Active" ColumnName="Active" />
+                <ScalarProperty Name="AssignedBy_ID" ColumnName="AssignedBy_ID" />
+                <ScalarProperty Name="AssignedBy" ColumnName="AssignedBy" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="New_value" ColumnName="New_value" />
+                <ScalarProperty Name="Last_value" ColumnName="Last_value" />
+                <ScalarProperty Name="SalesRepresentative" ColumnName="SalesRepresentative" />
+                <ScalarProperty Name="ID_SalesRepresentative" ColumnName="ID_SalesRepresentative" />
+                <ScalarProperty Name="ID_regBolsa" ColumnName="ID_regBolsa" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

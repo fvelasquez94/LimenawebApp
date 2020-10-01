@@ -19,5 +19,8 @@ namespace LimenawebApp.Models
         public string Doc_key { get; set; }
         public bool Printed { get; set; }
         public string Module { get; set; }
+        public Nullable<System.DateTime> Created_on { get; set; }
+        public Nullable<System.DateTime> Printed_on { get; set; }
+        public Nullable<int> ID_user { get; set; }
     }
 }

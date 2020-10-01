@@ -56,3 +56,505 @@
     <link rel="stylesheet" href="~/Content/appcontent/assets/vendor/contextmeu/jquery.contextMenu.css">
 
 }
+
+
+@if (ViewBag.Title == "Distribuidora Limeña - Quality Control" || ViewBag.Title == "Distribuidora Limeña - Quality Control ST")
+{
+    <style>
+        @@media (min-width: 576px) {
+            .qcmodal {
+                max-width: 100% !important;
+                margin: 1.75rem auto !important;
+            }
+        }
+
+        @@media (min-width: 576px) {
+            .modalso {
+                margin: 1.75rem auto !important;
+            }
+        }
+        /*@@media (max-width: 510px) {
+                .modal-dialog {
+                    max-width: 100% !important;
+                    margin: 1.75rem auto !important;
+                    font-size:8px;
+                }
+                .btnslso {
+                    font-size: 8px;
+                    padding: 14px;
+                }
+                .seluoms {
+                    font-size: 10px;
+                    width: 70px !important;
+                }
+                .numord {
+                    font-size: 14px;
+                    width: 40px !important;
+                }
+                .rowselord {
+                    font-size: 6px !important;
+                }
+            }
+
+            @@media (min-width: 576px) {
+                .modal-dialog {
+                    max-width: 100% !important;
+                    margin: 1.75rem auto !important;
+                }
+            }
+            @@media (min-width: 1280px) {
+                .modal-dialog {
+                    max-width: 70% !important;
+                    margin: 1.75rem auto !important;
+                }
+            }*/
+
+        .tableEdit thead {
+            background-color: rgb(253, 199, 69);
+            background: -webkit-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+            background: -o-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+            background: -ms-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+            background: -moz-linear-gradient(top, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+            background: linear-gradient(to bottom, rgb(253, 199, 69) 0%, rgb(228, 180, 63) 100%);
+        }
+
+        .tableEdit tbody td > span {
+            display: block;
+            padding-top: 1px;
+            padding-bottom: 1px;
+            padding-left: 1px;
+        }
+
+        .tableEdit tbody td > span {
+            margin: 3px 5px;
+        }
+
+        .table-condensed > thead > tr > th {
+            padding-left: 10px;
+        }
+
+        .input-sm, select.input-sm {
+            height: 25px;
+            padding: 3px 5px;
+        }
+
+        select.input-sm {
+            padding: 3px 1px;
+        }
+    </style>
+
+}
+
+@if (ViewBag.Title == "Dashboard")
+{
+    <style>
+
+
+        @@media (orientation: landscape) {
+            video, canvas {
+                position: fixed;
+                right: -246px;
+                top: -346px;
+                min-width: 100%;
+                min-height: 100%;
+            }
+        }
+
+
+
+        @@media (orientation: portrait) {
+            video, canvas {
+                position: fixed;
+                right: -246px;
+                min-width: 100%;
+                min-height: 100%;
+            }
+        }
+
+
+        /* Portrait */
+
+        @@media only screen and (min-device-width: 375px) and (max-device-width: 667px) and (-webkit-min-device-pixel-ratio: 2) and (orientation: portrait) {
+            video {
+                position: fixed;
+                right: -246px;
+                top: -446px;
+                min-width: 100%;
+                min-height: 100%;
+            }
+
+            canvas {
+                position: fixed;
+                right: -246px;
+                top: -346px;
+                min-width: 100%;
+                min-height: 100%;
+            }
+        }
+
+        /* iPads (landscape) ----------- */
+        @@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : landscape) {
+            /* Styles */
+        }
+
+        /* iPads (portrait) ----------- */
+        @@media only screen and (min-device-width : 768px) and (max-device-width : 1024px) and (orientation : portrait) {
+            /* Styles */
+            video {
+                position: fixed;
+                right: -146px;
+                top: -346px;
+                min-width: 100%;
+                min-height: 100%;
+            }
+
+            video, canvas {
+                position: fixed;
+                right: -146px;
+                top: -346px;
+                min-width: 100%;
+                min-height: 100%;
+            }
+        }
+
+
+        /*video,canvas {
+            position: absolute;
+            right: 0;
+
+            width: 395px;
+
+            background-size: cover;
+            overflow: hidden;
+        }*/
+    </style>
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Planning" || ViewBag.Title == "Distribuidora Limeña - Planning Routes")
+{
+    <link rel="stylesheet" href="~/Content/assets/css/bootstrap.css" type="text/css" />
+    <link rel="stylesheet" href="~/Content/assets/css/theme.css" type="text/css" />
+    <!-- Dragula -->
+    <link type="text/css" href="~/Content/assets/vendor/dragula/dragula.min.css" rel="stylesheet">
+
+
+    <style>
+
+        .fc -event-container .fc-event {
+            margin-top: 10px;
+        }
+
+        .fc-content {
+            font-size: 12px;
+        }
+
+        #sortable1, #sortable2 {
+            border: 1px solid #eee;
+            width: 100%;
+            min-height: 50%;
+            list-style-type: none;
+            margin: 0;
+            padding: 5px 0 0 0;
+            float: left;
+            margin-right: 10px;
+        }
+
+            #sortable1 li, #sortable2 li {
+                margin: 0 5px 5px 5px;
+                padding: 5px;
+                width: 100%;
+                height: 200px;
+            }
+
+        #mydiv {
+            position: absolute;
+            z-index: 9;
+            background-color: #f1f1f1;
+            text-align: center;
+            border: 1px solid #d3d3d3;
+        }
+
+        #mydivheader {
+            padding: 10px;
+            cursor: move;
+            z-index: 10;
+            background-color: #2196F3;
+            color: #fff;
+        }
+    </style>
+
+}
+@if (ViewBag.Title == "Distribuidora Limeña - Planning order")
+{
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/rowreorder/1.2.5/css/rowReorder.dataTables.min.css">
+}
+@if (ViewBag.Title == "Price Request History")
+{
+
+    <style>
+        .dataTables_filter, .dataTables_info {
+            display: none;
+        }
+    </style>
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Activity")
+{
+    <link rel="stylesheet" type="text/css" href="~/Content/appcontent/assets/css/dropify.min.css">
+    <style>
+
+        [dir=ltr] .form-check-inline {
+            display: inline-flex;
+            align-items: center;
+            margin-top: 40px;
+            padding-left: 25px;
+            margin-right: 0.75rem;
+        }
+
+
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .divtable .tr {
+            overflow: hidden;
+            clear: both;
+            border-top: 2px solid #dfdfdf;
+        }
+
+        .divtable .th,
+        .divtable .td {
+            padding: 5px 10px;
+            float: left;
+        }
+
+        .divtable .th {
+            font-weight: bold;
+        }
+
+
+        @@media (max-width: 1767px) {
+
+            .accordion-xs .headings {
+                display: none;
+            }
+
+            .accordion-xs .tr {
+                border-bottom-color: #dfdfdf;
+            }
+
+            .accordion-xs .th,
+            .accordion-xs .td {
+                float: none;
+                width: auto;
+                padding: 0;
+            }
+
+            .accordion-xs .accordion-xs-toggle {
+                background-color: white;
+                color: #000;
+                padding: 10px;
+                cursor: pointer;
+            }
+
+                .accordion-xs .accordion-xs-toggle:hover {
+                    background-color: #efedea;
+                }
+
+                .accordion-xs .accordion-xs-toggle:after {
+                    content: '\2b';
+                    float: right;
+                }
+
+                .accordion-xs .accordion-xs-toggle.collapsed:after {
+                    content: '\2212';
+                }
+
+            .accordion-xs-collapse .inner {
+                padding: 10px;
+            }
+
+            .accordion-xs-collapse .td:before {
+                font-weight: bold;
+            }
+
+            .accordion-xs-collapse .lastname:before {
+                content: 'Last Name: ';
+            }
+
+            .accordion-xs-collapse .username:before {
+                content: 'Username: ';
+            }
+
+            .accordion-xs .accordion-xs-toggle:after {
+                position: relative;
+                top: 1px;
+                display: inline-block;
+                font-family: 'Glyphicons Halflings';
+                font-style: normal;
+                font-weight: 300;
+                line-height: 1;
+                -webkit-font-smoothing: antialiased;
+            }
+        }
+
+
+        #rightss {
+            height: 500px;
+            overflow-y: scroll;
+        }
+
+        .modal {
+            overflow: auto !important;
+        }
+
+        #sig-canvas {
+            width: 200px;
+            height: 150px;
+            border-style: dashed;
+            border-radius: 0.50px;
+            border-color: lightgray;
+        }
+
+        .currency {
+        }
+
+        .currency-symbol {
+            position: absolute;
+            padding: 7px 4px 0px;
+            font-size: 13px;
+        }
+
+        .currency-symbolv2 {
+            position: absolute;
+            padding: 1px 4px 0px;
+            font-size: 12px;
+        }
+
+        #loading {
+            width: 100%;
+            height: 100%;
+            top: 0px;
+            left: 0px;
+            position: fixed;
+            opacity: 0.7;
+            background-color: #fff;
+            z-index: 99;
+            text-align: center;
+        }
+
+        #loading-content {
+            margin-top: 20%;
+        }
+
+        .hide {
+            display: none;
+        }
+
+
+        /*DATATABLES*/
+        table {
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+        }
+
+            table tr {
+                padding: .35em;
+            }
+
+            table th, table td {
+                padding: .625em;
+                text-align: left;
+            }
+
+            table th {
+                font-size: .9em;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+            }
+
+            table td {
+                font-size: .3em;
+            }
+        /**/
+        @@media screen and (max-width: 2000px) {
+
+            table td {
+                font-size: .9em;
+            }
+        }
+
+        @@media screen and (max-width: 850px) {
+            table th {
+                font-size: .8em;
+                letter-spacing: .1em;
+                text-transform: uppercase;
+            }
+
+            table td {
+                font-size: .7em;
+            }
+        }
+
+        /**/
+        /**/
+        input[type=checkbox] {
+            /* Double-sized Checkboxes */
+            -ms-transform: scale(2); /* IE */
+            -moz-transform: scale(2); /* FF */
+            -webkit-transform: scale(2); /* Safari and Chrome */
+            -o-transform: scale(2); /* Opera */
+            padding: 10px;
+        }
+
+        /* Might want to wrap a span around your checkbox text */
+        .checkboxtext {
+            /* Checkbox text */
+            font-size: 110%;
+            display: inline;
+        }
+
+        @@media screen and (max-width: 400px) {
+
+            table {
+                border: 0;
+            }
+
+                table thead {
+                    display: none;
+                }
+
+                table tr {
+                    border-bottom: 3px solid #ddd;
+                    display: block;
+                    margin-bottom: .625em;
+                }
+
+                table td {
+                    border-bottom: 1px solid #ddd;
+                    display: block;
+                    font-size: .8em;
+                    text-align: left;
+                }
+
+                    table td:before {
+                        content: attr(data-label);
+                        float: left;
+                        font-weight: bold;
+                        text-transform: uppercase;
+                    }
+
+                    table td:last-child {
+                        border-bottom: 0;
+                    }
+        }
+        /**/
+        /*END DATATABLES*/
+
+    </style>
+}

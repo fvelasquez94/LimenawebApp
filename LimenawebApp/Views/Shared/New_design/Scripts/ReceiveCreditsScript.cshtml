@@ -8,93 +8,143 @@
     (function ($) {
         'use strict';
         $('#modal-creditproducts').on('show.bs.modal', function (event) {
-
             var button = $(event.relatedTarget);// Button that triggered the modal
-            var lstdetails = button.data("details");
+            //var lstdetails = button.data("details");
             var customer = button.data('customercomplete');
             var invoices = button.data('invoices');
             var totalproducts = button.data('totalproducts');
             var docentry = button.data('docentry');
+            var newRowInvoice = '';
+            newRowInvoice += '<small class="mr-2">#' + invoices + '</small><br />';
+            $("#invoicesdiv").html("");
+            $("#invoicesdiv").append(newRowInvoice);
+                $.ajax
+                    ({
+                        url: '/Warehouse/Get_creditMemoDetail',
+                        type: 'POST',
+                        datatype: 'application/json',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            DocentryCredit: invoices
+                        }),
+                        success: function (result) {
+                            if (result.error == "Error") {
+
+                            } else {
+                                var lstdetails = result.details;
+                                console.log(lstdetails)
+                                
+
+                               
 
             $("#docentryCreditmemo").val(docentry);
+
+                                $("#docentryInvoice").val(invoices);
             $("#totalproductsreturns").html(totalproducts);
 
           
-            var newRowInvoice = '';
+         
             var returnReasons = @Html.Raw(Json.Encode(ViewBag.returnreasons));
             var returnReasonsChange = @Html.Raw(Json.Encode(ViewBag.returnreasonschange));
             $("#divCreditsproduct").html("");
-            $("#invoicesdiv").html("");
+            //$("#invoicesdiv").html("");
             $("#customername").html(customer);
           
 
 
-            $.each(invoices, function (i, invoice) {
-                newRowInvoice += '<small class="mr-2">#' + invoice + '</small><br />';
-
-            });
-            $("#invoicesdiv").append(newRowInvoice);
 
             var flagcheck = 1;
           
 
             var totalproductsshowing = 0;
-            $.each(returnReasons, function (i, returnReason) {
+                                $.each(returnReasons, function (i, returnReason) {
+              
                 var newRowContent = '';
-                newRowContent += '<p class="text-dark-gray d-flex align-items-center mt-3">';
-                newRowContent += ' <i class="material-icons icon-muted mr-2">payments</i>';
-                newRowContent += '<strong>' + returnReason.reasonCode + ' - ' + returnReason.reason + '</strong>';
-                newRowContent += ' </p>';
+                                    var flag = 0;
 
+                                    $.each(lstdetails, function (i, products) {
 
-                $.each(lstdetails, function (i, products) {
+                                        if (flag == 0) {
+                                            if (products.returnReasonCode == returnReason.reasonCode) {
+                                                newRowContent += '<p class="text-dark-gray d-flex align-items-center mt-3">';
+                                                newRowContent += ' <i class="material-icons icon-muted mr-2">payments</i>';
+                                                newRowContent += '<strong>' + returnReason.reasonCode + ' - ' + returnReason.reason + '</strong>';
+                                                newRowContent += ' </p>';
+
+                                                flag = 1;
+                                            }
+                                         
+                                        } 
+
                     if (products.returnReasonCode == returnReason.reasonCode) {
-                        totalproductsshowing +=1;
-                        newRowContent += '<div class="row align-items-center projects-item mb-1">';
-                        newRowContent += '<div class="col-sm">';
-                        newRowContent += '<div class="card m-0">';
-                        newRowContent += '<div class="px-4 py-3">';
-                        newRowContent += '<div class="row align-items-center">';
-                        newRowContent += ' <div class="col" style="min-width: 300px">';
-                        newRowContent += '<div class="d-flex align-items-center">';
-                        newRowContent += '<a href="#" class="text-body"><strong class="text-15pt mr-2">' + products.itemCode + ' - ' + products.itemName + '</strong></a>';
-                        newRowContent += '</div>';
-                        newRowContent += '<div class="d-flex align-items-center">';
-                        newRowContent += '<small class="mr-2">QTY: ' + products.quantity + '</small>';
-                        newRowContent += '<small class="mr-2">UOM: ' + products.unitMsr  + '</small>';
-                        newRowContent += '<small class="mr-2">Total Units: ' + parseFloat(products.quantity * products.numPerMsr).toFixed(2) + '</small>';
-             
-                        newRowContent += '<small class="mr-2 ">Unit Price: $' + parseFloat(products.unitPrice).toFixed(2) + '</small>';
-                        newRowContent += '<small class="mr-2">Total: $' + products.totalSale + '</small>';
-                        newRowContent += '<a class="badge" data-toggle="collapse" href="#collapsediv_' + products.itemCode+ '" role="button" aria-expanded="false" aria-controls="collapseExample">Change return reason</a >';
-                        newRowContent += '</div>';
+                        if (products.quantity < 0) {
 
-                        newRowContent += '<div class="collapse" id="collapsediv_' + products.itemCode + '"><div style="margin-top:10px;" class="row"><div class="col-md-8">';
-                        newRowContent += '<select id="' + products.itemCode + 'select_' + products.docEntry + '" onchange="changeReturnReason(this.id)" class="form-control" data-received="' + products.received +'"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder+'">';
-                        newRowContent += '<option disabled selected value> -- select an option -- </option>';
-                        $.each(returnReasonsChange, function (i, returnReasonchange) {
-                            newRowContent += '<option value="' + returnReasonchange.reasonCode + '">' + returnReasonchange.reason+'</option>';
-                         
-                        });
-                      
-                     
-                        newRowContent += '</select>';
-                        newRowContent += '</div>';
-                        newRowContent += '</div> </div>';
+                        } else {
+                            totalproductsshowing += 1;
+                            newRowContent += '<div class="row align-items-center projects-item mb-1">';
+                            newRowContent += '<div class="col-sm">';
+                            newRowContent += '<div class="card m-0">';
+                            newRowContent += '<div class="px-4 py-3">';
+                            newRowContent += '<div class="row align-items-center">';
+                            newRowContent += ' <div class="col" style="min-width: 300px">';
+                            newRowContent += '<div class="d-flex align-items-center">';
+                            newRowContent += '<a href="#" class="text-body"><strong class="text-15pt mr-2">' + products.itemCode + ' - ' + products.itemName + '</strong></a>';
+                            newRowContent += '</div>';
+                            newRowContent += '<div class="d-flex align-items-center">';
+                            newRowContent += '<small class="mr-2">QTY: ' + products.quantity + '</small>';
+                            
+                            newRowContent += '<small class="mr-2">UOM: ' + products.unitMsr + '</small>';
+                            newRowContent += '<small class="mr-2">Total Units: ' + parseFloat(products.quantity * products.numPerMsr).toFixed(2) + '</small>';
+
+                            newRowContent += '<small class="mr-2 ">Unit Price: $' + parseFloat(products.unitPrice).toFixed(3) + '</small>';
+                            newRowContent += '<small class="mr-2">Total: $' + products.totalSale + '</small>';
+
+                            if (products.noShow == false) {
+                                newRowContent += '<a class="badge" data-toggle="collapse" href="#collapsediv_' + products.itemCode + '" role="button" aria-expanded="false" aria-controls="collapseExample">More options</a >';
+                                newRowContent += '</div>';
+
+                                newRowContent += '<div class="collapse" id="collapsediv_' + products.itemCode + '"><div style="margin-top:10px;" class="row"><div class="col-md-8">';
+                                newRowContent += '<label>Change Return Reason</label>';
+                                newRowContent += '<select id="select_' + products.itemCode + '" onchange="changeReturnReason(this.id)" class="form-control" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '">';
+                                newRowContent += '<option disabled selected value> -- select an option -- </option>';
+                                $.each(returnReasonsChange, function (i, returnReasonchange) {
+                                    if (products.returnReasonCode == returnReasonchange.reasonCode) {
+                                        newRowContent += '<option selected value="' + returnReasonchange.reasonCode + '">' + returnReasonchange.reason + '</option>';
+                                    } else {
+                                        newRowContent += '<option value="' + returnReasonchange.reasonCode + '">' + returnReasonchange.reason + '</option>';
+                                    }
 
 
-                        newRowContent += '</div>';
-                        newRowContent += '<div class="col-auto d-flex align-items-center" style="min-width: 140px;">';
-                        newRowContent += '<div class="custom-control custom-checkbox-toggle custom-control-inline mr-1">';
-                        if (products.received == true) { newRowContent += '<input onchange="checkCredit(this.id)" checked=""  type="checkbox" id="' + products.itemCode + 'chk_' + products.docEntry + '" data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder +'" class="custom-control-input checkboxesindiv">'; }
-                        else {
-                            newRowContent += '<input type="checkbox" onchange="checkCredit(this.id)" id="' + products.itemCode + 'chk_' + products.docEntry + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">';
-                            flagcheck = 0;
+                                });
+
+
+                                newRowContent += '</select>';
+                                newRowContent += '<label>Change Quantity</label>';
+                                newRowContent += '<input type="number" id="numbqty_' + products.itemCode + '" class="form-control" onchange="changeQty(this.id)" value="' + products.quantity + '" max="' + products.originalQty + '" min="0" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(3) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '"/>';
+
+                                newRowContent += '<button type="button" id="btnNO_' + products.itemCode + '" class="btn btn-warning" style="margin-top:5px;" onclick="notreceivedproduct(this.id)" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(3) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '">Product not received</button>';
+                                newRowContent += '</div>';
+                                newRowContent += '</div> </div>';
+
+
+                                newRowContent += '</div>';
+                                newRowContent += '<div class="col-auto d-flex align-items-center" style="min-width: 140px;">';
+                                newRowContent += '<div class="custom-control custom-checkbox-toggle custom-control-inline mr-1">';
+                                if (products.received == true) { newRowContent += '<input onchange="checkCredit(this.id)" checked=""  type="checkbox" id="' + products.itemCode + 'chk_' + products.docEntry + '" data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">'; }
+                                else {
+                                    newRowContent += '<input type="checkbox" onchange="checkCredit(this.id)" id="' + products.itemCode + 'chk_' + products.docEntry + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">';
+                                    flagcheck = 0;
+                                }
+
+                                newRowContent += '<label class="custom-control-label" for="' + products.itemCode + 'chk_' + products.docEntry + '"></label>';
+                                newRowContent += ' </div>';
+                            } else {
+                                newRowContent += '<label class="badge badge-warning">Product not received</label>';
+                            }
+   
+                            newRowContent += '</div></div></div></div></div></div>';
                         }
-
-                        newRowContent += '<label class="custom-control-label" for="' + products.itemCode + 'chk_' + products.docEntry + '"></label>';
-                        newRowContent += ' </div>';
-                        newRowContent += '</div></div></div></div></div></div>';
+                        
                     }
 
 
@@ -109,10 +159,24 @@
             } else {
                 $("#submitPay").css("display", "none");
             }
+
+                            }
+
+                        },
+                        error: function () {
+                            alert("Whooaaa! Something went wrong..")
+                        },
+                    });
+          
+           
+
         })
     })(jQuery);
 
     window.onload = function () {
+
+
+
 
         $('#submitPay').on('click', function () {
 
@@ -129,40 +193,43 @@
                 if (result.value) {
 
                     var creditmem = $("#docentryCreditmemo").val();
+                    var docEntryInv = $("#docentryInvoice").val();
 
-                    Swal.fire(
-                        'Credit Memo submited',
-                        'Credit Memo was successfully submited.',
-                        'success'
-                    )
 
-                    //$.ajax
-                    //    ({
-                    //        url: '/Warehouse/Transform_creditMemo',
-                    //        type: 'POST',
-                    //        datatype: 'application/json',
-                    //        contentType: 'application/json',
-                    //        data: JSON.stringify({
-                    //            docentryCreditMemo: creditmem
-                    //        }),
-                    //        success: function (result) {
-                    //            if (result == "Success") {
 
-                    //                Swal.fire(
-                    //                    'Credit Memo submited',
-                    //                    'Credit Memo was successfully submited.',
-                    //                    'success'
-                    //                )
-                    //                window.location.reload(true);
-                    //            } else {
-                    //                alert("Credit memo no se actualizo");
-                    //            }
+                    $.ajax
+                        ({
+                            url: '/Warehouse/Transform_creditMemo',
+                            type: 'POST',
+                            datatype: 'application/json',
+                            contentType: 'application/json',
+                            data: JSON.stringify({
+                                docentryCreditMemo: creditmem,
+                                docEntryInv: docEntryInv
+                            }),
+                            success: function (result) {
+                                if (result == "SUCCESS" || result =="VALIDAR") {
+                                    if (result == "VALIDAR") {
+                                        toastr.info('Credit Memo has more details to validate');
+                                    } else {
+                                        Swal.fire(
+                                            'Credit Memo submited',
+                                            'Credit Memo was successfully submited.',
+                                            'success'
+                                        )
+                                        window.location.reload(true);
+                                    }
+                             
+                                } else {
 
-                    //        },
-                    //        error: function () {
-                    //            alert("Whooaaa! Something went wrong..")
-                    //        },
-                    //    });
+                                    toastr.warning('Credit Memo was not submited');
+                                }
+
+                            },
+                            error: function () {
+                                alert("Whooaaa! Something went wrong..")
+                            },
+                        });
 
 
                 }
@@ -220,7 +287,21 @@
 
         });
 
+        $(document).ready(function () {
 
+            $("#filter_name").keyup(function (e) {
+                var txt = $(this).val();
+
+                $('.rowcustom').each(function () {
+                    if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+            });
+        });
 
     }
     function checkCredit(id) {
@@ -247,7 +328,8 @@
             baseLine: baseLine,
             lineNum: lineNum,
             visOrder: visOrder,
-            received: button.is(":checked")
+            received: button.is(":checked"),
+            noShow: false
         };
        
 
@@ -265,10 +347,28 @@
                 if (result == "SUCCESS") {
 
                     toastr.success('Credit Memo updated');
-                    window.location.reload(true);
+                    //window.location.reload(true);
+
+                            //Validamos si mostrar el boton de enviar a todo
+        $('.checkboxesindiv').each(function () {
+            if ($(this).is(":checked")) {
+                //Put to api
+
+            } else {
+                validate = 1;
+
+            }
+
+        });
+
+        if (validate == 0) {
+            $("#submitPay").css("display", "inline-block");
+        } else {
+            $("#submitPay").css("display", "none");
+        }
 
                 } else {
-                    alert("Credito memo no actualizado");
+                    alert("Credito Memo was not updated");
                 }
             },
             error: function (err) {
@@ -276,30 +376,14 @@
             }
         });
 
-        ////Validamos si mostrar el boton de enviar a todo
-        //$('.checkboxesindiv').each(function () {
-        //    if ($(this).is(":checked")) {
-        //        //Put to api
 
-        //    } else {
-        //        validate = 1;
-
-        //    }
-
-        //});
-
-        //if (validate == 0) {
-        //    $("#submitPay").css("display", "inline-block");
-        //} else {
-        //    $("#submitPay").css("display", "none");
-        //}
 
     };
 
     function changeReturnReason(id) {
         var button = $("#" + id);// Button that triggered the modal
         var validate = 0;
-
+        var otherbtn = $("#numbqty_" + id.substring(7));
         var docentry = button.data("docent");
         var itemCode = button.data("itemcode");
         var quantity = button.data("qty");
@@ -311,17 +395,19 @@
         var received = button.data("received");
 
         var newReturnReason = button.val();
+        var newqty = otherbtn.val();
 
         var creditMemo_itemDraft = {
             itemCode: itemCode,
-            quantity: quantity,
+            quantity: newqty,
             uomEntry: uomEntry,
             returnReasonCode: newReturnReason,
             deleted: false,
             baseLine: baseLine,
             lineNum: lineNum,
             visOrder: visOrder,
-            received: received
+            received: received,
+            noShow: false
         };
 
 
@@ -339,10 +425,10 @@
                 if (result == "SUCCESS") {
 
                     toastr.success('Credit Memo updated');
-                    window.location.reload(true);
+ 
 
                 } else {
-                    alert("Credito memo no actualizado");
+                    alert("Credito Memo was not updated");
                 }
             },
             error: function (err) {
@@ -351,5 +437,154 @@
         });
 
     };
+
+
+
+
+
+    function changeQty(id) {
+
+        var button = $("#" + id);// Button that triggered the modal
+        var validate = 0;
+        var otherbtnname = "#select_" + id.substring(8);
+
+        var docentry = button.data("docent");
+        var itemCode = button.data("itemcode");
+        var quantity = button.data("qty");
+        var uomEntry = button.data("uom");
+        var returnReasonCode = button.data("returnreason");
+        var baseLine = button.data("baseline");
+        var lineNum = button.data("linenum");
+        var visOrder = button.data("visorder");
+        var received = button.data("received");
+
+        var newqty = button.val();
+        var newReturnReason = $(otherbtnname).val();
+        console.log(newqty);
+        console.log(newReturnReason);
+        var creditMemo_itemDraft = {
+            itemCode: itemCode,
+            quantity: newqty,
+            uomEntry: uomEntry,
+            returnReasonCode: newReturnReason,
+            deleted: false,
+            baseLine: baseLine,
+            lineNum: lineNum,
+            visOrder: visOrder,
+            received: received,
+            noShow: false
+        };
+
+
+        $.ajax({
+            url: '/Warehouse/Put_creditMemoDetail',
+            type: 'POST',
+            datatype: 'application/json',
+            contentType: 'application/json',
+            data: JSON.stringify({
+                Item: creditMemo_itemDraft,
+                DocentryCredit: docentry
+            })
+            ,
+            success: function (result) {
+                if (result == "SUCCESS") {
+
+                    toastr.success('Credit Memo updated');
+ 
+
+                } else {
+                    alert("Credito Memo was not updated");
+                }
+            },
+            error: function (err) {
+
+            }
+        });
+
+    };
+
+
+    function notreceivedproduct(id) {
+
+        Swal.fire({
+            title: 'Are you sure to check this credit as not received?',
+            text: "You won't be able to revert this.",
+            icon: 'warning',
+            showCancelButton: true,
+
+            confirmButtonText: 'Yes, change it',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.value) {
+
+                var button = $("#" + id);// Button that triggered the modal
+                var validate = 0;
+
+
+                var docentry = button.data("docent");
+                var itemCode = button.data("itemcode");
+                var quantity = button.data("qty");
+                var uomEntry = button.data("uom");
+                var returnReasonCode = button.data("returnreason");
+                var baseLine = button.data("baseline");
+                var lineNum = button.data("linenum");
+                var visOrder = button.data("visorder");
+                var received = button.data("received");
+                var price = button.data("price");
+
+
+                var creditMemo_itemDraft = {
+                    itemCode: itemCode,
+                    quantity: quantity,
+                    uomEntry: uomEntry,
+                    returnReasonCode: returnReasonCode,
+                    deleted: false,
+                    baseLine: baseLine,
+                    lineNum: lineNum,
+                    visOrder: visOrder,
+                    received: received,
+                    noShow: true
+                };
+
+                var newrow = {
+                    itemCode: itemCode,
+                    quantity: quantity * -1,
+                    uomEntry: uomEntry,
+                    returnReasonCode: returnReasonCode,
+                    price: price,
+
+                }
+
+
+                $.ajax({
+                    url: '/Warehouse/Put_creditMemoDetailNoshow',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        Item: creditMemo_itemDraft,
+                        DocentryCredit: docentry,
+                        newrow: newrow
+                    })
+                    ,
+                    success: function (result) {
+                        if (result == "SUCCESS") {
+
+                            toastr.success('Credit Memo updated');
+
+
+                        } else {
+                            alert("Credito Memo was not updated");
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                });
+
+
+            }
+        })
+    }
 
 </script>

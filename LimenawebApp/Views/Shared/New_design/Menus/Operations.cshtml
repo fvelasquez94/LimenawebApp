@@ -1,0 +1,65 @@
+﻿
+@{
+    LimenawebApp.Models.Sys_Users activeuser = (LimenawebApp.Models.Sys_Users)ViewBag.activeuser;
+    Layout = null;
+}
+
+<div class="page__header page__header-nav">
+    <div class="container-fluid page__container">
+        <div class="navbar navbar-secondary navbar-light navbar-expand-sm p-0">
+            <div class="navbar-collapse collapse" id="navbarsExample03">
+                <ul class="nav navbar-nav">
+
+                    @if (activeuser.Roles.Contains("Receive Containers"))
+                    {
+                        if (ViewData["Page"].ToString() == "Freezers")
+                        {
+                            <li class="nav-item active"><a href="@Url.Action("Freezers","Invoices")" class="nav-link">Containers</a></li> }
+                        else
+                        {
+                            <li class="nav-item"><a href="@Url.Action("Freezers","Invoices")" class="nav-link">Containers</a></li>}
+                    }
+                    @if (activeuser.Roles.Contains("Planning"))
+                    {
+                        if (ViewData["Page"].ToString() == "Planning")
+                        {
+                            <li class="nav-item active"><a href="@Url.Action("PlanningRoutes","Invoices")" class="nav-link">Planning</a></li> }
+                        else
+                        {
+                            <li class="nav-item"><a href="@Url.Action("PlanningRoutes","Invoices")" class="nav-link">Planning</a></li>}
+                    }
+                    @if (activeuser.Roles.Contains("Quality Control"))
+                    {
+                        if (ViewData["Page"].ToString() == "Quality Control")
+                        {
+                            <li class="nav-item active"><a href="@Url.Action("QualityControl_planning","Invoices")" class="nav-link">Quality Control</a></li> }
+                        else
+                        {
+                            <li class="nav-item"><a href="@Url.Action("QualityControl_planning","Invoices")" class="nav-link">Quality Control</a></li>}
+                    }
+                    @if (activeuser.Roles.Contains("SO Print"))
+                    {
+                        if (ViewData["Page"].ToString() == "Open Sales Orders")
+                        {
+                            <li class="nav-item active"><a href="@Url.Action("OpenSalesOrders","Invoices")" class="nav-link">Open S.O</a></li> }
+                        else
+                        {
+                            <li class="nav-item"><a href="@Url.Action("OpenSalesOrders","Invoices")" class="nav-link">Open S.O</a></li>}
+                    }
+
+
+
+
+
+                    @*<li class="nav-item dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Reports</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="Url.Action("Routes_Report", "Invoices")">Routes</a>
+
+                            </div>
+                        </li>*@
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

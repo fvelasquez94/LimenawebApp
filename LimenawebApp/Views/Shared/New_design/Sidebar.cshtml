@@ -21,9 +21,20 @@
 
             </div>
 
-            <div class="sidebar-p-a">
-                <a href="#" class="btn btn-outline-primary btn-block">Log out</a>
-            </div>
+            <div class="sidebar-heading sidebar-m-t">Menu</div>
+            <ul class="sidebar-menu">
+                <li class="sidebar-menu-item">
+                    <a class="sidebar-menu-button" href="@Url.Action("Dashboard","Main", null)">
+                        <i class="sidebar-menu-icon sidebar-menu-icon--left material-icons">dvr</i>
+                        <span class="sidebar-menu-text">Dashboard</span>
+                    </a>
+
+                </li>
+                </ul>
+
+                <div class="sidebar-p-a">
+                    <a href="@Url.Action("Log_out", "Home")" class="btn btn-outline-primary btn-block">Log out</a>
+                </div>
         </div>
     </div>
 </div>

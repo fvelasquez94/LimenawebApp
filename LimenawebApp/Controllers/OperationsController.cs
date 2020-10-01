@@ -99,13 +99,9 @@ namespace LimenawebApp.Controllers
                     if (producto.Forecast1_source1_period == 1)
                     {
                         periodo = (13).ToString();
-                        anio = producto.Forecast1_source1_year.ToString();
-                    }
-                    else if (producto.Forecast1_source1_period == 3) //Periodo 3 siempre  es Enero->
-                    {
-                        periodo = (producto.Forecast1_source1_period - 1).ToString();
                         anio = (producto.Forecast1_source1_year - 1).ToString();
                     }
+
                     else
                     {
                         periodo = (producto.Forecast1_source1_period - 1).ToString();
@@ -128,7 +124,7 @@ namespace LimenawebApp.Controllers
                     lstitem.lastsalesHistory = lastsaved_history;
                     lstitem.actualperiod = producto.Forecast1_source1_period;
                     lstitem.actualyear = producto.Forecast1_source1_year;
-
+                    //Periodo anterior -2 (ya se evaluo periodo actual y periodo anterior -1)
                     var periodossiguientesinit = Convert.ToInt32(periodo);
                     for (int i = 1; i < 5; i++) {
                         var nuevoperiod ="";
@@ -137,11 +133,6 @@ namespace LimenawebApp.Controllers
                         if (periodossiguientesinit == 1)
                         {
                             nuevoperiod = (13).ToString();
-                            nuevoanio = producto.Forecast1_source1_year.ToString();
-                        }
-                        else if (periodossiguientesinit == 3) //Periodo 3 NO siempre  es Enero->
-                        {
-                            nuevoperiod = (periodossiguientesinit - 1).ToString();
                             nuevoanio = (producto.Forecast1_source1_year - 1).ToString();
                         }
                         else
@@ -1541,7 +1532,7 @@ public class Initial_forecastData
                     newDet.DocumentDate = items.DocumentDate;
                     newDet.U_TI = items.U_TI;
                     newDet.U_HI = items.U_HI;
-                    newDet.U_PalletCount = 0;
+                    newDet.U_PalletCount = Convert.ToDecimal(items.U_PalletCount);
                     newDet.PalletsdeOrden = 0; 
                     newDet.CoberturaProyectadaNume = items.CoberturaProyectadaNume;
                     newDet.CoberturaIngresoPO = items.CoberturaIngresoPO;

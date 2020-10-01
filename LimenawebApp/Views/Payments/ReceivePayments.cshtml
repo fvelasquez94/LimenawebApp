@@ -1,0 +1,325 @@
+﻿@model List<LimenawebApp.Models.Payments.Payments_apiv2>
+@{
+    ViewBag.Title = "ReceivePayments";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    List<LimenawebApp.Models.Tb_Planning> lstroutes = (List<LimenawebApp.Models.Tb_Planning>)ViewBag.routes;
+    var ids = lstroutes.Select(c => c.ID_Route).ToArray();
+    string distict = string.Join(",", ids);
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Finance</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Payments</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Payments</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Finance.cshtml")
+
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
+            <div class="row">
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_name">Search</label>
+                        <input id="filter_name" type="text" class="form-control" placeholder="Enter keyword">
+                    </div>
+                </div>
+                @*<div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_buckets">Routes</label><br>
+                        <select id="filter_buckets" class="custom-select" style="width: 150px;">
+                            <option value="all">Any</option>
+                            <option value="S000474">ID - Route Name</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_assigned">Driver</label><br>
+                        <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                            <option value="all">Any</option>
+                            <option value="1">Driver 1</option>
+                            <option value="2">Driver 2</option>
+                            <option value="3">Driver 3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
+                        <label for="filter_assigned">Status</label><br>
+                        <select id="filter_assigned" class="custom-select" style="width: 150px;">
+                            <option value="all">Any</option>
+                            <option value="2">Finished</option>
+                            <option value="1">Waiting for Driver</option>
+                            <option value="3">Waiting for submit</option>
+                        </select>
+                    </div>
+                </div>*@
+                <div class="col-sm-auto">
+                    <div class="form-group" style="width: 200px;">
+                        <label for="filter_date">Daterange</label>
+                        <input id="filter_date" type="text" class="form-control" placeholder="Range example" data-toggle="daterangepicker" data-daterangepicker-start-date="@Convert.ToDateTime(ViewBag.filtrofechastart).ToString("yyyy/MM/dd")" data-daterangepicker-end-date="@Convert.ToDateTime(ViewBag.filtrofechaend).ToString("yyyy/MM/dd")">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+        <li class="nav-item">
+            <a href="#tab-21" class="nav-link active" data-toggle="tab" role="tab" aria-controls="tab-21" aria-selected="true">
+                <span class="nav-link__count">01</span>
+                All Payments
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#tab-22" class="nav-link" data-toggle="tab" role="tab" aria-controls="tab-22" aria-selected="false">
+                <span class="nav-link__count">02</span>
+                By Route
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="#tab-23" class="nav-link" data-toggle="tab" role="tab" aria-controls="tab-23" aria-selected="false">
+                <span class="nav-link__count">03</span>
+                By Accounts Receivables
+            </a>
+        </li>
+    </ul>
+    <div class="card">
+        <div class="card-body tab-content">
+            <div class="tab-pane active show fade" id="tab-21">
+                @if (Model != null)
+                {
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <table class="table" id="tbpayments">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice No</th>
+                                                <th>Invoice Date</th>
+                                                <th>Payment Date</th>
+                                                <th>Route</th>
+                                                <th>CardCode</th>
+                                                <th>Payment Type</th>
+                                                <th>Sum Applied</th>
+
+
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model)
+                                            {
+                                                <tr>
+                                                    <td>@item.invoice.docNum</td>
+                                                    <td>@item.docDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                                    <td>
+                                                        @item.createDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                                                                                                        @{
+
+                                                        DateTime dt = DateTime.ParseExact(item.docTime.Value.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                                        string timestring = dt.ToString("h:mm tt");
+                                                        <span>@timestring</span>
+                                                                                                        }
+                                                                                                    </td>
+                                                       <td>@item.invoice.deliveryRoute</td>
+                                                    <td>@item.cardCode</td>
+                                                    <td>
+                                                        @if (item.paymentType == 1) {<label class="badge badge-light">Cash</label> }
+                                                        @if (item.paymentType == 2) {
+                                                            <label class="badge badge-light">Check</label> 
+                                                            <label class="badge badge-success">@item.check.checkNum</label> 
+                                                            
+                                                        }
+                                                        @if (item.paymentType == 3) {<label class="badge badge-light">Money Order</label> }
+                                                        @if (item.paymentType == 4) {<label class="badge badge-light">Credit Card</label> }
+                                                        @if (item.paymentType == 5) {<label class="badge badge-light">ACH</label> }
+                                                        @if (item.paymentType == 6) {<label class="badge badge-light">Wire</label> }
+                                                    
+                                                    </td>
+                                                    <td>$@Convert.ToDecimal(item.sumApplied).ToString("N3")</td>
+                                                 
+                                                  
+                                                    <td>
+                                                        @if (item.invoice.invoiceStatus == 2)
+    {<label class="badge badge-warning">Waiting for Operations / Credits</label>}
+else
+{
+                                                    <a class="btn btn-success" href="#" onclick="convertDraft('@item.docEntry','@item.docEntryInv')">Submit</a>
+                                                    <a style="margin-left:5px;" class="btn btn-primary" href="#" data-toggle="modal" data-target="#modalEditPay" data-docentry="@item.docEntry" data-factdoc="@item.docEntryInv" data-docnum="@item.invoice.docNum">Edit</a>
+}
+
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                }
+                else
+                {
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane  show fade" id="tab-22">
+                @if (lstroutes != null)
+                {
+
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <table class="table" >
+                                        <thead>
+                                            <tr>
+                                                <th>Route</th>
+                                                <th>Date</th>
+                                                <th>Driver</th>
+                                                <th>Route Leader</th>
+                                                <th>Truck</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in lstroutes)
+                                            {
+                                                <tr>
+                                                    <td>@item.ID_Route - @item.Route_name</td>
+                                                    <td>@item.Departure.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                                    <td>@item.Driver_name</td>
+                                                    <td>@if (item.Routeleader_name == "SELECT..") { <label>N/A</label>} else{ <label>@item.Routeleader_name</label>}</td>
+                                                    <td>@item.Truck_name</td>
+                                                    <td><a href="#" data-route="@item.ID_Route" data-toggle="modal" data-target="#modal-large" class="btn btn-info">DETAILS</a></td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+                }
+                else
+                {
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+                }
+            </div>
+            <div class="tab-pane  show fade" id="tab-23">
+                               @if (Model != null)
+                {
+                        <div class="row">
+
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <table class="table" id="tbpayments">
+                                        <thead>
+                                            <tr>
+                                                <th>Invoice No</th>
+                                                <th>Invoice Date</th>
+                                                <th>Payment Date</th>
+                                                <th>Route</th>
+                                                <th>CardCode</th>
+                                                <th>Payment Type</th>
+                                                <th>Sum Applied</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var item in Model.Where(c=> !distict.Contains(c.invoice.id_Delivery.ToString())))
+                                            {
+                                                <tr>
+                                                    <td>@item.invoice.docNum</td>
+                                                    <td>@item.docDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                                                    <td>@item.createDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                                                                        @{
+
+                                                        DateTime dt = DateTime.ParseExact(item.docTime.Value.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                                        string timestring = dt.ToString("h:mm tt");
+                                                        <span>@timestring</span>
+                                                                                                        }
+                                                        </td>
+                                                       <td>@item.idRoute @item.invoice.deliveryRoute</td>
+                                                    <td>@item.cardCode</td>
+                                                    <td>
+                                                        @if (item.paymentType == 1)
+    {<label class="badge badge-light">Cash</label>}
+                                                        @if (item.paymentType == 2)
+    {
+                                                    <label class="badge badge-light">Check</label>
+                                                    <label class="badge badge-success">@item.check.checkNum</label>
+}
+                                                        @if (item.paymentType == 3)
+    {<label class="badge badge-light">Money Order</label>}
+                                                        @if (item.paymentType == 4)
+    {<label class="badge badge-light">Credit Card</label>}
+                                                        @if (item.paymentType == 5)
+    {<label class="badge badge-light">ACH</label>}
+                                                        @if (item.paymentType == 6)
+    {<label class="badge badge-light">Wire</label>}
+
+                                                    </td>
+                                                    <td>$@Convert.ToDecimal(item.sumApplied).ToString("N3")</td>
+                                                 
+                                                  
+                                                    <td>
+                                                        @if (item.invoice.invoiceStatus == 2)
+                                                        { <label class="badge badge-warning">Waiting for Operations / Credits</label>}
+                                                        else {
+                                                            <a class="btn btn-success" href="#" onclick="convertDraft('@item.docEntry','@item.docEntryInv')">Submit</a >
+                                                            <a style="margin-left:5px;" class="btn btn-primary" href="#"  data-toggle="modal" data-target="#modalEditPay" data-docentry="@item.docEntry"  data-factdoc="@item.docEntryInv" data-docnum="@item.docNum" >Edit</a >
+                                                        }</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                }
+                else
+                {
+                    <div>
+                        <label>No data to show</label>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+
+
+    
+
+
+</div>

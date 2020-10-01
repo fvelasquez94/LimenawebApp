@@ -57,7 +57,8 @@
                 if (result.value) {
                     var idauthorization = $("#idauthupdate").val();
                     var commentsfinanceauth = $("#commentsfinanceauth").val();
-
+                    var iddriver = $("#driverauth").html();
+                    var route = $("#routeauth").html();
                     $.ajax
                         ({
                             url: '/Authorizations/Put_Authorization',
@@ -67,7 +68,9 @@
                             data: JSON.stringify({
                                 id_authorization: idauthorization,
                                 commentsfinance: commentsfinanceauth,
-                                status : 1
+                                status: 1,
+                                iddriver: iddriver,
+                                route: route
                             }),
                             success: function (result) {
                                 if (result == "SUCCESS") {
@@ -80,7 +83,7 @@
 
                                     window.location.reload(true);
                                 } else {
-                                    alert("Authorization no se actualizo");
+                                    toastr.warning('Something went wrong.' + result);
                                 }
 
                             },
@@ -110,7 +113,8 @@
                 if (result.value) {
                     var idauthorization = $("#idauthupdate").val();
                     var commentsfinanceauth = $("#commentsfinanceauth").val();
-
+                    var iddriver = $("#driverauth").html();
+                    var route = $("#routeauth").html();
                     $.ajax
                         ({
                             url: '/Authorizations/Put_Authorization',
@@ -120,7 +124,9 @@
                             data: JSON.stringify({
                                 id_authorization: idauthorization,
                                 commentsfinance: commentsfinanceauth,
-                                status: 2
+                                status: 2,
+                                iddriver: iddriver,
+                                route: route
                             }),
                             success: function (result) {
                                 if (result == "SUCCESS") {
@@ -133,7 +139,7 @@
 
                                     window.location.reload(true);
                                 } else {
-                                    alert("Authorization no se actualizo");
+                                    alert("Something went wrong");
                                 }
 
                             },
@@ -150,7 +156,7 @@
 
 
         $('#filter_date').on('change', function () {
-
+         
             var st = new Date($('#filter_date').data('daterangepicker').startDate);
             var ed = new Date($('#filter_date').data('daterangepicker').endDate);
 
@@ -187,7 +193,7 @@
             var tipo_actividad = $('#filter_type').val();
             var prioridad = $('#filter_prioridad').val();
 
-            var url = '@Url.Action("ReceiveCredits", "Warehouse", new { fstartd = "START", fendd = "FINISH"})';
+            var url = '@Url.Action("Index", "Authorizations", new { fstartd = "START", fendd = "FINISH"})';
 
 
             url = url.replace('START', st);
@@ -200,6 +206,21 @@
         });
 
 
+        $(document).ready(function () {
+
+            $("#filter_name").keyup(function (e) {
+                var txt = $(this).val();
+
+                $('.rowcustom').each(function () {
+                    if ($(this).text().toUpperCase().indexOf(txt.toUpperCase()) != -1) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+
+            });
+        });
 
     }
     function checkCredit(id) {
@@ -247,7 +268,7 @@
                     window.location.reload(true);
 
                 } else {
-                    alert("Credito memo no actualizado");
+                    toastr.warning('Something went wrong.' + result);
                 }
             },
             error: function (err) {

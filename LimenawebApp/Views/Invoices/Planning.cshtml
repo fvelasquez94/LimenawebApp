@@ -1,668 +1,83 @@
 ﻿@{
     ViewBag.Title = "Distribuidora Limeña - Planning";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 
-<!--main content wrapper-->
-<div class="content-wrapper">
-    <!--/creative states-->
-    <div class="box-container">
-        <div class="container-fluid">
-            <!--page title-->
-            <!--/page title-->
-            <!--calendar-->
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Planning</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Planning</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Operations.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="card card-form d-flex flex-column flex-sm-row">
+        <div class="card-form__body card-body-form-group flex">
             <div class="row">
-                <div class=" col-md-12">
-                    <div class="card card-shadow mb-4">
-                        <div class="card-header border-0">
-                            <div class="custom-title-wrap bar-warning">
-                                <div class="custom-title">Scheduled Routes</div>
-                                <div class=" widget-action-link">
-                                    <div class="">
-                                        <a href="#" data-toggle="modal" data-target="#createModal" class="btn btn-sm btn-outline-success">
-                                            <i class="fa fa-truck"></i> New Route
-                                        </a>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div id='calendar'></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!--/calendar-->
-        </div>
-    </div>
-</div>
-<!--/main content wrapper-->
-<!--CREATE ROUTE DATA STARTS-->
-<div class="modal fade" id="createModal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form>
-                <div class="modal-header">
-
-                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="fa fa-truck"></i> Add New Route</h5>
-
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
-                    <div class="col-12 grid-margin">
-                        <div class="card">
-                            <div class="card-body">
-
-                                <p class="card-description">
-                                    <h5 class="card-title">Master route</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-
-                                            <div class="col-sm-12">
-
-                                                <select name="lstMaster" id="lstMaster" class="form-control" style="width:100%">
-                                                    <option value="0" selected>SELECT..</option>
-                                                </select>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Name</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-
-                                            <div class="col-sm-12">
-                                                <input class="form-control" type="text" name="routeName" id="routeName" required />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-
-                                <p class="card-description">
-                                    <h5 class="card-title">Driver</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-
-                                            <div class="col-sm-12">
-                                                <select name="lstDriver" id="lstDriver" class="form-control" style="width:100%">
-                                                    <option value="0" selected>SELECT..</option>
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Truck</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-
-                                            <div class="col-sm-12">
-                                                <select name="lstTruck" id="lstTruck" class="form-control" style="width:100%">
-                                                    <option value="0" selected>SELECT..</option>
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Route Leader</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-
-                                            <div class="col-sm-12">
-                                                <select name="lstRLeader" id="lstRLeader" class="form-control" style="width:100%">
-                                                    <option value="0" selected>SELECT..</option>
-                                                </select>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p class="card-description">
-                                    <h5 class="card-title">Delivery Date</h5>
-                                </p>
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-                                                <input type="datetime-local" name="departure" id="departure" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <p class="card-description">
-                                    <h5 class="card-title">Preparation Date</h5>
-                                </p>
-                                <div class="row">
-
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-                                                <input type="datetime-local" name="preparationdate" id="preparationdate" class="form-control">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <p class="card-description">
-                                    <h5 class="card-title">Repeat</h5>
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group row">
-                                            <div class="col-sm-12">
-
-                                                <select name="cust" class="form-control" disabled>
-                                                    <option value="NA">Never</option>
-                                                    <option value="FW">First week of every month</option>
-                                                    <option value="OW">Once a week</option>
-                                                    <option value="OTW">Once every two weeks</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="modal-footer">
-                    <button type="button" onclick="saveRoute()" class="btn btn-info">Save</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-<!--CREATE ROUTE DATA ENDS-->
-<!--DELETE DATA STARTS-->
-<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            @using (Html.BeginForm("DeleteRoute", "Commercial", FormMethod.Post))
-            {
-                @Html.AntiForgeryToken()
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-delete"></i> Delete Route Data</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-
+                <div class="col-sm-auto">
                     <div class="form-group">
-                        <label class="col-form-label">Are you sure you want to delete this Route?</label><br />
-                        <input type="text" id="ID_routeD" name="ID_routeD" hidden />
-
-                    </div>
-
-
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
-<!--EDIT DATA STARTS-->
-<div class="modal fade" id="editModal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Edit Route</h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="col-12 grid-margin">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <p class="card-description">
-                                <h5 class="card-title">Name</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-12">
-                                            <input class="form-control" type="text" name="routeName2" id="routeName2" required />
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <input id="selectedRoute2" name="selectedRoute2" type="text" hidden />
-
-
-                            <p class="card-description">
-                                <h5 class="card-title">Driver</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-12">
-                                            <select name="lstDriver2" id="lstDriver2" class="form-control" style="width:100%">
-                                                <option value="0" selected>SELECT..</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="card-description">
-                                <h5 class="card-title">Truck</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-12">
-                                            <select name="lstTruck2" id="lstTruck2" class="form-control" style="width:100%">
-                                                <option value="0" selected>SELECT..</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="card-description">
-                                <h5 class="card-title">Route Leader</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-12">
-                                            <select name="lstRLeader2" id="lstRLeader2" class="form-control" style="width:100%">
-                                                <option value="0" selected>SELECT..</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="card-description">
-                                <h5 class="card-title">Delivery Date</h5>
-                            </p>
-                            <div class="row">
-
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-                                            <input type="datetime-local" name="departure2" id="departure2" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <p class="card-description">
-                                <h5 class="card-title">Preparation Date</h5>
-                            </p>
-                            <div class="row">
-
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-                                            <input type="datetime-local" name="preparationdate2" id="preparationdate2" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="card-description">
-                                <h5 class="card-title">Repeat</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-                                        <div class="col-sm-12">
-
-                                            <select name="cust22" class="form-control" disabled>
-                                                <option value="NA">Never</option>
-                                                <option value="FW">First week of every month</option>
-                                                <option value="OW">Once a week</option>
-                                                <option value="OTW">Once every two weeks</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="finisheditbtn">Save</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!--CREATE USER DATA ENDS-->
-<!--EDIT DATA STARTS-->
-<div class="modal fade" id="editModal_KY" role="dialog" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Assign Driver and Truck</h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="col-12 grid-margin">
-                    <div class="card">
-                        <div class="card-body">
-
-                            <input id="selectedRouteOtraBodega" name="selectedRouteOtraBodega" type="text" hidden />
-
-
-                            <p class="card-description">
-                                <h5 class="card-title">Driver</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-12">
-                                            <select name="lstDriverOtraBodega" id="lstDriverOtraBodega" class="form-control" style="width:100%">
-                                                <option value="0" selected>SELECT..</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="card-description">
-                                <h5 class="card-title">Truck</h5>
-                            </p>
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group row">
-
-                                        <div class="col-sm-12">
-                                            <select name="lstTruckOtraBodega" id="lstTruckOtraBodega" class="form-control" style="width:100%">
-                                                <option value="0" selected>SELECT..</option>
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="assignbtn">Save</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-            </div>
-
-        </div>
-    </div>
-</div>
-<!--MODAL LOUISVILLE DATA ENDS-->
-<!--MODAL SALES ORDERS-->
-<div id="modal_SO" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="myLargeModalLabel">Sales Orders</h5>
-
-
-                <div>
-                    <button type="button" id="btneditr" class="btn btn-info mr-auto btn-sm">EDIT ROUTE INFO</button>
-                </div>
-            </div>
-
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6" id="divopenso">
-
-                        <div class="card card-shadow mb-4">
-                            <div class="card-header border-0">
-                                <div class="custom-title-wrap bar-primary">
-                                    <div class="custom-title">
-                                        Open Sales Orders
-                                        @*<small>        Sort by</small>*@
-                                        <ul class="nav nav-pills nav-pill-turquoise nav-pill-custom nav-pills-sm float-right " id="pills-tab" role="tablist">
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="pills-AZ" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">A-Z</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="pills-ZA" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">Z-A</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="pills-Date" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↓ Date</a>
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="pills-DateUp" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Date</a>
-                                            </li>
-
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="pills-Price" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Price</a>
-
-                                            </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="pills-PriceUp" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Price</a>
-                                            </li>
-                                        </ul>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="card-body">
-                                <input type="text" value="" id="selectedRoute" hidden />
-                                <input class="form-control" style="font-size:11px;" type="text" id="myInput" onkeyup="filterByCode()" placeholder="SEARCH BY ORDER NUMBER.." title="Type">
-                                <select id="officeFltr" class="form-control" onchange="myFunction()" style="width:100%; font-size:11px"></select>
-                                <select id="officeFltr2" class="form-control" onchange="myFunction2()" style="width:100%; font-size:11px"></select>
-                                <select id="officeFltr3" class="form-control" onchange="myFunction3()" style="width:100%; font-size:11px"></select>
-                                <ul id="sortable1" class="connectedSortable" style="height: 500px; overflow-y: auto; overflow-x:hidden"></ul>
-
-                            </div>
-
-
-                        </div>
-                        <div class="float-left">
-                            <span style="color:black !important" class="badge badge-warning text-light form-pill px-3 py-1">LIMENA</span>
-                            <span style="color:black !important" class="badge badge-info text-light form-pill px-3 py-1">BAR-S</span>
-
-                        </div>
-                    </div>
-
-                    <div class="col-md-6" id="divselos">
-                        <div class="card card-shadow mb-4">
-                            <div class="card-header border-0">
-                                <div class="custom-title-wrap bar-success">
-                                    <div class="custom-title" id="selectedOrdersTitle">
-                                        Selected Orders
-                                    </div>
-                                    <ul class="nav nav-pills nav-pill-turquoise nav-pill-custom nav-pills-sm float-right " id="pills-tab" role="tablist">
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-AZ2" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">A-Z</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-ZA2" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">Z-A</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-Date2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↓ Date</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-DateUp2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Date</a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-Price2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Price</a>
-
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-PriceUp2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Price</a>
-                                        </li>
-
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-CC2u" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Customer Code</a>
-
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-CC2d" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Customer Code</a>
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-SO2u" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ SO Code</a>
-
-                                        </li>
-                                        <li class="nav-item">
-                                            <a class="nav-link" id="pills-SO2d" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ SO Code</a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="card-body">
-
-                                <ul id="sortable2" class="connectedSortable" style="height: 590px; overflow-y: auto; overflow-x:hidden"></ul>
-                                <button type="button" id="newExtra" class="btn btn-info mr-auto btn-sm">ADD EXTRA EXPENSES</button>
-                                <a href="#" id="Sortbtn" class="btn btn-success mr-auto btn-sm">SORT</a>
-
-                                <div class="float-right" style="border-left:dashed; border-width:1px; margin-left:20px;margin-right:20px;">
-                                    <div style="margin-left:10px;">
-                                        <small id="Each">Each: </small><br />
-                                        <small id="Case">Case: </small><br />
-                                        <small id="Pack">Pack: </small><br />
-                                        <small id="LBS">LBS: </small><br />
-                                        <small id="totalEach">Total Cases: </small>
-                                    </div>
-
-
-
-                                </div>
-
-                                <div class="float-right">
-                                    <small id="totalAmountSO">Total Amount: </small><br />
-                                    <small id="totalSO">Total Sales Orders: </small><br />
-                                    <small id="totalCustomers">Total Customers: </small><br />
-                                    <small id="totalExtra">Total Extra: </small>
-
-
-                                </div>
-
-                            </div>
-                        </div>
-
+                        <label for="filter_prioridad">By Warehouse (coming soon)</label><br>
+                        <select id="filter_prioridad" class="custom-select" style="width: 200px;" disabled>
+                            <option value="">Show All</option>
+                            <option value="01">01 - TN</option>
+                            <option value="02">02 - KY</option>
+
+                        </select>
                     </div>
                 </div>
 
+                <div class="col-sm-auto">
+                    <div class="form-group" style="width: 200px;">
+                        <label for="filter_date">By Date</label>
+                        <input id="filter_date" type="text" class="form-control" placeholder="Range example" data-toggle="daterangepicker" data-daterangepicker-start-date="@Convert.ToDateTime(ViewBag.filtrofechastart).ToString("yyyy/MM/dd")" data-daterangepicker-end-date="@Convert.ToDateTime(ViewBag.filtrofechaend).ToString("yyyy/MM/dd")">
 
+                    </div>
+                </div>
+                <div class="col-sm-auto">
+                    <div class="form-group">
 
-            </div>
-            <div class="modal-footer">
-                <button type="button" id="delso" onclick="deleteRoute()" class="btn btn-default mr-auto btn-sm">Delete Route</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" id="savso" onclick="saveSalesOrders()" class="btn btn-primary">Save changes</button>
+                        <div class="custom-control custom-checkbox mt-sm-2">
+                            <button id="click_filterMain" class="btn btn-primary">Apply Filter</button>
+                        </div>
+                    </div>
+                </div>
+
+                @*<button class="btn btn-success border-left border-top border-top-sm-0 rounded-top-0 rounded-top-sm rounded-left-sm-0" data-toggle="modal" data-target="#modal-right">test aside 1</button>*@
             </div>
         </div>
+        <button class="btn btn-success border-left border-top border-top-sm-0 rounded-top-0 rounded-top-sm rounded-left-sm-0" data-toggle="modal" data-target="#createModal">New Route</button>
     </div>
 </div>
+<div id="divcalendar" class="container-fluid page__container">
 
+    <div class="nav-active-border b-success px-3">
+        <ul class="nav text-sm" role="tablist">
 
-<!--EXTRA DATA STARTS-->
-<div class="modal fade" id="extraModal" role="dialog" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-
-                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Extras</h5>
-
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-
-                <div class="col-12">
-
-                    <div class="row" style="border-style:none !important">
-                        <div class="col-8">
-                            <input type="text" id="addDescription" class="form-control" placeholder="Description">
-                        </div>
-                        <div class="col-3">
-
-                            <input type="text" id="addValue" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" placeholder="Value($)">
-                        </div>
-                        <div class="col-1">
-                            <button class="btn btn-info" id="addExtra">+</button>
-                        </div>
-                    </div>
-                    <br /><br />
-                    <div class="row">
-                        <table class="table table-striped" id="tbExtras">
-                            <thead>
-                                <tr>
-                                    <th>DESCRIPTION</th>
-                                    <th>VALUE($)</th>
-                                    <th>ACTIONS</th>
-
-                                </tr>
-                            </thead>
-                            <tbody id="tbBodyExtras"></tbody>
-                        </table>
-                    </div>
-                </div>
-
-
-            </div>
-
-
-            <div class="modal-footer">
-                <button type="button" class="btn btn-info" id="savExtras" onclick="saveExtrasDet()">Save</button>
-                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
-            </div>
-
-        </div>
+            <li class="nav-item">
+                <a class="nav-link active" id="weekview" data-toggle="tab">Weekly View</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="monthview" data-toggle="tab">Month View</a>
+            </li>
+        </ul>
     </div>
-</div>
-<!--EXTRA DATA ENDS-->
-<!--+++++++++-->
+
+    <!-- modal -->
+    <!-- / .modal -->
+    <div id="fullcalendar" data-plugin="fullCalendar">
+        <div class="loading m-4"></div>
+    </div>
+
+</div>  <!-- ############ Main END-->

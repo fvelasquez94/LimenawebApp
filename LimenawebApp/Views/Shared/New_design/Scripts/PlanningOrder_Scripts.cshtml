@@ -1,0 +1,569 @@
+﻿
+@{
+    Layout = null;
+    List<LimenawebApp.Controllers.InvoicesController.OpenSO> lstopenSO = (List<LimenawebApp.Controllers.InvoicesController.OpenSO>)ViewBag.opensalesOrders;
+    List<LimenawebApp.Models.Invoices.Invoices_api> lstinvoices = (List<LimenawebApp.Models.Invoices.Invoices_api>)ViewBag.invoices;
+}
+
+<div id="modal_SO" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Sales Orders</h5>
+            </div>
+            <div class="modal-body">
+
+                <table id="myTableSO" class="table">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" name="select_all" value="1" id="example-select-all"></th>
+                            <th>#DOCNUM</th>
+                            <th>Customer</th>
+                            <th>Route</th>
+                            <th>Sales Rep</th>
+
+                            <th>Printed</th>
+                            <th>Amount</th>
+                            <th>Total SO</th>
+                            <th>Date</th>
+                            <th>Remarks</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in lstopenSO)
+                        {
+                            <tr>
+                                <td></td>
+                                <td class="docnumbox" data-docnum="@item.NumSO">
+                                    @if (item.CardCode[0] == 'C')
+                                    {
+                                        <div class="badge badge-warning pillso" style="font-size:15px">#@item.NumSO</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge badge-info pillso" style="font-size:15px">#@item.NumSO</div>
+                                    }
+
+                                </td>
+                                <td>@item.CardCode - @item.CustomerName</td>
+                                <td>@item.DeliveryRoute</td>
+                                <td>@item.SalesPerson</td>
+                                <td>@if (item.Printed == "Y")
+                                {<label>YES</label> }
+                                else
+                                { <label>NO</label>}</td>
+                                <td><label>$@item.OpenAmount.Value.ToString("N2")</label></td>
+                                <td>@if (item.OpenAmount == item.TotalSO)
+                                {<label class="text-muted">$@item.TotalSO.Value.ToString("N2")</label> }
+                            else
+                            {<label>$@item.TotalSO.Value.ToString("N2")</label>}</td>
+                                <td><label>@Convert.ToDateTime(item.SODate).ToShortDateString()</label></td>
+                                <td>@item.Remarks</td>
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div> <!-- // END .modal-body -->
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="savso" onclick="saveSalesOrders()" class="btn btn-primary">Save changes</button>
+            </div>
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->
+
+<div id="modal_invoices" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Returned Invoices</h5>
+            </div>
+            <div class="modal-body">
+
+                <table id="myTableInvoices" class="table mb-0 thead-border-top-0  border-bottom-0" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" name="select_all2" value="1" id="example-select-all2"></th>
+                            <th>#DOCNUM</th>
+                            <th>Customer</th>
+                            <th>Sales Rep</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in lstinvoices)
+                        {
+                            <tr>
+                                <td></td>
+                                <td class="docnumbox" data-docnum="@item.docNum">
+                                    @if (item.cardCode[0] == 'C')
+                                    {
+                                        <div class="badge badge-warning pillso" style="font-size:15px">#@item.docNum</div>
+                                    }
+                                    else
+                                    {
+                                        <div class="badge badge-info pillso" style="font-size:15px">#@item.docNum</div>
+                                    }
+
+                                </td>
+                                <td>@item.cardCode - @item.cardName</td>
+                                <td>@item.slpName</td>
+                                <td><label>$@item.docTotal.ToString("N2")</label></td>
+                                <td><label>@Convert.ToDateTime(item.deliveryDate).ToShortDateString()</label></td>
+        
+                            </tr>
+
+                        }
+                    </tbody>
+                </table>
+            </div> <!-- // END .modal-body -->
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="savso" onclick="saveInvoices()" class="btn btn-primary">Save changes</button>
+            </div>
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->
+
+<script>
+
+    window.onload = function () {
+
+
+
+        $(document).ready(function () {
+            var table2 = $('#myTableSO').DataTable({
+                columnDefs: [{
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': false,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="checkbox" class="orders" value="false">';
+                    }
+                }],
+                paging: false,
+                'order': [[1, 'asc']]
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#myTableSO tbody').on('change', 'input.orders[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    var el = $('#example-select-all').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+            });
+
+            // Handle click on "Select all" control
+            $('#example-select-all').on('click', function () {
+                // Get all rows with search applied
+                var rows = table2.rows({ 'search': 'applied' }).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input.orders[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+
+            var table3 = $('#myTableInvoices').DataTable({
+                columnDefs: [{
+                    'targets': 0,
+                    'searchable': false,
+                    'orderable': false,
+                    'className': 'dt-body-center',
+                    'render': function (data, type, full, meta) {
+                        return '<input type="checkbox" class="invoices" value="false">';
+                    }
+                }],
+                paging: false,
+                'order': [[1, 'asc']]
+            });
+
+            // Handle click on checkbox to set state of "Select all" control
+            $('#myTableInvoices tbody').on('change', 'input.invoices[type="checkbox"]', function () {
+                // If checkbox is not checked
+                if (!this.checked) {
+                    var el = $('#example-select-all2').get(0);
+                    // If "Select all" control is checked and has 'indeterminate' property
+                    if (el && el.checked && ('indeterminate' in el)) {
+                        // Set visual state of "Select all" control
+                        // as 'indeterminate'
+                        el.indeterminate = true;
+                    }
+                }
+            });
+
+            // Handle click on "Select all" control
+            $('#example-select-all2').on('click', function () {
+                // Get all rows with search applied
+                var rows = table3.rows({ 'search': 'applied' }).nodes();
+                // Check/uncheck checkboxes for all rows in the table
+                $('input.invoices[type="checkbox"]', rows).prop('checked', this.checked);
+            });
+
+
+
+
+            var table = $('#tbOrder').DataTable({
+                //rowReorder: {
+                //    selector: 'tr'
+                //},
+                columnDefs: [
+                    //{targets: 0, visible: false }
+                ],
+                scrollY: 450,
+                "order": [[0, 'asc']],
+                searching: false,
+                paging: false,
+                "footerCallback": function (row, data, start, end, display) {
+                    var api = this.api(), data;
+
+                    // Remove the formatting to get integer data for summation
+                    var intVal = function (i) {
+                        return typeof i === 'string' ?
+                            i.replace(/[\$,]/g, '') * 1 :
+                            typeof i === 'number' ?
+                                i : 0;
+                    };
+
+                    // Total over all pages
+                    total = api
+                        .column(8)
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    // Total over this page
+                    pageTotal = api
+                        .column(8, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+                    pageTotal2 = api
+                        .column(8, { page: 'current' })
+                        .data()
+                        .reduce(function (a, b) {
+                            return intVal(a) + intVal(b);
+                        }, 0);
+
+
+                    var a = api
+                        .column(4, { page: 'current' })
+                        .data()
+                        .unique();
+                    // Update footer
+                    //$(api.column(7).footer()).html(
+                    //    pageTotal
+                    //);
+                    $(api.column(6).footer()).html(
+                        "TOTAL AMOUNT: $" + pageTotal2.toLocaleString()
+                    );
+
+                    $(api.column(0).footer()).html(
+                        "TOTAL CUSTOMERS: " + a.length
+                    );
+
+
+                    // '' + pageTotal + ' ( ' + total + ' total)'
+                }
+            });
+
+
+            $('#tbOrder_wrapper').removeClass('form-inline');
+
+
+
+
+        });
+
+
+    }
+
+    function deleteSO(idsalesorder) {
+
+        swal.fire({
+            title: 'Are you sure to delete this document?',
+            text: "You won't be able to revert this",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3dba6f',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+
+                $.ajax({
+                    url: '/Invoices/deleteSO',
+                    type: 'POST',
+                    data: { 'id_salesorder': idsalesorder },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+                        console.log(result);
+                        if (result == "success") {
+
+                            Swal.fire(
+                                'Document deleted!',
+                                'The document has been deleted.',
+                                'success'
+                            )
+                            window.location.reload(true);
+                        } else {
+                            alert("Something went wrong..");
+                        }
+
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..");
+
+                    }
+                });
+
+            }
+        })
+    }
+
+    function saveSalesOrders() {
+        var column1RelArray = [];
+
+        $('input.orders').each(function () {
+            // If checkbox is checked
+            if ($(this).is(":checked")) {
+                var docnu = $(this).closest('tr').children('td.docnumbox').data("docnum");
+                column1RelArray.push(docnu);
+            }
+
+        });
+
+        if (column1RelArray.length > 0) {
+            var id_route = $("#selectedRoute").val();
+            document.getElementById("loader").style.display = "flex";
+            $.ajax
+                ({
+                    url: '/Invoices/SaveSalesOrders',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        salesOrders: column1RelArray,
+                        id_route: id_route
+
+                    }),
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Sales Orders saved successfully.", "Success");
+                            //sortSalesOrders()
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else if (result == "NO DATA") {
+                            toastr.warning("Please, choose at least one sales order to continue.", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        } else {
+                            toastr.info("Saving new changes..", "Warning");
+
+                            document.getElementById("loader").style.display = "none";
+                            saveSalesOrders();
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+        } else {
+            toastr.info("Select at least one sales order");
+        }
+
+
+
+
+
+
+    }
+
+
+
+    function saveInvoices() {
+        var column1RelArray = [];
+
+        $('input.invoices').each(function () {
+            // If checkbox is checked
+            if ($(this).is(":checked")) {
+                var docnu = $(this).closest('tr').children('td.docnumbox').data("docnum");
+                column1RelArray.push(docnu);
+            }
+
+        });
+
+        if (column1RelArray.length > 0) {
+            var id_route = $("#selectedRoute").val();
+            document.getElementById("loader").style.display = "flex";
+            $.ajax
+                ({
+                    url: '/Invoices/SaveInvoices',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        invoices: column1RelArray,
+                        id_route: id_route
+
+                    }),
+                    success: function (result) {
+
+                        if (result == "SUCCESS") {
+                            toastr.success("Invoices saved successfully.", "Success");
+                            //sortSalesOrders()
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else if (result == "NO DATA") {
+                            toastr.warning("Please, choose at least one Invoices to continue.", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        } else {
+                            toastr.info("Saving new changes..", "Warning");
+
+                            document.getElementById("loader").style.display = "none";
+                            saveSalesOrders();
+                        }
+
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+        } else {
+            toastr.info("Select at least one Invoices to continue.");
+        }
+
+
+
+
+
+
+    }
+
+</script>
+
+
+
+<script>
+    function changeOrder() {
+        var table = $('#tbOrder').DataTable();
+        table.destroy();
+        var table2 = $('#tbOrder').DataTable({
+            rowReorder: {
+                selector: 'tr'
+            },
+            columnDefs: [
+                //{targets: 0, visible: false }
+            ],
+            scrollY: 450,
+            "order": [[0, 'asc']],
+            searching: false,
+            paging: false
+        });
+
+
+        $('#tbOrder_wrapper').removeClass('form-inline');
+    }
+    function saveOrderData() {
+
+
+        var table = $('#tbOrder').DataTable();
+        var data;
+        data = Array();
+
+        console.log(data);
+
+        $("#tbOrder tr").each(function (i, v) {
+            data[i] = Array();
+            $(this).children('td').each(function (ii, vv) {
+
+
+                if (ii == 0) {
+
+                    data[i][ii] = $(this).eq(0).find('input').val();
+
+                } else if (ii == 9) {
+
+                    data[i][ii] = $(this).eq(0).find('textarea').val();
+
+                } else {
+
+                    data[i][ii] = $(this).text();
+
+                }
+
+
+
+            });
+        })
+        var objects = [];
+        for (var i = 1, len = data.length; i < len; i++) {
+
+            if (i > 1) {
+                objects.push({
+                    sort: data[i][0],
+                    num: data[i][1],
+                    SO: data[i][2],
+                    comment: data[i][9]
+                });
+            }
+
+        }
+
+
+
+
+        document.getElementById("loader").style.display = "flex";
+        $.ajax
+            ({
+                url: '/Invoices/Save_order',
+                type: 'POST',
+                data: { 'objects': objects },
+                success: function (result) {
+
+                    if (result == "SUCCESS") {
+                        toastr.success("Data saved successfully.", "Success");
+                        document.getElementById("loader").style.display = "none";
+                        window.location.reload(true);
+                    } else {
+                        toastr.warning("Something went wrong.." + result, "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    }
+
+
+                },
+                error: function () {
+
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+
+
+
+
+    }
+
+</script>

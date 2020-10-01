@@ -515,7 +515,7 @@ namespace LimenawebApp.Controllers
            
                 using (DLI_PROEntities dbmk = new DLI_PROEntities())
                 {
-                    lstproduct = (dlipro.BI_Dim_Products.Where(x => x.id_brand==brand && subInt.Contains(x.id_subcategory) && x.id_category == ID_category && x.Pepperi=="YES")).OrderBy(c=>c.id_subcategory).ToList<BI_Dim_Products>();
+                    lstproduct = (dlipro.BI_Dim_Products.Where(x => x.id_brand==brand && subInt.Contains(x.id_subcategory) && x.id_category == ID_category && x.Pepperi=="Yes" && x.Active=="Y")).OrderBy(c=>c.id_subcategory).ToList<BI_Dim_Products>();
                 }
 
                 if (lstproduct.Count > 0)
@@ -525,7 +525,7 @@ namespace LimenawebApp.Controllers
                     ActivitiesM act = (from actd in dbcmk.ActivitiesM where (actd.ID_activity == idact) select actd).FirstOrDefault();
                     var countItems = (from a in dbcmk.FormsM_details where (a.ID_visit == idact) select a).Count();
 
-                    var nuevacuenta = countItems + 4;
+                    var nuevacuenta = countItems + 20;
                     var activeSub = "";
                     var countp = 0;
                     var totalpro = lstproduct.Count();
@@ -539,7 +539,7 @@ namespace LimenawebApp.Controllers
                         try
                         {
                             if (countp == 0) {
-                                FormsM_details detalle_subcatnuevo = new FormsM_details(); //Producto
+                                FormsM_details detalle_subcatnuevo = new FormsM_details(); //Category
 
 
                                 detalle_subcatnuevo.ID_formresourcetype = 95;
@@ -560,7 +560,7 @@ namespace LimenawebApp.Controllers
                                 detalle_subcatnuevo.idkey = nuevacuenta;
                                 detalle_subcatnuevo.query1 = "";
                                 detalle_subcatnuevo.query2 = "";
-                                detalle_subcatnuevo.parent = 0;
+                                detalle_subcatnuevo.parent = 13;
                                 detalle_subcatnuevo.ID_empresa = 11;
 
 
@@ -569,37 +569,6 @@ namespace LimenawebApp.Controllers
 
                                 nuevacuenta++;
 
-
-                                //Agregamos foto inicial
-                                FormsM_details detalle_fotonuevo = new FormsM_details(); //Producto
-
-
-                                detalle_fotonuevo.ID_formresourcetype = 5;
-                                detalle_fotonuevo.fsource = "";
-                                detalle_fotonuevo.fdescription = "Tomar fotografia inicial";
-                                detalle_fotonuevo.fvalue = 0;
-                                detalle_fotonuevo.fvalueDecimal = 0;
-                                detalle_fotonuevo.fvalueText = item.subcategory_name;
-                                detalle_fotonuevo.ID_formM = act.ID_form;
-
-                                detalle_fotonuevo.ID_visit = idact;
-                                detalle_fotonuevo.original = false;
-                                //Colocamos numero de orden
-                                detalle_fotonuevo.obj_order = nuevacuenta;
-                                //Colocamos grupo si tiene
-                                detalle_fotonuevo.obj_group = Convert.ToInt32(item.id_subcategory);
-                                //Colocamos ID generado por editor
-                                detalle_fotonuevo.idkey = nuevacuenta;
-                                detalle_fotonuevo.query1 = "1";
-                                detalle_fotonuevo.query2 = "";
-                                detalle_fotonuevo.parent = 0;
-                                detalle_fotonuevo.ID_empresa = 11;
-
-
-
-                                detailstoinsert.Add(detalle_fotonuevo);
-
-                                nuevacuenta++;
 
                                 subcatid= Convert.ToInt32(item.id_subcategory);
                                 subcatname = item.subcategory_name;
@@ -611,37 +580,9 @@ namespace LimenawebApp.Controllers
                            
                             }
                             else {
-                                //Fotografia final e inicial si existiera
-                                FormsM_details detalle_fotonuevo3 = new FormsM_details(); //Producto
-
-
-                                detalle_fotonuevo3.ID_formresourcetype = 5;
-                                detalle_fotonuevo3.fsource = "";
-                                detalle_fotonuevo3.fdescription = "Tomar fotografia final";
-                                detalle_fotonuevo3.fvalue = 0;
-                                detalle_fotonuevo3.fvalueDecimal = 0;
-                                detalle_fotonuevo3.fvalueText = subcatname;
-                                detalle_fotonuevo3.ID_formM = act.ID_form;
-
-                                detalle_fotonuevo3.ID_visit = idact;
-                                detalle_fotonuevo3.original = false;
-                                //Colocamos numero de orden
-                                detalle_fotonuevo3.obj_order = nuevacuenta;
-                                //Colocamos grupo si tiene
-                                detalle_fotonuevo3.obj_group = subcatid;
-                                //Colocamos ID generado por editor
-                                detalle_fotonuevo3.idkey = nuevacuenta;
-                                detalle_fotonuevo3.query1 = "2";
-                                detalle_fotonuevo3.query2 = "";
-                                detalle_fotonuevo3.parent = 0;
-                                detalle_fotonuevo3.ID_empresa = 11;
-
-
-
-                                detailstoinsert.Add(detalle_fotonuevo3);
-                                nuevacuenta++;
+                                //SUBCATEGORY
                                 //inicial
-                                FormsM_details detalle_subcatnuevo2 = new FormsM_details(); //Producto
+                                FormsM_details detalle_subcatnuevo2 = new FormsM_details(); //Subcategory
 
 
                                 detalle_subcatnuevo2.ID_formresourcetype = 95;
@@ -662,7 +603,7 @@ namespace LimenawebApp.Controllers
                                 detalle_subcatnuevo2.idkey = nuevacuenta;
                                 detalle_subcatnuevo2.query1 = "";
                                 detalle_subcatnuevo2.query2 = "";
-                                detalle_subcatnuevo2.parent = 0;
+                                detalle_subcatnuevo2.parent = 13;
                                 detalle_subcatnuevo2.ID_empresa = 11;
 
 
@@ -671,36 +612,6 @@ namespace LimenawebApp.Controllers
 
                                 nuevacuenta++;
 
-
-                                FormsM_details detalle_fotonuevo2 = new FormsM_details(); //Producto
-
-
-                                detalle_fotonuevo2.ID_formresourcetype = 5;
-                                detalle_fotonuevo2.fsource = "";
-                                detalle_fotonuevo2.fdescription = "Tomar fotografia inicial";
-                                detalle_fotonuevo2.fvalue = 0;
-                                detalle_fotonuevo2.fvalueDecimal = 0;
-                                detalle_fotonuevo2.fvalueText = item.subcategory_name;
-                                detalle_fotonuevo2.ID_formM = act.ID_form;
-
-                                detalle_fotonuevo2.ID_visit = idact;
-                                detalle_fotonuevo2.original = false;
-                                //Colocamos numero de orden
-                                detalle_fotonuevo2.obj_order = nuevacuenta;
-                                //Colocamos grupo si tiene
-                                detalle_fotonuevo2.obj_group = Convert.ToInt32(item.id_subcategory);
-                                //Colocamos ID generado por editor
-                                detalle_fotonuevo2.idkey = nuevacuenta;
-                                detalle_fotonuevo2.query1 = "1";
-                                detalle_fotonuevo2.query2 = "";
-                                detalle_fotonuevo2.parent = 0;
-                                detalle_fotonuevo2.ID_empresa = 11;
-
-
-
-                                detailstoinsert.Add(detalle_fotonuevo2);
-
-                                nuevacuenta++;
 
                                 subcatid = Convert.ToInt32(item.id_subcategory);
                                 subcatname = item.subcategory_name;
@@ -732,7 +643,7 @@ namespace LimenawebApp.Controllers
                             detalle_nuevo.idkey = nuevacuenta;
                             detalle_nuevo.query1 = "";
                             detalle_nuevo.query2 = "";
-                            detalle_nuevo.parent = 0;
+                            detalle_nuevo.parent = 13;
                             detalle_nuevo.ID_empresa = 11;
 
 
@@ -743,162 +654,226 @@ namespace LimenawebApp.Controllers
 
                             var padrec = nuevacuenta;
                             nuevacuenta++;
+                            var padredetalle = 0;
+                            //Creamos los elementos que contendra cada producto (nuevo metodo 08/04/2020)
+                            for (var i = 0; i < 31; i++) {
+                                FormsM_details detalle_nuevodeProducto = new FormsM_details();
+                                //0=¿Producto Disponible? -8
+                                //1=Disponible -19
+                                //2=No Disponible-19
+                                //3=¿Cuantas caras tiene el producto/sku? - 17
+                                //4=¿Como se encuentra actualmente la selección de precio? -8
+                                //5=Precio sugerido -21
+                                //6=Precio tienda -21
+                                //7=¿Producto posee alguna promocion? -8
+                                //8=SI -19
+                                //9=NO -19
+                                //10=ANALISIS DE VISIBILIDAD Y COMUNICACIÓN - 8
+                                //11=¿La tienda cuenta con material pop? -8
+                                //12=SI -19
+                                //13=NO -19
+                                //14=¿Qué tipo de material pop y exhibicion permite la tienda colocar para el producto? (se puede seleccionar más de una opción)
+                                //15=Cross -16
+                                //16=Bandeja -16
+                                //17=Carrilera -16
+                                //18=Glorificador -16
+                                //19=Sticker Precio (preciadores) -16
+                                //20=Cintillo (channel strips) -16
+                                //21=Gráficas de piso -16
+                                //22=Sticker en Nevera -16
+                                //23=Displays / Racks -16
+                                //24=Afiche o imágenes en paredes -16
+                                //25=No permite -16
+                                //26=¿En que posición de la gondola se encuetra el producto? -8
+                                //27=Stretch Level -16
+                                //28=Eye Level -16
+                                //29=Touch Level -16
+                                //30=Stoop Level -16
+                                detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                detalle_nuevodeProducto.fsource = "";
+                                detalle_nuevodeProducto.fdescription = "";
+                                detalle_nuevodeProducto.fvalue = 0;
+                                detalle_nuevodeProducto.fvalueDecimal = 0;
+                                detalle_nuevodeProducto.fvalueText = "";
+                                detalle_nuevodeProducto.parent = padrec;
+                               
+                                switch (i) {
+                                    case 0:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "¿Producto Disponible?";
+                                        padredetalle = nuevacuenta;
+                                        break;
+                                    case 1:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "SI";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 2:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "NO";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 3:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 17;
+                                        detalle_nuevodeProducto.fsource = "¿Cuantas caras tiene el producto/sku?";
+                                        break;
+                                    case 4:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "¿Como se encuentra actualmente la selección de precio?";
+                                        padredetalle = nuevacuenta;
+                                        break;
+                                    case 5:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 21;
+                                        detalle_nuevodeProducto.fsource = "Precio sugerido";
+                                        detalle_nuevodeProducto.fvalueDecimal = Convert.ToDecimal(item.SRP); //PRECIO SUGERIDO DESDE SAP
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 6:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 21;
+                                        detalle_nuevodeProducto.fsource = "Precio tienda (editar solo si es diferente a precio sugerido)";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 7:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "¿Producto posee alguna promocion?";
+                                        padredetalle = nuevacuenta;
+                                        break;
+                                    case 8:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "SI";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 9:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "NO";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 10:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "ANALISIS DE VISIBILIDAD Y COMUNICACIÓN";
+                                        break;
+                                    case 11:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "¿La tienda cuenta con material pop?";
+                                        padredetalle = nuevacuenta;
+                                        break;
+                                    case 12:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "SI";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 13:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "NO";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 14:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "¿Qué tipo de material pop y exhibicion permite la tienda colocar para el producto? (se puede seleccionar más de una opción)";
+                                        padredetalle = nuevacuenta;
+                                        break;
+                                    case 15:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Cross";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 16:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Bandeja";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 17:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Carrilera";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 18:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Glorificador";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 19:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Sticker Precio (preciadores)";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 20:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Cintillo (channel strips)";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 21:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Gráficas de piso";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 22:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Sticker en Nevera";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 23:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Displays / Racks";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 24:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "Afiche o imágenes en paredes";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 25:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 16;
+                                        detalle_nuevodeProducto.fsource = "No permite";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 26:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 8;
+                                        detalle_nuevodeProducto.fsource = "¿En que posición de la gondola se encuetra el producto?";
+                                        padredetalle = nuevacuenta;
+                                        break;
+                                    case 27:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "Stretch Level";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 28:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "Eye Level";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 29:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "Touch Level";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                    case 30:
+                                        detalle_nuevodeProducto.ID_formresourcetype = 19;
+                                        detalle_nuevodeProducto.fsource = "Stoop Level";
+                                        detalle_nuevodeProducto.parent = padredetalle;
+                                        break;
+                                }
+                          
 
-                            FormsM_details detalle_nuevo2 = new FormsM_details(); //Disponibilidad SI
-
-
-                            detalle_nuevo2.ID_formresourcetype = 16;
-                            detalle_nuevo2.fsource = "";
-                            detalle_nuevo2.fdescription = "Disponible";
-                            detalle_nuevo2.fvalue = 0;
-                            detalle_nuevo2.fvalueDecimal = 0;
-                            detalle_nuevo2.fvalueText = "";
-                            detalle_nuevo2.ID_formM = act.ID_form;
-
-                            detalle_nuevo2.ID_visit = idact;
-                            detalle_nuevo2.original = false;
-                            //Colocamos numero de orden
-                            detalle_nuevo2.obj_order = nuevacuenta;
-                            //Colocamos grupo si tiene
-                            detalle_nuevo2.obj_group = 0;
-                            //Colocamos ID generado por editor
-                            detalle_nuevo2.idkey = nuevacuenta;
-                            detalle_nuevo2.query1 = "";
-                            detalle_nuevo2.query2 = "";
-                            detalle_nuevo2.parent = padrec;
-                            detalle_nuevo2.ID_empresa = 11;
-
-
-
-                            detailstoinsert.Add(detalle_nuevo2);
-                            //dbcmk.SaveChanges();
-                            nuevacuenta++;
-
-
-                            FormsM_details detalle_nuevo5 = new FormsM_details(); //Disponibilidad NO
-
-
-                            detalle_nuevo5.ID_formresourcetype = 16;
-                            detalle_nuevo5.fsource = "";
-                            detalle_nuevo5.fdescription = "No Disponible";
-                            detalle_nuevo5.fvalue = 0;
-                            detalle_nuevo5.fvalueDecimal = 0;
-                            detalle_nuevo5.fvalueText = "";
-                            detalle_nuevo5.ID_formM = act.ID_form;
-
-                            detalle_nuevo5.ID_visit = idact;
-                            detalle_nuevo5.original = false;
-                            //Colocamos numero de orden
-                            detalle_nuevo5.obj_order = nuevacuenta;
-                            //Colocamos grupo si tiene
-                            detalle_nuevo5.obj_group = 0;
-                            //Colocamos ID generado por editor
-                            detalle_nuevo5.idkey = nuevacuenta;
-                            detalle_nuevo5.query1 = "";
-                            detalle_nuevo5.query2 = "";
-                            detalle_nuevo5.parent = padrec;
-                            detalle_nuevo5.ID_empresa = 11;
-
-
-
-                            detailstoinsert.Add(detalle_nuevo5);
-                            //dbcmk.SaveChanges();
-                            nuevacuenta++;
-
-
-                            FormsM_details detalle_nuevo3 = new FormsM_details(); //Precio tienda
-
-
-                            detalle_nuevo3.ID_formresourcetype = 21;
-                            detalle_nuevo3.fsource = "";
-                            detalle_nuevo3.fdescription = "Precio sugerido";
-                            detalle_nuevo3.fvalue = 0;
-                            detalle_nuevo3.fvalueDecimal = Convert.ToDecimal(item.SRP); //PRECIO SUGERIDO DESDE SAP
-                            detalle_nuevo3.fvalueText = "";
-                            detalle_nuevo3.ID_formM = act.ID_form;
-
-                            detalle_nuevo3.ID_visit = idact;
-                            detalle_nuevo3.original = false;
-                            //Colocamos numero de orden
-                            detalle_nuevo3.obj_order = nuevacuenta;
-                            //Colocamos grupo si tiene
-                            detalle_nuevo3.obj_group = 0;
-                            //Colocamos ID generado por editor
-                            detalle_nuevo3.idkey = nuevacuenta;
-                            detalle_nuevo3.query1 = "";
-                            detalle_nuevo3.query2 = "";
-                            detalle_nuevo3.parent = padrec;
-                            detalle_nuevo3.ID_empresa = 11;
-
-
-
-                            detailstoinsert.Add(detalle_nuevo3);
-                            //dbcmk.SaveChanges();
-                            nuevacuenta++;
-
-                            FormsM_details detalle_nuevo4 = new FormsM_details(); //Precio sugerido
-
-
-                            detalle_nuevo4.ID_formresourcetype = 21;
-                            detalle_nuevo4.fsource = "";
-                            detalle_nuevo4.fdescription = "Precio tienda(Editar solo si es diferente al precio sugerido)";
-                            detalle_nuevo4.fvalue = 0;
-                            detalle_nuevo4.fvalueDecimal = 0;
-                            detalle_nuevo4.fvalueText = "";
-                            detalle_nuevo4.ID_formM = act.ID_form;
-
-                            detalle_nuevo4.ID_visit = idact;
-                            detalle_nuevo4.original = false;
-                            //Colocamos numero de orden
-                            detalle_nuevo4.obj_order = nuevacuenta;
-                            //Colocamos grupo si tiene
-                            detalle_nuevo4.obj_group = 0;
-                            //Colocamos ID generado por editor
-                            detalle_nuevo4.idkey = nuevacuenta;
-                            detalle_nuevo4.query1 = "";
-                            detalle_nuevo4.query2 = "";
-                            detalle_nuevo4.parent = padrec;
-                            detalle_nuevo4.ID_empresa = 11;
-
-
-
-                            detailstoinsert.Add(detalle_nuevo4);
-                            
-                            nuevacuenta++;
-
-                            if (countp == totalpro) {
-                                //Foto final
-                                FormsM_details detalle_fotonuevo4 = new FormsM_details(); //Producto
-
-
-                                detalle_fotonuevo4.ID_formresourcetype = 5;
-                                detalle_fotonuevo4.fsource = "";
-                                detalle_fotonuevo4.fdescription = "Tomar fotografia final";
-                                detalle_fotonuevo4.fvalue = 0;
-                                detalle_fotonuevo4.fvalueDecimal = 0;
-                                detalle_fotonuevo4.fvalueText = item.subcategory_name;
-                                detalle_fotonuevo4.ID_formM = act.ID_form;
-
-                                detalle_fotonuevo4.ID_visit = idact;
-                                detalle_fotonuevo4.original = false;
+                                //Deatalles que no se evaluan
+                                detalle_nuevodeProducto.ID_formM = act.ID_form;
+                                detalle_nuevodeProducto.ID_visit = idact;
+                                detalle_nuevodeProducto.original = false;
                                 //Colocamos numero de orden
-                                detalle_fotonuevo4.obj_order = nuevacuenta;
+                                detalle_nuevodeProducto.obj_order = nuevacuenta;
                                 //Colocamos grupo si tiene
-                                detalle_fotonuevo4.obj_group = Convert.ToInt32(item.id_subcategory); ;
+                                detalle_nuevodeProducto.obj_group = 0;
                                 //Colocamos ID generado por editor
-                                detalle_fotonuevo4.idkey = nuevacuenta;
-                                detalle_fotonuevo4.query1 = "2";
-                                detalle_fotonuevo4.query2 = "";
-                                detalle_fotonuevo4.parent = 0;
-                                detalle_fotonuevo4.ID_empresa = 11;
+                                detalle_nuevodeProducto.idkey = nuevacuenta;
+                                detalle_nuevodeProducto.query1 = "";
+                                detalle_nuevodeProducto.query2 = "";
+                                detalle_nuevodeProducto.ID_empresa = 11;
 
 
 
-                                detailstoinsert.Add(detalle_fotonuevo4);
+                                detailstoinsert.Add(detalle_nuevodeProducto);
                                 nuevacuenta++;
-
                             }
-                            
 
                         }
                         catch (Exception ex)
@@ -909,26 +884,26 @@ namespace LimenawebApp.Controllers
 
                     }
                     dbcmk.BulkInsert(detailstoinsert);
-                    FormsM_details lastitem = (from a in dbcmk.FormsM_details where (a.ID_visit == idact && a.idkey == (countItems - 2)) select a).FirstOrDefault();
+                    //FormsM_details lastitem = (from a in dbcmk.FormsM_details where (a.ID_visit == idact && a.idkey == (countItems - 2)) select a).FirstOrDefault();
 
-                    lastitem.obj_order = nuevacuenta + 200;
-                    lastitem.idkey = nuevacuenta + 200;
-                    dbcmk.Entry(lastitem).State = EntityState.Modified;
+                    //lastitem.obj_order = nuevacuenta + 200;
+                    //lastitem.idkey = nuevacuenta + 200;
+                    //dbcmk.Entry(lastitem).State = EntityState.Modified;
+                    ////dbcmk.SaveChanges();
+                    //nuevacuenta++;
+                    //FormsM_details lastitem2 = (from a in dbcmk.FormsM_details where (a.ID_visit == idact && a.idkey == (countItems - 1)) select a).FirstOrDefault();
+
+                    //lastitem2.obj_order = nuevacuenta + 200;
+                    //lastitem2.idkey = nuevacuenta + 200;
+                    //dbcmk.Entry(lastitem2).State = EntityState.Modified;
+                    ////dbcmk.SaveChanges();
+                    //nuevacuenta++;
+                    //FormsM_details lastitem3 = (from a in dbcmk.FormsM_details where (a.ID_visit == idact && a.idkey == countItems) select a).FirstOrDefault();
+
+                    //lastitem3.obj_order = nuevacuenta + 200;
+                    //lastitem3.idkey = nuevacuenta + 200;
+                    //dbcmk.Entry(lastitem3).State = EntityState.Modified;
                     //dbcmk.SaveChanges();
-                    nuevacuenta++;
-                    FormsM_details lastitem2 = (from a in dbcmk.FormsM_details where (a.ID_visit == idact && a.idkey == (countItems - 1)) select a).FirstOrDefault();
-
-                    lastitem2.obj_order = nuevacuenta + 200;
-                    lastitem2.idkey = nuevacuenta + 200;
-                    dbcmk.Entry(lastitem2).State = EntityState.Modified;
-                    //dbcmk.SaveChanges();
-                    nuevacuenta++;
-                    FormsM_details lastitem3 = (from a in dbcmk.FormsM_details where (a.ID_visit == idact && a.idkey == countItems) select a).FirstOrDefault();
-
-                    lastitem3.obj_order = nuevacuenta + 200;
-                    lastitem3.idkey = nuevacuenta + 200;
-                    dbcmk.Entry(lastitem3).State = EntityState.Modified;
-                    dbcmk.SaveChanges();
 
                     string result = "Success";
                     return Json(result, JsonRequestBehavior.AllowGet);
@@ -939,7 +914,7 @@ namespace LimenawebApp.Controllers
                     return Json(result, JsonRequestBehavior.AllowGet);
                 }
             }
-            catch
+            catch (Exception ex)
             {
                 string result = "Error";
                 return Json(result, JsonRequestBehavior.AllowGet);

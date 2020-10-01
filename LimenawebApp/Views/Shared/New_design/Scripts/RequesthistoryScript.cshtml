@@ -1,0 +1,354 @@
+﻿@model List<LimenawebApp.Models.Price_request.Mdl_PriceChangeHistory.Bolsa_SalesR>
+@{
+    Layout = null;
+   
+}
+<div id="modal-newbolsa" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card card-form">
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 card-body">
+                            <p><strong class="headings-color">Increase/decrease bag amount</strong></p>
+                            <p>
+
+                                <small class="mr-2">Increase or decrease the bag amount for each Sales Representative to use Price Change Module</small><br />
+
+
+                            </p>
+                        </div>
+
+                        <div class="col-lg-8 card-form__body card-body">
+
+                            <label>Sales Representative:</label>
+                            <select id="salesrep" class="form-control" style="width:100%">
+                                <option value="0" data-bagvalue="0">Select..</option>
+                                @foreach (var user in Model.OrderBy(c => c.Username))
+        {
+                        <option data-bagvalue="@user.Asignado" value="@user.ID_user">@user.Username</option>
+}
+                            </select>
+                            <br />
+                            <label>Current Amount:</label>
+
+                            <div class="form-group">
+                                <div class="input-group input-group-merge">
+                                    <input type="text" id="assignedval" class="form-control readonly form-control-prepended" readonly>
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <span class="material-icons">monetization_on</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label>Amount to increase/decrease(use minus sign before amount -):</label>
+
+                            <div class="form-group">
+                                <div class="input-group input-group-merge">
+                                    <input type="number" id="newvalue" class="form-control readonly form-control-prepended">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <span class="material-icons">monetization_on</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label>Final Amount:</label>
+                    
+                            <div class="form-group">
+                                <div class="input-group input-group-merge">
+                                    <input type="text" id="finalamountval" class="form-control readonly form-control-prepended" readonly>
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <span class="material-icons">monetization_on</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <label>Comments:</label>
+                            <textarea class="form-control" id="comments"></textarea>
+                            <br /><br />
+                            <button type="button" id="btnsavebolsafondo" class="btn btn-success">Save</button>
+                            <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+
+                        </div>
+                        </div>
+                    </div>
+                </div> <!-- // END .modal-body -->
+
+            </div> <!-- // END .modal-content -->
+        </div> <!-- // END .modal-dialog -->
+    </div> <!-- // END .modal -->
+    <script>
+    window.onload = function () {
+        table = $('#tablehistory').DataTable({
+            paging: false,
+
+             "columnDefs": [{
+                "targets": 'no-sort',
+                "orderable": false,
+            }]});   //pay attention to capital D, which is mandatory to retrieve "api" datatables' object, as Lionel said
+        $('#inlineFormFilterBy').keyup(function () {
+            table.search($(this).val()).draw();
+        });
+
+        $('#chk_all2').change(function () {
+            if (this.checked) {
+                //table.$("input.selectchk").prop("checked", true);
+                $('input.selectchk2', table.rows({ filter: 'applied' }).nodes()).prop("checked", true);
+
+            } else {
+                //table.$("input.selectchk").prop("checked", false);
+                $('input.selectchk2', table.rows({ filter: 'applied' }).nodes()).prop("checked", false);
+
+            }
+
+        });
+
+        $('#newvalue').keyup(function () {
+            if (isNaN($(this).val())) {
+     
+            } else {
+                var value = parseFloat($(this).val());
+                var actual = parseFloat($("#assignedval").val());
+                var final = actual + value;
+                $("#finalamountval").val(final);
+            }
+          
+        });
+
+        $('#salesrep').change(function () {
+            var value = $(this).children('option:selected').data('bagvalue');
+
+            if (value == 0 || isNaN(value)) {
+                $("#assignedval").val("")
+                $("#finalamountval").val("")
+                $("#newvalue").val(0)
+            } else {
+                $("#assignedval").val(value)
+                $("#finalamountval").val("")
+                $("#newvalue").val(0)
+            }
+        });
+
+            $("#btnsaveproducts").click(function () {
+                var period = $('#fltperiod').val();
+
+                if (period == "0") {
+                    alert("Select a valid period");
+                } else {
+                swal.fire({
+                    title: 'Export Price Change History?',
+                    text: "Are you sure you want to print the Price Change History for the selected Sales Representatives?",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+                        //Guardamos
+
+                        var data;
+                        data = Array();
+
+                        $("#tablehistory tr").each(function (i, v) {
+                            data[i] = Array();
+                            $(this).children('td').each(function (ii, vv) {
+                                if (ii == 0) {
+                                    if ($(this).eq(0).find('input[type = "checkbox"]').is(":checked")) {
+                                        data[i][ii] = true;
+
+                                    } else {
+                                        data[i][ii] = false;
+                                    }
+                                } else {
+                                    data[i][ii] = $(this).text();
+                                }
+
+                            });
+                        })
+
+                        var objects = [];
+                        for (var i = 0, len = data.length; i < len; i++) {
+
+                            if (i != 0) {
+                                if (data[i][0] == true) {
+                                    objects.push({
+                                        ItemCode: data[i][1],
+
+                                    });
+                                }
+
+                            }
+
+                        }
+
+                        if (objects.length > 0) {
+
+                            var commasel= Array.prototype.map.call(objects, function (item) { return item.ItemCode; }).join(",");
+
+
+                            var url = '@Url.Action("PriceChangeHistory_Export", "Pricerequest", new { ids = "AUREQ", period="DSD"})';
+                            url = url.replace('AUREQ', commasel);
+                            console.log(period);
+                            var newurl = url.replace('DSD', period);
+                            newurl = newurl.replace('amp;', '');
+                            window.location.href = newurl;
+
+                            @*$.ajax
+                            ({
+                                    url: '/Operations/Save_DataProcessOTB',
+                                type: 'POST',
+                                    data: { 'objects': objects, 'Categories': dataCategory.toString(), 'Subcategories': dataSubCategory.toString(), 'Providers': dataProvider.toString(), 'Brands': dataBrands.toString()},
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success('Data saved successfully');
+
+
+                                        setTimeout(
+                                            function () {
+                                                var url = '@Url.Action("OTB", "OTB", null)';
+                                                url = url.replace('amp;', '');
+                                                 window.location.href = url;
+                                            }, 2000);
+
+                                    } else {
+
+                                    }
+                                    $("#btnsaveproducts").attr("disabled", false);
+
+                                },
+                                error: function () {
+                                    $("#btnsaveproducts").attr("disabled", false);
+                                },
+                            });*@
+
+                        } else {
+                          
+                            toastr.info('Please select at least one Sales Representative');
+
+
+                        }
+
+
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+                }
+
+
+
+
+
+        });
+
+
+
+            $("#btnsavebolsafondo").click(function () {
+
+                swal.fire({
+                    title: 'Agregar fondos a la bolsa?',
+                    text: "",
+                    icon: 'info',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3dba6f',
+                    cancelButtonColor: '#aaa',
+                    confirmButtonText: 'Yes'
+                }).then(function (result) {
+                    if (result.value) {
+
+                        var flag = 0;
+
+                        var rep = $("#salesrep").val();
+                        var repname = $("#salesrep option:selected").html();
+                        var comments = $("#comments").val();
+                        var newvalue = parseFloat($("#newvalue").val());
+
+                        if (isNaN(newvalue)) {
+                            flag = 1;
+                        }
+
+                        if (flag ==0) {
+
+                            var nuevabolsa = {
+                                ID_SalesRepresentative: rep,
+                                SalesRepresentative: repname,
+                                Last_value: 0,
+                                New_value: newvalue,
+                                Value: 0,
+                                Date: 0,
+                                AssignedBy: "",
+                                AssignedBy_ID: 0,
+                                Active: true,
+                                Comments: comments,
+                                Type: 1
+                            }
+
+
+                            $.ajax
+                            ({
+                                    url: '/Pricerequest/Save_bolsa',
+                                type: 'POST',
+                                    data: { 'nuevabolsa': nuevabolsa},
+                                success: function (result) {
+
+                                    if (result == "Success") {
+                                        toastr.success('Data saved successfully');
+
+
+                                        setTimeout(
+                                            function () {
+                                           window.location.reload(true); 
+                                            }, 2000);
+
+                                    } else {
+                                        toastr.warning('Something went wrong, please try again');
+                                    }
+                       
+
+                                },
+                                error: function () {
+                        
+                                },
+                            });
+
+                        } else {
+                   
+                            toastr.info('Please fill all the fields');
+
+
+                        }
+
+                    } else if (result.dismiss == 'cancel') {
+
+                    }
+
+                });
+
+            });
+
+
+        }
+
+                function filterPeriod() {
+                    var period = $('#fltperiod').val();
+
+                    if (period != "0") {
+
+            var url = '@Url.Action("Requesthistory", "Pricerequest", new { period = "dad" })';
+                    url = url.replace('dad', period);
+            var newurl = url;
+            newurl = newurl.replace(/&amp;/g, "&");
+
+            window.location.href = newurl;
+                    } 
+
+        };
+    </script>
