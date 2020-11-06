@@ -164,6 +164,7 @@ else
 {
                                                     <a class="btn btn-success" href="#" onclick="convertDraft('@item.docEntry','@item.docEntryInv')">Submit</a>
                                                     <a style="margin-left:5px;" class="btn btn-primary" href="#" data-toggle="modal" data-target="#modalEditPay" data-docentry="@item.docEntry" data-factdoc="@item.docEntryInv" data-docnum="@item.invoice.docNum">Edit</a>
+                                                    <a href="#" onclick="delPayment(@item.docEntry, @item.docEntryInv)" class="btn btn-warning"><i class="mdi mdi-trash-can mr-2"></i>DEL</a>
 }
 
                                                     </td>
@@ -295,6 +296,7 @@ else
                                                         else {
                                                             <a class="btn btn-success" href="#" onclick="convertDraft('@item.docEntry','@item.docEntryInv')">Submit</a >
                                                             <a style="margin-left:5px;" class="btn btn-primary" href="#"  data-toggle="modal" data-target="#modalEditPay" data-docentry="@item.docEntry"  data-factdoc="@item.docEntryInv" data-docnum="@item.docNum" >Edit</a >
+                                                             <a href="#" onclick="delPayment(@item.docEntry,@item.docEntryInv)" class="btn btn-warning waves-effect waves-light"><i class="mdi mdi-trash-can mr-2"></i>DEL</a>
                                                         }</td>
                                                 </tr>
                                             }

@@ -56,10 +56,11 @@ namespace LimenawebApp.Models.Payments
 
     public class Payments_apiv2
     {
-        public int docEntry { get; set; }
-        public int docNum { get; set; }
+        public int? docEntry { get; set; }
+        public int? docNum { get; set; }
         public DateTime docDate { get; set; }
         public DateTime createDate { get; set; }
+  
         public int? docTime { get; set; }
         public string cardCode { get; set; }
         public int docEntryInv { get; set; }
@@ -70,7 +71,7 @@ namespace LimenawebApp.Models.Payments
         public int? hasIssue { get; set; }
         public int? webStatus { get; set; }
         public string canceled { get; set; }
-        public int? appliedBy { get; set; }
+    
         public Invoices_api_forpayments invoice { get; set; }
         public PaymentMethod_cash cash { get; set; }
         public PaymentMethod_check_moneyorder check { get; set; }
@@ -219,7 +220,7 @@ namespace LimenawebApp.Models.Payments
         public string id_Helper { get; set; }
         public string id_Delivery { get; set; }
         public string deliveryRoute { get; set; }
-        public System.DateTime deliveryDate { get; set; }
+        public System.DateTime? deliveryDate { get; set; }
         public int? slpCode { get; set; }
         public string slpName { get; set; }
         public decimal paymentsDraft { get; set; } //Total pagos $$ que se han realizado en la app

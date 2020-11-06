@@ -534,9 +534,17 @@ namespace LimenawebApp.Controllers.Finance
                             }
                         }
                         else {
-
-                            var result2 = "Error";
-                            return Json(result2, JsonRequestBehavior.AllowGet);
+                            if (response.Content.Contains("cliente es  inactivo"))
+                            {
+                                var result2 = "Inactive Customer, please contact Finance department";
+                                return Json(result2, JsonRequestBehavior.AllowGet);
+                            }
+                            else
+                            {
+                                var result2 = "Error";
+                                return Json(result2, JsonRequestBehavior.AllowGet);
+                            }
+                          
                         }
 
 
@@ -562,6 +570,49 @@ namespace LimenawebApp.Controllers.Finance
 
             }
         }
+
+        public ActionResult Delete_Payment(int docentry, int docentryinvoice)
+        {
+            try
+            {
+                var response = Cls_payments.DeletePayment(docentry);
+
+                if (response.IsSuccessful == true)
+                {
+                    //Verificamos si tiene otros pagos pendientes o si era el ultimo
+                    //Si tiene pagos pendientes no se hace nada
+                    //Si NO tiene pagos pendientes, se coloca en waiting for payment
+                    var payments = Cls_payments.GetPayments("", docentryinvoice, null, null, false).data;
+                    PUT_Invoices_api newput = new PUT_Invoices_api();
+                    if (payments != null && payments.Count > 0) //Verificamos que hayan mas pagos que realizar
+                    {//Si hay, NO hacemos nada ya que se mantiene el estado Waiting for finantials
+                    }
+                    else
+                    {
+                        //Si NO hay pasa a Waiting for payment
+                        newput.stateSd = 6;
+                        var response2 = cls_invoices.PutInvoice(docentryinvoice, newput);
+                    }
+
+                        var result = "SUCCESS";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    var result = "Error";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                var resulterror = ex.Message;
+                return Json(resulterror, JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
 
         public ActionResult Put_payment(int docentry, Payment_putNew Item)
         {

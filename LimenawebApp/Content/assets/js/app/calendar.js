@@ -1,6 +1,6 @@
 (function ($) {
 	"use strict";
-    var warehouse = warehousesel;
+    var warehouse = $("#whssel").val();
     var flagbtn = 0;
   var calendar,
   e,

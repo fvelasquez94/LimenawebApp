@@ -20,7 +20,9 @@
             var financeuser = button.data('financeuser');
             var commentsdriver = button.data('drivercomm');
             var commentsfinance = button.data('commentsfinance');
+            var status = button.data('status');
 
+      
 
             $("#customerauth").html(customer);
             $("#routeauth").html(route);
@@ -35,7 +37,16 @@
 
             $("#idauthupdate").val(idauthorization);
             $("#dateauth").html(date);
+            
 
+
+            if (status == 0) {
+                $("#btnApproveAuth").show();
+                $("#denyAuth").show();
+            } else {
+                $("#btnApproveAuth").hide();
+                $("#denyAuth").hide();
+            }
 
 
           

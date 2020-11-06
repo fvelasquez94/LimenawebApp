@@ -88,12 +88,12 @@ namespace LimenawebApp.Controllers.Commercial.Price_request
                 if (period == null || period == "")
                 {
                     ViewBag.period = salesHistory.Select(c => c.id_Period).FirstOrDefault() + "| " + salesHistory.Select(c => c.Period_Name).FirstOrDefault();
-                    var activeperiodweeks = dlipro.Database.SqlQuery<PeriodoActivoSemana>("select * from HELP_RANGOPERIODOSEMANA where YearDLI={0}", "2020").GroupBy(n => new { n.PeriodCode, n.PeriodName}).Select(c => new periods { periodcode = c.Key.PeriodCode, periodname = c.Key.PeriodName }).ToList();
+                    var activeperiodweeks = dlipro.Database.SqlQuery<PeriodoActivoSemana>("select * from HELP_RANGOPERIODOSEMANA where YearDLI in ({0},{1})", "2020","2021").GroupBy(n => new { n.PeriodCode, n.PeriodName}).Select(c => new periods { periodcode = c.Key.PeriodCode, periodname = c.Key.PeriodName }).ToList();
                     ViewBag.activeperiodos = activeperiodweeks;
                 }
                 else {
                     var periodcode = period;
-                    var activeperiodweeks = dlipro.Database.SqlQuery<PeriodoActivoSemana>("select * from HELP_RANGOPERIODOSEMANA where YearDLI={0}", "2020").GroupBy(n => new { n.PeriodCode, n.PeriodName }).Select(c=> new periods { periodcode = c.Key.PeriodCode, periodname = c.Key.PeriodName }).ToList();
+                    var activeperiodweeks = dlipro.Database.SqlQuery<PeriodoActivoSemana>("select * from HELP_RANGOPERIODOSEMANA where YearDLI in ({0},{1})", "2020", "2021").GroupBy(n => new { n.PeriodCode, n.PeriodName }).Select(c=> new periods { periodcode = c.Key.PeriodCode, periodname = c.Key.PeriodName }).ToList();
                     var activeperiod = activeperiodweeks.Where(a => a.periodcode == periodcode).FirstOrDefault();
                     var selectedperiod = "";
                     if (activeperiod != null) {

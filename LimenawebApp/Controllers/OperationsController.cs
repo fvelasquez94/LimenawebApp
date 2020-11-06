@@ -311,7 +311,7 @@ namespace LimenawebApp.Controllers
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
-
+                ViewBag.activeuser = activeuser;
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 
@@ -388,7 +388,7 @@ namespace LimenawebApp.Controllers
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
-
+                ViewBag.activeuser = activeuser;
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 
@@ -695,7 +695,7 @@ public class Initial_forecastData
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
-
+                ViewBag.activeuser = activeuser;
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 
@@ -801,7 +801,7 @@ public class Initial_forecastData
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
-
+                ViewBag.activeuser = activeuser;
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 
@@ -915,7 +915,7 @@ public class Initial_forecastData
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
-
+                ViewBag.activeuser = activeuser;
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 
@@ -966,7 +966,7 @@ public class Initial_forecastData
                 DateTime now = DateTime.Today;
                 List<Tb_Alerts> lstAlerts = (from a in dblim.Tb_Alerts where (a.ID_user == activeuser.ID_User && a.Active == true && a.Date == now) select a).OrderByDescending(x => x.Date).Take(5).ToList();
                 ViewBag.lstAlerts = lstAlerts;
-
+                ViewBag.activeuser = activeuser;
                 ViewData["nameUser"] = activeuser.Name + " " + activeuser.Lastname;
                 //FIN HEADER
 

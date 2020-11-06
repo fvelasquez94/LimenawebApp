@@ -2,7 +2,7 @@
 @{
     ViewBag.Title = "Distribuidora Limeña - Planning order";
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
-
+    LimenawebApp.Models.Sys_Users activeuser = (LimenawebApp.Models.Sys_Users)ViewBag.activeuser;
    
 }
 
@@ -120,7 +120,11 @@
                                 </div>
                                 <div class="float-right">
                                     <a href="#" class="btn btn-success" onclick="saveOrderData()">Save</a>
-                                    <a href="@Url.Action("Print_Roadmap", "Invoices", new { id = ViewBag.id_route })" class="btn btn-info" target="_blank">print</a>
+                                    @if (activeuser.Roles.Contains("PrintAdmin"))
+    {
+                                <a href="@Url.Action("Print_Roadmap", "Invoices", new { id = ViewBag.id_route })" class="btn btn-info" target="_blank">print</a>
+}
+
 
                                 </div>
                             </div>

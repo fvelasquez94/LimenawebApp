@@ -61,7 +61,25 @@ namespace LimenawebApp.Controllers.API
 
             return result;
         }
+        public IRestResponse PutCreditmemoNew(PutDetailsCreditmemos_apiNew item, int docentry, int visorder)
+        {
+            var settings = clsapi.GetAPI();
 
+            string bearerToken = settings.token;
+            var client = new RestClient(settings.IP);
+            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
+            IRestResponse result;
+
+                var request = new RestRequest("/api/CreditMemos/Draft/Row/" + docentry + "/" + visorder, Method.PUT);
+
+
+                request.RequestFormat = DataFormat.Json;
+                request.AddJsonBody(item);
+
+                result = client.Execute(request);
+
+            return result;
+        }
         public IRestResponse CancelCreditmemoDetail(PutDetailsCreditmemos_apiNOSHOW item, int docentry)
         {
             var settings = clsapi.GetAPI();
@@ -85,6 +103,28 @@ namespace LimenawebApp.Controllers.API
             //    request.AddJsonBody(item);
 
                 result = client.Execute(request);
+
+
+
+
+            return result;
+        }
+
+        public IRestResponse Reconciliation(CreditMemo_reconciliation creditmemo)
+        {
+            var settings = clsapi.GetAPI();
+
+            string bearerToken = settings.token;
+            var client = new RestClient(settings.IP);
+            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
+            IRestResponse result;
+ 
+                var request = new RestRequest("/api/CreditMemos/Reconciliation", Method.PUT);
+
+            request.RequestFormat = DataFormat.Json;
+            request.AddJsonBody(creditmemo);
+
+            result = client.Execute(request);
 
 
 

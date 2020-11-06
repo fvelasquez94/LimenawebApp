@@ -51,6 +51,13 @@ namespace LimenawebApp.Models.Creditmemos_api
         public decimal? originalQty { get; set; }
     }
 
+    public class CreditMemo_reconciliation {
+        public string cardCode { get; set; }
+     public int docNumInvoice { get; set; }
+     public int   docNumCredit { get; set; }
+       public decimal totalCredit{ get; set; }
+}
+
     public class PostCreditmemos_api
     {
         public int docEntryInv { get; set; }
@@ -74,7 +81,15 @@ namespace LimenawebApp.Models.Creditmemos_api
         public bool noShow { get; set; }
 
     }
+    public class PutDetailsCreditmemos_apiNew
+    {
+        public int quantity { get; set; }
+        public int uomEntry { get; set; }
+        public string returnReasonCode { get; set; }
+        public bool received { get; set; }
+        public bool changeOriginalQty { get; set; }
 
+    }
     public class PutDetailsCreditmemos_apiNOSHOW
     {
         public string itemCode { get; set; }

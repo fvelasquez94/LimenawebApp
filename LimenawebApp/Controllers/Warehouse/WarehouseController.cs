@@ -294,19 +294,46 @@ namespace LimenawebApp.Controllers.Warehouse
 
             }
         }
+        public ActionResult Put_creditMemoDetailnew(PutDetailsCreditmemos_apiNew Item, int DocentryCredit, int visorder)
+        {
+            try
+            {
+                var response = cls_creditmemos.PutCreditmemoNew(Item, DocentryCredit, visorder);
 
+                if (response.IsSuccessful == true)
+                {
+
+                    var result = "SUCCESS";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+
+                    var result = "Error";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+
+            }
+            catch (Exception ex)
+            {
+                var resulterror = ex.Message;
+                return Json(resulterror, JsonRequestBehavior.AllowGet);
+
+            }
+        }
         public ActionResult Put_creditMemoDetailNoshow(PutDetailsCreditmemos_api Item, int DocentryCredit, PutDetailsCreditmemos_apiNOSHOW newrow)
         {
             try
             {
-                var response = cls_creditmemos.PutCreditmemo(Item, DocentryCredit);
+                //var response = cls_creditmemos.PutCreditmemo(Item, DocentryCredit);
 
-                if (response.IsSuccessful == true)
-                {
+                //if (response.IsSuccessful == true)
+                //{
                     //Agregamos nueva linea negativa
                     var response2 = cls_creditmemos.CancelCreditmemoDetail(newrow, DocentryCredit);
 
-                    if (response.IsSuccessful == true)
+                    if (response2.IsSuccessful == true)
                     {
                         var result = "SUCCESS";
                         return Json(result, JsonRequestBehavior.AllowGet);
@@ -316,13 +343,13 @@ namespace LimenawebApp.Controllers.Warehouse
                         return Json(result, JsonRequestBehavior.AllowGet);
                     }
               
-                }
-                else
-                {
+                //}
+                //else
+                //{
 
-                    var result = "Error";
-                    return Json(result, JsonRequestBehavior.AllowGet);
-                }
+                //    var result = "Error";
+                //    return Json(result, JsonRequestBehavior.AllowGet);
+                //}
 
 
             }
@@ -504,6 +531,26 @@ namespace LimenawebApp.Controllers.Warehouse
                         //Si el estado es =2, quiere decir que aun esta en Operaciones y el Vendedor NO ha realizado pagos
                         var invoice = Cls_invoices.GetInvoice(docEntryInv, 0, false).data.FirstOrDefault();
                         PUT_Invoices_api newput = new PUT_Invoices_api();
+
+                        //Reconciliamos el Credit Memo
+                        try
+                        {
+                            CreditMemo_reconciliation newreconciliation = new CreditMemo_reconciliation();
+                            newreconciliation.cardCode = invoice.cardCode;
+                            newreconciliation.docNumCredit = creditmemos.data[0].docNum;
+                            newreconciliation.docNumInvoice = invoice.docNum;
+                            newreconciliation.totalCredit = creditmemos.data[0].docTotal;
+
+                            var reconciliation = cls_creditmemos.Reconciliation(newreconciliation);
+                        }
+                        catch {
+
+                        }
+
+
+                        //Fin
+
+
 
                         //Si hay pagos, va para finanzas
                         if (invoice.paymentsDraft > 0)

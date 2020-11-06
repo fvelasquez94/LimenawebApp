@@ -269,6 +269,8 @@
                                 
                                 $('#modalPayIndividual').modal('hide')
                                 //window.location.reload(true);
+                            } else if (result == "Inactive Customer, please contact Finance department") {
+                                alert('Failed to close Invoice. Inactive Customer, please contact Finance department');
                             } else {
                                 alert("Payment was not submitted");
                             }
@@ -454,6 +456,48 @@
         });
     }
 
+    function delPayment(docentrypayment, docentryInv) {
+
+        Swal.fire({
+            title: 'Are you sure you want to delete this payment?',
+            text: "You won't be able to revert this.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+                $.ajax({
+                    url: '/Payments/Delete_Payment',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify(
+                        {
+                            docentry: docentrypayment,
+                            docentryinvoice: docentryInv
+                        }),
+                    success: function (result) {
+                        if (result == "SUCCESS") {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Payment deleted successfully',
+                                text: "",
+                                showConfirmButton: false,
+                                timer: 2000
+                            })
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning('Failed to delete Payment');
+                        }
+                    },
+                    error: function (err) {
+
+                    }
+                });
+
+            }
+        })
+    }
 
 
     window.onload = function () {

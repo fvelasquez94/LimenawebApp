@@ -137,13 +137,12 @@
                                         <i class="material-icons icon-muted icon-20pt mr-2">account_circle</i>
                                         <label class="text-body">@item.idDriver</label>
                                     </div>
-                                    @if (item.status == 0)
-                                    {
+                               
                                         <div class="col-auto d-flex align-items-center" style="min-width: 140px;">
-                                            <a href="#" data-customer="@item.cardName" data-authcode="@item.idAuthorization" data-idreason="@item.idReason" data-reason="@item.reason" data-driver="@item.idDriver" data-route="@item.idRoute" data-date="@item.date" data-financeuser="@item.idFinanceUser" data-drivercomm="@item.comments" data-commentsfinance="@item.commentsFinance" data-toggle="modal" data-target="#modal-authorizations" class="text-dark-gray">DETAILS</a>
+                                            <a href="#" data-customer="@item.cardName" data-authcode="@item.idAuthorization" data-idreason="@item.idReason" data-reason="@item.reason" data-driver="@item.idDriver" data-route="@item.idRoute" data-date="@item.date" data-financeuser="@item.idFinanceUser" data-drivercomm="@item.comments" data-commentsfinance="@item.commentsFinance" data-status="@item.status" data-toggle="modal" data-target="#modal-authorizations" class="text-dark-gray">DETAILS</a>
                                             <i class="material-icons icon-muted icon-20pt ml-2">folder</i>
                                         </div>
-                                    }
+                                    
 
                                 </div>
                             </div>

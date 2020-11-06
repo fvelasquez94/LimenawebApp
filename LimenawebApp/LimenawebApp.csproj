@@ -207,8 +207,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.96.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.96\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.105.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.105\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -243,9 +243,11 @@
     <Compile Include="Controllers\API\Cls_Creditmemos.cs" />
     <Compile Include="Controllers\API\Cls_Frezzers.cs" />
     <Compile Include="Controllers\API\cls_invoices.cs" />
+    <Compile Include="Controllers\API\Cls_Items.cs" />
     <Compile Include="Controllers\API\Cls_Journals.cs" />
     <Compile Include="Controllers\API\cls_payments.cs" />
     <Compile Include="Controllers\API\Cls_Returnreasons.cs" />
+    <Compile Include="Controllers\API\Cls_SalesOrders.cs" />
     <Compile Include="Controllers\clsGeneral.cs" />
     <Compile Include="Controllers\Commercial\Price_request\PricerequestController.cs" />
     <Compile Include="Controllers\DSDController.cs" />
@@ -268,6 +270,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\Session\Cls_alerts.cs" />
     <Compile Include="Controllers\Session\Cls_API.cs" />
+    <Compile Include="Controllers\Session\Cls_API_secondary.cs" />
     <Compile Include="Controllers\Session\Cls_cookies.cs" />
     <Compile Include="Controllers\Session\Cls_session.cs" />
     <Compile Include="Controllers\Utils.cs" />
@@ -431,6 +434,7 @@
     <Compile Include="Models\Inv_Project_products.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Items\Mdl_Items.cs" />
     <Compile Include="Models\ITM1.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -502,6 +506,7 @@
     <Compile Include="Models\RoutesM.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SalesOrders\Mdl_SalesOrders.cs" />
     <Compile Include="Models\SalesRep.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -15800,6 +15805,7 @@
     <Content Include="Views\Shared\New_design\Modals\ReceivePayments.cshtml" />
     <Content Include="Views\Shared\New_design\Scripts\PaymentsnewScript.cshtml" />
     <Content Include="Views\Authorizations\AuthAlert.cshtml" />
+    <Content Include="Views\Emails\email_authanswer.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

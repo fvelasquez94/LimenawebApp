@@ -7,6 +7,7 @@ using LimenawebApp.Controllers.Operations;
 using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
 using LimenawebApp.Models.Invoices;
+using LimenawebApp.Models.SalesOrders;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
@@ -31,6 +32,7 @@ namespace LimenawebApp.Controllers
         private Cls_Frezzers cls_Frezzers = new Cls_Frezzers();
         private Cls_planning cls_planning = new Cls_planning();
         private cls_invoices cls_invoices = new cls_invoices();
+        private Cls_SalesOrders cls_salesorders = new Cls_SalesOrders();
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
         // GET: Invoices
@@ -471,9 +473,9 @@ namespace LimenawebApp.Controllers
                 ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
                 ////////
 
-                var company_bodega = "0";
-                if (whssel == null || whssel == "")
-                {
+                var company_bodega = "01";
+                //if (whssel == null || whssel == "")
+                //{
 
                     if (activeuser.ID_Company == 1)
                     {
@@ -483,12 +485,12 @@ namespace LimenawebApp.Controllers
                     {
                         company_bodega = "02";
                     }
-                }
-                else
-                {
-                    company_bodega = whssel;
-                }
-
+                //}
+                //else
+                //{
+                //    company_bodega = whssel;
+                //}
+                ViewBag.warehousesel = company_bodega;
 
                 ///////////////////////////////
                 //List<Tb_Planning> rutaslst = new List<Tb_Planning>();
@@ -583,7 +585,7 @@ namespace LimenawebApp.Controllers
                 ViewBag.mainroutes = JsonConvert.SerializeObject(myArrListmainroutes);
 
                 //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
-                ViewBag.warehousesel = company_bodega;
+             
 
                 //FIN HEADER
                 return View();
@@ -2038,7 +2040,12 @@ namespace LimenawebApp.Controllers
 
                     var response2 = cls_invoices.PutInvoice(Convert.ToInt32(selSO.DocEntry), newput);
                 }
-                var detailstodel = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == selSO.ID_salesorder) select a).ToList();
+
+                if (selSO.query5 != "Invoice")
+                {
+                   // var response = cls_salesorders.DeletefromRoute(0);
+                }
+                    var detailstodel = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == selSO.ID_salesorder) select a).ToList();
                 dblim.Tb_PlanningSO_details.BulkDelete(detailstodel);
                 dblim.SaveChanges();
                 dblim.Tb_PlanningSO.Remove(selSO);
@@ -3490,7 +3497,24 @@ namespace LimenawebApp.Controllers
                         var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (myCollection.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
                         foreach (string value in salesOrders)
                         {
-                            var idso = Convert.ToInt32(value);
+
+                            //enviamos a wms
+
+                            //SendSOAPI newOrder = new SendSOAPI();
+                            //newOrder.DocEntry = 0;
+                            //newOrder.IdDriver = planning.ID_driver;
+                            //newOrder.IdDeliveryRoute = planning.ID_SAPRoute;
+                            //newOrder.IdHelper = planning.ID_routeleader;
+                            //newOrder.IdTruck = planning.ID_truck;
+                            //newOrder.RouteNumber = planning.ID_Route;
+                            //var response = cls_salesorders.AddtoToRoute(newOrder);
+
+                            //if (response.IsSuccessful == true)
+                            //{
+
+                            //}
+
+                                var idso = Convert.ToInt32(value);
                             var saleOrder = (from a in dtSO where (a.NumSO == idso) select a).First();
 
                             decimal openO = Convert.ToDecimal(saleOrder.OpenAmount);
@@ -3790,6 +3814,8 @@ namespace LimenawebApp.Controllers
                             newput.id_Delivery = planning.ID_Route.ToString();
 
                             var response2 = cls_invoices.PutInvoice(invoice.docEntry, newput);
+
+                
                         }
 
                         }

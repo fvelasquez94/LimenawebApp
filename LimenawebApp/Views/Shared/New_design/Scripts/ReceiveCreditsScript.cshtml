@@ -100,12 +100,12 @@
                             newRowContent += '<small class="mr-2">Total: $' + products.totalSale + '</small>';
 
                             if (products.noShow == false) {
-                                newRowContent += '<a class="badge" data-toggle="collapse" href="#collapsediv_' + products.itemCode + '" role="button" aria-expanded="false" aria-controls="collapseExample">More options</a >';
+                                newRowContent += '<a class="badge" data-toggle="collapse" href="#collapsediv_' + products.itemCode + "_" + products.id_Detail + '" role="button" aria-expanded="false" aria-controls="collapseExample">More options</a >';
                                 newRowContent += '</div>';
 
-                                newRowContent += '<div class="collapse" id="collapsediv_' + products.itemCode + '"><div style="margin-top:10px;" class="row"><div class="col-md-8">';
+                                newRowContent += '<div class="collapse" id="collapsediv_' + products.itemCode + "_" + products.id_Detail + '"><div style="margin-top:10px;" class="row"><div class="col-md-8">';
                                 newRowContent += '<label>Change Return Reason</label>';
-                                newRowContent += '<select id="select_' + products.itemCode + '" onchange="changeReturnReason(this.id)" class="form-control" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '">';
+                                newRowContent += '<select id="select_' + products.itemCode + "_" + products.id_Detail + '" onchange="changeReturnReason(this.id)" class="form-control" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '">';
                                 newRowContent += '<option disabled selected value> -- select an option -- </option>';
                                 $.each(returnReasonsChange, function (i, returnReasonchange) {
                                     if (products.returnReasonCode == returnReasonchange.reasonCode) {
@@ -120,9 +120,9 @@
 
                                 newRowContent += '</select>';
                                 newRowContent += '<label>Change Quantity</label>';
-                                newRowContent += '<input type="number" id="numbqty_' + products.itemCode + '" class="form-control" onchange="changeQty(this.id)" value="' + products.quantity + '" max="' + products.originalQty + '" min="0" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(3) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '"/>';
+                                newRowContent += '<input type="number" id="numbqty_' + products.itemCode + "_" + products.id_Detail + '" class="form-control" onchange="changeQty(this.id)" value="' + products.quantity + '" max="' + products.originalQty + '" min="0" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(3) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '"/>';
 
-                                newRowContent += '<button type="button" id="btnNO_' + products.itemCode + '" class="btn btn-warning" style="margin-top:5px;" onclick="notreceivedproduct(this.id)" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(3) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '">Product not received</button>';
+                                newRowContent += '<button type="button" id="btnNO_' + products.itemCode + "_" + products.id_Detail + '" class="btn btn-warning" style="margin-top:5px;" onclick="notreceivedproduct(this.id)" data-received="' + products.received + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(3) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '">Product not received</button>';
                                 newRowContent += '</div>';
                                 newRowContent += '</div> </div>';
 
@@ -130,13 +130,13 @@
                                 newRowContent += '</div>';
                                 newRowContent += '<div class="col-auto d-flex align-items-center" style="min-width: 140px;">';
                                 newRowContent += '<div class="custom-control custom-checkbox-toggle custom-control-inline mr-1">';
-                                if (products.received == true) { newRowContent += '<input onchange="checkCredit(this.id)" checked=""  type="checkbox" id="' + products.itemCode + 'chk_' + products.docEntry + '" data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">'; }
+                                if (products.received == true) { newRowContent += '<input onchange="checkCredit(this.id)" checked=""  type="checkbox" id="' + products.itemCode + "_" + products.id_Detail + 'chk_' + products.docEntry + '" data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">'; }
                                 else {
-                                    newRowContent += '<input type="checkbox" onchange="checkCredit(this.id)" id="' + products.itemCode + 'chk_' + products.docEntry + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">';
+                                    newRowContent += '<input type="checkbox" onchange="checkCredit(this.id)" id="' + products.itemCode + "_" + products.id_Detail + 'chk_' + products.docEntry + '"  data-itemcode="' + products.itemCode + '" data-description="' + products.itemName + '" data-qty="' + products.quantity + '" data-price="' + parseFloat(products.unitPrice).toFixed(2) + '" data-baseline="' + products.baseLine + '" data-linenum="' + products.lineNum + '" data-uom="' + products.uomEntry + '" data-docent="' + docentry + '" data-returnreason="' + products.returnReasonCode + '" data-visorder="' + products.visOrder + '" class="custom-control-input checkboxesindiv">';
                                     flagcheck = 0;
                                 }
 
-                                newRowContent += '<label class="custom-control-label" for="' + products.itemCode + 'chk_' + products.docEntry + '"></label>';
+                                newRowContent += '<label class="custom-control-label" for="' + products.itemCode + "_" + products.id_Detail + 'chk_' + products.docEntry + '"></label>';
                                 newRowContent += ' </div>';
                             } else {
                                 newRowContent += '<label class="badge badge-warning">Product not received</label>';
@@ -317,30 +317,32 @@
         var lineNum = button.data("linenum");
         var visOrder = button.data("visorder");
 
-
-
-        var creditMemo_itemDraft = {
-            itemCode: itemCode,
-            quantity: quantity,
-            uomEntry: uomEntry,
-            returnReasonCode: returnReasonCode,
-            deleted: false,
-            baseLine: baseLine,
-            lineNum: lineNum,
-            visOrder: visOrder,
-            received: button.is(":checked"),
-            noShow: false
-        };
        
 
+          var creditMemo_itemDraft = {
+            //itemCode: itemCode,
+              quantity: quantity,
+            uomEntry: uomEntry,
+              returnReasonCode: returnReasonCode,
+            //deleted: false,
+            //baseLine: baseLine,
+            //lineNum: lineNum,
+            //visOrder: visOrder,
+            received: button.is(":checked"),
+            changeOriginalQty: true
+            //noShow: false
+        };
+
+
         $.ajax({
-            url: '/Warehouse/Put_creditMemoDetail',
+            url: '/Warehouse/Put_creditMemoDetailnew',
             type: 'POST',
             datatype: 'application/json',
             contentType: 'application/json',
             data: JSON.stringify({
                 Item: creditMemo_itemDraft,
-                DocentryCredit: docentry
+                DocentryCredit: docentry,
+                visorder: visOrder
             })
             ,
             success: function (result) {
@@ -398,34 +400,36 @@
         var newqty = otherbtn.val();
 
         var creditMemo_itemDraft = {
-            itemCode: itemCode,
+            //itemCode: itemCode,
             quantity: newqty,
             uomEntry: uomEntry,
             returnReasonCode: newReturnReason,
-            deleted: false,
-            baseLine: baseLine,
-            lineNum: lineNum,
-            visOrder: visOrder,
+            //deleted: false,
+            //baseLine: baseLine,
+            //lineNum: lineNum,
+            //visOrder: visOrder,
             received: received,
-            noShow: false
+            changeOriginalQty: true
+            //noShow: false
         };
 
 
         $.ajax({
-            url: '/Warehouse/Put_creditMemoDetail',
+            url: '/Warehouse/Put_creditMemoDetailnew',
             type: 'POST',
             datatype: 'application/json',
             contentType: 'application/json',
             data: JSON.stringify({
                 Item: creditMemo_itemDraft,
-                DocentryCredit: docentry
+                DocentryCredit: docentry,
+                visorder: visOrder
             })
             ,
             success: function (result) {
                 if (result == "SUCCESS") {
 
                     toastr.success('Credit Memo updated');
- 
+                    $('#modal-creditproducts').modal('hide');
 
                 } else {
                     alert("Credito Memo was not updated");
@@ -463,21 +467,22 @@
         console.log(newqty);
         console.log(newReturnReason);
         var creditMemo_itemDraft = {
-            itemCode: itemCode,
-            quantity: newqty,
+            //itemCode: itemCode,
+            quantity: quantity,
             uomEntry: uomEntry,
             returnReasonCode: newReturnReason,
-            deleted: false,
-            baseLine: baseLine,
-            lineNum: lineNum,
-            visOrder: visOrder,
+            //deleted: false,
+            //baseLine: baseLine,
+            //lineNum: lineNum,
+            //visOrder: visOrder,
             received: received,
-            noShow: false
+            changeOriginalQty:true
+            //noShow: false
         };
 
 
         $.ajax({
-            url: '/Warehouse/Put_creditMemoDetail',
+            url: '/Warehouse/Put_creditMemoDetailnew',
             type: 'POST',
             datatype: 'application/json',
             contentType: 'application/json',
@@ -571,7 +576,7 @@
                         if (result == "SUCCESS") {
 
                             toastr.success('Credit Memo updated');
-
+                            $('#modal-creditproducts').modal('hide');
 
                         } else {
                             alert("Credito Memo was not updated");

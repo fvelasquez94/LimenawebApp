@@ -15,6 +15,7 @@ namespace LimenawebApp.Controllers.Session
         private string TOKEN = string.Format("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImYudmVsYXNxdWV6QGxpbWVuYWluYy5uZXQiLCJDb21wYW55IjoiRGlzdGlidWlkb3JhTGltZW5hSW5jIiwianRpIjoiZjdiYjBjOGUtODNiYi00NDhhLThjMmMtODEwNWU2ODc4M2I5IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoibWFuYWdlciIsImV4cCI6MTYyODk2MDc3Nn0.lg6748xLpeEV-PyHipy4jkUU9CyQnOXv1cHlpXGlYVU");
         private string IP = ConfigurationManager.AppSettings["API_ja"]; //externa
 
+ 
         public class APISettings
         {
             public string token { get; set; }
@@ -39,7 +40,7 @@ namespace LimenawebApp.Controllers.Session
         {
             APISettings settings = new APISettings();
             settings.IP = this.IP;
-            //settings.token = this.TOKEN;
+            settings.token = this.TOKEN;
 
             loguser user = new loguser();
             user.userName = "Desarrollo";
@@ -80,5 +81,7 @@ namespace LimenawebApp.Controllers.Session
 
 
         }
+
+
     }
 }

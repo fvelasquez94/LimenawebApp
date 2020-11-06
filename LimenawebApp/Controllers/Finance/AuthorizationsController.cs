@@ -3,6 +3,7 @@ using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
 using LimenawebApp.Models.Authorizations;
 using Newtonsoft.Json;
+using Postal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -117,9 +118,25 @@ namespace LimenawebApp.Controllers.Finance
                     {
 
                             cls_alerts.New_alert(iduser.ID_User, "Approved Authorization", "for route " + authactual.data.idRoute);
-                   
+
+                    try
+                    {
+                        //enviamos email
+                        dynamic semail = new Email("email_authanswer");
+                        semail.To = iduser.Email.ToString();
+                        semail.From = "donotreply@limenainc.net";
+                        semail.user = iduser.Name + " " + iduser.Lastname;
+                        semail.estatus = "approved";
+                        semail.fdtext = authactual.data.commentsFinance;
+                        semail.autext = authactual.data.reason;
+                        semail.dritext = authactual.data.comments;
+                        semail.Send();
+                    }
+                    catch {
 
                     }
+   
+                }
 
 
                 return RedirectToAction("AuthMessage", "Authorizations", new { status = 1 });
@@ -153,7 +170,23 @@ namespace LimenawebApp.Controllers.Finance
 
                     cls_alerts.New_alert(iduser.ID_User, "Denied Authorization", "for route " + authactual.data.idRoute);
 
+                    try
+                    {
+                        //enviamos email
+                        dynamic semail = new Email("email_authanswer");
+                        semail.To = iduser.Email.ToString();
+                        semail.From = "donotreply@limenainc.net";
+                        semail.user = iduser.Name + " " + iduser.Lastname;
+                        semail.estatus = "denied";
+                        semail.fdtext = authactual.data.commentsFinance;
+                        semail.autext = authactual.data.reason;
+                        semail.dritext = authactual.data.comments;
+                        semail.Send();
+                    }
+                    catch
+                    {
 
+                    }
                 }
 
 

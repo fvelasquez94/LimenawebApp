@@ -1967,6 +1967,9 @@ namespace LimenawebApp.Controllers
                 }
                 if (not > 0) { flag = 1;
                     internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1, closedOrderTimes={0} where DocNum={1}", (timesClosed + 1), docint);
+
+                    //Mandamos los cambios directo a SAP (consultar  a Stan que pasa si abren nuevamente la orden)
+
                 }
 
                 if (flag == 1) {
@@ -2020,11 +2023,12 @@ public ActionResult Prices_requestpdo(int docnum)
                 var infoproducts = (from c in dlipro.BI_Dim_Products where (products.Contains(c.id)) select c).ToArray();
 
                 var finaldetails = (from a in so_details
-                                   join b in autolst on a.ItemCode  equals b.ItemCode into data
+                                    //join b in autolst on new { a.ItemCode, a.LineNum } equals new { b.ItemCode,b.LineNum } into data
+                                    join b in autolst on  a.ItemCode equals b.ItemCode into data
                                    join c in infoproducts on a.ItemCode equals c.id
                                    from final in data.DefaultIfEmpty()             
                                    select new Pedidos_precios { LineNum = a.LineNum, Quantity = a.Quantity, CardCode = a.CardCode, UomCode = a.UomCode, UomEntry = a.UomEntry, ItemCode = a.ItemCode, ItemName = a.ItemName, DocNum = a.DocNum, DocDate = a.DocDate, Price = a.Price,
-                                       NewPrice = final == null ? 0 : final.NuevoPrecio, Estado = final == null ? 0 : final.Estado, MinPrice=(a.NumPerMsr * c.MinPrice), Total=a.Price*a.Quantity, Brand_Name=c.Brand_Name, id_brand=c.id_brand,
+                                       NewPrice = final == null ? 0 : final.LineNum==a.LineNum ? final.NuevoPrecio : 0, Estado = final == null ? 0 : final.Estado, MinPrice=(a.NumPerMsr * c.MinPrice), Total=a.Price*a.Quantity, Brand_Name=c.Brand_Name, id_brand=c.id_brand,
                                        category_name=c.category_name, id_subcategory=c.id_subcategory, subcategory_name=c.subcategory_name, Bonificable=c.Bonificables, CantBonif=c.CantBonif, FactorBonif=c.FactorBonif, deleted= final ==null ? false : final.Deleted
                                    });
 
