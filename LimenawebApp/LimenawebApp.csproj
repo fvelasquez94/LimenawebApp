@@ -207,8 +207,8 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Extensions, Version=4.0.105.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Extensions.4.0.105\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
+    <Reference Include="Z.EntityFramework.Extensions, Version=5.1.9.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Extensions.5.1.9\lib\net45\Z.EntityFramework.Extensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -240,6 +240,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\API\Cls_Authorizations.cs" />
     <Compile Include="Controllers\API\Cls_Banks.cs" />
+    <Compile Include="Controllers\API\Cls_BusinessPartners.cs" />
     <Compile Include="Controllers\API\Cls_Creditmemos.cs" />
     <Compile Include="Controllers\API\Cls_Frezzers.cs" />
     <Compile Include="Controllers\API\cls_invoices.cs" />
@@ -248,6 +249,7 @@
     <Compile Include="Controllers\API\cls_payments.cs" />
     <Compile Include="Controllers\API\Cls_Returnreasons.cs" />
     <Compile Include="Controllers\API\Cls_SalesOrders.cs" />
+    <Compile Include="Controllers\API\Cls_transactions.cs" />
     <Compile Include="Controllers\clsGeneral.cs" />
     <Compile Include="Controllers\Commercial\Price_request\PricerequestController.cs" />
     <Compile Include="Controllers\DSDController.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="Controllers\Session\Cls_alerts.cs" />
     <Compile Include="Controllers\Session\Cls_API.cs" />
     <Compile Include="Controllers\Session\Cls_API_secondary.cs" />
+    <Compile Include="Controllers\Session\Cls_budget.cs" />
     <Compile Include="Controllers\Session\Cls_cookies.cs" />
     <Compile Include="Controllers\Session\Cls_session.cs" />
     <Compile Include="Controllers\Utils.cs" />
@@ -304,6 +307,7 @@
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Creditmemos_api\Mdl_Creditmemos.cs" />
+    <Compile Include="Models\Customers\Mdl_BusinessPartners.cs" />
     <Compile Include="Models\C_DRIVERS.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
     </Compile>
@@ -400,6 +404,12 @@
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Frezzers\Mdl_Frezzers.cs" />
+    <Compile Include="Models\Help_Invoices_Layout.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Help_Invoices_Layout_BarCode.cs">
+      <DependentUpon>DLI_PRO.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Interna_DLI.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -506,6 +516,7 @@
     <Compile Include="Models\RoutesM.cs">
       <DependentUpon>dbComercia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\SalesOrders\Mdl_Budget.cs" />
     <Compile Include="Models\SalesOrders\Mdl_SalesOrders.cs" />
     <Compile Include="Models\SalesRep.cs">
       <DependentUpon>DLI_PRO.tt</DependentUpon>
@@ -612,6 +623,7 @@
     <Compile Include="Models\Tb_Resources.cs">
       <DependentUpon>dbLimena.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Transactions\Mdl_Transactions.cs" />
     <Compile Include="Models\Transito_Final.cs">
       <DependentUpon>dbMatrizCompras.tt</DependentUpon>
     </Compile>
@@ -676,10 +688,22 @@
       <DependentUpon>InvocesNuevooriginal.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\INVOICE BARCODE.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>INVOICE BARCODE.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Invoice Storage Type %28RR%29.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Invoice Storage Type %28RR%29.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\INVOICE STORAGE TYPE.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>INVOICE STORAGE TYPE.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Order_DSD.cs">
@@ -700,6 +724,12 @@
       <DependentUpon>rptMarketingActivity.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\rptPalletLabel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>rptPalletLabel.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\rptRoadmaporiginal.cs">
       <DependentUpon>rptRoadmaporiginal.rpt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -716,6 +746,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>rptSubMarketingActivity.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\SO Picking - Pallet Label.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SO Picking - Pallet Label.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
   </ItemGroup>
@@ -1870,6 +1906,7 @@
     <Content Include="Content\assets\js\app-icons.js" />
     <Content Include="Content\assets\js\app-settings.js" />
     <Content Include="Content\assets\js\app.js" />
+    <Content Include="Content\assets\js\app\calendarWMS.js" />
     <Content Include="Content\assets\js\app\calendar - Copy.js" />
     <Content Include="Content\assets\js\app\calendar.js" />
     <Content Include="Content\assets\js\app\calendarbitacoras.js" />
@@ -1884,6 +1921,7 @@
     <Content Include="Content\assets\js\flatpickr.js" />
     <Content Include="Content\assets\js\fullcalendar.js" />
     <Content Include="Content\assets\js\ion-rangeslider.js" />
+    <Content Include="Content\assets\js\lazyloadWMS.config.js" />
     <Content Include="Content\assets\js\lazyload.config.js" />
     <Content Include="Content\assets\js\lazyload.js" />
     <Content Include="Content\assets\js\lazyload2.config.js" />
@@ -1917,6 +1955,11 @@
     <Content Include="Content\assets\vendor\flatpickr\airbnb.css" />
     <Content Include="Content\assets\vendor\flatpickr\flatpickr.min.css" />
     <Content Include="Content\assets\vendor\flatpickr\flatpickr.min.js" />
+    <Content Include="Content\assets\vendor\flowchart\jquery.flowchart.css" />
+    <Content Include="Content\assets\vendor\flowchart\jquery.flowchart.js" />
+    <Content Include="Content\assets\vendor\flowchart\jquery.flowchart.min.css" />
+    <Content Include="Content\assets\vendor\flowchart\jquery.flowchart.min.js" />
+    <Content Include="Content\assets\vendor\flowchart\MIT-LICENSE.txt" />
     <Content Include="Content\assets\vendor\fullcalendar\fullcalendar.min.css" />
     <Content Include="Content\assets\vendor\fullcalendar\fullcalendar.min.js" />
     <Content Include="Content\assets\vendor\ion.rangeSlider.min.js" />
@@ -15593,6 +15636,9 @@
     <Content Include="Content\libs\bootstrap\scss\_type.scss" />
     <Content Include="Content\libs\bootstrap\scss\_utilities.scss" />
     <Content Include="Content\libs\bootstrap\scss\_variables.scss" />
+    <Content Include="Content\assets\vendor\flowchart\flowchart.jquery.json" />
+    <Content Include="Content\assets\vendor\flowchart\package.json" />
+    <Content Include="Content\assets\vendor\flowchart\README.md" />
     <None Include="Models\Reports.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
@@ -15806,6 +15852,18 @@
     <Content Include="Views\Shared\New_design\Scripts\PaymentsnewScript.cshtml" />
     <Content Include="Views\Authorizations\AuthAlert.cshtml" />
     <Content Include="Views\Emails\email_authanswer.cshtml" />
+    <Content Include="Views\Pricerequest\RequesthistoryNOSR.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\RequesthistoryNOSRScript.cshtml" />
+    <Content Include="Views\Invoices\Planning_orderWMS.cshtml" />
+    <Content Include="Views\Invoices\PlanningRoutesWMS.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PlanningRoutesWMSScripts.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\PlanningOrderWMS_Scripts.cshtml" />
+    <Content Include="Views\Invoices\OpenInvoices.cshtml" />
+    <Content Include="Views\Warehouse\Credits_flow.cshtml" />
+    <Content Include="Views\Invoices\OpenInvoicesRoutes.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\OpenInvoicesRoutes_Script.cshtml" />
+    <Content Include="Views\Shared\New_design\Scripts\Creditsflow_Script.cshtml" />
+    <Content Include="Views\Main\Dashboard_SP.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -15860,9 +15918,17 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>InvocesNuevooriginal.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\INVOICE BARCODE.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>INVOICE BARCODE.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Invoice Storage Type %28RR%29.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Invoice Storage Type %28RR%29.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\INVOICE STORAGE TYPE.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>INVOICE STORAGE TYPE.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Order_DSD.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -15876,6 +15942,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptMarketingActivity.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rptPalletLabel.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>rptPalletLabel.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\rptRoadmaporiginal.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptRoadmaporiginal.cs</LastGenOutput>
@@ -15887,6 +15957,10 @@
     <EmbeddedResource Include="Reports\rptSubMarketingActivity.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptSubMarketingActivity.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\SO Picking - Pallet Label.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SO Picking - Pallet Label.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

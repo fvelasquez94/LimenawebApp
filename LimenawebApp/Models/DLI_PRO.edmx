@@ -14,6 +14,7 @@
           <Property Name="U_Salario" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_Bono" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_Whs" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="U_Active" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="@DROUTE">
           <Key>
@@ -42,6 +43,7 @@
           <Property Name="U_Salario" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_Bono" Type="numeric" Precision="19" Scale="6" />
           <Property Name="U_Whs" Type="nvarchar" MaxLength="2" Nullable="false" />
+          <Property Name="U_Active" Type="nvarchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="@PICKERS">
           <Key>
@@ -871,7 +873,6 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
         <EntityType Name="BI_Dim_Products">
           <Key>
             
-            
             <PropertyRef Name="CantBonif" />
             <PropertyRef Name="FactorBonif" />
             
@@ -901,7 +902,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="DSD" Type="varchar" MaxLength="1" />
           <Property Name="SRP" Type="numeric" Precision="19" Scale="6" />
           <Property Name="unitCost" Type="numeric" Precision="19" Scale="6" />
-          <Property Name="MinPorcent" Type="int" Nullable="false" />
+          <Property Name="MinPorcent" Type="int" />
           <Property Name="MinPrice" Type="numeric" Precision="38" Scale="17" />
           <Property Name="Bonificables" Type="varchar" MaxLength="1" />
           <Property Name="MinPercIndiv" Type="varchar" MaxLength="1" />
@@ -914,6 +915,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.BI_Dim_Products' does not have a prima
           <Property Name="UoMGroup" Type="nvarchar" MaxLength="100" />
           <Property Name="InventoryItem" Type="varchar" MaxLength="1" />
           <Property Name="UnitPrice" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ReturnReasons" Type="nvarchar" MaxLength="80" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -936,13 +938,167 @@ warning 6002: The table/view 'DLI_PRO.dbo.Dsd_Products' does not have a primary 
           <Property Name="id_subcategory" Type="int" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.Help_Invoices_Layout' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Help_Invoices_Layout">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="SlpName" />
+            <PropertyRef Name="PymntGroup" />
+            <PropertyRef Name="PHONE" />
+            <PropertyRef Name="TrnspName" />
+            
+            
+            <PropertyRef Name="GrupName" />
+            <PropertyRef Name="LineTotal" />
+            <PropertyRef Name="Discount" />
+            <PropertyRef Name="AREA" />
+            <PropertyRef Name="LineNum" />
+          </Key>
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
+          <Property Name="DocNum" Type="int" />
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="DocDueDate" Type="datetime" />
+          <Property Name="SlpCode" Type="int" />
+          <Property Name="SlpName" Type="nvarchar" MaxLength="155" Nullable="false" />
+          <Property Name="BaseRef" Type="nvarchar" MaxLength="16" />
+          <Property Name="BaseType" Type="int" />
+          <Property Name="GroupNum" Type="smallint" />
+          <Property Name="PymntGroup" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ShipToCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="254" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="254" />
+          <Property Name="TrnspName" Type="nvarchar" MaxLength="40" Nullable="false" />
+          <Property Name="Volume" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Weight" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="U_STOPD" Type="int" />
+          <Property Name="U_ROUTED" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="U_REGIOND" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="TreeType" Type="char" MaxLength="1" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dscription" Type="nvarchar" MaxLength="100" />
+          <Property Name="CalcSRP" Type="decimal" Precision="19" Scale="6" />
+          <Property Name="U_SRP" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Weight1" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Category" Type="nvarchar" MaxLength="50" />
+          <Property Name="GrupName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ItmsGrpNam" Type="nvarchar" MaxLength="71" />
+          <Property Name="CodeBars" Type="nvarchar" MaxLength="254" />
+          <Property Name="BinLoc" Type="char" MaxLength="10" />
+          <Property Name="WhsCode" Type="nvarchar" MaxLength="8" />
+          <Property Name="Quantity" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="Price" Type="numeric" Precision="38" Scale="6" />
+          <Property Name="UnitPrice" Type="numeric" Precision="38" Scale="11" />
+          <Property Name="PriceBefDi" Type="varchar" MaxLength="21" />
+          <Property Name="LineTotal" Type="numeric" Precision="38" Scale="6" Nullable="false" />
+          <Property Name="TotalExpns" Type="varchar" MaxLength="21" />
+          <Property Name="UomCode" Type="varchar" MaxLength="4" />
+          <Property Name="uniMsr" Type="nvarchar" MaxLength="100" />
+          <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalBefDisc" Type="varchar" MaxLength="21" />
+          <Property Name="DiscPrcnt" Type="money" />
+          <Property Name="DiscSum" Type="varchar" MaxLength="21" />
+          <Property Name="DocTotal" Type="varchar" MaxLength="21" />
+          <Property Name="Discount" Type="numeric" Precision="19" Scale="6" Nullable="false" />
+          <Property Name="PROMO" Type="char" MaxLength="1" />
+          <Property Name="PERC" Type="char" MaxLength="1" />
+          <Property Name="AMOUNT" Type="char" MaxLength="1" />
+          <Property Name="NormalPrice" Type="numeric" Precision="38" Scale="11" />
+          <Property Name="DiscPer" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="DiscAmount" Type="numeric" Precision="38" Scale="6" />
+          <Property Name="Cases" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="Packs" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Units" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Libras" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="AREA" Type="int" Nullable="false" />
+          <Property Name="Storage" Type="nvarchar" MaxLength="20" />
+          <Property Name="Liq" Type="char" MaxLength="1" />
+          <Property Name="TotalPlus" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalNeg" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ReturnReason" Type="nvarchar" MaxLength="254" />
+          <Property Name="LineNum" Type="int" Nullable="false" />
+          <Property Name="VisOrder" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'DLI_PRO.dbo.Help_Invoices_Layout_BarCode' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Help_Invoices_Layout_BarCode">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="SlpName" />
+            <PropertyRef Name="PymntGroup" />
+            <PropertyRef Name="PHONE" />
+            <PropertyRef Name="TrnspName" />
+            <PropertyRef Name="GrupName" />
+            <PropertyRef Name="LineNum" />
+            <PropertyRef Name="ITEMTYPE" />
+          </Key>
+          <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
+          <Property Name="CardName" Type="nvarchar" MaxLength="100" />
+          <Property Name="DocNum" Type="int" />
+          <Property Name="DocEntry" Type="int" Nullable="false" />
+          <Property Name="DocDate" Type="datetime" />
+          <Property Name="DocDueDate" Type="datetime" />
+          <Property Name="SlpCode" Type="int" />
+          <Property Name="SlpName" Type="nvarchar" MaxLength="155" Nullable="false" />
+          <Property Name="BaseRef" Type="nvarchar" MaxLength="16" />
+          <Property Name="BaseType" Type="int" />
+          <Property Name="GroupNum" Type="smallint" />
+          <Property Name="PymntGroup" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="ShipToCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Address2" Type="nvarchar" MaxLength="254" />
+          <Property Name="PHONE" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="TrnspName" Type="nvarchar" MaxLength="40" Nullable="false" />
+          <Property Name="Volume" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Weight" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="254" />
+          <Property Name="U_STOPD" Type="int" />
+          <Property Name="U_ROUTED" Type="nvarchar" MaxLength="30" />
+          <Property Name="U_REGIOND" Type="nvarchar" MaxLength="3" />
+          <Property Name="U_SRP" Type="decimal" Precision="11" Scale="2" />
+          <Property Name="ItemCode" Type="nvarchar" MaxLength="50" />
+          <Property Name="Dscription" Type="nvarchar" MaxLength="100" />
+          <Property Name="Category" Type="nvarchar" MaxLength="50" />
+          <Property Name="GrupName" Type="nvarchar" MaxLength="20" Nullable="false" />
+          <Property Name="ItmsGrpNam" Type="nvarchar" MaxLength="71" />
+          <Property Name="CodeBars" Type="nvarchar" MaxLength="254" />
+          <Property Name="BinLoc" Type="char" MaxLength="10" />
+          <Property Name="Quantity" Type="varchar" MaxLength="8" />
+          <Property Name="Price" Type="varchar" MaxLength="21" />
+          <Property Name="UnitPrice" Type="numeric" Precision="38" Scale="19" />
+          <Property Name="PriceBefDi" Type="varchar" MaxLength="21" />
+          <Property Name="LineTotal" Type="varchar" MaxLength="21" />
+          <Property Name="TotalExpns" Type="varchar" MaxLength="21" />
+          <Property Name="UomCode" Type="varchar" MaxLength="4" />
+          <Property Name="unitMsr" Type="nvarchar" MaxLength="100" />
+          <Property Name="NumPerMsr" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalBefDisc" Type="varchar" MaxLength="21" />
+          <Property Name="DiscPrcnt" Type="varchar" MaxLength="20" />
+          <Property Name="DiscSum" Type="varchar" MaxLength="21" />
+          <Property Name="DocTotal" Type="varchar" MaxLength="21" />
+          <Property Name="Cases" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Packs" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Units" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="Lbs" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="RowUnits" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalPlus" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="TotalNeg" Type="numeric" Precision="19" Scale="6" />
+          <Property Name="ReturnReason" Type="nvarchar" MaxLength="254" />
+          <Property Name="LineNum" Type="int" Nullable="false" />
+          <Property Name="VisOrder" Type="int" />
+          <Property Name="ITEMTYPE" Type="varchar" MaxLength="7" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.OpenSalesOrders' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="OpenSalesOrders">
           <Key>
+            <PropertyRef Name="DocEntry" />
             <PropertyRef Name="NumSO" />
             <PropertyRef Name="BonifPendientes" />
           </Key>
           <Property Name="SODate" Type="datetime" />
+          <Property Name="DocEntry" Type="int" Nullable="false" />
           <Property Name="NumSO" Type="int" Nullable="false" />
           <Property Name="PepperiNum" Type="nvarchar" MaxLength="100" />
           <Property Name="CardCode" Type="nvarchar" MaxLength="15" />
@@ -1050,12 +1206,14 @@ warning 6002: The table/view 'DLI_PRO.dbo.Supervisor' does not have a primary ke
         <EntityType Name="Supervisor">
           <Key>
             <PropertyRef Name="id_Supervisor" />
+            
             <PropertyRef Name="Area" />
           </Key>
           <Property Name="id_Supervisor" Type="int" Nullable="false" />
           <Property Name="Supervisor_Name" Type="nvarchar" MaxLength="101" />
-          <Property Name="Zone" Type="varchar" MaxLength="12" />
+          <Property Name="Zone" Type="varchar" MaxLength="12" Nullable="false" />
           <Property Name="Area" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Active" Type="char" MaxLength="1" />
         </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'DLI_PRO.dbo.view_cuentascobrarCliente' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
@@ -1272,7 +1430,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [BI_Dim_Products].[StockBonif] AS [StockBonif], 
     [BI_Dim_Products].[UoMGroup] AS [UoMGroup], 
     [BI_Dim_Products].[InventoryItem] AS [InventoryItem], 
-    [BI_Dim_Products].[UnitPrice] AS [UnitPrice]
+    [BI_Dim_Products].[UnitPrice] AS [UnitPrice], 
+    [BI_Dim_Products].[ReturnReasons] AS [ReturnReasons]
     FROM [dbo].[BI_Dim_Products] AS [BI_Dim_Products]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Dsd_Products" EntityType="Self.Dsd_Products" store:Type="Views" store:Schema="dbo">
@@ -1290,9 +1449,138 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [Dsd_Products].[id_subcategory] AS [id_subcategory]
     FROM [dbo].[Dsd_Products] AS [Dsd_Products]</DefiningQuery>
           </EntitySet>
+          <EntitySet Name="Help_Invoices_Layout" EntityType="Self.Help_Invoices_Layout" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Help_Invoices_Layout].[CardCode] AS [CardCode], 
+    [Help_Invoices_Layout].[CardName] AS [CardName], 
+    [Help_Invoices_Layout].[DocNum] AS [DocNum], 
+    [Help_Invoices_Layout].[DocEntry] AS [DocEntry], 
+    [Help_Invoices_Layout].[DocDate] AS [DocDate], 
+    [Help_Invoices_Layout].[DocDueDate] AS [DocDueDate], 
+    [Help_Invoices_Layout].[SlpCode] AS [SlpCode], 
+    [Help_Invoices_Layout].[SlpName] AS [SlpName], 
+    [Help_Invoices_Layout].[BaseRef] AS [BaseRef], 
+    [Help_Invoices_Layout].[BaseType] AS [BaseType], 
+    [Help_Invoices_Layout].[GroupNum] AS [GroupNum], 
+    [Help_Invoices_Layout].[PymntGroup] AS [PymntGroup], 
+    [Help_Invoices_Layout].[ShipToCode] AS [ShipToCode], 
+    [Help_Invoices_Layout].[Address2] AS [Address2], 
+    [Help_Invoices_Layout].[PHONE] AS [PHONE], 
+    [Help_Invoices_Layout].[Comments] AS [Comments], 
+    [Help_Invoices_Layout].[TrnspName] AS [TrnspName], 
+    [Help_Invoices_Layout].[Volume] AS [Volume], 
+    [Help_Invoices_Layout].[Weight] AS [Weight], 
+    [Help_Invoices_Layout].[U_STOPD] AS [U_STOPD], 
+    [Help_Invoices_Layout].[U_ROUTED] AS [U_ROUTED], 
+    [Help_Invoices_Layout].[U_REGIOND] AS [U_REGIOND], 
+    [Help_Invoices_Layout].[TreeType] AS [TreeType], 
+    [Help_Invoices_Layout].[ItemCode] AS [ItemCode], 
+    [Help_Invoices_Layout].[Dscription] AS [Dscription], 
+    [Help_Invoices_Layout].[CalcSRP] AS [CalcSRP], 
+    [Help_Invoices_Layout].[U_SRP] AS [U_SRP], 
+    [Help_Invoices_Layout].[Weight1] AS [Weight1], 
+    [Help_Invoices_Layout].[Category] AS [Category], 
+    [Help_Invoices_Layout].[GrupName] AS [GrupName], 
+    [Help_Invoices_Layout].[ItmsGrpNam] AS [ItmsGrpNam], 
+    [Help_Invoices_Layout].[CodeBars] AS [CodeBars], 
+    [Help_Invoices_Layout].[BinLoc] AS [BinLoc], 
+    [Help_Invoices_Layout].[WhsCode] AS [WhsCode], 
+    [Help_Invoices_Layout].[Quantity] AS [Quantity], 
+    [Help_Invoices_Layout].[Price] AS [Price], 
+    [Help_Invoices_Layout].[UnitPrice] AS [UnitPrice], 
+    [Help_Invoices_Layout].[PriceBefDi] AS [PriceBefDi], 
+    [Help_Invoices_Layout].[LineTotal] AS [LineTotal], 
+    [Help_Invoices_Layout].[TotalExpns] AS [TotalExpns], 
+    [Help_Invoices_Layout].[UomCode] AS [UomCode], 
+    [Help_Invoices_Layout].[uniMsr] AS [uniMsr], 
+    [Help_Invoices_Layout].[NumPerMsr] AS [NumPerMsr], 
+    [Help_Invoices_Layout].[TotalBefDisc] AS [TotalBefDisc], 
+    [Help_Invoices_Layout].[DiscPrcnt] AS [DiscPrcnt], 
+    [Help_Invoices_Layout].[DiscSum] AS [DiscSum], 
+    [Help_Invoices_Layout].[DocTotal] AS [DocTotal], 
+    [Help_Invoices_Layout].[Discount] AS [Discount], 
+    [Help_Invoices_Layout].[PROMO] AS [PROMO], 
+    [Help_Invoices_Layout].[PERC] AS [PERC], 
+    [Help_Invoices_Layout].[AMOUNT] AS [AMOUNT], 
+    [Help_Invoices_Layout].[NormalPrice] AS [NormalPrice], 
+    [Help_Invoices_Layout].[DiscPer] AS [DiscPer], 
+    [Help_Invoices_Layout].[DiscAmount] AS [DiscAmount], 
+    [Help_Invoices_Layout].[Cases] AS [Cases], 
+    [Help_Invoices_Layout].[Packs] AS [Packs], 
+    [Help_Invoices_Layout].[Units] AS [Units], 
+    [Help_Invoices_Layout].[Libras] AS [Libras], 
+    [Help_Invoices_Layout].[AREA] AS [AREA], 
+    [Help_Invoices_Layout].[Storage] AS [Storage], 
+    [Help_Invoices_Layout].[Liq] AS [Liq], 
+    [Help_Invoices_Layout].[TotalPlus] AS [TotalPlus], 
+    [Help_Invoices_Layout].[TotalNeg] AS [TotalNeg], 
+    [Help_Invoices_Layout].[ReturnReason] AS [ReturnReason], 
+    [Help_Invoices_Layout].[LineNum] AS [LineNum], 
+    [Help_Invoices_Layout].[VisOrder] AS [VisOrder]
+    FROM [dbo].[Help_Invoices_Layout] AS [Help_Invoices_Layout]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Help_Invoices_Layout_BarCode" EntityType="Self.Help_Invoices_Layout_BarCode" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Help_Invoices_Layout_BarCode].[CardCode] AS [CardCode], 
+    [Help_Invoices_Layout_BarCode].[CardName] AS [CardName], 
+    [Help_Invoices_Layout_BarCode].[DocNum] AS [DocNum], 
+    [Help_Invoices_Layout_BarCode].[DocEntry] AS [DocEntry], 
+    [Help_Invoices_Layout_BarCode].[DocDate] AS [DocDate], 
+    [Help_Invoices_Layout_BarCode].[DocDueDate] AS [DocDueDate], 
+    [Help_Invoices_Layout_BarCode].[SlpCode] AS [SlpCode], 
+    [Help_Invoices_Layout_BarCode].[SlpName] AS [SlpName], 
+    [Help_Invoices_Layout_BarCode].[BaseRef] AS [BaseRef], 
+    [Help_Invoices_Layout_BarCode].[BaseType] AS [BaseType], 
+    [Help_Invoices_Layout_BarCode].[GroupNum] AS [GroupNum], 
+    [Help_Invoices_Layout_BarCode].[PymntGroup] AS [PymntGroup], 
+    [Help_Invoices_Layout_BarCode].[ShipToCode] AS [ShipToCode], 
+    [Help_Invoices_Layout_BarCode].[Address2] AS [Address2], 
+    [Help_Invoices_Layout_BarCode].[PHONE] AS [PHONE], 
+    [Help_Invoices_Layout_BarCode].[TrnspName] AS [TrnspName], 
+    [Help_Invoices_Layout_BarCode].[Volume] AS [Volume], 
+    [Help_Invoices_Layout_BarCode].[Weight] AS [Weight], 
+    [Help_Invoices_Layout_BarCode].[Comments] AS [Comments], 
+    [Help_Invoices_Layout_BarCode].[U_STOPD] AS [U_STOPD], 
+    [Help_Invoices_Layout_BarCode].[U_ROUTED] AS [U_ROUTED], 
+    [Help_Invoices_Layout_BarCode].[U_REGIOND] AS [U_REGIOND], 
+    [Help_Invoices_Layout_BarCode].[U_SRP] AS [U_SRP], 
+    [Help_Invoices_Layout_BarCode].[ItemCode] AS [ItemCode], 
+    [Help_Invoices_Layout_BarCode].[Dscription] AS [Dscription], 
+    [Help_Invoices_Layout_BarCode].[Category] AS [Category], 
+    [Help_Invoices_Layout_BarCode].[GrupName] AS [GrupName], 
+    [Help_Invoices_Layout_BarCode].[ItmsGrpNam] AS [ItmsGrpNam], 
+    [Help_Invoices_Layout_BarCode].[CodeBars] AS [CodeBars], 
+    [Help_Invoices_Layout_BarCode].[BinLoc] AS [BinLoc], 
+    [Help_Invoices_Layout_BarCode].[Quantity] AS [Quantity], 
+    [Help_Invoices_Layout_BarCode].[Price] AS [Price], 
+    [Help_Invoices_Layout_BarCode].[UnitPrice] AS [UnitPrice], 
+    [Help_Invoices_Layout_BarCode].[PriceBefDi] AS [PriceBefDi], 
+    [Help_Invoices_Layout_BarCode].[LineTotal] AS [LineTotal], 
+    [Help_Invoices_Layout_BarCode].[TotalExpns] AS [TotalExpns], 
+    [Help_Invoices_Layout_BarCode].[UomCode] AS [UomCode], 
+    [Help_Invoices_Layout_BarCode].[unitMsr] AS [unitMsr], 
+    [Help_Invoices_Layout_BarCode].[NumPerMsr] AS [NumPerMsr], 
+    [Help_Invoices_Layout_BarCode].[TotalBefDisc] AS [TotalBefDisc], 
+    [Help_Invoices_Layout_BarCode].[DiscPrcnt] AS [DiscPrcnt], 
+    [Help_Invoices_Layout_BarCode].[DiscSum] AS [DiscSum], 
+    [Help_Invoices_Layout_BarCode].[DocTotal] AS [DocTotal], 
+    [Help_Invoices_Layout_BarCode].[Cases] AS [Cases], 
+    [Help_Invoices_Layout_BarCode].[Packs] AS [Packs], 
+    [Help_Invoices_Layout_BarCode].[Units] AS [Units], 
+    [Help_Invoices_Layout_BarCode].[Lbs] AS [Lbs], 
+    [Help_Invoices_Layout_BarCode].[RowUnits] AS [RowUnits], 
+    [Help_Invoices_Layout_BarCode].[TotalPlus] AS [TotalPlus], 
+    [Help_Invoices_Layout_BarCode].[TotalNeg] AS [TotalNeg], 
+    [Help_Invoices_Layout_BarCode].[ReturnReason] AS [ReturnReason], 
+    [Help_Invoices_Layout_BarCode].[LineNum] AS [LineNum], 
+    [Help_Invoices_Layout_BarCode].[VisOrder] AS [VisOrder], 
+    [Help_Invoices_Layout_BarCode].[ITEMTYPE] AS [ITEMTYPE]
+    FROM [dbo].[Help_Invoices_Layout_BarCode] AS [Help_Invoices_Layout_BarCode]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="OpenSalesOrders" EntityType="Self.OpenSalesOrders" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [OpenSalesOrders].[SODate] AS [SODate], 
+    [OpenSalesOrders].[DocEntry] AS [DocEntry], 
     [OpenSalesOrders].[NumSO] AS [NumSO], 
     [OpenSalesOrders].[PepperiNum] AS [PepperiNum], 
     [OpenSalesOrders].[CardCode] AS [CardCode], 
@@ -1380,7 +1668,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
     [Supervisor].[id_Supervisor] AS [id_Supervisor], 
     [Supervisor].[Supervisor_Name] AS [Supervisor_Name], 
     [Supervisor].[Zone] AS [Zone], 
-    [Supervisor].[Area] AS [Area]
+    [Supervisor].[Area] AS [Area], 
+    [Supervisor].[Active] AS [Active]
     FROM [dbo].[Supervisor] AS [Supervisor]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="view_cuentascobrarCliente" EntityType="Self.view_cuentascobrarCliente" store:Type="Views" store:Schema="dbo">
@@ -1903,6 +2192,8 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
             <Parameter Name="docEntry" Mode="In" Type="String" />
             <Parameter Name="kitcode" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="Help_Invoices_Layout" EntityType="DLI_PROModel.Help_Invoices_Layout" />
+          <EntitySet Name="Help_Invoices_Layout_BarCode" EntityType="DLI_PROModel.Help_Invoices_Layout_BarCode" />
         </EntityContainer>
         <EntityType Name="BI_Dim_Customer">
           <Key>
@@ -1991,7 +2282,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="id_Vendor" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
           <Property Name="id_brand" Type="Int32" />
           <Property Name="unitCost" Type="Decimal" Precision="19" Scale="6" />
-          <Property Name="MinPorcent" Type="Int32" Nullable="false" />
+          <Property Name="MinPorcent" Type="Int32" />
           <Property Name="MinPrice" Type="Decimal" Precision="38" Scale="17" />
           <Property Name="item_name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="Vendor_Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
@@ -2006,6 +2297,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="UoMGroup" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Name="InventoryItem" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
           <Property Name="UnitPrice" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ReturnReasons" Type="String" MaxLength="80" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="ITM1">
           <Key>
@@ -2088,6 +2380,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="U_Salario" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="U_Bono" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="U_Whs" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="U_Active" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="C_TRUCKS">
           <Key>
@@ -2106,6 +2399,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="U_Salario" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="U_Bono" Type="Decimal" Precision="19" Scale="6" />
           <Property Name="U_Whs" Type="String" Nullable="false" MaxLength="2" FixedLength="false" Unicode="true" />
+          <Property Name="U_Active" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="OpenSalesOrders_Details">
           <Key>
@@ -2341,8 +2635,9 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           </Key>
           <Property Name="id_Supervisor" Type="Int32" Nullable="false" />
           <Property Name="Supervisor_Name" Type="String" MaxLength="101" FixedLength="false" Unicode="true" />
-          <Property Name="Zone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" />
+          <Property Name="Zone" Type="String" MaxLength="12" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Area" Type="String" Nullable="false" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Active" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="view_cuentascobrarCliente">
           <Key>
@@ -2668,6 +2963,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Key>
             <PropertyRef Name="NumSO" />
             <PropertyRef Name="BonifPendientes" />
+            <PropertyRef Name="DocEntry" />
           </Key>
           <Property Name="SODate" Type="DateTime" Precision="3" />
           <Property Name="NumSO" Type="Int32" Nullable="false" />
@@ -2692,6 +2988,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Name="CreateDate" Type="DateTime" Precision="3" />
           <Property Name="DocTime" Type="String" MaxLength="4000" FixedLength="false" Unicode="true" />
           <Property Name="SOType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
         </EntityType>
         <ComplexType Name="sp_genericInvoiceV2_Result">
           <Property Type="String" Name="CardCode" Nullable="true" MaxLength="15" />
@@ -2776,6 +3073,152 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <Property Type="Decimal" Name="SRP" Nullable="true" Precision="19" Scale="6" />
           <Property Type="Decimal" Name="PriceList" Nullable="true" Precision="19" Scale="6" />
         </ComplexType>
+        <EntityType Name="Help_Invoices_Layout">
+          <Key>
+            <PropertyRef Name="DocEntry" />
+            <PropertyRef Name="SlpName" />
+            <PropertyRef Name="PymntGroup" />
+            <PropertyRef Name="PHONE" />
+            <PropertyRef Name="TrnspName" />
+            <PropertyRef Name="GrupName" />
+            <PropertyRef Name="LineTotal" />
+            <PropertyRef Name="Discount" />
+            <PropertyRef Name="AREA" />
+            <PropertyRef Name="LineNum" />
+          </Key>
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DocNum" Type="Int32" />
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="DocDueDate" Type="DateTime" Precision="3" />
+          <Property Name="SlpCode" Type="Int32" />
+          <Property Name="SlpName" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="BaseRef" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="BaseType" Type="Int32" />
+          <Property Name="GroupNum" Type="Int16" />
+          <Property Name="PymntGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ShipToCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address2" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="PHONE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Comments" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="TrnspName" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="Volume" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Weight" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_STOPD" Type="Int32" />
+          <Property Name="U_ROUTED" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="U_REGIOND" Type="String" MaxLength="3" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TreeType" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Dscription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="CalcSRP" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="U_SRP" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Weight1" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GrupName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItmsGrpNam" Type="String" MaxLength="71" FixedLength="false" Unicode="true" />
+          <Property Name="CodeBars" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="BinLoc" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="WhsCode" Type="String" MaxLength="8" FixedLength="false" Unicode="true" />
+          <Property Name="Quantity" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="Price" Type="Decimal" Precision="38" Scale="6" />
+          <Property Name="UnitPrice" Type="Decimal" Precision="38" Scale="11" />
+          <Property Name="PriceBefDi" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="LineTotal" Type="Decimal" Nullable="false" Precision="38" Scale="6" />
+          <Property Name="TotalExpns" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="UomCode" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="uniMsr" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NumPerMsr" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalBefDisc" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="DiscPrcnt" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="DiscSum" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="DocTotal" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="Discount" Type="Decimal" Nullable="false" Precision="19" Scale="6" />
+          <Property Name="PROMO" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="PERC" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="AMOUNT" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="NormalPrice" Type="Decimal" Precision="38" Scale="11" />
+          <Property Name="DiscPer" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="DiscAmount" Type="Decimal" Precision="38" Scale="6" />
+          <Property Name="Cases" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="Packs" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Units" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Libras" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="AREA" Type="Int32" Nullable="false" />
+          <Property Name="Storage" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Liq" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="TotalPlus" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalNeg" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ReturnReason" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="LineNum" Type="Int32" Nullable="false" />
+          <Property Name="VisOrder" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Help_Invoices_Layout_BarCode">
+          <Key>
+            <PropertyRef Name="SlpName" />
+            <PropertyRef Name="PymntGroup" />
+            <PropertyRef Name="PHONE" />
+            <PropertyRef Name="TrnspName" />
+            <PropertyRef Name="GrupName" />
+            <PropertyRef Name="LineNum" />
+            <PropertyRef Name="ITEMTYPE" />
+            <PropertyRef Name="DocEntry" />
+          </Key>
+          <Property Name="CardCode" Type="String" MaxLength="15" FixedLength="false" Unicode="true" />
+          <Property Name="CardName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DocNum" Type="Int32" />
+          <Property Name="DocDate" Type="DateTime" Precision="3" />
+          <Property Name="DocDueDate" Type="DateTime" Precision="3" />
+          <Property Name="SlpCode" Type="Int32" />
+          <Property Name="SlpName" Type="String" Nullable="false" MaxLength="155" FixedLength="false" Unicode="true" />
+          <Property Name="BaseRef" Type="String" MaxLength="16" FixedLength="false" Unicode="true" />
+          <Property Name="BaseType" Type="Int32" />
+          <Property Name="GroupNum" Type="Int16" />
+          <Property Name="PymntGroup" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="ShipToCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Address2" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="PHONE" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="TrnspName" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Name="Volume" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Weight" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Comments" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="U_STOPD" Type="Int32" />
+          <Property Name="U_ROUTED" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="U_REGIOND" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="U_SRP" Type="Decimal" Precision="11" Scale="2" />
+          <Property Name="ItemCode" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Dscription" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GrupName" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="ItmsGrpNam" Type="String" MaxLength="71" FixedLength="false" Unicode="true" />
+          <Property Name="CodeBars" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="BinLoc" Type="String" MaxLength="10" FixedLength="true" Unicode="false" />
+          <Property Name="Quantity" Type="String" MaxLength="8" FixedLength="false" Unicode="false" />
+          <Property Name="Price" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="UnitPrice" Type="Decimal" Precision="38" Scale="19" />
+          <Property Name="PriceBefDi" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="LineTotal" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="TotalExpns" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="UomCode" Type="String" MaxLength="4" FixedLength="false" Unicode="false" />
+          <Property Name="unitMsr" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="NumPerMsr" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalBefDisc" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="DiscPrcnt" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DiscSum" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="DocTotal" Type="String" MaxLength="21" FixedLength="false" Unicode="false" />
+          <Property Name="Cases" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Packs" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Units" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="Lbs" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="RowUnits" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalPlus" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="TotalNeg" Type="Decimal" Precision="19" Scale="6" />
+          <Property Name="ReturnReason" Type="String" MaxLength="254" FixedLength="false" Unicode="true" />
+          <Property Name="LineNum" Type="Int32" Nullable="false" />
+          <Property Name="VisOrder" Type="Int32" />
+          <Property Name="ITEMTYPE" Type="String" Nullable="false" MaxLength="7" FixedLength="false" Unicode="false" />
+          <Property Name="DocEntry" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3242,6 +3685,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="BI_Dim_Products">
             <EntityTypeMapping TypeName="DLI_PROModel.BI_Dim_Products">
               <MappingFragment StoreEntitySet="BI_Dim_Products">
+                <ScalarProperty Name="ReturnReasons" ColumnName="ReturnReasons" />
                 <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
                 <ScalarProperty Name="InventoryItem" ColumnName="InventoryItem" />
                 <ScalarProperty Name="UoMGroup" ColumnName="UoMGroup" />
@@ -3360,6 +3804,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="C_HELPERS">
             <EntityTypeMapping TypeName="DLI_PROModel.C_HELPERS">
               <MappingFragment StoreEntitySet="@HELPERS">
+                <ScalarProperty Name="U_Active" ColumnName="U_Active" />
                 <ScalarProperty Name="U_Whs" ColumnName="U_Whs" />
                 <ScalarProperty Name="U_Bono" ColumnName="U_Bono" />
                 <ScalarProperty Name="U_Salario" ColumnName="U_Salario" />
@@ -3380,6 +3825,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="C_DRIVERS">
             <EntityTypeMapping TypeName="DLI_PROModel.C_DRIVERS">
               <MappingFragment StoreEntitySet="@DRIVERS">
+                <ScalarProperty Name="U_Active" ColumnName="U_Active" />
                 <ScalarProperty Name="U_Whs" ColumnName="U_Whs" />
                 <ScalarProperty Name="U_Bono" ColumnName="U_Bono" />
                 <ScalarProperty Name="U_Salario" ColumnName="U_Salario" />
@@ -3615,6 +4061,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="Supervisor">
             <EntityTypeMapping TypeName="DLI_PROModel.Supervisor">
               <MappingFragment StoreEntitySet="Supervisor">
+                <ScalarProperty Name="Active" ColumnName="Active" />
                 <ScalarProperty Name="Area" ColumnName="Area" />
                 <ScalarProperty Name="Zone" ColumnName="Zone" />
                 <ScalarProperty Name="Supervisor_Name" ColumnName="Supervisor_Name" />
@@ -3952,6 +4399,7 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
           <EntitySetMapping Name="OpenSalesOrders">
             <EntityTypeMapping TypeName="DLI_PROModel.OpenSalesOrders">
               <MappingFragment StoreEntitySet="OpenSalesOrders">
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
                 <ScalarProperty Name="SOType" ColumnName="SOType" />
                 <ScalarProperty Name="DocTime" ColumnName="DocTime" />
                 <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
@@ -4069,6 +4517,138 @@ warning 6002: The table/view 'DLI_PRO.dbo.view_VendorsData' does not have a prim
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Help_Invoices_Layout">
+            <EntityTypeMapping TypeName="DLI_PROModel.Help_Invoices_Layout">
+              <MappingFragment StoreEntitySet="Help_Invoices_Layout">
+                <ScalarProperty Name="VisOrder" ColumnName="VisOrder" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="ReturnReason" ColumnName="ReturnReason" />
+                <ScalarProperty Name="TotalNeg" ColumnName="TotalNeg" />
+                <ScalarProperty Name="TotalPlus" ColumnName="TotalPlus" />
+                <ScalarProperty Name="Liq" ColumnName="Liq" />
+                <ScalarProperty Name="Storage" ColumnName="Storage" />
+                <ScalarProperty Name="AREA" ColumnName="AREA" />
+                <ScalarProperty Name="Libras" ColumnName="Libras" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Packs" ColumnName="Packs" />
+                <ScalarProperty Name="Cases" ColumnName="Cases" />
+                <ScalarProperty Name="DiscAmount" ColumnName="DiscAmount" />
+                <ScalarProperty Name="DiscPer" ColumnName="DiscPer" />
+                <ScalarProperty Name="NormalPrice" ColumnName="NormalPrice" />
+                <ScalarProperty Name="AMOUNT" ColumnName="AMOUNT" />
+                <ScalarProperty Name="PERC" ColumnName="PERC" />
+                <ScalarProperty Name="PROMO" ColumnName="PROMO" />
+                <ScalarProperty Name="Discount" ColumnName="Discount" />
+                <ScalarProperty Name="DocTotal" ColumnName="DocTotal" />
+                <ScalarProperty Name="DiscSum" ColumnName="DiscSum" />
+                <ScalarProperty Name="DiscPrcnt" ColumnName="DiscPrcnt" />
+                <ScalarProperty Name="TotalBefDisc" ColumnName="TotalBefDisc" />
+                <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
+                <ScalarProperty Name="uniMsr" ColumnName="uniMsr" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
+                <ScalarProperty Name="TotalExpns" ColumnName="TotalExpns" />
+                <ScalarProperty Name="LineTotal" ColumnName="LineTotal" />
+                <ScalarProperty Name="PriceBefDi" ColumnName="PriceBefDi" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="WhsCode" ColumnName="WhsCode" />
+                <ScalarProperty Name="BinLoc" ColumnName="BinLoc" />
+                <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
+                <ScalarProperty Name="ItmsGrpNam" ColumnName="ItmsGrpNam" />
+                <ScalarProperty Name="GrupName" ColumnName="GrupName" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Weight1" ColumnName="Weight1" />
+                <ScalarProperty Name="U_SRP" ColumnName="U_SRP" />
+                <ScalarProperty Name="CalcSRP" ColumnName="CalcSRP" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="TreeType" ColumnName="TreeType" />
+                <ScalarProperty Name="U_REGIOND" ColumnName="U_REGIOND" />
+                <ScalarProperty Name="U_ROUTED" ColumnName="U_ROUTED" />
+                <ScalarProperty Name="U_STOPD" ColumnName="U_STOPD" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="TrnspName" ColumnName="TrnspName" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="ShipToCode" ColumnName="ShipToCode" />
+                <ScalarProperty Name="PymntGroup" ColumnName="PymntGroup" />
+                <ScalarProperty Name="GroupNum" ColumnName="GroupNum" />
+                <ScalarProperty Name="BaseType" ColumnName="BaseType" />
+                <ScalarProperty Name="BaseRef" ColumnName="BaseRef" />
+                <ScalarProperty Name="SlpName" ColumnName="SlpName" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
+                <ScalarProperty Name="DocDueDate" ColumnName="DocDueDate" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Help_Invoices_Layout_BarCode">
+            <EntityTypeMapping TypeName="DLI_PROModel.Help_Invoices_Layout_BarCode">
+              <MappingFragment StoreEntitySet="Help_Invoices_Layout_BarCode">
+                <ScalarProperty Name="DocEntry" ColumnName="DocEntry" />
+                <ScalarProperty Name="ITEMTYPE" ColumnName="ITEMTYPE" />
+                <ScalarProperty Name="VisOrder" ColumnName="VisOrder" />
+                <ScalarProperty Name="LineNum" ColumnName="LineNum" />
+                <ScalarProperty Name="ReturnReason" ColumnName="ReturnReason" />
+                <ScalarProperty Name="TotalNeg" ColumnName="TotalNeg" />
+                <ScalarProperty Name="TotalPlus" ColumnName="TotalPlus" />
+                <ScalarProperty Name="RowUnits" ColumnName="RowUnits" />
+                <ScalarProperty Name="Lbs" ColumnName="Lbs" />
+                <ScalarProperty Name="Units" ColumnName="Units" />
+                <ScalarProperty Name="Packs" ColumnName="Packs" />
+                <ScalarProperty Name="Cases" ColumnName="Cases" />
+                <ScalarProperty Name="DocTotal" ColumnName="DocTotal" />
+                <ScalarProperty Name="DiscSum" ColumnName="DiscSum" />
+                <ScalarProperty Name="DiscPrcnt" ColumnName="DiscPrcnt" />
+                <ScalarProperty Name="TotalBefDisc" ColumnName="TotalBefDisc" />
+                <ScalarProperty Name="NumPerMsr" ColumnName="NumPerMsr" />
+                <ScalarProperty Name="unitMsr" ColumnName="unitMsr" />
+                <ScalarProperty Name="UomCode" ColumnName="UomCode" />
+                <ScalarProperty Name="TotalExpns" ColumnName="TotalExpns" />
+                <ScalarProperty Name="LineTotal" ColumnName="LineTotal" />
+                <ScalarProperty Name="PriceBefDi" ColumnName="PriceBefDi" />
+                <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+                <ScalarProperty Name="BinLoc" ColumnName="BinLoc" />
+                <ScalarProperty Name="CodeBars" ColumnName="CodeBars" />
+                <ScalarProperty Name="ItmsGrpNam" ColumnName="ItmsGrpNam" />
+                <ScalarProperty Name="GrupName" ColumnName="GrupName" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
+                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
+                <ScalarProperty Name="U_SRP" ColumnName="U_SRP" />
+                <ScalarProperty Name="U_REGIOND" ColumnName="U_REGIOND" />
+                <ScalarProperty Name="U_ROUTED" ColumnName="U_ROUTED" />
+                <ScalarProperty Name="U_STOPD" ColumnName="U_STOPD" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Weight" ColumnName="Weight" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="TrnspName" ColumnName="TrnspName" />
+                <ScalarProperty Name="PHONE" ColumnName="PHONE" />
+                <ScalarProperty Name="Address2" ColumnName="Address2" />
+                <ScalarProperty Name="ShipToCode" ColumnName="ShipToCode" />
+                <ScalarProperty Name="PymntGroup" ColumnName="PymntGroup" />
+                <ScalarProperty Name="GroupNum" ColumnName="GroupNum" />
+                <ScalarProperty Name="BaseType" ColumnName="BaseType" />
+                <ScalarProperty Name="BaseRef" ColumnName="BaseRef" />
+                <ScalarProperty Name="SlpName" ColumnName="SlpName" />
+                <ScalarProperty Name="SlpCode" ColumnName="SlpCode" />
+                <ScalarProperty Name="DocDueDate" ColumnName="DocDueDate" />
+                <ScalarProperty Name="DocDate" ColumnName="DocDate" />
+                <ScalarProperty Name="DocNum" ColumnName="DocNum" />
+                <ScalarProperty Name="CardName" ColumnName="CardName" />
+                <ScalarProperty Name="CardCode" ColumnName="CardCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

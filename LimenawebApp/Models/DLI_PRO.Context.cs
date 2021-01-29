@@ -54,6 +54,8 @@ namespace LimenawebApp.Models
         public virtual DbSet<OBIN> OBIN { get; set; }
         public virtual DbSet<BI_Contact_Person> BI_Contact_Person { get; set; }
         public virtual DbSet<OpenSalesOrders> OpenSalesOrders { get; set; }
+        public virtual DbSet<Help_Invoices_Layout> Help_Invoices_Layout { get; set; }
+        public virtual DbSet<Help_Invoices_Layout_BarCode> Help_Invoices_Layout_BarCode { get; set; }
     
         public virtual ObjectResult<sp_genericInvoice_Result> sp_genericInvoice(string dockey)
         {

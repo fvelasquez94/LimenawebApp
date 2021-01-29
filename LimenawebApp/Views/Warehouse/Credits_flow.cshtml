@@ -1,0 +1,506 @@
+﻿@model LimenawebApp.Models.Invoices.Invoices_api
+@{
+    ViewBag.Title = "Credits flow";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    List<LimenawebApp.Models.Transactions.Transactions_api> lsttransactions = (List<LimenawebApp.Models.Transactions.Transactions_api>)ViewBag.transactions;
+    List<LimenawebApp.Models.Creditmemos_api.Creditmemos_api> lstcreditmemos = (List<LimenawebApp.Models.Creditmemos_api.Creditmemos_api>)ViewBag.creditmemos;
+    List<LimenawebApp.Models.Authorizations.Authorizations_api> lstauth = (List<LimenawebApp.Models.Authorizations.Authorizations_api>)ViewBag.authorizations;
+    List<LimenawebApp.Models.Payments.Payments_api> lstpayments = (List<LimenawebApp.Models.Payments.Payments_api>)ViewBag.payments;
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Invoice flow</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Invoice Details</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+<div class="page__header page__header-nav">
+
+</div>
+
+
+<div class="container-fluid page__container">
+    @*<div class="alert alert-soft-warning d-flex align-items-center card-margin" role="alert">
+            <i class="material-icons mr-3">error_outline</i>
+            <div class="text-body">This Invoice seems to be open since<strong> @Model.deliveryDate.Value.ToShortDateString() </strong> </div>
+        </div>*@
+    <div class="row card-group-row">
+        <div class="col-lg-4 col-md-6 card-group-row__col">
+            <div class="card card-group-row__card">
+                <div class="card-body-x-lg card-body d-flex flex-row align-items-center">
+                    <div class="flex">
+
+                        <p>Invoice #@Model.docNum </p>
+                        <p>(Docentry #@Model.docEntry)</p>
+
+                    </div>
+                    <div><i class="material-icons icon-muted icon-40pt ml-3">receipt</i></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 card-group-row__col">
+            <div class="card card-group-row__card">
+                <div class="card-body-x-lg card-body d-flex flex-row align-items-center">
+                    <div class="flex">
+
+                        <p>Route: @Model.deliveryRoute </p>
+                        <p>Customer: @Model.cardCode - @Model.cardName </p>
+                        <p>Driver: @Model.driver</p>
+
+                    </div>
+                    <div><i class="material-icons icon-muted icon-40pt ml-3">receipt</i></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6 card-group-row__col">
+            <div class="card card-group-row__card">
+                <div class="card-body-x-lg card-body d-flex flex-row align-items-center">
+                    <div class="flex">
+                        <div class="card-header__title text-muted mb-2">
+                            @if (Model.invoiceStatus == 1)
+                            {<span>Smart Delivery (Invoice)</span> }
+                            else if (Model.invoiceStatus == 2)
+                            { <span>Operatios</span>}
+                            else if (Model.invoiceStatus == 3)
+                            { <span>Finantials</span>}
+                            else if (Model.invoiceStatus == 4)
+                            { <span>Finantials</span>}
+                            else if (Model.invoiceStatus == 5)
+                            { <span>Finantials</span>}
+                            else if (Model.invoiceStatus == 6)
+                            { <span>Smart Delivery (A/R)</span>}
+                            else if (Model.invoiceStatus == 7)
+                            { <span>Planning</span>}
+                            else if (Model.invoiceStatus == 8)
+                            { <span>Planning</span>}
+                            else if (Model.invoiceStatus == 9)
+                            { <span>N/A</span>}
+                        </div>
+
+                        <div class="d-flex align-items-center">
+                            <div class="h4 m-0">
+                                @if (Model.invoiceStatus == 1)
+                                {<span>In Transit</span> }
+                                else if (Model.invoiceStatus == 2)
+                                { <span>Waiting for Operations</span>}
+                                else if (Model.invoiceStatus == 3)
+                                { <span>Waiting for Finantials</span>}
+                                else if (Model.invoiceStatus == 4)
+                                { <span>In Research</span>}
+                                else if (Model.invoiceStatus == 5)
+                                { <span>Waiting for Funds</span>}
+                                else if (Model.invoiceStatus == 6)
+                                { <span>Waiting for Payment</span>}
+                                else if (Model.invoiceStatus == 7)
+                                { <span>Undelivered</span>}
+                                else if (Model.invoiceStatus == 8)
+                                { <span>Waiting for new Route</span>}
+                                else if (Model.invoiceStatus == 9)
+                                { <span>Finished</span>}
+                            </div>
+
+                        </div>
+                    </div>
+                    <div><i class="material-icons icon-muted icon-40pt ml-3">contacts</i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+    <br />
+    <hr />
+    <div class="col-md-12">
+
+        <div class=" card">
+            <ul class="timeline">
+                <li>
+                    <span class="year">Invoice planned</span>
+                    <ul class="content">
+                   
+                        <li>Sergio Cabrera <br />Warehouse</li>
+                       
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">Delivery</span>
+                    <ul class="content">
+                        <li>@Model.deliveryDate.Value.ToString("MM/dd/yyyy")<br />@Model.truck<br />@Model.driver <br />@Model.id_Helper</li>
+                   
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">Authorizations</span>
+                    <ul class="content">
+                        @if (lstauth != null)
+    {
+        foreach (var item in lstauth)
+        {
+                    <li>
+                        @item.date.Value.ToShortDateString()
+                        @item.createTime<br />@item.reason<br /> @item.idDriver<br />       @if (item.status == 0)
+    {
+                    <span class="badge badge-warning text-dark" style="font-weight:bold; font-size:13px;">Waiting for an Answer</span>
+}
+else if (item.status == 1)
+{
+                    <span class="badge badge-success text-white" style="font-size:13px">Approved</span>
+}
+else
+{
+                    <span class="badge badge-danger text-white" style="font-size:13px">Rejected</span>
+
+}
+                    </li>
+                    <li>
+                        @item.date.Value.ToShortDateString()
+                        @item.createTime<br />@item.reason<br /> @item.idDriver<br />       @if (item.status == 0)
+    {
+                    <span class="badge badge-warning text-dark" style="font-weight:bold; font-size:13px;">Waiting for an Answer</span>
+}
+else if (item.status == 2)
+{
+                    <span class="badge badge-success text-white" style="font-size:13px">Approved</span>
+}
+else
+{
+                    <span class="badge badge-danger text-white" style="font-size:13px">Rejected</span>
+
+}
+                    </li>
+
+}
+}
+
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">Payments</span>
+                    <ul class="content">
+                        <li>2011-1</li>
+                        <li>2011-2</li>
+                        <li>2011-3</li>
+                        <li>officia aliquid minima enim eaque quam!</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">Credits & Returns</span>
+                    <ul class="content">
+                        <li>2012-1</li>
+                        <li>2012-2</li>
+                        <li>2012-3</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">2013</span>
+                    <ul class="content">
+                        <li>2013-1</li>
+                        <li>2013-2</li>
+                        <li>2013-3</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">2014</span>
+                    <ul class="content">
+                        <li>2014-1</li>
+                        <li>2014-2</li>
+                        <li>2014-3</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">2015</span>
+                    <ul class="content">
+                        <li>2015-1</li>
+                        <li>2015-2</li>
+                        <li>2015-3</li>
+                    </ul>
+                </li>
+                <li>
+                    <span class="year">2016</span>
+                    <ul class="content">
+                        <li>2016-1</li>
+                        <li>2016-2</li>
+                        <li>2016-3</li>
+                    </ul>
+                </li>
+                <li><span class="year new">Sustained Growth</span></li>
+            </ul>
+        </div>
+
+    </div>
+    <div class="row">
+        <h4 class="title">Payments</h4>
+        <div class="col-md-12 card">
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#Payment</th>
+
+                        <th>Date</th>
+
+
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (lstpayments != null)
+                    {
+                        foreach (var item in lstpayments)
+                        {
+                            <tr>
+                                <td>@item.docEntry</td>
+
+                                <td>
+                                    @item.docDate.ToShortDateString() -
+                                    @{
+
+                                        DateTime dt = DateTime.ParseExact(item.docTime.Value.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                        string timestring = dt.ToString("h:mm tt");
+                                        <label>@timestring</label>
+                                    }
+                                </td>
+
+
+                                <td>@item.userWeb</td>
+                                <td>
+                                    @if (item.paymentType == 1)
+                                    {<label>Cash</label>}
+                                    @if (item.paymentType == 2)
+                                    {<label>Check / #@item.check.checkNum</label>}
+                                    @if (item.paymentType == 3)
+                                    {<label>Money Order</label>}
+                                    @if (item.paymentType == 4)
+                                    {<label>Credit Card</label>}
+                                    @if (item.paymentType == 5)
+                                    {<label>ACH</label>}
+                                    @if (item.paymentType == 6)
+                                    {<label>Wire</label>}
+                                </td>
+                                <td>$@item.sumApplied.ToString("N2")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+
+    <div class="col-12 px-0 card">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#Credit/Return</th>
+                        <th>Type</th>
+                        <th>Date</th>
+
+
+                        <th>User</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (lstcreditmemos != null)
+                    {
+                        foreach (var item in lstcreditmemos)
+                        {
+                            <tr>
+                                <td>@item.docEntry</td>
+                                <td>Limena/BARS FUD</td>
+                                <td>
+                                    @item.docDate.ToShortDateString() -
+                                    @{
+
+                                        DateTime dt = DateTime.ParseExact(item.docTime.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                        string timestring = dt.ToString("h:mm tt");
+                                        <label>@timestring</label>
+                                    }
+                                </td>
+
+
+                                <td>@item.driver</td>
+                                <td>
+                                    $@item.docTotal.ToString("N2")
+                                </td>
+                                <th>Waiting for Warehouse</th>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+
+
+        </div>
+    </div>
+
+    <div class="col-12 px-0 card">
+
+        <h4 class="title">Authorizations</h4>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#Authorization</th>
+                        <th>Type</th>
+                        <th>Creation</th>
+
+
+                        <th>Comments Driver</th>
+                        <th>Update</th>
+                        <th>Comments Finance</th>
+                        <th>Status</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (lstauth != null)
+                {
+                    foreach (var item in lstauth)
+                    {
+                        <tr>
+                            <td>@item.idAuthorization</td>
+                            <td>@item.reason</td>
+                            <td>
+                                @item.date.Value.ToShortDateString()
+                                @item.createTime
+
+
+                            </td>
+
+
+                            <td>@item.comments</td>
+                            <td> @item.updateTime</td>
+                            <td>
+                                @item.commentsFinance
+                            </td>
+                            <td>
+                                @if (item.status == 0)
+                            {
+                                <span class="badge badge-warning text-dark" style="font-weight:bold; font-size:13px;">Waiting for an Answer</span>
+                        }
+                        else if (item.status == 1)
+                        {
+                            <span class="badge badge-success text-white" style="font-size:13px">Approved</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-danger text-white" style="font-size:13px">Rejected</span>
+
+                }
+                            </td>
+
+                        </tr>
+                }
+            }
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+    </div>
+
+    <div class="row">
+        <h4 class="title">Transactions</h4>
+        <div class="col-12 px-0 card">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>#Transaction</th>
+
+                            <th>Date</th>
+
+                            <th>Description</th>
+                            <th>User</th>
+                            <th>Amount</th>
+                            <th>Applied</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (lsttransactions != null)
+                        {
+                            foreach (var item in lsttransactions)
+                            {
+                                <tr>
+                                    <td>@item.idTransaction</td>
+
+                                    <td>
+                                        @item.docDate.ToShortDateString() -
+                                        @{
+
+                                            DateTime dt = DateTime.ParseExact(item.docTime.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                            string timestring = dt.ToString("h:mm tt");
+                                            <label>@timestring</label>
+                                        }
+                                    </td>
+
+                                    <td>
+                                        @if (item.transactionType == "Return")
+                                        {
+                                            <label>Returned Products | </label>
+
+                                            <label>CM Ref:@item.docEntry</label>
+                                        }
+                                        else
+                                        {
+                                            <label>Payment | </label>
+                                            <label>Payment Method: @item.paymentType</label>
+                                        }
+                                    </td>
+                                    <td>@item.userWeb</td>
+                                    <td>
+                                        @if (item.transactionType == "Return")
+                                        {
+                                            <span class="text-danger">-$@item.total.ToString("N2")</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="text-success">$@item.total.ToString("N2")</span>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.applied)
+                                        {<span class="badge badge-success text-white" style="font-size:13px">Yes</span>}
+                                        else
+                                        { <span class="badge badge-warning text-black" style="font-size:13px">No</span>}
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+
+
+</div>

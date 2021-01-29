@@ -1,0 +1,236 @@
+﻿@model List<LimenawebApp.Models.InvoicesbyRoute>
+
+@{
+    ViewBag.Title = "Distribuidora Limeña - Open Invoices Routes";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Invoices Routes</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Invoices Routes</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Operations.cshtml")
+
+<div class="container-fluid page__container">
+    <div class="row">
+
+        <div class="card col-md-12">
+            <div class="card-header card-header-large bg-white">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label class="col-sm-12 col-form-label ">Filter by Date</label>
+                            <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                                <i class="mdi mdi-calendar"></i>&nbsp;
+                                <span></span> <i class="fa fa-caret-down"></i>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div class="col-md-3"></div>  
+                    <div class="col-md-2"></div>  
+                    
+                    <div class="col-md-3">
+                  
+                          
+                        
+                    </div>
+                </div>
+
+           
+            </div>
+            <div class="card-header card-header-tabs-basic nav" role="tablist">
+                @if (ViewBag.company == "01")
+    {
+            <a href="#main" class="active" data-toggle="tab" role="tab" aria-controls="activity_all" aria-selected="true"> <i class="material-icons icon-muted icon-20pt mr-2">home</i> Nashville, TN</a>
+            <a href="#second" data-toggle="tab" role="tab" aria-selected="false"><i class="material-icons icon-muted icon-20pt mr-2">local_shipping</i>Louisville, KY</a>
+}
+else if (ViewBag.company == "02")
+{
+            <a href="#second" class="active" data-toggle="tab" role="tab" aria-selected="false"> <i class="material-icons icon-muted icon-20pt mr-2">home</i> Louisville, KY</a>
+}
+
+            </div>
+            <div class="card-body tab-content">
+                @if (ViewBag.company == "01")
+    {
+
+            <div class="tab-pane active show fade" id="main">
+
+                <div class="card-body pt-3 pb-4 ">
+                    <div class="table-responsive">
+                        <table id="data_tableEditor" class="table table-bordered " cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NAME</th>
+                                    <th>DATE(DEPARTURE)</th>
+                                    <th>DRIVER</th>
+                                    <th>TRUCK</th>
+                                    <th>ROUTE LEADER</th>
+                                    <th>ACTIONS</th>
+
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var so in Model.Where(a => a.Warehouse == "01"))
+                    {
+                        <tr style="font-size:14px;">
+                            <td style="font-size:12px !important;">@so.ID_Route</td>
+                            <td>
+                                @so.Route_name
+                            </td>
+                            <td>@so.Departure</td>
+                            <td>@so.Driver_name</td>
+                            <td>@so.Truck_name</td>
+                            <td>@so.Routeleader_name</td>
+
+                            <td>
+                            <div class="button-list">
+    <a href="@Url.Action("OpenInvoices", "Invoices", new { id = so.ID_Route })" class="btn  btn-info" style="font-size:12px !important;"><i class="fa fa-external-link"></i>Invoices</a>
+
+  
+        <a href="#" onclick="PrintRoute(@so.ID_Route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Print</a>
+        <a href="#" onclick="PrintRouteTNWMS(@so.ID_Route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Preview</a>
+        <a href="#" onclick="PrintRouteTNWMSBarcode(@so.ID_Route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Preview Barcode</a>
+        <a href="@Url.Action("Print_DPCD", "Invoices", new { id_route = so.ID_Route })" target="_blank" class="btn btn-warning" style="font-size:12px !important;"><i class="fa fa-print"></i>Daily Payment CD</a>
+
+        @*<a href="#" onclick="PrintDailyPayment(so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Daily Payment CD</a>*@
+
+    
+
+</div></td>
+                        </tr>
+        }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tab-pane fade" id="second">
+                <div class="card-body pt-3 pb-4">
+                    <div class="table-responsive">
+                        <table id="data_tableEditor2" class="table table-bordered table-striped" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NAME</th>
+                                    <th>DATE(DEPARTURE)</th>
+                                    <th>DRIVER</th>
+                                    <th>TRUCK</th>
+                                    <th>ROUTE LEADER</th>
+                          
+                                    <th>ACTIONS</th>
+
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var so in Model.Where(a => a.Warehouse == "02"))
+                    {
+                        <tr style="font-size:14px;">
+                            <td style="font-size:12px;">@so.ID_Route</td>
+                            <td>
+                                @so.Route_name
+          
+                            </td>
+                            <td>@so.Departure</td>
+                            <td>@so.Driver_name</td>
+                            <td>@so.Truck_name</td>
+                            <td>@so.Routeleader_name</td>
+      
+                            <td><div class="button-list">
+      
+                        <a href="@Url.Action("OpenInvoices", "Invoices", new { id = so.ID_Route })"  style="font-size:12px;" class="btn  btn-info "><i class="fa fa-external-link"></i>Invoices</a>
+       
+
+                            </div></td>
+                        </tr>
+        }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+}
+                @if (ViewBag.company == "02")
+    {
+            <div class="tab-pane active show fade" id="second">
+
+
+                <div class="card-body pt-3 pb-4">
+                    <div class="table-responsive">
+                        <table id="data_tableEditor" class="table table-bordered" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>NAME</th>
+                                    <th>DATE(DEPARTURE)</th>
+                                    <th>DRIVER</th>
+                                    <th>TRUCK</th>
+                                    <th>ROUTE LEADER</th>
+                                    <th>ACTIONS</th>
+
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var so in Model)
+                    {
+                        <tr style="font-size:14px;">
+                            <td style="font-size:12px;">@so.ID_Route</td>
+                            <td>
+                                @so.Route_name
+                            </td>
+                            <td>@so.Departure</td>
+                            <td>@so.Driver_name</td>
+                            <td>@so.Truck_name</td>
+                            <td>@so.Routeleader_name</td>
+
+                            <td>
+                                <div class="button-list">
+                        <a href="#" onclick="PrintRouteWHS(@so.ID_Route)" class="btn  btn-warning " style="font-size:12px;"><i class="fa fa-print"></i>Print</a>
+                        <a href="@Url.Action("Print_DPCD", "Invoices", new { id_route=so.ID_Route})" target="_blank" class="btn  btn-warning" style="font-size:12px;"><i class="fa fa-print"></i>Daily Payment CD</a>
+       
+                            </div></td>
+                        </tr>
+        }
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+}
+
+
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

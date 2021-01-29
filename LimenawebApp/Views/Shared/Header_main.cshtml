@@ -48,7 +48,7 @@
             <!--/brand name-->
             <!--header rightside links-->
             <ul class="navbar-nav header-links ml-auto hide-arrow">
-                <li class="nav-item dropdown">
+                @*<li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="alertsDropdown" href="#" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">
                         <i class="vl_bell"></i>
@@ -92,7 +92,7 @@
 
                         <a class="dropdown-item small" href="#">View all notification</a>
                     </div>
-                </li>
+                </li>*@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle mr-lg-3" id="userNav" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div class="user-thumb">
@@ -174,7 +174,9 @@
                             <li>
                                 <a href="@Url.Action("Reports_RC", "Reports")" id="rep1_submenu" class="dropdown-item">Daily Routes Summary</a>
                             </li>
-
+                            <li>
+                                <a style="display:none" id="tasks_submenu9" class="dropdown-item" href="@Url.Action("Dashboard_SP", "Main")">Sales Progress</a>
+                            </li>
                         </ul>
                         <a id="drop2" class="dropdown-item dropdown-toggle mr-lg-3" data-toggle="collapse" data-target="#multi_menu2">Sales Support</a>
                         <ul class="collapse" id="multi_menu2" data-parent="#accordion">
@@ -221,6 +223,9 @@
                         <ul class="collapse" id="multi_menu3" data-parent="#accordion">
                             <li id="invo1_submenu" style="display:none">
                                 <a href="@Url.Action("PlanningRoutes", "Invoices")" class="dropdown-item">Planning</a>
+                            </li>
+                            <li id="invo4_submenu" style="display:none">
+                                <a href="@Url.Action("PlanningRoutesWMS", "Invoices")" class="dropdown-item">Planning WMS</a>
                             </li>
                             <li id="invo2_submenu" style="display:none">
                                 <a href="@Url.Action("QualityControl_planning", "Invoices")" class="dropdown-item">Quality Control</a>

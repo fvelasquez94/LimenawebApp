@@ -468,7 +468,14 @@ namespace LimenawebApp.Controllers.Finance
 
                         newput.stateSd = 5; //for funds
                             var response2 = cls_invoices.PutInvoice(docentryinvoice, newput);
+
+                        if (response2.Content.Contains("cliente es  inactivo"))
+                        {
+                            var result2 = "Inactive Customer, please contact Finance department";
+                            return Json(result2, JsonRequestBehavior.AllowGet);
                         }
+
+                    }
 
                     else {
                         var response = Cls_payments.Transform_payment(docentry, activeuser.ID_User);

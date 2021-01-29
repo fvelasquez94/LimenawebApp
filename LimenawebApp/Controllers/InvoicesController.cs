@@ -9,6 +9,7 @@ using LimenawebApp.Models;
 using LimenawebApp.Models.Invoices;
 using LimenawebApp.Models.SalesOrders;
 using Newtonsoft.Json;
+using RestSharp;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -95,6 +96,14 @@ namespace LimenawebApp.Controllers
 
                 ViewBag.invoices = invoices;
 
+
+                List<APIMessageDetails> lstfailed = new List<APIMessageDetails>();
+                if (TempData["failedSO"] != null) {
+                    lstfailed = TempData["failedSO"] as List<APIMessageDetails>;
+                }
+
+                ViewBag.lstfailed = lstfailed;
+
                 return View(orders);
 
             }
@@ -105,6 +114,78 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+        public ActionResult Planning_orderWMS(int id)
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Planning";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+                var orders = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id && a.Warehouse == company_bodega) select a).OrderBy(a => a.query3).ToList();
+
+                //FIN HEADER
+                DateTime filterdate = DateTime.Today.AddDays(-31);
+                var lstOpenSales = (from obj in dlipro.OpenSalesOrders where (obj.SODate > filterdate && obj.WareHouse == company_bodega) select new OpenSO { NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
+
+                ViewBag.opensalesOrders = lstOpenSales;
+                ViewBag.id_route = id;
+                List<Invoices_api> invoices = new List<Invoices_api>();
+                var apiinvoices = cls_invoices.GetInvoices("", "", "", 8, false, null, null, false);
+                if (apiinvoices != null)
+                {
+                    if (apiinvoices.data != null && apiinvoices.data.Count > 0)
+                    {
+                        invoices = apiinvoices.data;
+                    }
+                }
+
+                ViewBag.invoices = invoices;
+
+
+                List<APIMessageDetails> lstfailed = new List<APIMessageDetails>();
+                if (TempData["failedSO"] != null)
+                {
+                    lstfailed = TempData["failedSO"] as List<APIMessageDetails>;
+                }
+
+                ViewBag.lstfailed = lstfailed;
+
+                return View(orders);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
         private List<DateTime> GetDateRange(DateTime StartingDate, DateTime EndingDate)
         {
             if (StartingDate > EndingDate)
@@ -469,8 +550,7 @@ namespace LimenawebApp.Controllers
                 if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
                 if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
 
-                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
-                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+            
                 ////////
 
                 var company_bodega = "01";
@@ -485,6 +565,170 @@ namespace LimenawebApp.Controllers
                     {
                         company_bodega = "02";
                     }
+                //}
+                //else
+                //{
+                //    company_bodega = whssel;
+                //}
+                ViewBag.warehousesel = company_bodega;
+
+                ///////////////////////////////
+                //List<Tb_Planning> rutaslst = new List<Tb_Planning>();
+                //Nuevo filtro por bodega
+                List<Routes_calendarPlanning> rutas = new List<Routes_calendarPlanning>();
+
+                rutas = cls_planning.GetRoutes(company_bodega, filtrostartdate, filtroenddate);
+
+                JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                string result = javaScriptSerializer.Serialize(rutas.ToArray());
+                ViewBag.calroutes = result;
+                ///
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.AddDays(1).ToShortDateString();
+                //SELECTS
+
+                var drivers = dlipro.C_DRIVERS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListDrivers = new ArrayList();
+                myArrListDrivers.AddRange((from p in drivers
+                                           select new
+                                           {
+                                               id = p.Code,
+                                               text = p.Name.ToUpper().Replace("'", ""),
+                                           }).ToList());
+
+                ViewBag.drivers = JsonConvert.SerializeObject(myArrListDrivers);
+
+
+
+                //DRIVERS OTRAS BODEGAS
+                var driversOTROS = dlipro.C_DRIVERS.Where(a => a.U_Whs != company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListDriversOTROS = new ArrayList();
+                myArrListDriversOTROS.AddRange((from p in driversOTROS
+                                                select new
+                                                {
+                                                    id = p.Code,
+                                                    text = p.Name.ToUpper().Replace("'", ""),
+                                                }).ToList());
+
+                ViewBag.driversOtros = JsonConvert.SerializeObject(myArrListDriversOTROS);
+
+
+                //LISTADO DE Routes Leader
+                var routeleader = dlipro.C_HELPERS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListrouteleader = new ArrayList();
+                myArrListrouteleader.AddRange((from p in routeleader
+                                               select new
+                                               {
+                                                   id = p.Code,
+                                                   text = p.Name.ToUpper().Replace("'", ""),
+                                               }).ToList());
+
+                ViewBag.routeleaders = JsonConvert.SerializeObject(myArrListrouteleader);
+                //LISTADO DE Trucks
+                var trucks = dlipro.C_TRUCKS.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListtruck = new ArrayList();
+                myArrListtruck.AddRange((from p in trucks
+                                         select new
+                                         {
+                                             id = p.Code,
+                                             text = p.Name.ToUpper().Replace("'", ""),
+                                         }).ToList());
+
+                ViewBag.trucks = JsonConvert.SerializeObject(myArrListtruck);
+
+                var trucksOTRASBODEGAS = dlipro.C_TRUCKS.Where(a => a.U_Whs != company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListtruckOTRAS = new ArrayList();
+                myArrListtruckOTRAS.AddRange((from p in trucksOTRASBODEGAS
+                                              select new
+                                              {
+                                                  id = p.Code,
+                                                  text = p.Name.ToUpper().Replace("'", ""),
+                                              }).ToList());
+
+                ViewBag.trucksOtros = JsonConvert.SerializeObject(myArrListtruckOTRAS);
+
+                //LISTADO DE Rutas
+                var mainroutes = dlipro.C_DROUTE.Where(a => a.U_Whs == company_bodega).ToList();
+                //Convertimos la lista a array
+                ArrayList myArrListmainroutes = new ArrayList();
+                myArrListmainroutes.AddRange((from p in mainroutes
+                                              select new
+                                              {
+                                                  id = p.Code,
+                                                  text = p.Name
+                                              }).ToList());
+
+                ViewBag.mainroutes = JsonConvert.SerializeObject(myArrListmainroutes);
+
+                //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
+             
+
+                //FIN HEADER
+                return View();
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+
+        public ActionResult PlanningRoutesWMS(string whssel, string fstartd, string fendd)
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Planning";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                ////filtros de fecha (SEMANAL 2 semanas por la planeacion de Viernes a Lunes)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(13).AddHours(23);
+                //filtros de fecha //MENSUAL
+                //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                //var saturday = sunday.AddMonths(1).AddDays(-1);
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                ////////
+
+                var company_bodega = "01";
+                //if (whssel == null || whssel == "")
+                //{
+
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
                 //}
                 //else
                 //{
@@ -585,7 +829,7 @@ namespace LimenawebApp.Controllers
                 ViewBag.mainroutes = JsonConvert.SerializeObject(myArrListmainroutes);
 
                 //Session["opensalesOrders"] = (from obj in dlipro.OpenSalesOrders select new OpenSO{ NumSO = obj.NumSO, CardCode = obj.CardCode, CustomerName = obj.CustomerName, DeliveryRoute = obj.DeliveryRoute, SalesPerson = obj.SalesPerson, SODate = obj.SODate, TotalSO = obj.TotalSO, OpenAmount = obj.OpenAmount, Remarks = obj.Remarks, Printed = obj.Printed }).ToList();
-             
+
 
                 //FIN HEADER
                 return View();
@@ -619,7 +863,16 @@ namespace LimenawebApp.Controllers
 
         public ActionResult Print_OpenSalesOrders(List<MyObj_formtemplate> objects)
         {
-            try {
+            try
+            {
+                int userid = 0;
+                if (cls_session.checkSession())
+                {
+
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                    userid = activeuser.ID_User;
+                }
+
 
                 List<string> list = new List<string>();
                 foreach (var item in objects)
@@ -636,7 +889,7 @@ namespace LimenawebApp.Controllers
                     print.Printed = false;
                     print.Doc_key = save;
                     print.Module = "OpenSalesOrders";
-
+                    print.ID_detail = userid;
                     print.Printed_on = DateTime.UtcNow;
 
                     var hh = 0;
@@ -665,6 +918,79 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+        /// <summary>
+        /// Nueva impresion para facturas 12/11/2020
+        /// </summary>
+
+        public class MyObj_PrintDocentryInvoices
+        {
+            public string Docentry { get; set; }
+        }
+        public ActionResult Preview_InvoicesOI(List<MyObj_PrintDocentryInvoices> objects)
+        {
+            try
+            {
+
+
+
+
+                List<string> list = new List<string>();
+                foreach (var item in objects)
+                {
+                    var idact = item.Docentry.Substring(4);
+                    list.Add(idact);
+                }
+                List<Tb_planning_print> lsttosave = new List<Tb_planning_print>();
+                MemoryStream finalStream = new MemoryStream();
+                //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                List<byte[]> listafinal = new List<byte[]>();
+                foreach (var save in list)
+                {
+                    var itemdoc = Convert.ToInt32(save);
+                    //Buscamos datos en la vista maestra de facturas
+                    var sqlQueryText = dlipro.Help_Invoices_Layout.Where(c => c.DocEntry == itemdoc).ToList();
+
+                    //Buscamos en subreporte kit (07/23/2020)
+
+                    ReportDocument rd = new ReportDocument();
+
+                    //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
+                    rd.Load(Path.Combine(Server.MapPath("~/Reports"), "INVOICE STORAGE TYPE.rpt"));
+                    rd.DataSourceConnections.Clear();
+                    //rd.Subreports[0].SetDataSource(lstkit);
+                    rd.SetDataSource(sqlQueryText);
+
+
+
+                    Response.Buffer = false;
+                    Response.ClearContent();
+                    Response.ClearHeaders();
+                    Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                    byte[] getBytes = null;
+                    Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                    ms.Seek(0, SeekOrigin.Begin);
+                    getBytes = ReadFully(ms);
+                    listafinal.Add(getBytes);
+                    //para sacar la copia
+                    listafinal.Add(getBytes);
+                    ms.Dispose();
+        
+
+                }
+                //Nueva descarga
+                TempData["Output"] = listafinal;
+
+                return Json("success", JsonRequestBehavior.AllowGet);
+
+            }
+            catch (Exception ex)
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+
+            }
+        }
+
         public ActionResult OpenSalesOrders(string fstartd, string fendd)
         {
             if (cls_session.checkSession())
@@ -737,6 +1063,196 @@ namespace LimenawebApp.Controllers
 
             }
         }
+
+
+        public ActionResult OpenInvoices(string fstartd, string fendd)
+        {
+            if (cls_session.checkSession())
+            {
+
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Invoices in Routes";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+
+                //filtros de fecha //SEMANAL
+                //var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                //var saturday = sunday.AddDays(6).AddHours(23);
+                //filtros de fecha //MENSUAL
+                //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                //var saturday = sunday.AddMonths(1).AddDays(-1);
+                //filtros de fecha (DIARIO)
+                var sunday = DateTime.Today;
+                var saturday = sunday.AddDays(2);
+                //filtros de fecha (ANUAL)
+                int year = DateTime.Now.Year;
+                //var sunday = new DateTime(year, 1, 1);
+                //var saturday = new DateTime(year, 12, 31);
+                //FILTROS**************
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+                //if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = DateTime.ParseExact(fstartd, "MM/dd/yyyy", CultureInfo.InvariantCulture); }
+                //if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = DateTime.ParseExact(fendd, "MM/dd/yyyy", CultureInfo.InvariantCulture).AddHours(23).AddMinutes(59); }
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                //FIN FILTROS*******************
+
+
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+                IEnumerable<Invoices_api> SalesOrder;
+                //SalesOrder = (from b in dlipro.OpenSalesOrders select b).Take(10);
+                SalesOrder = cls_invoices.GetInvoices("", "", "",1, false, filtrostartdate, filtroenddate, false).data ;//(from b in dlipro.OpenSalesOrders where (b.SODate >= filtrostartdate && b.SODate <= filtroenddate) select b);
+
+                return View(SalesOrder);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+        public ActionResult OpenInvoicesRoutes(string fstartd, string fendd)
+        {
+            if (cls_session.checkSession())
+            {
+
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Operations";
+                ViewData["Page"] = "Invoices in Routes";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+
+                //filtros de fecha //SEMANAL
+                //var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                //var saturday = sunday.AddDays(6).AddHours(23);
+                //filtros de fecha //MENSUAL
+                //var sunday = new DateTime(DateTime.Today.Year, DateTime.Today.Month, 1);
+                //var saturday = sunday.AddMonths(1).AddDays(-1);
+                //filtros de fecha (DIARIO)
+                var sunday = DateTime.Today;
+                var saturday = sunday.AddDays(2);
+                //filtros de fecha (ANUAL)
+                int year = DateTime.Now.Year;
+                //var sunday = new DateTime(year, 1, 1);
+                //var saturday = new DateTime(year, 12, 31);
+                //FILTROS**************
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+                //if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = DateTime.ParseExact(fstartd, "MM/dd/yyyy", CultureInfo.InvariantCulture); }
+                //if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = DateTime.ParseExact(fendd, "MM/dd/yyyy", CultureInfo.InvariantCulture).AddHours(23).AddMinutes(59); }
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+                //FIN FILTROS*******************
+
+
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+
+                List<InvoicesbyRoute> lstPlanning = new List<InvoicesbyRoute>();
+                if (company_bodega == "01")
+                {
+                    lstPlanning = (from a in dblim.Tb_Planning
+                                   where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate)
+                                   select new InvoicesbyRoute
+                                   {
+                                       ID_Route = a.ID_Route,
+                                       Route_name = a.Route_name,
+                                       ID_driver = a.ID_driver,
+                                       Driver_name = a.Driver_name,
+                                       ID_routeleader = a.ID_routeleader,
+                                       Routeleader_name = a.Routeleader_name,
+                                       ID_truck = a.ID_truck,
+                                       Truck_name = a.Truck_name,
+                                       Departure = a.Departure,
+                                       isfinished = a.isfinished,
+                                       Warehouse = a.Warehouse,
+                                       ID_SAPRoute = a.ID_SAPRoute
+                                    
+                                      
+                                   }).ToList();
+                }
+                else
+                {
+                    lstPlanning = (from a in dblim.Tb_Planning
+                                   where (a.Departure >= filtrostartdate && a.Departure <= filtroenddate && a.Warehouse == company_bodega)
+                                   select new InvoicesbyRoute
+                                   {
+                                       ID_Route = a.ID_Route,
+                                       Route_name = a.Route_name,
+                                       ID_driver = a.ID_driver,
+                                       Driver_name = a.Driver_name,
+                                       ID_routeleader = a.ID_routeleader,
+                                       Routeleader_name = a.Routeleader_name,
+                                       ID_truck = a.ID_truck,
+                                       Truck_name = a.Truck_name,
+                                       Departure = a.Departure,
+                                       isfinished = a.isfinished,
+                                       Warehouse = a.Warehouse,
+                                       ID_SAPRoute = a.ID_SAPRoute
+                                       
+                                   }).ToList();
+                }
+                ViewBag.company = company_bodega;
+                return View(lstPlanning);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
+
         public ActionResult Freezers(string fstartd, string fendd)
         {
             if (cls_session.checkSession())
@@ -1166,6 +1682,13 @@ namespace LimenawebApp.Controllers
         public ActionResult Print_so(int id, int docentry )
         {
             try {
+                int userid = 0;
+                if (cls_session.checkSession())
+                {
+
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                    userid = activeuser.ID_User;
+                }
                 Tb_planning_print print = new Tb_planning_print();
 
                 var order = (from a in dlipro.OpenSalesOrders where (a.NumSO == docentry) select a).FirstOrDefault();
@@ -1175,7 +1698,7 @@ namespace LimenawebApp.Controllers
                 print.Doc_key = docentry.ToString();
                 print.Module = "QualityControl";
                 print.Printed_on = DateTime.UtcNow;
-
+                print.ID_user = userid;
                 var hh = 0;
                 var mm = 0;
 
@@ -1455,8 +1978,8 @@ namespace LimenawebApp.Controllers
 
                 ViewBag.lstSO = lstSalesOrders;
 
-                
 
+                ViewBag.id_route = id;
 
                 ViewBag.lstSO_children = arrytodel;
                 return View();
@@ -2032,7 +2555,8 @@ namespace LimenawebApp.Controllers
             {
 
                 Tb_PlanningSO selSO = dblim.Tb_PlanningSO.Find(id_salesorder);
-
+                List<APIMessageDetails> failedlst = new List<APIMessageDetails>();
+         
                 if (selSO.query5 == "Invoice") {
                     //Actualizamos
                     PUT_Invoices_api newput = new PUT_Invoices_api();
@@ -2043,19 +2567,116 @@ namespace LimenawebApp.Controllers
 
                 if (selSO.query5 != "Invoice")
                 {
-                   // var response = cls_salesorders.DeletefromRoute(0);
-                }
-                    var detailstodel = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == selSO.ID_salesorder) select a).ToList();
-                dblim.Tb_PlanningSO_details.BulkDelete(detailstodel);
-                dblim.SaveChanges();
-                dblim.Tb_PlanningSO.Remove(selSO);
-                dblim.SaveChanges();
+                    //var response = cls_salesorders.DeletefromRoute(Convert.ToInt32(selSO.DocEntry));
 
-                return Json("success", JsonRequestBehavior.AllowGet);
+                    //if (response.IsSuccessful)
+                    //{
+                        var detailstodel = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == selSO.ID_salesorder) select a).ToList();
+                        dblim.Tb_PlanningSO_details.BulkDelete(detailstodel);
+                        dblim.SaveChanges();
+                        dblim.Tb_PlanningSO.Remove(selSO);
+                        dblim.SaveChanges();
+
+                        return Json("success", JsonRequestBehavior.AllowGet);
+                //    }
+                //    else
+                //    {
+
+                //        APIMessage newerror = new APIMessage();
+                //        newerror = JsonConvert.DeserializeObject<APIMessage>(response.Content);
+                //        newerror.MessageD = JsonConvert.DeserializeObject<List<APIMessageDetails>>(newerror.Message).FirstOrDefault();
+
+
+                //        failedlst.Add(newerror.MessageD);
+
+ 
+                //        TempData["failedSO"] = failedlst;
+
+
+                //return Json("error", JsonRequestBehavior.AllowGet);
+                //    }
+
+                }
+                else {
+
+                    return Json("success", JsonRequestBehavior.AllowGet);
+                }
+
+
+               
 
             }
-            catch
+            catch (Exception ex)
             {
+
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+
+
+        }
+
+        public ActionResult deleteSOWMS(int id_salesorder)
+        {
+            try
+            {
+
+                Tb_PlanningSO selSO = dblim.Tb_PlanningSO.Find(id_salesorder);
+                List<APIMessageDetails> failedlst = new List<APIMessageDetails>();
+
+                if (selSO.query5 == "Invoice")
+                {
+                    //Actualizamos
+                    PUT_Invoices_api newput = new PUT_Invoices_api();
+                    newput.stateSd = 8;
+
+                    var response2 = cls_invoices.PutInvoice(Convert.ToInt32(selSO.DocEntry), newput);
+                }
+
+                if (selSO.query5 != "Invoice")
+                {
+                    var response = cls_salesorders.DeletefromRoute(Convert.ToInt32(selSO.DocEntry));
+
+                    if (response.IsSuccessful)
+                    {
+                    var detailstodel = (from a in dblim.Tb_PlanningSO_details where (a.ID_salesorder == selSO.ID_salesorder) select a).ToList();
+                    dblim.Tb_PlanningSO_details.BulkDelete(detailstodel);
+                    dblim.SaveChanges();
+                    dblim.Tb_PlanningSO.Remove(selSO);
+                    dblim.SaveChanges();
+
+                    return Json("success", JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+
+                        APIMessage newerror = new APIMessage();
+                        newerror = JsonConvert.DeserializeObject<APIMessage>(response.Content);
+                        newerror.MessageD = JsonConvert.DeserializeObject<List<APIMessageDetails>>(newerror.Message).FirstOrDefault();
+
+
+                        failedlst.Add(newerror.MessageD);
+
+
+                        TempData["failedSO"] = failedlst;
+
+
+                        return Json("error", JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+                else
+                {
+
+                    return Json("success", JsonRequestBehavior.AllowGet);
+                }
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+
                 return Json("error", JsonRequestBehavior.AllowGet);
             }
 
@@ -3082,14 +3703,370 @@ namespace LimenawebApp.Controllers
                         var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (avaSO.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
                         try {
                             var count = 0;
+                            var count2 = 1;
                             foreach (var saleOrder in salesOrders)
                             {
                                 if (saleOrder.OpenAmount == saleOrder.TotalSO)
                                 {
+                                    //enviamos a wms
+
+                                    SendSOAPI newOrder = new SendSOAPI();
+                                    newOrder.DocEntry = saleOrder.DocEntry;
+                                    newOrder.IdDriver = newPlanning.ID_driver;
+                                    newOrder.IdDeliveryRoute = newPlanning.ID_SAPRoute;
+                                    newOrder.IdHelper = newPlanning.ID_routeleader;
+                                    newOrder.IdTruck = newPlanning.ID_truck;
+                                    newOrder.RouteNumber = newPlanning.ID_Route;
+                                    newOrder.StopNumber = count2;
+                                    //var response = cls_salesorders.AddtoToRoute(newOrder);
+
+                                    //if (response.IsSuccessful == true)
+                                    //{
+                                        count2++;
+                                        decimal openO = Convert.ToDecimal(saleOrder.OpenAmount);
+                                        var sapdoc = saleOrder.NumSO.ToString();
+                                        var existe = (from a in dblim.Tb_PlanningSO where (a.Amount == openO && a.SAP_docnum == sapdoc) select a).FirstOrDefault();
+                                        if (existe == null)
+                                        {
+                                            Tb_PlanningSO newSO = new Tb_PlanningSO();
+                                            newSO.SAP_docnum = saleOrder.NumSO.ToString();
+                                            newSO.SAP_docdate = Convert.ToDateTime(saleOrder.SODate);
+                                            newSO.ID_customer = saleOrder.CardCode;
+                                            newSO.Customer_name = saleOrder.CustomerName.ToUpper();
+                                            newSO.ID_rep = saleOrder.IDSalesPerson.ToString();
+                                            newSO.Rep_name = saleOrder.SalesPerson.ToUpper();
+                                            newSO.ID_SAPRoute = newPlanning.ID_SAPRoute;
+                                            newSO.Amount = Convert.ToDecimal(saleOrder.OpenAmount);
+                                            newSO.isfinished = false;
+                                            newSO.query1 = "";
+                                            newSO.query2 = saleOrder.DeliveryRoute;
+                                            newSO.query3 = 0;
+                                            //newSO.query3 = count;
+                                            newSO.query4 = "";
+                                            newSO.query5 = "";
+                                            newSO.Weight = "";
+                                            newSO.Volume = "";
+                                            newSO.Printed = saleOrder.Printed;
+                                            newSO.ID_Route = newPlanning.ID_Route;
+                                        newSO.DocEntry = ""; //saleOrder.DocEntry.ToString();
+                                            newSO.DateCheckIn = DateTime.UtcNow;
+                                            newSO.DateCheckOut = DateTime.UtcNow;
+                                            newSO.ID_userValidate = 0;
+                                            newSO.Warehouse = saleOrder.WareHouse;
+                                            newSO.Transferred = 0;
+                                            newSO.QC_count = Convert.ToInt32(saleOrder.NoWhs);
+                                            newSO.MensajeError = "";
+                                            newSO.Error = 0;
+                                            if (saleOrder.Remarks == null) { newSO.Remarks = ""; } else { newSO.Remarks = saleOrder.Remarks; }
+
+                                            dblim.Tb_PlanningSO.Add(newSO);
+                                            dblim.SaveChanges();
+
+                                            count++;
+
+                                            var detailslst = (from a in dtSO_details where (a.DocNum == saleOrder.NumSO) select a).ToList();
+
+                                            if (detailslst.Count > 0)
+                                            {
+
+                                                List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
+                                                foreach (var dt in detailslst)
+                                                {
+                                                    Tb_PlanningSO_details newDtl = new Tb_PlanningSO_details();
+                                                    newDtl.Line_num = dt.LineNum;
+                                                    if (dt.U_BinLocation == null) { newDtl.Bin_loc = ""; } else { newDtl.Bin_loc = dt.U_BinLocation; }
+
+                                                    newDtl.Quantity = Convert.ToDecimal(dt.Quantity);
+                                                    if (dt.UomEntry == null) { newDtl.UomEntry = ""; } else { newDtl.UomEntry = dt.UomEntry.ToString(); }
+                                                    if (dt.UomCode == null) { newDtl.UomCode = ""; } else { newDtl.UomCode = dt.UomCode; }
+
+                                                    newDtl.NumPerMsr = Convert.ToDecimal(dt.NumPerMsr);
+                                                    newDtl.ItemCode = dt.ItemCode;
+                                                    newDtl.AREA = dt.AREA.ToString();
+                                                    newDtl.SUBAREA = dt.SUBAREA.ToString();
+                                                    newDtl.UomFilter = dt.UoMFilter.ToString();
+                                                    newDtl.PrintOrder = dt.PrintOrder.ToString();
+                                                    newDtl.ItemName = dt.ItemName;
+                                                    newDtl.StockWhs01 = "";
+                                                    newDtl.isvalidated = false;
+                                                    if (dt.U_Storage == null) { newDtl.ID_storagetype = ""; } else { newDtl.ID_storagetype = dt.U_Storage; }
+                                                    if (dt.U_Storage == null) { newDtl.Storage_type = ""; } else { newDtl.Storage_type = dt.U_Storage; }
+                                                    newDtl.ID_salesorder = newSO.ID_salesorder;
+                                                    newDtl.query1 = "";
+                                                    newDtl.query2 = dt.CambioPrecio.ToString();
+                                                    newDtl.ID_picker = "";
+                                                    newDtl.Picker_name = "";
+                                                    newDtl.ID_pickerWHS = "";
+                                                    newDtl.Picker_nameWHS = "";
+                                                    newDtl.DateCheckIn = DateTime.UtcNow;
+                                                    newDtl.DateCheckOut = DateTime.UtcNow;
+                                                    newDtl.ID_userValidate = 0;
+                                                    newDtl.ID_ValidationDetails = 0;
+                                                    newDtl.ValidationDetails = "";
+                                                    newDtl.type = dt.TreeType;
+                                                    newDtl.parent = "";
+                                                    newDtl.childrendefqty = 0;
+                                                    newDtl.Transferred = 0;
+                                                    newDtl.Warehouse = dt.Whs;
+                                                    newDtl.QC_count = Convert.ToInt32(dt.NoWhs);
+                                                    if (newSO.Warehouse == dt.Whs)
+                                                    {
+                                                        newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs);
+                                                    }
+                                                    else
+                                                    {
+                                                        newDtl.QC_totalCount = 1;
+                                                    }
+
+                                                    lsttosave.Add(newDtl);
+
+
+                                                    //Si tiene hijos o es propiedad S, agregamos
+                                                    if (dt.TreeType == "S")
+                                                    {
+                                                        int countLineNum = dt.LineNum + 1;
+                                                        var kit_childs = (from d in dlipro.ITT1 where (d.Father == dt.ItemCode) select d).OrderBy(d => d.ChildNum).ToList();
+
+                                                        if (kit_childs.Count > 0)
+                                                        {
+                                                            foreach (var hijo in kit_childs)
+                                                            {
+                                                                var childinfo = (from ad in dlipro.BI_Dim_Products where (ad.id == hijo.Code) select ad).FirstOrDefault();
+                                                                var itemnamechild = "";
+                                                                if (childinfo != null)
+                                                                {
+                                                                    itemnamechild = childinfo.item_name;
+                                                                }
+                                                                Tb_PlanningSO_details newDtlHijo = new Tb_PlanningSO_details();
+                                                                newDtlHijo.Line_num = countLineNum;
+                                                                if (dt.U_BinLocation == null) { newDtlHijo.Bin_loc = ""; } else { newDtlHijo.Bin_loc = dt.U_BinLocation; }
+
+                                                                newDtlHijo.Quantity = Convert.ToInt32(hijo.Quantity);
+
+                                                                if (dt.UomEntry == null) { newDtlHijo.UomEntry = ""; } else { newDtlHijo.UomEntry = dt.UomEntry.ToString(); }
+                                                                if (dt.UomCode == null) { newDtlHijo.UomCode = ""; } else { newDtlHijo.UomCode = dt.UomCode; }
+
+                                                                newDtlHijo.NumPerMsr = 0;
+                                                                newDtlHijo.ItemCode = hijo.Code;
+                                                                newDtlHijo.AREA = dt.AREA.ToString();
+                                                                newDtlHijo.SUBAREA = dt.SUBAREA.ToString();
+                                                                newDtlHijo.UomFilter = dt.UoMFilter.ToString();
+                                                                newDtlHijo.PrintOrder = dt.PrintOrder.ToString();
+                                                                newDtlHijo.ItemName = itemnamechild;
+                                                                newDtlHijo.StockWhs01 = "";
+                                                                newDtlHijo.isvalidated = false;
+                                                                if (dt.U_Storage == null) { newDtlHijo.ID_storagetype = ""; } else { newDtlHijo.ID_storagetype = dt.U_Storage; }
+                                                                if (dt.U_Storage == null) { newDtlHijo.Storage_type = ""; } else { newDtlHijo.Storage_type = dt.U_Storage; }
+                                                                newDtlHijo.ID_salesorder = newSO.ID_salesorder;
+                                                                newDtlHijo.query1 = "";
+                                                                newDtlHijo.query2 = "";
+                                                                newDtlHijo.ID_picker = "";
+                                                                newDtlHijo.Picker_name = "";
+                                                                newDtlHijo.ID_pickerWHS = "";
+                                                                newDtlHijo.Picker_nameWHS = "";
+                                                                newDtlHijo.DateCheckIn = DateTime.UtcNow;
+                                                                newDtlHijo.DateCheckOut = DateTime.UtcNow;
+                                                                newDtlHijo.ID_userValidate = 0;
+                                                                newDtlHijo.ID_ValidationDetails = 0;
+                                                                newDtlHijo.ValidationDetails = "";
+                                                                newDtlHijo.type = "I";
+                                                                newDtlHijo.parent = dt.ItemCode;
+                                                                newDtlHijo.childrendefqty = Convert.ToInt32(hijo.Quantity);
+                                                                newDtlHijo.Transferred = 0;
+                                                                newDtlHijo.Warehouse = dt.Whs;
+                                                                newDtlHijo.QC_count = Convert.ToInt32(dt.NoWhs);
+                                                                if (newSO.Warehouse == dt.Whs)
+                                                                {
+                                                                    newDtlHijo.QC_totalCount = Convert.ToInt32(dt.NoWhs);
+                                                                }
+                                                                else
+                                                                {
+                                                                    newDtlHijo.QC_totalCount = 1;
+                                                                }
+                                                                lsttosave.Add(newDtlHijo);
+                                                                countLineNum++;
+                                                            }
+
+
+                                                        }
+                                                    }
+
+
+                                                }
+
+                                                dblim.BulkInsert(lsttosave);
+                                            }
+                                        }
+
+
+                                        
+                                    //}
+
+
+                                }
+
+
+                            }
+                        } catch { }
+
+                    }
+
+
+
+                    //List<Routes_calendar> rutaslst = new List<Routes_calendar>();
+
+
+                    //Routes_calendar rt = new Routes_calendar();
+
+                    //rt.title = newPlanning.ID_Route + " - " + newPlanning.Route_name;
+                    //rt.url = "";
+                    //rt.start = newPlanning.Departure.ToString("yyyy-MM-dd");
+                    ////rt.end = item.Departure.AddDays(1).ToString("yyyy-MM-dd");
+                    //rt.route_leader = newPlanning.Routeleader_name;
+                    //rt.className = ".fc-event";
+                    //rt.driver = newPlanning.Driver_name;
+                    //rt.truck = newPlanning.Truck_name;
+                    //rt.departure = newPlanning.Departure.ToShortTimeString();
+                    //if (newPlanning.isfinished == true) { rt.isfinished = "Y"; } else { rt.isfinished = "N"; }
+                    //var sum = (from e in dblim.Tb_PlanningSO where (e.ID_Route == newPlanning.ID_Route && e.Warehouse==company_bodega) select e);
+                    //if (sum != null && sum.Count() > 0)
+                    //{
+                    //    rt.amount = sum.Select(c => c.Amount).Sum().ToString();
+                    //    rt.customerscount = sum.Select(c => c.Customer_name).Distinct().Count().ToString();
+                    //    rt.orderscount = sum.Count().ToString();
+                    //}
+                    //else
+                    //{
+                    //    rt.amount = "0.0";
+                    //    rt.customerscount = "";
+                    //    rt.orderscount = "";
+                    //}
+
+
+                    //rutaslst.Add(rt);
+
+
+                    //JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                    //string result = javaScriptSerializer.Serialize(rutaslst);
+                    return Json("success", JsonRequestBehavior.AllowGet);
+
+                }
+                return Json("Error trying saving new route", JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        public ActionResult CreateRoutePlanningWMS(string routeName, string lstMasterCode, string lstMasterName, string lstDriverCode, string lstDriverName, string lstTruckCode, string lstTruckName, string lstRLeaderCode, string lstRLeaderName, DateTime departure, DateTime preparationdate, string otherwhs)
+        {
+
+            try
+            {
+                if (generalClass.checkSession())
+                {
+                    Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+
+                    var company_bodega = "0";
+                    if (activeuser.ID_Company == 1)
+                    {
+                        company_bodega = "01";
+                    }
+                    else if (activeuser.ID_Company == 2)
+                    {
+                        company_bodega = "02";
+                    }
+
+
+                    dblim.Configuration.AutoDetectChangesEnabled = false;
+                    dblim.Configuration.ValidateOnSaveEnabled = false;
+                    Tb_Planning newPlanning = new Tb_Planning();
+
+                    newPlanning.Route_name = routeName;
+                    newPlanning.ID_SAPRoute = lstMasterCode;
+                    newPlanning.ID_driver = lstDriverCode;
+                    newPlanning.Driver_name = lstDriverName;
+                    newPlanning.ID_truck = lstTruckCode;
+                    newPlanning.Truck_name = lstTruckName;
+                    newPlanning.ID_routeleader = lstRLeaderCode;
+                    newPlanning.Routeleader_name = lstRLeaderName;
+                    newPlanning.Departure = departure;
+                    newPlanning.isfinished = false;
+                    newPlanning.query1 = "";
+                    if (otherwhs == "YES")
+                    {
+                        newPlanning.query1 = "from";
+                    }
+
+
+                    newPlanning.query2 = "";
+                    newPlanning.query3 = 0;
+                    newPlanning.Invoiced = false;
+                    newPlanning.Date = departure.Date;
+                    newPlanning.DateCheckIn = DateTime.UtcNow;
+                    newPlanning.DateCheckOut = DateTime.UtcNow;
+                    newPlanning.ID_userValidate = 0;
+                    //Nueva propiedad para bodega
+                    newPlanning.Warehouse = company_bodega;
+                    newPlanning.ID_driver_whs = "";
+                    newPlanning.Driver_name_whs = "";
+                    newPlanning.ID_truck_whs = "";
+                    newPlanning.Truck_name_whs = "";
+                    newPlanning.DatetoInvoice = preparationdate;
+
+                    dblim.Tb_Planning.Add(newPlanning);
+                    dblim.SaveChanges();
+
+                    DateTime filterdate = DateTime.Today.AddDays(-31);
+
+                    var lstArray = (from obj in dblim.Tb_PlanningSO where (obj.SAP_docdate > filterdate) select obj.SAP_docnum).ToArray();
+                    //var lstArray = (from obj in dblim.Tb_PlanningSO where (obj.isfinished == false && obj.DocEntry == "") select obj.SAP_docnum).ToArray();
+
+                    List<int> myCollection = new List<int>();
+
+                    foreach (var item in lstArray)
+                    {
+                        myCollection.Add(Convert.ToInt32(item));
+                    }
+                    var salesOrders = (from a in dlipro.OpenSalesOrders where (a.DeliveryRoute == lstMasterName && !myCollection.Contains(a.NumSO) && a.SODate > filterdate) select a).ToList();
+
+                    var avaSO = (from a in salesOrders select a.NumSO).ToArray();
+
+                    if (salesOrders.Count > 0)
+                    {
+                        //ORDER BY AREA, SUBAREA, UoMFilter, PrintOrder, U_BinLocation, T1.ItemCode 
+                        var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (avaSO.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
+                        try
+                        {
+                            var count = 0;
+                            var count2 = 1;
+                            foreach (var saleOrder in salesOrders)
+                            {
+                                if (saleOrder.OpenAmount == saleOrder.TotalSO)
+                                {
+                                    //enviamos a wms
+
+                                    SendSOAPI newOrder = new SendSOAPI();
+                                    newOrder.DocEntry = saleOrder.DocEntry;
+                                    newOrder.IdDriver = newPlanning.ID_driver;
+                                    newOrder.IdDeliveryRoute = newPlanning.ID_SAPRoute;
+                                    newOrder.IdHelper = newPlanning.ID_routeleader;
+                                    newOrder.IdTruck = newPlanning.ID_truck;
+                                    newOrder.RouteNumber = newPlanning.ID_Route;
+                                    newOrder.StopNumber = count2;
+                                    var response = cls_salesorders.AddtoToRoute(newOrder);
+
+                                    if (response.IsSuccessful == true)
+                                    {
+                                    count2++;
                                     decimal openO = Convert.ToDecimal(saleOrder.OpenAmount);
                                     var sapdoc = saleOrder.NumSO.ToString();
                                     var existe = (from a in dblim.Tb_PlanningSO where (a.Amount == openO && a.SAP_docnum == sapdoc) select a).FirstOrDefault();
-                                    if (existe == null) {
+                                    if (existe == null)
+                                    {
                                         Tb_PlanningSO newSO = new Tb_PlanningSO();
                                         newSO.SAP_docnum = saleOrder.NumSO.ToString();
                                         newSO.SAP_docdate = Convert.ToDateTime(saleOrder.SODate);
@@ -3110,7 +4087,7 @@ namespace LimenawebApp.Controllers
                                         newSO.Volume = "";
                                         newSO.Printed = saleOrder.Printed;
                                         newSO.ID_Route = newPlanning.ID_Route;
-                                        newSO.DocEntry = "";
+                                        newSO.DocEntry = saleOrder.DocEntry.ToString();
                                         newSO.DateCheckIn = DateTime.UtcNow;
                                         newSO.DateCheckOut = DateTime.UtcNow;
                                         newSO.ID_userValidate = 0;
@@ -3175,23 +4152,28 @@ namespace LimenawebApp.Controllers
                                                 {
                                                     newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs);
                                                 }
-                                                else {
+                                                else
+                                                {
                                                     newDtl.QC_totalCount = 1;
                                                 }
-                                               
+
                                                 lsttosave.Add(newDtl);
 
 
                                                 //Si tiene hijos o es propiedad S, agregamos
-                                                if (dt.TreeType == "S") {
+                                                if (dt.TreeType == "S")
+                                                {
                                                     int countLineNum = dt.LineNum + 1;
                                                     var kit_childs = (from d in dlipro.ITT1 where (d.Father == dt.ItemCode) select d).OrderBy(d => d.ChildNum).ToList();
 
-                                                    if (kit_childs.Count > 0) {
-                                                        foreach (var hijo in kit_childs) {
+                                                    if (kit_childs.Count > 0)
+                                                    {
+                                                        foreach (var hijo in kit_childs)
+                                                        {
                                                             var childinfo = (from ad in dlipro.BI_Dim_Products where (ad.id == hijo.Code) select ad).FirstOrDefault();
                                                             var itemnamechild = "";
-                                                            if (childinfo != null) {
+                                                            if (childinfo != null)
+                                                            {
                                                                 itemnamechild = childinfo.item_name;
                                                             }
                                                             Tb_PlanningSO_details newDtlHijo = new Tb_PlanningSO_details();
@@ -3256,11 +4238,16 @@ namespace LimenawebApp.Controllers
                                     }
 
 
+                                
+                                    }
+
+
                                 }
 
 
                             }
-                        } catch { }
+                        }
+                        catch { }
 
                     }
 
@@ -3418,6 +4405,86 @@ namespace LimenawebApp.Controllers
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
+
+        public ActionResult deleteRouteWMS(string id_route)
+        {
+
+            try
+            {
+
+                var id = Convert.ToInt32(id_route);
+                var route = dblim.Tb_Planning.Where(c => c.ID_Route == id).Select(c => c).FirstOrDefault();
+
+                if (route != null)
+                {
+                    var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id);
+
+                    //var todelete = (from f in vp select f.ID_salesorder).ToArray();
+                    var todeleteWMS = (from f in vp select f.DocEntry).ToArray();
+
+                    int flagalldeleted = 0;
+
+                    foreach (var item in todeleteWMS) {
+                        var response = cls_salesorders.DeletefromRoute(Convert.ToInt32(item));
+
+                        if (response.IsSuccessful) //Si se elimina de WMS, procedemos a eliminar de detalles
+                        {
+                            var vpSO = dblim.Tb_PlanningSO.Where(a => a.DocEntry == item).FirstOrDefault();
+                            var vpdet = dblim.Tb_PlanningSO_details.Where(a => a.ID_salesorder == vpSO.ID_salesorder);
+                            dblim.BulkDelete(vpdet);
+
+                            dblim.Tb_PlanningSO.Remove(vpSO);
+                            dblim.SaveChanges();
+                        }
+                        else {
+                            flagalldeleted = 1;
+                        }
+
+                    }
+                    if (flagalldeleted == 0) { //No fallo ninguna SO, eliminamos todo
+                        dblim.Tb_Planning.Remove(route);
+
+                        var vp_extra = dblim.Tb_Planning_extra.Where(a => a.ID_Route == id);
+                        dblim.Tb_Planning_extra.RemoveRange(vp_extra);
+
+                        dblim.SaveChanges();
+                    }                   
+                    var rrresult = "SUCCESS";
+                    return Json(rrresult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    string result = "NO DATA FOUND";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                string result = "ERROR: " + ex.Message;
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public class APIMessage
+        {
+            public Boolean Succeded { get; set; }
+            public string Message { get; set; }
+            public APIMessageDetails MessageD { get; set; }
+            public IEnumerable<String> Errors { get; set; }
+   
+        }
+
+        public class APIMessageDetails {
+            public string SO { get; set; }
+            public string Line { get; set; }
+            public string Error { get; set; }
+        }
+
+
         public ActionResult SaveSalesOrders(string[] salesOrders, string id_route)
         {
 
@@ -3495,29 +4562,393 @@ namespace LimenawebApp.Controllers
 
 
                         var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (myCollection.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
+
+                        var count = 1;
+
+                        List<int> sofailed = new List<int>();
+                        List<APIMessageDetails> failedlst = new List<APIMessageDetails>();
                         foreach (string value in salesOrders)
                         {
 
                             //enviamos a wms
-
-                            //SendSOAPI newOrder = new SendSOAPI();
-                            //newOrder.DocEntry = 0;
-                            //newOrder.IdDriver = planning.ID_driver;
-                            //newOrder.IdDeliveryRoute = planning.ID_SAPRoute;
-                            //newOrder.IdHelper = planning.ID_routeleader;
-                            //newOrder.IdTruck = planning.ID_truck;
-                            //newOrder.RouteNumber = planning.ID_Route;
+                            var idso = Convert.ToInt32(value);
+                            var saleOrder = (from a in dtSO where (a.NumSO == idso) select a).First();
+                            Decimal openO = 0;
+                            SendSOAPI newOrder = new SendSOAPI();
+                            newOrder.DocEntry = saleOrder.DocEntry;
+                            newOrder.IdDriver = planning.ID_driver;
+                            newOrder.IdDeliveryRoute = planning.ID_SAPRoute;
+                            newOrder.IdHelper = planning.ID_routeleader;
+                            newOrder.IdTruck = planning.ID_truck;
+                            newOrder.RouteNumber = planning.ID_Route;
+                            newOrder.InvDate = planning.Departure;
+                            newOrder.StopNumber = count;
                             //var response = cls_salesorders.AddtoToRoute(newOrder);
 
+                            
+
                             //if (response.IsSuccessful == true)
-                            //{
+                           // {
+
+                                count++;
+                               
+                                openO = Convert.ToDecimal(saleOrder.OpenAmount);
+                                var sapdoc = saleOrder.NumSO.ToString();
+                                var existe = (from a in dblim.Tb_PlanningSO where (a.Amount == openO && a.SAP_docnum == sapdoc) select a).FirstOrDefault();
+                                if (existe == null)
+                                {
+
+
+
+                                    Tb_PlanningSO newSO = new Tb_PlanningSO();
+                                    newSO.SAP_docnum = saleOrder.NumSO.ToString();
+                                    newSO.SAP_docdate = Convert.ToDateTime(saleOrder.SODate);
+                                    newSO.ID_customer = saleOrder.CardCode;
+                                    newSO.Customer_name = saleOrder.CustomerName.ToUpper();
+                                    newSO.ID_rep = saleOrder.IDSalesPerson.ToString();
+                                    newSO.Rep_name = saleOrder.SalesPerson.ToUpper();
+                                    newSO.ID_SAPRoute = planning.ID_SAPRoute;
+                                    newSO.Amount = Convert.ToDecimal(saleOrder.OpenAmount);
+                                    newSO.isfinished = false;
+                                    newSO.query1 = "";
+                                    newSO.query2 = saleOrder.DeliveryRoute;
+                                    newSO.query3 = 0;
+                                    newSO.query4 = "";
+                                    newSO.query5 = "";
+                                    newSO.Weight = "";
+                                    newSO.Volume = "";
+                                    newSO.Printed = saleOrder.Printed;
+                                    newSO.ID_Route = planning.ID_Route;
+                                newSO.DocEntry = "";// saleOrder.DocEntry.ToString();
+                                    newSO.DateCheckIn = DateTime.UtcNow;
+                                    newSO.DateCheckOut = DateTime.UtcNow;
+                                    newSO.ID_userValidate = 0;
+                                    newSO.Transferred = 0;
+                                    newSO.Warehouse = saleOrder.WareHouse;
+                                    newSO.MensajeError = "";
+                                    newSO.Error = 0;
+                                    newSO.QC_count = Convert.ToInt32(saleOrder.NoWhs);
+
+                                    if (saleOrder.Remarks == null) { newSO.Remarks = ""; } else { newSO.Remarks = saleOrder.Remarks; }
+                                    dblim.Tb_PlanningSO.Add(newSO);
+                                    dblim.SaveChanges();
+                                    //List<Tb_PlanningSO_details> lstsave = new List<Tb_PlanningSO_details>();
+                                    var detailslst2 = (from a in dtSO_details where (a.DocNum == saleOrder.NumSO) select a).ToList();
+
+                                    if (detailslst2.Count > 0)
+                                    {
+                                        List<Tb_PlanningSO_details> lsttosave = new List<Tb_PlanningSO_details>();
+                                        foreach (var dt in detailslst2)
+                                        {
+                                            Tb_PlanningSO_details newDtl = new Tb_PlanningSO_details();
+
+                                            newDtl.Line_num = dt.LineNum;
+                                            if (dt.U_BinLocation == null) { newDtl.Bin_loc = ""; } else { newDtl.Bin_loc = dt.U_BinLocation; }
+
+                                            newDtl.Quantity = Convert.ToDecimal(dt.Quantity);
+                                            if (dt.UomEntry == null) { newDtl.UomEntry = ""; } else { newDtl.UomEntry = dt.UomEntry.ToString(); }
+                                            if (dt.UomCode == null) { newDtl.UomCode = ""; } else { newDtl.UomCode = dt.UomCode; }
+
+                                            newDtl.NumPerMsr = Convert.ToDecimal(dt.NumPerMsr);
+                                            newDtl.ItemCode = dt.ItemCode;
+                                            newDtl.AREA = dt.AREA.ToString();
+                                            newDtl.SUBAREA = dt.SUBAREA.ToString();
+                                            newDtl.UomFilter = dt.UoMFilter.ToString();
+                                            newDtl.PrintOrder = dt.PrintOrder.ToString();
+                                            newDtl.ItemCode = dt.ItemCode;
+                                            newDtl.ItemName = dt.ItemName;
+                                            newDtl.StockWhs01 = "";
+                                            newDtl.isvalidated = false;
+                                            if (dt.U_Storage == null) { newDtl.ID_storagetype = ""; } else { newDtl.ID_storagetype = dt.U_Storage; }
+                                            if (dt.U_Storage == null) { newDtl.Storage_type = ""; } else { newDtl.Storage_type = dt.U_Storage; }
+                                            newDtl.ID_salesorder = newSO.ID_salesorder;
+                                            newDtl.query1 = "";
+                                            newDtl.query2 = dt.CambioPrecio.ToString();
+                                            newDtl.ID_picker = "";
+                                            newDtl.Picker_name = "";
+                                            newDtl.ID_pickerWHS = "";
+                                            newDtl.Picker_nameWHS = "";
+                                            newDtl.DateCheckIn = DateTime.UtcNow;
+                                            newDtl.DateCheckOut = DateTime.UtcNow;
+                                            newDtl.ID_userValidate = 0;
+                                            newDtl.ID_ValidationDetails = 0;
+                                            newDtl.ValidationDetails = "";
+                                            newDtl.type = dt.TreeType;
+                                            newDtl.parent = "";
+                                            newDtl.childrendefqty = 0;
+                                            newDtl.Warehouse = dt.Whs;
+                                            newDtl.Transferred = 0;
+
+                                            //Evaluamos si se haran 2 conteos o 1
+                                            //02=Louisville, KY ----- WHS=01-Nashville, TN
+                                            //Se haran 2 conteos si la orden es solicitada en KY pero el detalle sale de TN
+
+
+                                            newDtl.QC_count = Convert.ToInt32(dt.NoWhs);
+                                            if (newSO.Warehouse == dt.Whs)
+                                            {
+                                                newDtl.QC_totalCount = Convert.ToInt32(dt.NoWhs);
+                                            }
+                                            else
+                                            {
+                                                newDtl.QC_totalCount = 1;
+                                            }
+
+
+                                            lsttosave.Add(newDtl);
+                                            //dblim.Tb_PlanningSO_details.Add(newDtl);
+
+                                            //Si tiene hijos o es propiedad S, agregamos
+                                            if (dt.TreeType == "S")
+                                            {
+                                                int countLineNum = dt.LineNum + 1;
+                                                var kit_childs = (from d in dlipro.ITT1 where (d.Father == dt.ItemCode) select d).OrderBy(d => d.ChildNum).ToList();
+
+                                                if (kit_childs.Count > 0)
+                                                {
+                                                    foreach (var hijo in kit_childs)
+                                                    {
+                                                        var childinfo = (from ad in dlipro.BI_Dim_Products where (ad.id == hijo.Code) select ad).FirstOrDefault();
+                                                        var itemnamechild = "";
+                                                        if (childinfo != null)
+                                                        {
+                                                            itemnamechild = childinfo.item_name;
+                                                        }
+                                                        Tb_PlanningSO_details newDtlHijo = new Tb_PlanningSO_details();
+                                                        newDtlHijo.Line_num = countLineNum;
+                                                        if (dt.U_BinLocation == null) { newDtlHijo.Bin_loc = ""; } else { newDtlHijo.Bin_loc = dt.U_BinLocation; }
+
+                                                        newDtlHijo.Quantity = Convert.ToDecimal(hijo.Quantity);
+
+                                                        if (dt.UomEntry == null) { newDtlHijo.UomEntry = ""; } else { newDtlHijo.UomEntry = dt.UomEntry.ToString(); }
+                                                        if (dt.UomCode == null) { newDtlHijo.UomCode = ""; } else { newDtlHijo.UomCode = dt.UomCode; }
+
+                                                        newDtlHijo.NumPerMsr = 0;
+                                                        newDtlHijo.ItemCode = hijo.Code;
+                                                        newDtlHijo.AREA = dt.AREA.ToString();
+                                                        newDtlHijo.SUBAREA = dt.SUBAREA.ToString();
+                                                        newDtlHijo.UomFilter = dt.UoMFilter.ToString();
+                                                        newDtlHijo.PrintOrder = dt.PrintOrder.ToString();
+                                                        newDtlHijo.ItemName = itemnamechild;
+                                                        newDtlHijo.StockWhs01 = "";
+                                                        newDtlHijo.isvalidated = false;
+                                                        if (dt.U_Storage == null) { newDtlHijo.ID_storagetype = ""; } else { newDtlHijo.ID_storagetype = dt.U_Storage; }
+                                                        if (dt.U_Storage == null) { newDtlHijo.Storage_type = ""; } else { newDtlHijo.Storage_type = dt.U_Storage; }
+                                                        newDtlHijo.ID_salesorder = newSO.ID_salesorder;
+                                                        newDtlHijo.query1 = "";
+                                                        newDtlHijo.query2 = "";
+                                                        newDtlHijo.ID_picker = "";
+                                                        newDtlHijo.Picker_name = "";
+                                                        newDtlHijo.ID_pickerWHS = "";
+                                                        newDtlHijo.Picker_nameWHS = "";
+                                                        newDtlHijo.DateCheckIn = DateTime.UtcNow;
+                                                        newDtlHijo.DateCheckOut = DateTime.UtcNow;
+                                                        newDtlHijo.ID_userValidate = 0;
+                                                        newDtlHijo.ID_ValidationDetails = 0;
+                                                        newDtlHijo.ValidationDetails = "";
+                                                        newDtlHijo.type = "I";
+                                                        newDtlHijo.parent = dt.ItemCode;
+                                                        newDtlHijo.childrendefqty = Convert.ToInt32(hijo.Quantity);
+                                                        newDtlHijo.Warehouse = dt.Whs;
+                                                        newDtlHijo.QC_count = Convert.ToInt32(dt.NoWhs);
+                                                        if (newSO.Warehouse == dt.Whs)
+                                                        {
+                                                            newDtlHijo.QC_totalCount = Convert.ToInt32(dt.NoWhs); ;
+                                                        }
+                                                        else
+                                                        {
+                                                            newDtlHijo.QC_totalCount = 1;
+                                                        }
+                                                        newDtlHijo.Transferred = 0;
+                                                        lsttosave.Add(newDtlHijo);
+                                                        countLineNum++;
+                                                    }
+
+
+                                                }
+                                            }
+
+                                        }
+
+
+                                        dblim.BulkInsert(lsttosave);
+                                    }
+                                }
+
+
+                            //}
+                            //else {
+
+                            //    APIMessage newerror = new APIMessage();
+                            //    newerror= JsonConvert.DeserializeObject<APIMessage>(response.Content);
+                            //    newerror.MessageD= JsonConvert.DeserializeObject<List<APIMessageDetails>>(newerror.Message).FirstOrDefault();
+
+
+                            //    failedlst.Add(newerror.MessageD);
+
+                            //    sofailed.Add(idso);
+
+                                
+
+                      
 
                             //}
 
-                                var idso = Convert.ToInt32(value);
-                            var saleOrder = (from a in dtSO where (a.NumSO == idso) select a).First();
+                           
 
-                            decimal openO = Convert.ToDecimal(saleOrder.OpenAmount);
+
+
+                        }
+
+                        TempData["failedSO"] = failedlst;
+
+                        var result = new
+                        {
+                            result = "SUCCESS",
+                            failedSO = sofailed.ToArray()
+                      
+                        };
+                        //string ttresult = "SUCCESS";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        var result = new
+                        {
+                            result = "NO DATA",
+                            failedSO = ""
+
+                        };
+                        
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                var result = new
+                {
+                    result = "ERROR: " + ex.Message,
+                    failedSO = ""
+
+                };
+           
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+
+        public ActionResult SaveSalesOrdersWMS(string[] salesOrders, string id_route)
+        {
+
+            try
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+                var company_bodega = "0";
+                if (activeuser.ID_Company == 1)
+                {
+                    company_bodega = "01";
+                }
+                else if (activeuser.ID_Company == 2)
+                {
+                    company_bodega = "02";
+                }
+                if (salesOrders == null)
+                {
+                    //var id = Convert.ToInt32(id_route);
+                    //var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id);
+
+                    //var todelete = (from f in vp select f.ID_salesorder).ToArray();
+                    //var vpdet = dblim.Tb_PlanningSO_details.Where(a => todelete.Contains(a.ID_salesorder));
+                    ////dblim.Tb_PlanningSO_details.RemoveRange(vpdet);
+                    //dblim.BulkDelete(vpdet);
+
+
+
+
+                    //dblim.Tb_PlanningSO.RemoveRange(vp);
+                    //dblim.SaveChanges();
+
+                    var rrresult = "SUCCESS";
+                    return Json(rrresult, JsonRequestBehavior.AllowGet);
+                }
+                else
+                {
+                    if (salesOrders.Length > 0 || salesOrders != null)
+                    {
+                        var id = Convert.ToInt32(id_route);
+                        var soexist = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id) select f.SAP_docnum).ToArray();
+
+                        var fincoll = (from a in soexist where (!salesOrders.Contains(a)) select a).ToArray();
+
+
+                        Tb_Planning planning = new Tb_Planning();
+                        planning = dblim.Tb_Planning.Find(id);
+                        if (fincoll.Length > 0)
+                        {
+
+                            //var todelete = (from f in dblim.Tb_PlanningSO where (f.ID_Route == id && fincoll.Contains(f.SAP_docnum)) select f.ID_salesorder).ToArray();
+                            //var vpdet = dblim.Tb_PlanningSO_details.Where(a => todelete.Contains(a.ID_salesorder));
+                            //dblim.Tb_PlanningSO_details.RemoveRange(vpdet);
+                            //dblim.BulkDelete(vpdet);
+
+
+                            //var vp = dblim.Tb_PlanningSO.Where(a => a.ID_Route == id && fincoll.Contains(a.SAP_docnum));
+                            //dblim.Tb_PlanningSO.RemoveRange(vp);
+                            //dblim.SaveChanges();
+                        }
+
+                        salesOrders = (from a in salesOrders where (!soexist.Contains(a)) select a).ToArray();
+
+
+                        List<int> myCollection = new List<int>();
+
+                        foreach (var item in salesOrders)
+                        {
+                            myCollection.Add(Convert.ToInt32(item));
+                        }
+
+
+
+
+                        var dtSO = (from c in dlipro.OpenSalesOrders where (myCollection.Contains(c.NumSO)) select c).ToList();
+
+
+                        var dtSO_details = (from c in dlipro.OpenSalesOrders_Details where (myCollection.Contains(c.DocNum) && !c.TreeType.Contains("I")) select c).OrderBy(c => c.AREA).ThenBy(c => c.SUBAREA).ThenBy(c => c.UoMFilter).ThenBy(c => c.PrintOrder).ThenBy(c => c.U_BinLocation).ThenBy(c => c.ItemCode).ToList();
+
+                        var count = 1;
+
+                        List<int> sofailed = new List<int>();
+                        List<APIMessageDetails> failedlst = new List<APIMessageDetails>();
+                        foreach (string value in salesOrders)
+                        {
+
+                            //enviamos a wms
+                            var idso = Convert.ToInt32(value);
+                            var saleOrder = (from a in dtSO where (a.NumSO == idso) select a).First();
+                            Decimal openO = 0;
+                            SendSOAPI newOrder = new SendSOAPI();
+                            newOrder.DocEntry = saleOrder.DocEntry;
+                            newOrder.IdDriver = planning.ID_driver;
+                            newOrder.IdDeliveryRoute = planning.ID_SAPRoute;
+                            newOrder.IdHelper = planning.ID_routeleader;
+                            newOrder.IdTruck = planning.ID_truck;
+                            newOrder.RouteNumber = planning.ID_Route;
+                            newOrder.InvDate = planning.Departure;
+                            newOrder.StopNumber = count;
+                            var response = cls_salesorders.AddtoToRoute(newOrder);
+
+
+
+                            if (response.IsSuccessful == true)
+                             {
+
+                            count++;
+
+                            openO = Convert.ToDecimal(saleOrder.OpenAmount);
                             var sapdoc = saleOrder.NumSO.ToString();
                             var existe = (from a in dblim.Tb_PlanningSO where (a.Amount == openO && a.SAP_docnum == sapdoc) select a).FirstOrDefault();
                             if (existe == null)
@@ -3544,7 +4975,7 @@ namespace LimenawebApp.Controllers
                                 newSO.Volume = "";
                                 newSO.Printed = saleOrder.Printed;
                                 newSO.ID_Route = planning.ID_Route;
-                                newSO.DocEntry = "";
+                                newSO.DocEntry = saleOrder.DocEntry.ToString();
                                 newSO.DateCheckIn = DateTime.UtcNow;
                                 newSO.DateCheckOut = DateTime.UtcNow;
                                 newSO.ID_userValidate = 0;
@@ -3700,17 +5131,51 @@ namespace LimenawebApp.Controllers
                                 }
                             }
 
+
+                        }
+                            else {
+
+                            APIMessage newerror = new APIMessage();
+                            newerror = JsonConvert.DeserializeObject<APIMessage>(response.Content);
+                            newerror.MessageD = JsonConvert.DeserializeObject<List<APIMessageDetails>>(newerror.Message).FirstOrDefault();
+
+
+                            failedlst.Add(newerror.MessageD);
+
+                            sofailed.Add(idso);
+
+
+
+
+
                         }
 
 
 
 
-                        string ttresult = "SUCCESS";
-                        return Json(ttresult, JsonRequestBehavior.AllowGet);
+
+                    }
+
+                        TempData["failedSO"] = failedlst;
+
+                        var result = new
+                        {
+                            result = "SUCCESS",
+                            failedSO = sofailed.ToArray()
+
+                        };
+                        //string ttresult = "SUCCESS";
+                        return Json(result, JsonRequestBehavior.AllowGet);
                     }
                     else
                     {
-                        string result = "NO DATA";
+                        var result = new
+                        {
+                            result = "NO DATA",
+                            failedSO = ""
+
+                        };
+
                         return Json(result, JsonRequestBehavior.AllowGet);
                     }
                 }
@@ -3720,7 +5185,13 @@ namespace LimenawebApp.Controllers
             }
             catch (Exception ex)
             {
-                string result = "ERROR: " + ex.Message;
+                var result = new
+                {
+                    result = "ERROR: " + ex.Message,
+                    failedSO = ""
+
+                };
+
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
         }
@@ -3795,7 +5266,7 @@ namespace LimenawebApp.Controllers
                                 newSO.DateCheckOut = DateTime.UtcNow;
                                 newSO.ID_userValidate = 0;
                                 newSO.Transferred = 0;
-                                newSO.Warehouse = "01";
+                                newSO.Warehouse = company_bodega;
                                 newSO.MensajeError = "";
                                 newSO.Error = 0;
                                 newSO.QC_count = 1;
@@ -5208,6 +6679,7 @@ namespace LimenawebApp.Controllers
                 //Con eso se descarga
                 //Response.AddHeader("Content-Disposition", "attachment; filename=" + "Route_WHSInvoices.pdf");
                 return File(report, System.Net.Mime.MediaTypeNames.Application.Pdf);
+
             }
             else
             {
@@ -5336,6 +6808,569 @@ namespace LimenawebApp.Controllers
 
         }
 
+
+        public ActionResult PrintPalletlabel(int id_route)
+        {
+            try
+            {
+                //Se actualizo formato de reporte el 07/23/2020 
+
+                var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route) select new palletLabel { CardCode=a.ID_customer, CardName=a.Customer_name, DeliveryRoute=a.Tb_Planning.Route_name}).Distinct().ToList();
+
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so.Count > 0)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+          
+                        ReportDocument rd = new ReportDocument();
+
+                        //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "rptPalletLabel.rpt"));
+                        rd.DataSourceConnections.Clear();
+                        //rd.Subreports[0].SetDataSource(lstkit);
+                        rd.SetDataSource(so);
+
+
+     
+                        Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=rptPalletLabel.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        listafinal.Add(getBytes);
+                        listafinal.Add(getBytes);
+                        listafinal.Add(getBytes);
+                        ms.Dispose();
+           
+
+
+
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
+
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //return Json(urlcontent);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult Print_routeTN_WHS(int id_route)
+        {
+            try
+            {
+                //Se actualizo formato de reporte el 07/23/2020 
+
+                var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route && a.DocEntry != "--") select a).ToList();
+
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so.Count > 0)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+                    foreach (var item in so)
+                    {
+                        var itemdoc = Convert.ToInt32(item.DocEntry);
+                        //Buscamos datos en la vista maestra de facturas
+                        var sqlQueryText = dlipro.Help_Invoices_Layout.Where(c=>c.DocEntry == itemdoc).ToList();
+                        //var sqlQueryText = dlipro.sp_genericInvoiceV2(item.DocEntry.ToString()).ToList();
+                        //List<sp_genericInvoiceV2_kit_Result> lstkit = new List<sp_genericInvoiceV2_kit_Result>();
+                        //foreach (var iteminterno in sqlQueryText)
+                        //{
+                        //    iteminterno.UomCode = "";
+                        //    //var sqlQuerySubReport = dlipro.sp_genericInvoiceV2_kit(item.DocEntry.ToString(), iteminterno.ItemCode).ToList();
+                        //    //if (sqlQuerySubReport.Count > 0)
+                        //    //{
+                        //    //    lstkit.AddRange(sqlQuerySubReport);
+                        //    //}
+                        //}
+
+                        //Buscamos en subreporte kit (07/23/2020)
+
+                        ReportDocument rd = new ReportDocument();
+
+                        //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "INVOICE STORAGE TYPE.rpt"));
+                        rd.DataSourceConnections.Clear();
+                        //rd.Subreports[0].SetDataSource(lstkit);
+                        rd.SetDataSource(sqlQueryText);
+
+
+                        //ConnectionInfo connectInfo = new ConnectionInfo()
+                        //{
+                        //    //ServerName = ".",
+                        //    //DatabaseName = "DLI_PRO",
+                        //    //UserID = "sa",
+                        //    //Password = "sa123"         
+                        //    ServerName = "192.168.1.14",
+                        //    DatabaseName = "PEPPERI_TEST",
+                        //    UserID = "sa",
+                        //    Password = "DiLimen@2018"
+                        //};
+                        //rd.SetDatabaseLogon("sa", "DiLimen@2018", "192.168.1.14", "PEPPERI_TEST");
+                        //foreach (Table tbl in rd.Database.Tables)
+                        //{
+                        //    tbl.LogOnInfo.ConnectionInfo = connectInfo;
+                        //    tbl.ApplyLogOnInfo(tbl.LogOnInfo);
+                        //}
+
+                        //var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                        Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        listafinal.Add(getBytes);
+                        ms.Dispose();
+                        //var path2 = Path.Combine(filePathOriginal, id_route + "Route_WHSInvoices.pdf");
+
+
+                        //rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, path2);
+
+                        //var ms1 = new MemoryStream(getBytes);
+                        //ms1.Position = 0;
+                        //copy.AddDocument(new PdfReader(ms1));
+                        //ms1.Dispose();
+
+                        //PARA VISUALIZAR
+                        //Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        //Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        //stream.Seek(0, SeekOrigin.Begin);
+
+                        //stream.Position = 0;
+                        //copy.AddDocument(new PdfReader(stream));
+                        //stream.Dispose();
+                    }
+
+
+
+
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
+
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //return Json(urlcontent);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        public ActionResult Print_routeTN_WHS_one(int id_salesorder)
+        {
+            try
+            {
+                //Se actualizo formato de reporte el 07/23/2020 
+
+                var so = (from a in dblim.Tb_PlanningSO where (a.ID_salesorder == id_salesorder && a.DocEntry != "--") select a).ToList();
+
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so.Count > 0)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+                    foreach (var item in so)
+                    {
+                        var itemdoc = Convert.ToInt32(item.DocEntry);
+                        //Buscamos datos en la vista maestra de facturas
+                        var sqlQueryText = dlipro.Help_Invoices_Layout.Where(c => c.DocEntry == itemdoc).ToList();
+                        //var sqlQueryText = dlipro.sp_genericInvoiceV2(item.DocEntry.ToString()).ToList();
+                        //List<sp_genericInvoiceV2_kit_Result> lstkit = new List<sp_genericInvoiceV2_kit_Result>();
+                        //foreach (var iteminterno in sqlQueryText)
+                        //{
+                        //    iteminterno.UomCode = "";
+                        //    //var sqlQuerySubReport = dlipro.sp_genericInvoiceV2_kit(item.DocEntry.ToString(), iteminterno.ItemCode).ToList();
+                        //    //if (sqlQuerySubReport.Count > 0)
+                        //    //{
+                        //    //    lstkit.AddRange(sqlQuerySubReport);
+                        //    //}
+                        //}
+
+                        //Buscamos en subreporte kit (07/23/2020)
+
+                        ReportDocument rd = new ReportDocument();
+
+                        //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "INVOICE STORAGE TYPE.rpt"));
+                        rd.DataSourceConnections.Clear();
+                        //rd.Subreports[0].SetDataSource(lstkit);
+                        rd.SetDataSource(sqlQueryText);
+
+
+                        //ConnectionInfo connectInfo = new ConnectionInfo()
+                        //{
+                        //    //ServerName = ".",
+                        //    //DatabaseName = "DLI_PRO",
+                        //    //UserID = "sa",
+                        //    //Password = "sa123"         
+                        //    ServerName = "192.168.1.14",
+                        //    DatabaseName = "PEPPERI_TEST",
+                        //    UserID = "sa",
+                        //    Password = "DiLimen@2018"
+                        //};
+                        //rd.SetDatabaseLogon("sa", "DiLimen@2018", "192.168.1.14", "PEPPERI_TEST");
+                        //foreach (Table tbl in rd.Database.Tables)
+                        //{
+                        //    tbl.LogOnInfo.ConnectionInfo = connectInfo;
+                        //    tbl.ApplyLogOnInfo(tbl.LogOnInfo);
+                        //}
+
+                        //var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                        Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        //listafinal.Add(getBytes);
+                        ms.Dispose();
+                        //var path2 = Path.Combine(filePathOriginal, id_route + "Route_WHSInvoices.pdf");
+
+
+                        //rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, path2);
+
+                        //var ms1 = new MemoryStream(getBytes);
+                        //ms1.Position = 0;
+                        //copy.AddDocument(new PdfReader(ms1));
+                        //ms1.Dispose();
+
+                        //PARA VISUALIZAR
+                        //Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        //Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        //stream.Seek(0, SeekOrigin.Begin);
+
+                        //stream.Position = 0;
+                        //copy.AddDocument(new PdfReader(stream));
+                        //stream.Dispose();
+                    }
+
+
+
+
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
+
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //return Json(urlcontent);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+
+        public ActionResult Print_routeTN_barcode(int id_route)
+        {
+            try
+            {
+                //Se actualizo formato de reporte el 07/23/2020 
+
+                var so = (from a in dblim.Tb_PlanningSO where (a.ID_Route == id_route && a.DocEntry != "--") select a).ToList();
+
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so.Count > 0)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+                    foreach (var item in so)
+                    {
+                        var itemdoc = Convert.ToInt32(item.DocEntry);
+                        //Buscamos datos en la vista maestra de facturas
+                        var sqlQueryText = dlipro.Help_Invoices_Layout_BarCode.Where(c => c.DocEntry == itemdoc).ToList();
+                        //var sqlQueryText = dlipro.sp_genericInvoiceV2(item.DocEntry.ToString()).ToList();
+                        //List<sp_genericInvoiceV2_kit_Result> lstkit = new List<sp_genericInvoiceV2_kit_Result>();
+                        //foreach (var iteminterno in sqlQueryText)
+                        //{
+                        //    iteminterno.UomCode = "";
+                        //    //var sqlQuerySubReport = dlipro.sp_genericInvoiceV2_kit(item.DocEntry.ToString(), iteminterno.ItemCode).ToList();
+                        //    //if (sqlQuerySubReport.Count > 0)
+                        //    //{
+                        //    //    lstkit.AddRange(sqlQuerySubReport);
+                        //    //}
+                        //}
+
+                        //Buscamos en subreporte kit (07/23/2020)
+
+                        ReportDocument rd = new ReportDocument();
+
+                        //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "INVOICE BARCODE.rpt"));
+                        rd.DataSourceConnections.Clear();
+                        //rd.Subreports[0].SetDataSource(lstkit);
+                        rd.SetDataSource(sqlQueryText);
+
+
+                        //ConnectionInfo connectInfo = new ConnectionInfo()
+                        //{
+                        //    //ServerName = ".",
+                        //    //DatabaseName = "DLI_PRO",
+                        //    //UserID = "sa",
+                        //    //Password = "sa123"         
+                        //    ServerName = "192.168.1.14",
+                        //    DatabaseName = "PEPPERI_TEST",
+                        //    UserID = "sa",
+                        //    Password = "DiLimen@2018"
+                        //};
+                        //rd.SetDatabaseLogon("sa", "DiLimen@2018", "192.168.1.14", "PEPPERI_TEST");
+                        //foreach (Table tbl in rd.Database.Tables)
+                        //{
+                        //    tbl.LogOnInfo.ConnectionInfo = connectInfo;
+                        //    tbl.ApplyLogOnInfo(tbl.LogOnInfo);
+                        //}
+
+                        //var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                        Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=INVOICEBARCODE.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        listafinal.Add(getBytes);
+                        ms.Dispose();
+                        //var path2 = Path.Combine(filePathOriginal, id_route + "Route_WHSInvoices.pdf");
+
+
+                        //rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, path2);
+
+                        //var ms1 = new MemoryStream(getBytes);
+                        //ms1.Position = 0;
+                        //copy.AddDocument(new PdfReader(ms1));
+                        //ms1.Dispose();
+
+                        //PARA VISUALIZAR
+                        //Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        //Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        //stream.Seek(0, SeekOrigin.Begin);
+
+                        //stream.Position = 0;
+                        //copy.AddDocument(new PdfReader(stream));
+                        //stream.Dispose();
+                    }
+
+
+
+
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
+
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //return Json(urlcontent);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+
+        public ActionResult Print_routeTN_barcode_one(int id_salesorder)
+        {
+            try
+            {
+                //Se actualizo formato de reporte el 07/23/2020 
+
+                var so = (from a in dblim.Tb_PlanningSO where (a.ID_salesorder == id_salesorder && a.DocEntry != "--") select a).ToList();
+
+                //var quemadosSO = new List<string>();
+                //quemadosSO.Add("78492");
+                //quemadosSO.Add("78497");
+                if (so.Count > 0)
+                {
+                    //Aca iria ciclo foreach
+
+                    MemoryStream finalStream = new MemoryStream();
+                    //PdfCopyFields copy = new PdfCopyFields(finalStream);
+                    List<byte[]> listafinal = new List<byte[]>();
+                    foreach (var item in so)
+                    {
+                        var itemdoc = Convert.ToInt32(item.DocEntry);
+                        //Buscamos datos en la vista maestra de facturas
+                        var sqlQueryText = dlipro.Help_Invoices_Layout_BarCode.Where(c => c.DocEntry == itemdoc).ToList();
+                        //var sqlQueryText = dlipro.sp_genericInvoiceV2(item.DocEntry.ToString()).ToList();
+                        //List<sp_genericInvoiceV2_kit_Result> lstkit = new List<sp_genericInvoiceV2_kit_Result>();
+                        //foreach (var iteminterno in sqlQueryText)
+                        //{
+                        //    iteminterno.UomCode = "";
+                        //    //var sqlQuerySubReport = dlipro.sp_genericInvoiceV2_kit(item.DocEntry.ToString(), iteminterno.ItemCode).ToList();
+                        //    //if (sqlQuerySubReport.Count > 0)
+                        //    //{
+                        //    //    lstkit.AddRange(sqlQuerySubReport);
+                        //    //}
+                        //}
+
+                        //Buscamos en subreporte kit (07/23/2020)
+
+                        ReportDocument rd = new ReportDocument();
+
+                        //rd.Load(Path.Combine(Server.MapPath("~/Reports"), "Invoces Nuevo.rpt"));
+                        rd.Load(Path.Combine(Server.MapPath("~/Reports"), "INVOICE BARCODE.rpt"));
+                        rd.DataSourceConnections.Clear();
+                        //rd.Subreports[0].SetDataSource(lstkit);
+                        rd.SetDataSource(sqlQueryText);
+
+
+                        //ConnectionInfo connectInfo = new ConnectionInfo()
+                        //{
+                        //    //ServerName = ".",
+                        //    //DatabaseName = "DLI_PRO",
+                        //    //UserID = "sa",
+                        //    //Password = "sa123"         
+                        //    ServerName = "192.168.1.14",
+                        //    DatabaseName = "PEPPERI_TEST",
+                        //    UserID = "sa",
+                        //    Password = "DiLimen@2018"
+                        //};
+                        //rd.SetDatabaseLogon("sa", "DiLimen@2018", "192.168.1.14", "PEPPERI_TEST");
+                        //foreach (Table tbl in rd.Database.Tables)
+                        //{
+                        //    tbl.LogOnInfo.ConnectionInfo = connectInfo;
+                        //    tbl.ApplyLogOnInfo(tbl.LogOnInfo);
+                        //}
+
+                        //var filePathOriginal = Server.MapPath("/Reports/pdf");
+
+                        Response.Buffer = false;
+                        Response.ClearContent();
+                        Response.ClearHeaders();
+                        Response.AppendHeader("Content-Disposition", "inline; filename=INVOICEBARCODE.pdf;");
+                        byte[] getBytes = null;
+                        Stream ms = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        ms.Seek(0, SeekOrigin.Begin);
+                        getBytes = ReadFully(ms);
+                        listafinal.Add(getBytes);
+                        //para sacar la copia
+                        //listafinal.Add(getBytes);
+                        ms.Dispose();
+                        //var path2 = Path.Combine(filePathOriginal, id_route + "Route_WHSInvoices.pdf");
+
+
+                        //rd.ExportToDisk(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat, path2);
+
+                        //var ms1 = new MemoryStream(getBytes);
+                        //ms1.Position = 0;
+                        //copy.AddDocument(new PdfReader(ms1));
+                        //ms1.Dispose();
+
+                        //PARA VISUALIZAR
+                        //Response.AppendHeader("Content-Disposition", "inline; filename=Route_WHSInvoices.pdf;");
+                        //Stream stream = rd.ExportToStream(CrystalDecisions.Shared.ExportFormatType.PortableDocFormat);
+                        //stream.Seek(0, SeekOrigin.Begin);
+
+                        //stream.Position = 0;
+                        //copy.AddDocument(new PdfReader(stream));
+                        //stream.Dispose();
+                    }
+
+
+
+
+                    //Nueva descarga
+                    TempData["Output"] = listafinal;
+
+                    //return Json(urlcontent);
+                    return Json("Success", JsonRequestBehavior.AllowGet);
+
+                }
+                else
+                {
+
+                    return Json("CountError", JsonRequestBehavior.AllowGet);
+
+                }
+            }
+            catch (Exception ex)
+            {
+                //return Json(urlcontent);
+                return Json("Error: " + ex.Message, JsonRequestBehavior.AllowGet);
+            }
+
+        }
 
 
         public ActionResult Print_WHSDailyPayment(int id_route)

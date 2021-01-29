@@ -22,6 +22,27 @@ namespace LimenawebApp.Models
         public decimal? Utilizado { get; set; }
 
     }
+
+    public class flowInvoice
+    {
+        public int Docnum { get; set; }
+        public int Docentry { get; set; }
+        public string Type { get; set; }
+        public string Comment { get; set; }
+        public string Text { get; set; }
+        public int ID_user { get; set; }
+        public string ID_userstring { get; set; }
+        public string UserName { get; set; }
+        public string Department { get; set; }
+        public decimal? amount { get; set; }
+        public DateTime? date { get; set; }
+        public DateTime? Deliverydate { get; set; }
+        public int? Datetime { get; set; }
+        public string DatetimeString { get; set; }
+        public string DatetimeStringUpdate { get; set; }
+        public int? Deliverydatetime { get; set; }
+    }
+
     public class ActivitiesReport
     {
         public int ID_Activity { get; set; }
@@ -43,6 +64,16 @@ namespace LimenawebApp.Models
 
 
     }
+
+
+    public class palletLabel
+    {
+        public string CardCode { get; set; }
+        public string CardName { get; set; }
+        public string DeliveryRoute { get; set; }
+
+    }
+
 
     public class Inv_ProjectsTasks_mod
     {
@@ -91,6 +122,8 @@ namespace LimenawebApp.Models
         public string StateCode { get; set; }
         public string State { get; set; }   
     }
+
+
 
 
     public class Pedidos_precios
@@ -144,7 +177,7 @@ namespace LimenawebApp.Models
         public string id_Vendor { get; set; }
         public Nullable<int> id_brand { get; set; }
         public Nullable<decimal> unitCost { get; set; }
-        public int MinPorcent { get; set; }
+        public Nullable<int> MinPorcent { get; set; }
         public Nullable<decimal> MinPrice { get; set; }
         public string item_name { get; set; }
         public string Vendor_Name { get; set; }
@@ -190,6 +223,7 @@ namespace LimenawebApp.Models
         public string Route { get; set; }
         public string comments { get; set; }
         public int LineNum { get; set; }
+        public decimal? SRP { get; set; }
     }
 
 
@@ -219,6 +253,22 @@ namespace LimenawebApp.Models
         public string idSAP { get; set; }
         public string idSAPsupervisor{ get; set; }
         public string classifications{ get; set; }
+
+    }
+
+    public class RepsSalesReport
+    {
+        public int ID_User { get; set; }
+        public string Name { get; set; }
+        public decimal weeklySales { get; set; }
+        public int weeklySalesCustomers { get; set; }
+        public decimal weeklyBudget { get; set; }
+        public int weeklyCustomers { get; set; }
+        public decimal extra { get; set; }
+        public string idSAP { get; set; }
+        public int idSAPint { get; set; }
+      
+ 
 
     }
 
@@ -263,5 +313,21 @@ namespace LimenawebApp.Models
         public int transferred { get; set; }
         public int existendeOtraBodega { get; set; }
         public List<lst_Freezer> freezers { get; set; }
+    }
+
+    public class InvoicesbyRoute
+    {
+        public int ID_Route { get; set; }
+        public string Route_name { get; set; }
+        public string ID_driver { get; set; }
+        public string Driver_name { get; set; }
+        public string ID_routeleader { get; set; }
+        public string Routeleader_name { get; set; }
+        public string ID_truck { get; set; }
+        public string Truck_name { get; set; }
+        public System.DateTime Departure { get; set; }
+        public bool isfinished { get; set; }
+        public string ID_SAPRoute { get; set; }
+        public string Warehouse { get; set; }
     }
 }

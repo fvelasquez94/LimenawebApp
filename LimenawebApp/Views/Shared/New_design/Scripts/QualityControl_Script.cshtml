@@ -682,6 +682,55 @@
 
 
     }
+
+
+        //TN Nashville 11/27/2020
+    function PrintPalletlabel(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to preview this route in Pallet Label View?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/PrintPalletlabel',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+                                $("#loader").hide();
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                                $("#loader").hide();
+                            }
+
+                            else {
+                                alert(result);
+                                $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+                            $("#loader").hide();
+                        }
+                    });
+
+                }
+            })
+        }
+
     function deleteData_StorageType() {
         var idpicker = $('#pickerlst').val();
         var pickername = $("#pickerlst option:selected").text();
@@ -890,4 +939,97 @@
             })
         }
 
+
+
+    function PrintSOTNWMS(id) {
+
+                  swal.fire({
+                title: 'Are you sure to print this invoice?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/Print_routeTN_WHS_one',
+                        type: 'POST',
+                        data: { 'id_salesorder': id },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+                                $("#loader").hide();
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                                $("#loader").hide();
+                            }
+
+                            else {
+                                alert(result);
+                                $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+                            $("#loader").hide();
+                        }
+                    });
+
+                }
+            })
+    }
+
+        function PrintSOTNWMSBarcode(id) {
+
+                  swal.fire({
+                title: 'Are you sure to print this invoice?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/Print_routeTN_barcode_one',
+                        type: 'POST',
+                        data: { 'id_salesorder': id },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+                                $("#loader").hide();
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                                $("#loader").hide();
+                            }
+
+                            else {
+                                alert(result);
+                                $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+                            $("#loader").hide();
+                        }
+                    });
+
+                }
+            })
+    }
 </script>

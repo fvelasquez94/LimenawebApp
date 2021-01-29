@@ -321,13 +321,13 @@
                             )
                             window.location.reload(true);
                         } else {
-                            alert("Something went wrong..");
+                            alert("Error when trying update entries..");
                         }
 
 
                     },
                     error: function (request) {
-                        alert("Something went wrong..");
+                        alert("Something went wrong. Error message is not in list.");
 
                     }
                 });
@@ -364,12 +364,20 @@
                     }),
                     success: function (result) {
 
-                        if (result == "SUCCESS") {
-                            toastr.success("Sales Orders saved successfully.", "Success");
+                        if (result.result == "SUCCESS") {
+                            
+                            
                             //sortSalesOrders()
                             document.getElementById("loader").style.display = "none";
+                            if (result.failedSO.length > 0) {
+                                //alert("This orders could not be assigned to the route: " + result.failedSO)
+                                toastr.info("Not all Sales Orders was saved successfully", "Success");
+                            } else {
+                                toastr.success("Sales Orders saved successfully.", "Success");
+                            }
+                          
                             window.location.reload(true);
-                        } else if (result == "NO DATA") {
+                        } else if (result.result == "NO DATA") {
                             toastr.warning("Please, choose at least one sales order to continue.", "Warning");
                             document.getElementById("loader").style.display = "none";
                         } else {

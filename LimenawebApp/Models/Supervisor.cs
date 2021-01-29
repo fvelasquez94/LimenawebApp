@@ -18,5 +18,6 @@ namespace LimenawebApp.Models
         public string Supervisor_Name { get; set; }
         public string Zone { get; set; }
         public string Area { get; set; }
+        public string Active { get; set; }
     }
 }

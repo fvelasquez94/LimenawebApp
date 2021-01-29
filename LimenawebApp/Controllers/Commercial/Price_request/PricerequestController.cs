@@ -117,6 +117,97 @@ namespace LimenawebApp.Controllers.Commercial.Price_request
             }
         }
 
+        public ActionResult RequesthistoryNOSR(string fstartd, string fendd, string period)
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Commercial";
+                ViewData["Page"] = "Price Request History";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
+                DateTime filtrostartdate;
+                DateTime filtroenddate;
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
+
+                if (fstartd == null || fstartd == "") { filtrostartdate = sunday; } else { filtrostartdate = Convert.ToDateTime(fstartd); }
+                if (fendd == null || fendd == "") { filtroenddate = saturday; } else { filtroenddate = Convert.ToDateTime(fendd).AddHours(23).AddMinutes(59); }
+
+                ViewBag.filtrofechastart = filtrostartdate.ToShortDateString();
+                ViewBag.filtrofechaend = filtroenddate.ToShortDateString();
+
+                var salesreps = (from a in dblim.Sys_Users where (a.Roles.Contains("Sales Supervisor")) select new Bolsa_SalesR { ID_user = a.ID_User, ID_userSAP = a.IDSAP, Username = a.Name + " " + a.Lastname, Asignado = a.BolsaValor, Disponible = 0, Utilizado = 0 }).ToList();
+                List<Help_BolsaUtilizada> salesHistory = new List<Help_BolsaUtilizada>();
+                if (period == null || period == "")
+                {
+                    salesHistory = internadli.Database.SqlQuery<Help_BolsaUtilizada>("Select * from Help_BolsaUtilizadaActual").ToList<Help_BolsaUtilizada>();
+
+                }
+                else
+                {
+                    var periodsel = period.Substring(1);
+                    salesHistory = internadli.Database.SqlQuery<Help_BolsaUtilizada>("Select * from Help_BolsaUtilizada where id_Period={0}", periodsel).ToList<Help_BolsaUtilizada>();
+
+                }
+
+                foreach (var item in salesreps)
+                {
+                    item.Utilizado = Math.Round(Convert.ToDecimal(salesHistory.Where(c => c.ID_user == item.ID_user).Select(c => c.Utilizado).FirstOrDefault()), 2);
+                    item.Disponible = Math.Round(Convert.ToDecimal(item.Asignado) - Convert.ToDecimal(item.Utilizado), 2);
+                }
+
+                ViewBag.salesHistory = salesHistory;
+
+                //periodos activos
+
+                if (period == null || period == "")
+                {
+                    ViewBag.period = salesHistory.Select(c => c.id_Period).FirstOrDefault() + "| " + salesHistory.Select(c => c.Period_Name).FirstOrDefault();
+                    var activeperiodweeks = dlipro.Database.SqlQuery<PeriodoActivoSemana>("select * from HELP_RANGOPERIODOSEMANA where YearDLI in ({0},{1})", "2020", "2021").GroupBy(n => new { n.PeriodCode, n.PeriodName }).Select(c => new periods { periodcode = c.Key.PeriodCode, periodname = c.Key.PeriodName }).ToList();
+                    ViewBag.activeperiodos = activeperiodweeks;
+                }
+                else
+                {
+                    var periodcode = period;
+                    var activeperiodweeks = dlipro.Database.SqlQuery<PeriodoActivoSemana>("select * from HELP_RANGOPERIODOSEMANA where YearDLI in ({0},{1})", "2020", "2021").GroupBy(n => new { n.PeriodCode, n.PeriodName }).Select(c => new periods { periodcode = c.Key.PeriodCode, periodname = c.Key.PeriodName }).ToList();
+                    var activeperiod = activeperiodweeks.Where(a => a.periodcode == periodcode).FirstOrDefault();
+                    var selectedperiod = "";
+                    if (activeperiod != null)
+                    {
+                        selectedperiod = activeperiod.periodcode + " | " + activeperiod.periodname;
+                    }
+                    ViewBag.period = selectedperiod;
+                    ViewBag.activeperiodos = activeperiodweeks;
+                }
+
+
+
+
+                return View(salesreps);
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+        }
+
 
         public class htmlModel
         {
@@ -214,7 +305,45 @@ namespace LimenawebApp.Controllers.Commercial.Price_request
             }
 
         }
+        public ActionResult PriceChangeHistory_Export2(string ids, string period)
+        {
+            try
+            {
+                //var salesHistory = internadli.Database.SqlQuery<Help_BolsaUtilizada>("Select top 2 * from Help_BolsaUtilizada").ToList<Help_BolsaUtilizada>();
 
+                var periodcode = period.Substring(1);//salesHistory[0].id_Period;
+
+                //UTILIZANDO LIBRERIA 
+                DataSet ds = getDataSetExportToExcel(ids, periodcode);
+                using (XLWorkbook wb = new XLWorkbook())
+                {
+                    wb.Worksheets.Add(ds);
+                    wb.Worksheet(1).Name = "Resume";
+                    wb.Worksheet(2).Name = "Price Change Product History";
+                    wb.Worksheet(3).Name = "Price Change History";
+                    wb.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                    wb.Style.Font.Bold = true;
+                    Response.Clear();
+                    Response.Buffer = true;
+                    Response.Charset = "";
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment;filename=PriceChangeHistory.xlsx");
+                    using (MemoryStream MyMemoryStream = new MemoryStream())
+                    {
+                        wb.SaveAs(MyMemoryStream);
+                        MyMemoryStream.WriteTo(Response.OutputStream);
+                        Response.Flush();
+                        Response.End();
+                    }
+                }
+                return View();
+            }
+            catch (Exception ex2)
+            {
+                return RedirectToAction("RequesthistoryNOSR", "Pricerequest");
+            }
+
+        }
         public DataSet getDataSetExportToExcel(string ids, string periodcode)
         {
             List<int> TagIds = ids.Split(',').Select(int.Parse).ToList();
@@ -239,7 +368,7 @@ namespace LimenawebApp.Controllers.Commercial.Price_request
             DataTable dtEmpOrder = new DataTable("Price Change Product History");
             var tb_auth = (from b in internadli.Tb_Autorizaciones where (TagIds.Contains(b.ID_user) && b.Estado == 2 && (b.FechaValidacion >= activeperiod.BeginDate && b.FechaValidacion <= activeperiod.EndDate)) select new Tb_AutorizacionExport {
                 ID_detalle = b.ID_detalle, DocNum = b.DocNum, ItemCode = b.ItemCode, Producto = b.Producto, CodUOM = b.CodUOM, UOM = b.UOM, Cantidad = b.Cantidad, PrecioPedido = b.PrecioPedido, PrecioMin = b.PrecioMin,
-                NuevoPrecio = b.NuevoPrecio, Resultado = ((b.PrecioPedido - b.NuevoPrecio) * b.Cantidad), DocNumSAP = b.DocNumSAP, FechaIngreso = b.FechaIngreso, FechaValidacion = b.FechaValidacion, LineNum = b.LineNum,
+                NuevoPrecio = b.NuevoPrecio, Resultado = b.NuevoPrecio>0 ? ((b.PrecioPedido - b.NuevoPrecio) * b.Cantidad) : 0, DocNumSAP = b.DocNumSAP, FechaIngreso = b.FechaIngreso, FechaValidacion = b.FechaValidacion, LineNum = b.LineNum,
                 UserName = b.UserName, DocPepperi = b.DocPepperi, CodCustomer = b.CodCustomer, Customer = b.Customer, PeriodCode = periodcode, PeriodName = "", WeekDLI = 0
             }).ToList();
 

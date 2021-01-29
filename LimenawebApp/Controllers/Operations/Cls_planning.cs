@@ -49,7 +49,7 @@ namespace LimenawebApp.Controllers.Operations
             else 
             {
                 actividades_calendar = (from a in dblim.Tb_Planning
-                                        where (a.Departure >= fstartd && a.Departure <= fendd && a.Warehouse == Whs || a.query1.Contains("from"))
+                                        where ((a.Departure >= fstartd && a.Departure <= fendd && a.Warehouse == Whs) || (a.Departure >= fstartd && a.Departure <= fendd && a.query1.Contains("from")))
                                         select new Routes_calendarPlanning
                                         {
                                             title = a.ID_Route + " - " + a.Route_name,

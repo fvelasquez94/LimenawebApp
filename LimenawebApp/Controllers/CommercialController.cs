@@ -1,7 +1,9 @@
 ﻿using ClosedXML.Excel;
 using CrystalDecisions.CrystalReports.Engine;
+using LimenawebApp.Controllers.API;
 using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
+using LimenawebApp.Models.SalesOrders;
 using Newtonsoft.Json;
 using Postal;
 using System;
@@ -31,6 +33,7 @@ namespace LimenawebApp.Controllers
         private DLI_PROEntities dlipro = new DLI_PROEntities();
         private Interna_DLIEntities internadli = new Interna_DLIEntities();
         private Cls_session cls_session = new Cls_session();
+        private Cls_SalesOrders cls_salesorders = new Cls_SalesOrders();
         //TIENDAS Y RUTAS (Se utiliza en Routes)
         public class tablahijospadreAct
         {
@@ -189,11 +192,13 @@ namespace LimenawebApp.Controllers
                 ViewBag.idusertemp = activeuser.ID_User;
                 ViewBag.nameuser = activeuser.Name + " " + activeuser.Lastname;
 
+                ViewBag.activeuser = activeuser;
+
                 //Lista de productos con filtro de Pepperi, el dia 22/08/2019 se solicito eliminar el GOYA/PRE-SALE (114)
                 //Producto Don Beto BUL300326 (Siempre mostrar)
                 //Filtro original
-               //var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114 && a.Credits =="NO" || a.id== "BUL300326") select a);
-               
+                //var products = (from a in dlipro.BI_Dim_Products where (a.Pepperi == "YES" && a.id_brand != 114 && a.Credits =="NO" || a.id== "BUL300326") select a);
+
                 //Cambios requeridos por Aldo Quijano 05/07/2020
                 var products = (from a in dlipro.BI_Dim_Products where (a.Active =="Y" && a.Blocked=="N" && a.InventoryItem=="Y" && !a.id.Contains("FIX") && a.id_brand != 114 || a.id == "BUL300326") select a);
 
@@ -535,7 +540,9 @@ namespace LimenawebApp.Controllers
                 ViewBag.lstAlerts = lstAlerts;
 
                 //FIN HEADER
-
+                var test = (from a in dlipro.BI_Dim_Products
+                            where (a.Pepperi == "YES" && a.id_brand != 114)
+                            select a).Count();
                 //Lista de productos con filtro de Pepperi, el dia 22/08/2019 se solicito eliminar el GOYA/PRE-SALE (114)
                 var products = (from a in dlipro.BI_Dim_Products
                                 where (a.Pepperi == "YES" && a.id_brand != 114)
@@ -1204,6 +1211,7 @@ namespace LimenawebApp.Controllers
                 if (activeuser != null)
                 {
                     var pedidostring = pedido.ToString();
+                    var SalesOrder = (from c in dlipro.OpenSalesOrders where (c.NumSO==pedido) select c).FirstOrDefault();
                     //Primero borramos todo rastro
                     internadli.Database.ExecuteSqlCommand("delete from Tb_Autorizaciones where DocNum={0}", pedido);
                     //Reiniciamos el estado de los productos eliminados para comprobar nuevamente
@@ -1243,7 +1251,8 @@ namespace LimenawebApp.Controllers
                             newDet.FechaIngreso = DateTime.UtcNow;
                             newDet.FechaValidacion = DateTime.UtcNow;
                             newDet.LineNum = items.lineNumber;
-                            newDet.DocNumSAP = "";
+                            //Se deshabilito interfaz porque se hara con endpoint de salesorders 11/12/2020
+                            newDet.DocNumSAP = SalesOrder.DocEntry.ToString();
                             newDet.OrderClosed = false;
                             newDet.ID_user = usuario.ID_User;
                             newDet.UserName = usuario.Name + " " + usuario.Lastname;
@@ -1345,7 +1354,7 @@ namespace LimenawebApp.Controllers
                 if (activeuser != null)
                 {
                     var pedidostring = pedido.ToString();
-
+                    var SalesOrder = (from c in dlipro.OpenSalesOrders where (c.NumSO == pedido) select c).FirstOrDefault();
                     //internadli.SaveChanges();
                     List<Tb_Autorizaciones> lsttosave = new List<Tb_Autorizaciones>();
 
@@ -1385,7 +1394,8 @@ namespace LimenawebApp.Controllers
                             newDet.FechaIngreso = DateTime.UtcNow;
                             newDet.FechaValidacion = DateTime.UtcNow;
                             newDet.LineNum = items.lineNumber;
-                            newDet.DocNumSAP = "";
+                            //Se deshabilito interfaz porque se hara con endpoint de salesorders 11/12/2020
+                            newDet.DocNumSAP = SalesOrder.DocEntry.ToString();
                             newDet.OrderClosed = true;
                             newDet.ID_user = usuario.ID_User;
                             newDet.UserName = usuario.Name + " " + usuario.Lastname;
@@ -1715,6 +1725,46 @@ namespace LimenawebApp.Controllers
 
         }
 
+        public class returnReasonscodes {
+            public string id { get; set; }
+            public string text { get; set; }
+        }
+
+        public ActionResult GetReturnReasons(string product)
+        {
+            try
+            {
+                if (product != "")
+                {
+
+
+                    var lstava = (from a in dlipro.BI_Dim_Products where (a.id == product) select a).FirstOrDefault();
+
+                    if (lstava.ReturnReasons != null || lstava.ReturnReasons != "")
+                    {
+                        string tags = lstava.ReturnReasons;
+                        List<string> numbers = tags.Split(',').ToList<string>();
+
+                        var lstReturnReasons = (from dr in dlipro.UFD1 where (dr.TableID == "RDR1" && dr.FieldID == 0 && numbers.Contains(dr.FldValue)) select new returnReasonscodes { id = dr.FldValue, text = dr.Descr }).ToArray();
+                        JavaScriptSerializer javaScriptSerializer = new JavaScriptSerializer();
+                        string result = javaScriptSerializer.Serialize(lstReturnReasons);
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    else {
+                        string result = "No data found";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                return Json("error", JsonRequestBehavior.AllowGet);
+            }
+            return Json("error", JsonRequestBehavior.AllowGet);
+
+        }
+
         [HttpPost]
         public ActionResult CambiarPorcentajePorUsuario(int id, double factorn)
         {
@@ -1879,112 +1929,218 @@ namespace LimenawebApp.Controllers
 
         }
 
+
         public ActionResult Prices_requestCerrarOrden(string docnum, int timesClosed)
         {
-            
+            var errorfollow = "";
+            var resulttry = "";
             var result = "";
             var docint = Convert.ToInt32(docnum);
             try {
+
                 var bonif = (from a in internadli.Tb_Bonificaciones where (a.CodPedido == docnum) select a);
                 var not = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docint) select b).Count();
 
-                var pedido = (from a in dlipro.OpenSalesOrders where (a.NumSO == docint) select a).FirstOrDefault();
+                //Verificamos que NO vayan elimindas todas las filas 12/31/2020
+                var so_details = (from a in dlipro.view_ordenesAbiertasDet where (a.DocNum == docint && a.Quantity > 0 && !a.TreeType.Contains("I")) select a).Count();
+
+                var totaleliminadas = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docint && b.Deleted==true && b.DeletedSAP==0) select b).Count();
 
 
-                var bonifcount = bonif.Count();
 
-                int flag = 0;
-                if (bonifcount > 0) { flag = 1;
-                    internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=1, closedOrderTimes={0} where CodPedido={1}", (timesClosed+1), docnum);
-
-                    //Verificamos si hay bonificaciones eliminadas
-
-                    internadli.Database.ExecuteSqlCommand("delete from Tb_Bonificaciones where deleted=1 and CodPedido={0}", docnum);
+                var pedidonum = (from g in dlipro.view_ordenesAbiertasDet
+                               join j in dlipro.OCRD on g.CardCode equals j.CardCode
+                               where (g.DocNum == docint)
+                               select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0, Printed = g.Printed }).Distinct().OrderBy(c => c.cardname).FirstOrDefault();
 
 
-                    //PROCESO PARA ENVIAR TABLA DE BONIF A MARCA
-                    //var arrayProdBon = bonif.Select(a => a.ID_Vendor).Distinct().ToArray(); //cargamos los vendors unicos
-
-                    //foreach (var marca in arrayProdBon) { 
-                    //var productsmarca = bonif.Where(a => a.ID_Vendor == marca);//cargamos los productos bonificados por marca
-
-                    // var usersVendor = (from a in dblim.Sys_Users where (a.IDSAP == marca) select a).ToList(); //cargamos usuarios de vendors
-
-                    //if (usersVendor.Count>0)
-                    //{
-                    //var tabla = "";
-                    //foreach (var producto in productsmarca)//generamos la tabla a mostrar
-                    //{
-                    //    var tr = "";
-                    //    tr = "<tr>";
-                    //    tr += "<td>" + producto.Producto + "</td>";
-                    //    tr += "<td>" + producto.CodUOM + "</td>";
-                    //    if (producto.TipoIngreso == 1)
-                    //    {
-                    //        tr += "<td>" + "QUANTITY" + "</td>";
-                    //    }
-                    //    else if(producto.TipoIngreso==2){
-                    //        tr += "<td>" + "CURRENCY" + "</td>";
-                    //    }
-                    //    tr += "<td>" + producto.CantidadFinal + "</td>";
-                    //    tr += "<td>$ " + producto.CurrencyFinal + "</td>";
-                    //    tr += "</tr>";
-                    //    tabla += tr;
-                    //}
-
-                    //try {
-                    //    foreach (var user in usersVendor)
-                    //    { //enviamos mensaje a cada uno de los vendors
-                    //      //Send the email
-
-                    //        List<string> r = new List<string>(user.Roles.Split(new string[] { "," }, StringSplitOptions.None));
-                    //        if (r.Contains("Bonifications Emails"))
-                    //        {
-                    //            dynamic semail = new Email("email_confirmation_bonification");
-                    //            semail.To = user.Email.ToString();
-                    //            semail.From = "donotreply@limenainc.net";
-                    //            semail.Date = DateTime.Now.ToShortDateString();
-                    //            semail.SLP = pedido.SalesPerson.ToUpper();
-                    //            semail.Customer = pedido.CustomerName.ToUpper();
-                    //            semail.tabla = tabla;
-
-                    //            semail.Send();
-
-                    //        }
 
 
-                    //    }
-                    //}
-                    //catch{
+                if (so_details == totaleliminadas)
+                {
+                    result = "You can't delete all Products in SO. Please contact your Supervisor or Finance Department for more information.";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                } else if (pedidonum.Printed=="Y") {
+                    result = "You can't close this order because it was already printed. Please contact your Supervisor or Finance Department for more information.";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else {
+                    var pedido = (from a in dlipro.OpenSalesOrders where (a.NumSO == docint) select a).FirstOrDefault();
 
-                    //}
+                    errorfollow = "pedido";
+                    var bonifcount = bonif.Count();
+
+                    int flag = 1;
+                    if (bonifcount > 0)
+                    {
+
+                        internadli.Database.ExecuteSqlCommand("update Tb_Bonificaciones set OrderClosed=1, Estado=2, closedOrderTimes={0} where CodPedido={1}", (timesClosed + 1), docnum);
+
+                        //Verificamos si hay bonificaciones eliminadas
+
+                        internadli.Database.ExecuteSqlCommand("delete from Tb_Bonificaciones where deleted=1 and CodPedido={0}", docnum);
 
 
-                    //}
+                        //PROCESO PARA ENVIAR TABLA DE BONIF A MARCA
+                        //var arrayProdBon = bonif.Select(a => a.ID_Vendor).Distinct().ToArray(); //cargamos los vendors unicos
 
-                    //}
+                        //foreach (var marca in arrayProdBon) { 
+                        //var productsmarca = bonif.Where(a => a.ID_Vendor == marca);//cargamos los productos bonificados por marca
+
+                        // var usersVendor = (from a in dblim.Sys_Users where (a.IDSAP == marca) select a).ToList(); //cargamos usuarios de vendors
+
+                        //if (usersVendor.Count>0)
+                        //{
+                        //var tabla = "";
+                        //foreach (var producto in productsmarca)//generamos la tabla a mostrar
+                        //{
+                        //    var tr = "";
+                        //    tr = "<tr>";
+                        //    tr += "<td>" + producto.Producto + "</td>";
+                        //    tr += "<td>" + producto.CodUOM + "</td>";
+                        //    if (producto.TipoIngreso == 1)
+                        //    {
+                        //        tr += "<td>" + "QUANTITY" + "</td>";
+                        //    }
+                        //    else if(producto.TipoIngreso==2){
+                        //        tr += "<td>" + "CURRENCY" + "</td>";
+                        //    }
+                        //    tr += "<td>" + producto.CantidadFinal + "</td>";
+                        //    tr += "<td>$ " + producto.CurrencyFinal + "</td>";
+                        //    tr += "</tr>";
+                        //    tabla += tr;
+                        //}
+
+                        //try {
+                        //    foreach (var user in usersVendor)
+                        //    { //enviamos mensaje a cada uno de los vendors
+                        //      //Send the email
+
+                        //        List<string> r = new List<string>(user.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                        //        if (r.Contains("Bonifications Emails"))
+                        //        {
+                        //            dynamic semail = new Email("email_confirmation_bonification");
+                        //            semail.To = user.Email.ToString();
+                        //            semail.From = "donotreply@limenainc.net";
+                        //            semail.Date = DateTime.Now.ToShortDateString();
+                        //            semail.SLP = pedido.SalesPerson.ToUpper();
+                        //            semail.Customer = pedido.CustomerName.ToUpper();
+                        //            semail.tabla = tabla;
+
+                        //            semail.Send();
+
+                        //        }
+
+
+                        //    }
+                        //}
+                        //catch{
+
+                        //}
+
+
+                        //}
+
+                        //}
+
+                    }
+                    if (not > 0)
+                    {
+                        flag = 1;
+
+                        Post_priceChange body = new Post_priceChange();
+
+                        //actualizamos productos que NO se eliminan
+                        var lstdetalles = (from a in internadli.Tb_Autorizaciones where (a.DocNum == docint && a.Deleted == false) select a).ToList();
+                        body.details = new List<details_priceChange>();
+                        body.docentry = pedido.DocEntry;
+
+                        foreach (var item in lstdetalles)
+                        {
+                            details_priceChange product = new details_priceChange();
+
+                            product.visorder = item.LineNum;
+                            product.price = item.NuevoPrecio;
+
+                            body.details.Add(product);
+                        }
+                        //Mandamos los cambios directo a SAP (consultar  a Stan que pasa si abren nuevamente la orden)
+
+                        //Endpoint 11/12/2020
+                        var response = cls_salesorders.Reconciliation(body);
+                        //Productos que se actualizan
+                        if (response.IsSuccessful == true)
+                        {
+
+                            internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1, Estado=2, closedOrderTimes={0} where DocNum={1} and deleted=0", (timesClosed + 1), docint);
+                        }
+                        else
+                        {
+                            flag = 0;
+                            errorfollow = response.StatusDescription;
+                        }
+
+                        //Eliminar los productos Endpoint 01/07/2021
+                        details_priceChangeDelete bodyDelete = new details_priceChangeDelete();
+
+                        //seleccionamos productos con bandera a eliminar
+                        var lstdetallesEliminar = (from a in internadli.Tb_Autorizaciones where (a.DocNum == docint && a.Deleted == true) select a).ToList();
+                        //bodyDelete.details = new List<details_priceChangeDelete>();
+                        //bodyDelete.docentry = pedido.DocEntry;
+
+                        //foreach (var item in lstdetallesEliminar)
+                        //{
+                        //    details_priceChangeDelete product = new details_priceChangeDelete();
+
+                        //    product.visOrder = item.LineNum;
+                        //    product.docEntry = pedido.DocEntry;
+
+                        //    bodyDelete.Add(product);
+                        //}
+
+                        bodyDelete.docEntry = pedido.DocEntry;
+                        bodyDelete.LineNumbers = lstdetallesEliminar.Select(c => c.LineNum).ToArray();
+
+                        var response2 = cls_salesorders.DeleteRowfromOrder(bodyDelete);
+
+                        if (response2.IsSuccessful == true)
+                        {
+                            internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1, Estado=2, DeletedSAP=1, closedOrderTimes={0} where DocNum={1} and deleted=1", (timesClosed + 1), docint);
+                        }
+                        else
+                        {
+                            flag = 0;
+                            errorfollow = response.StatusDescription;
+                        }
+
+
+                        result = "SUCCESS";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+
+                        //if (flag == 0)
+                        //{
+                        //    result = "Error: " + errorfollow;
+                        //    return Json(result, JsonRequestBehavior.AllowGet);
+
+                        //}
+                        //else
+                        //{
+                        //    result = "SUCCESS";
+                        //    return Json(result, JsonRequestBehavior.AllowGet);
+                        //}
+
+                    }
+                    else {
+                        result = "No data to update";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
 
                 }
-                if (not > 0) { flag = 1;
-                    internadli.Database.ExecuteSqlCommand("update Tb_Autorizaciones set OrderClosed=1, closedOrderTimes={0} where DocNum={1}", (timesClosed + 1), docint);
-
-                    //Mandamos los cambios directo a SAP (consultar  a Stan que pasa si abren nuevamente la orden)
-
-                }
-
-                if (flag == 1) {
-                    
-                }
-
-                    
-            result = "SUCCESS";
-            return Json(result, JsonRequestBehavior.AllowGet);
-
 
         }
             catch (Exception ex)
             {
-                result = "ERROR: " + ex.Message;
+                result = "ERROR: " + ex.Message + "--- " + errorfollow;
                 return Json(result, JsonRequestBehavior.AllowGet);
 
             }
@@ -1992,7 +2148,63 @@ namespace LimenawebApp.Controllers
 
         }
 
-public ActionResult Prices_requestpdo(int docnum)
+
+        public ActionResult CancelSO(string docnum)
+        {
+            var errorfollow = "";
+            var result = "";
+            var docint = Convert.ToInt32(docnum);
+            try
+            {
+
+                    var pedido = (from a in dlipro.OpenSalesOrders where (a.NumSO == docint) select a).FirstOrDefault();
+
+                var pedidonum = (from g in dlipro.view_ordenesAbiertasDet
+                                 join j in dlipro.OCRD on g.CardCode equals j.CardCode
+                                 where (g.DocNum == docint)
+                                 select new lstPedidos { docnum = g.DocNum, date = g.DocDate, cardcode = g.CardCode, cardname = j.CardName, status = 0, Printed = g.Printed }).Distinct().OrderBy(c => c.cardname).FirstOrDefault();
+
+                if (pedidonum.Printed == "Y")
+                {
+                    result = "You can't cancel this order because it was already printed. Please contact your Supervisor or Finance Department for more information.";
+                    return Json(result, JsonRequestBehavior.AllowGet);
+                }
+                else {
+                    //Endpoint 11/12/2020
+                    var response = cls_salesorders.CancelSO(pedido.DocEntry);
+                    //Productos que se actualizan
+
+                    if (response.IsSuccessful == true)
+
+                    {
+                        result = "SUCCESS";
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                    else
+                    {
+                        result = "ERROR: " + response.ErrorMessage;
+                        return Json(result, JsonRequestBehavior.AllowGet);
+                    }
+                }
+
+
+
+
+
+
+            }
+            catch (Exception ex)
+            {
+                result = "ERROR: " + ex.Message + "--- " + errorfollow;
+                return Json(result, JsonRequestBehavior.AllowGet);
+
+            }
+
+
+        }
+
+
+        public ActionResult Prices_requestpdo(int docnum)
         {
             Sys_Users activeuser = Session["activeUser"] as Sys_Users;
             if (activeuser != null)
@@ -2015,16 +2227,20 @@ public ActionResult Prices_requestpdo(int docnum)
                 ViewBag.lstAlerts = lstAlerts;
 
                 //FIN HEADER
+
+                var ordenpedido = (from g in dlipro.view_ordenesAbiertasDet where (g.DocNum == docnum) select g).FirstOrDefault();
+                ViewBag.ordenpedido = ordenpedido;
+
                 var so_details = (from a in dlipro.view_ordenesAbiertasDet where(a.DocNum==docnum && a.Quantity >0 && !a.TreeType.Contains("I")) select a).ToArray();
                 var autolst = (from b in internadli.Tb_Autorizaciones where (b.DocNum == docnum) select b).ToArray();
-
+       
                 var products = so_details.Select(a => a.ItemCode).ToArray();
 
                 var infoproducts = (from c in dlipro.BI_Dim_Products where (products.Contains(c.id)) select c).ToArray();
 
                 var finaldetails = (from a in so_details
-                                    //join b in autolst on new { a.ItemCode, a.LineNum } equals new { b.ItemCode,b.LineNum } into data
-                                    join b in autolst on  a.ItemCode equals b.ItemCode into data
+                                    join b in autolst on new { a.ItemCode, a.LineNum } equals new { b.ItemCode,b.LineNum } into data
+                                    //join b in autolst on  a.ItemCode equals b.ItemCode into data
                                    join c in infoproducts on a.ItemCode equals c.id
                                    from final in data.DefaultIfEmpty()             
                                    select new Pedidos_precios { LineNum = a.LineNum, Quantity = a.Quantity, CardCode = a.CardCode, UomCode = a.UomCode, UomEntry = a.UomEntry, ItemCode = a.ItemCode, ItemName = a.ItemName, DocNum = a.DocNum, DocDate = a.DocDate, Price = a.Price,
@@ -2269,7 +2485,7 @@ public ActionResult Prices_requestpdo(int docnum)
                 var infoproducts = (from c in dlipro.BI_Dim_Products where (products.Contains(c.id)) select c).ToArray();
 
                 var finaldetails = (from a in so_details
-                                    join b in autolst on a.ItemCode equals b.ItemCode into data
+                                    join b in autolst on new { a.ItemCode, a.LineNum } equals new { b.ItemCode, b.LineNum } into data
                                     join c in infoproducts on a.ItemCode equals c.id
                                     from final in data.DefaultIfEmpty()
                                     select new Pedidos_precios
@@ -8119,7 +8335,8 @@ public ActionResult Prices_requestpdo(int docnum)
                     isAdmin = 1;
                     lstCredits = (from a in dblim.Tb_CreditsRequest where(a.dateCreate >= filtrostartdate && a.dateCreate <= filtroenddate) select new Tb_CreditsRequestWithRoute { ID_creditRequest = a.ID_creditRequest, ItemCode = a.ItemCode, ItemName = a.ItemName, UoMCode = a.UoMCode, Request_reason = a.Request_reason, Quantity = a.Quantity, URL_image = a.URL_image, Validated = a.Validated, DocNumSAP = a.DocNumSAP, IDRequest_reason = a.IDRequest_reason, dateCreate = a.dateCreate, dateValidate = a.dateValidate,
                         userValidate = a.userValidate, userValidateName = a.userValidateName, userCreate = a.userCreate, userCreateName = a.userCreateName, CardCode = a.CardCode, CardName = a.CardName, estado = a.estado,
-                        Route = "", comments = a.comments, LineNum=a.LineNum
+                        Route = "", comments = a.comments, LineNum=a.LineNum,
+                        SRP = 0
                     }).ToList();
 
 
@@ -8127,19 +8344,21 @@ public ActionResult Prices_requestpdo(int docnum)
                     foreach (var item in lstCredits)
                     {
                         item.Route = salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault() == null ? "NA" : salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault();
+                        item.SRP = (from sr in dlipro.BI_Dim_Products where (sr.id == item.ItemCode) select sr.SRP).FirstOrDefault();
                     }
                 }
                 else
                 {
                     isAdmin = 0;
-                    lstCredits= (from a in dblim.Tb_CreditsRequest where(a.userCreate==activeuser.ID_User && a.dateCreate >= filtrostartdate && a.dateCreate <= filtroenddate)
-                                 select new Tb_CreditsRequestWithRoute
-                                 {
-                                     ID_creditRequest = a.ID_creditRequest,
-                                     ItemCode = a.ItemCode,
-                                     ItemName = a.ItemName,
-                                     ReturnItemCode = a.ItemCodeReturn,
-                                     ReturnItemName = a.ItemNameReturn,
+                    lstCredits = (from a in dblim.Tb_CreditsRequest where (a.userCreate == activeuser.ID_User && a.dateCreate >= filtrostartdate && a.dateCreate <= filtroenddate)
+                                  select new Tb_CreditsRequestWithRoute
+                                  {
+                                      ID_creditRequest = a.ID_creditRequest,
+                                      ItemCode = a.ItemCode,
+                                      ItemName = a.ItemName,
+                                      ReturnItemCode = a.ItemCodeReturn,
+                                      ReturnItemName = a.ItemNameReturn,
+                                      SRP = 0,
                                      UoMCode = a.UoMCode,
                                      UoMEntry = a.UoMEntry,
                                      Request_reason = a.Request_reason,
@@ -8166,6 +8385,7 @@ public ActionResult Prices_requestpdo(int docnum)
                     foreach (var item in lstCredits)
                     {
                         item.Route = salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault() == null ? "NA" : salesordersOpen.Where(df => df.CardCode == item.CardCode).Select(df => df.DeliveryRoute).FirstOrDefault();
+                        item.SRP = (from sr in dlipro.BI_Dim_Products where (sr.id == item.ItemCode) select sr.SRP).FirstOrDefault();
                     }
                 }
                 ViewBag.isadmin = isAdmin;

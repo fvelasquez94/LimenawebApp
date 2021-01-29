@@ -21,7 +21,9 @@ namespace LimenawebApp.Controllers.Warehouse
         private Cls_Creditmemos cls_creditmemos = new Cls_Creditmemos();
         private Cls_Returnreasons cls_returnreasons = new Cls_Returnreasons();
         private cls_invoices Cls_invoices = new cls_invoices();
+        private Cls_transactions Cls_transactions = new Cls_transactions();
         private Cls_Authorizations cls_Authorizations = new Cls_Authorizations();
+        private cls_payments Cls_payments = new cls_payments();
         public ActionResult ReceiveCredits(string fstartd, string fendd)
         {
 
@@ -266,6 +268,181 @@ namespace LimenawebApp.Controllers.Warehouse
 
         }
 
+
+        public ActionResult Credits_flow(int id)
+        {
+
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Warehouse";
+                ViewData["Page"] = "Received Credits";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                List<flowInvoice> lstflow = new List<flowInvoice>();
+                var invoice = Cls_invoices.GetInvoice(id, 0, true).data.FirstOrDefault();
+
+                flowInvoice firstStep = new flowInvoice();
+                firstStep.Docentry = invoice.docEntry;
+                firstStep.Docnum = invoice.docNum;
+                firstStep.date = invoice.docDate;
+                firstStep.Datetime = 110;
+                firstStep.Deliverydate = invoice.deliveryDate;
+                firstStep.Deliverydatetime = 110;
+                firstStep.Type = "Planning";
+                firstStep.ID_user = 0;
+                firstStep.ID_userstring = "";
+                firstStep.UserName = "Sergio Cabrera";
+                firstStep.Department = "Operations";
+                firstStep.amount = invoice.docTotal;
+                firstStep.Text = "";
+                firstStep.Comment = "";
+
+                lstflow.Add(firstStep);
+
+
+                var transactions = Cls_transactions.GetTransactions(id.ToString(), "","","","","",null,null,100,1).data;
+                ViewBag.transactions = transactions;
+
+                var creditmemos = cls_creditmemos.GetCreditMemos(id, "", null, null, true);
+                ViewBag.creditmemos = creditmemos.data;
+
+                if (creditmemos != null) {
+                    if (creditmemos.data != null) {
+                        if (creditmemos.data.Count() > 0) {
+                            foreach (var item in creditmemos.data) {
+                                flowInvoice newstep = new flowInvoice();
+                                newstep.Docentry = item.docEntry;
+                                newstep.Docnum = 0;
+                                newstep.date = item.docDate;
+                                newstep.Datetime = item.docTime;
+                                newstep.Deliverydate = item.docDate;
+                                newstep.Deliverydatetime = item.docTime;
+                                newstep.Type = "Credit Memo";
+                                newstep.ID_user = 0;
+                                newstep.ID_userstring = item.id_Driver;
+                                newstep.UserName = item.driver;
+                                newstep.Department = "Operations";
+                                newstep.amount = item.docTotal;
+                                newstep.Comment = "";
+                                newstep.Text = "";
+                                lstflow.Add(newstep);
+
+                            }
+                        }
+                    }
+                }
+               
+
+                var payments = Cls_payments.GetPayments("", id, null, null, false).data;
+                ViewBag.payments = payments;
+
+
+                if (payments != null)
+                {                  
+                        if (payments.Count() > 0)
+                        {
+                            foreach (var item in payments)
+                            {
+                                flowInvoice newstep = new flowInvoice();
+                                newstep.Docentry = item.docEntry;
+                                newstep.Docnum = 0;
+                                newstep.date = item.docDate;
+                                newstep.Datetime = item.docTime;
+                                newstep.Deliverydate = item.docDate;
+                                newstep.Deliverydatetime = item.docTime;
+                                newstep.Type = "Payment";
+                                newstep.ID_user = 0;
+                                newstep.ID_userstring = "";
+                                newstep.UserName = item.userWeb;
+                                newstep.Department = "Logistics";
+                                newstep.amount = item.sumApplied;
+                            newstep.Text = "";
+                            newstep.Comment = "";
+                            lstflow.Add(newstep);
+                            }
+                        }
+                    
+                }
+
+
+                var authorizations = cls_Authorizations.GetAuthorizationsRoute(0, invoice.cardCode, invoice.id_Route, "").data;
+                ViewBag.authorizations = authorizations;
+
+
+                if (authorizations != null)
+                {
+                    if (authorizations.Count() > 0)
+                    {
+                        foreach (var item in authorizations)
+                        {
+                            flowInvoice newstep = new flowInvoice();
+                            newstep.Docentry = 0;
+                            newstep.Docnum = Convert.ToInt32(item.docNum);
+                            newstep.date = item.date;
+                            newstep.Datetime = 0;
+                            newstep.DatetimeString = item.createTime;
+                            newstep.Deliverydate = item.date;
+                            newstep.Deliverydatetime = 0;
+                            newstep.DatetimeStringUpdate = item.updateTime;
+                            newstep.Type = "Authorization";
+                            newstep.ID_user = 0;
+                            newstep.ID_userstring = item.idDriver;
+                            newstep.UserName = (from a in db.Sys_Users where (a.IDSAP==item.idDriver) select a.Name + " " + a.Lastname).FirstOrDefault();
+                            newstep.Department = "Logistics";
+                            newstep.amount =0;
+                            newstep.Text = item.idType.ToString();
+                            newstep.Comment = item.comments;
+                            lstflow.Add(newstep);
+
+                            flowInvoice newstep2 = new flowInvoice();
+                            newstep2.Docentry = 0;
+                            newstep2.Docnum = Convert.ToInt32(item.docNum);
+                            newstep2.date = item.date;
+                            newstep2.Datetime = Convert.ToInt32(item.createTime);
+                            newstep2.Deliverydate = item.date;
+                            newstep2.Deliverydatetime = Convert.ToInt32(item.updateTime);
+                            newstep2.Type = "Authorization";
+                            newstep2.ID_user = 0;
+                            newstep2.ID_userstring = item.idFinanceUser;
+                            newstep2.UserName = (from a in db.Sys_Users where (a.IDSAP == item.idDriver) select a.Name + " " + a.Lastname).FirstOrDefault();
+                            newstep2.Department = "Finance";
+                            newstep2.Text = item.idType.ToString();
+                            newstep2.amount = 0;
+                            newstep2.Comment = item.comments;
+                            lstflow.Add(newstep2);
+                        }
+                    }
+
+                }
+
+                return View(invoice);
+
+
+
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+
+        }
+
         public ActionResult Put_creditMemoDetail(PutDetailsCreditmemos_api Item, int DocentryCredit)
         {
             try
@@ -342,7 +519,7 @@ namespace LimenawebApp.Controllers.Warehouse
                         var result = "Error";
                         return Json(result, JsonRequestBehavior.AllowGet);
                     }
-              
+
                 //}
                 //else
                 //{
@@ -535,9 +712,12 @@ namespace LimenawebApp.Controllers.Warehouse
                         //Reconciliamos el Credit Memo
                         try
                         {
+
+                            var creditmemoOriginal = cls_creditmemos.GetCreditMemosOriginal(docEntryInv, "", null, null, false);
+
                             CreditMemo_reconciliation newreconciliation = new CreditMemo_reconciliation();
                             newreconciliation.cardCode = invoice.cardCode;
-                            newreconciliation.docNumCredit = creditmemos.data[0].docNum;
+                            newreconciliation.docNumCredit = creditmemoOriginal.data.FirstOrDefault().docNum;
                             newreconciliation.docNumInvoice = invoice.docNum;
                             newreconciliation.totalCredit = creditmemos.data[0].docTotal;
 
@@ -561,6 +741,7 @@ namespace LimenawebApp.Controllers.Warehouse
                             //Si no hay pagos y NO existe autorizacion, la dejamos en estado 6 Waiting for payment
                             //Si autorizacion CODIGO 1 (deja producto sin recibir pago) se aprueba, colocar estado 6 y verificar que estado de factura NO sea 3 (sino quiere decir que el vendedor cambio ele stado)
                             //Authorizations
+                            newput.stateSd = 6;
                             var authorizations = cls_Authorizations.GetAuthorizations(docEntryInv,"","",null,null);
                             if (authorizations.data != null)
                             {

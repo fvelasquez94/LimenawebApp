@@ -37,5 +37,6 @@ namespace LimenawebApp.Models
         public Nullable<System.DateTime> CreateDate { get; set; }
         public string DocTime { get; set; }
         public string SOType { get; set; }
+        public int DocEntry { get; set; }
     }
 }

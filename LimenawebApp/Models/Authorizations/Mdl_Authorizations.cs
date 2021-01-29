@@ -35,6 +35,9 @@ namespace LimenawebApp.Models.Authorizations
         public string cardCode { get; set; }
         public string cardName { get; set; }
         public System.DateTime? date { get; set; }
+       public string createTime { get; set; }
+       public string updateTime { get; set; }
+
 
     }
 

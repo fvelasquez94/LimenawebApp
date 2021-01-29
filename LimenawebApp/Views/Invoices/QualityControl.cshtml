@@ -31,6 +31,9 @@
                 <div>
                     <a href="@Url.Action("QualityControl_planning", "Invoices")" class="btn btn-info">Back</a>
                 </div>
+                <div>
+                    <a href="#" onclick="PrintPalletlabel(@ViewBag.id_route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Preview Pallet Label</a>
+                </div>
             </div>
 
             <div class="table-responsive">
@@ -104,7 +107,9 @@ else
                     {
                         <a href="#" onclick="PrintSO(@so.ID_Route,@so.DocEntry)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Print</a>
             }
-
+                            @if (so.isfinished == true && so.DocEntry != "" && so.DocEntry != "--")
+    {<a href="#" onclick="PrintSOTNWMS(@so.ID_salesorder)" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-print"></i>Preview Invoice</a><a href="#" onclick="PrintSOTNWMSBarcode(@so.ID_salesorder)" class="btn btn-sm btn-outline-info btn-sm form-pill"><i class="fa fa-print"></i>Preview Barcode</a>
+}
 
             @*@if (Convert.ToDecimal(so.query1) >= 100)
             {

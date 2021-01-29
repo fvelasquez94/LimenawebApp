@@ -12,7 +12,7 @@
   <xs:element name="Reports" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="Reports" msprop:Generator_UserDSName="Reports">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="Dsd_Orders" msprop:Generator_TableClassName="Dsd_OrdersDataTable" msprop:Generator_TableVarName="tableDsd_Orders" msprop:Generator_RowChangedName="Dsd_OrdersRowChanged" msprop:Generator_TablePropName="Dsd_Orders" msprop:Generator_RowDeletingName="Dsd_OrdersRowDeleting" msprop:Generator_RowChangingName="Dsd_OrdersRowChanging" msprop:Generator_RowEvHandlerName="Dsd_OrdersRowChangeEventHandler" msprop:Generator_RowDeletedName="Dsd_OrdersRowDeleted" msprop:Generator_RowClassName="Dsd_OrdersRow" msprop:Generator_UserTableName="Dsd_Orders" msprop:Generator_RowEvArgName="Dsd_OrdersRowChangeEvent">
+        <xs:element name="Dsd_Orders" msprop:Generator_TableClassName="Dsd_OrdersDataTable" msprop:Generator_TableVarName="tableDsd_Orders" msprop:Generator_TablePropName="Dsd_Orders" msprop:Generator_RowDeletingName="Dsd_OrdersRowDeleting" msprop:Generator_RowChangingName="Dsd_OrdersRowChanging" msprop:Generator_RowEvHandlerName="Dsd_OrdersRowChangeEventHandler" msprop:Generator_RowDeletedName="Dsd_OrdersRowDeleted" msprop:Generator_UserTableName="Dsd_Orders" msprop:Generator_RowChangedName="Dsd_OrdersRowChanged" msprop:Generator_RowEvArgName="Dsd_OrdersRowChangeEvent" msprop:Generator_RowClassName="Dsd_OrdersRow">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="ID_OrderDSD" msprop:Generator_ColumnVarNameInTable="columnID_OrderDSD" msprop:Generator_ColumnPropNameInRow="ID_OrderDSD" msprop:Generator_ColumnPropNameInTable="ID_OrderDSDColumn" msprop:Generator_UserColumnName="ID_OrderDSD" type="xs:int" />
@@ -34,11 +34,24 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
+        <xs:element name="ReportLabelPallet" msprop:Generator_TableClassName="ReportLabelPalletDataTable" msprop:Generator_TableVarName="tableReportLabelPallet" msprop:Generator_TablePropName="ReportLabelPallet" msprop:Generator_RowDeletingName="ReportLabelPalletRowDeleting" msprop:Generator_RowChangingName="ReportLabelPalletRowChanging" msprop:Generator_RowEvHandlerName="ReportLabelPalletRowChangeEventHandler" msprop:Generator_RowDeletedName="ReportLabelPalletRowDeleted" msprop:Generator_UserTableName="ReportLabelPallet" msprop:Generator_RowChangedName="ReportLabelPalletRowChanged" msprop:Generator_RowEvArgName="ReportLabelPalletRowChangeEvent" msprop:Generator_RowClassName="ReportLabelPalletRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="CardCode" msprop:Generator_ColumnVarNameInTable="columnCardCode" msprop:Generator_ColumnPropNameInRow="CardCode" msprop:Generator_ColumnPropNameInTable="CardCodeColumn" msprop:Generator_UserColumnName="CardCode" type="xs:string" />
+              <xs:element name="CardName" msprop:Generator_ColumnVarNameInTable="columnCardName" msprop:Generator_ColumnPropNameInRow="CardName" msprop:Generator_ColumnPropNameInTable="CardNameColumn" msprop:Generator_UserColumnName="CardName" type="xs:string" minOccurs="0" />
+              <xs:element name="DeliveryRoute" msprop:Generator_ColumnVarNameInTable="columnDeliveryRoute" msprop:Generator_ColumnPropNameInRow="DeliveryRoute" msprop:Generator_ColumnPropNameInTable="DeliveryRouteColumn" msprop:Generator_UserColumnName="DeliveryRoute" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
       </xs:choice>
     </xs:complexType>
     <xs:unique name="Constraint1" msdata:PrimaryKey="true">
       <xs:selector xpath=".//mstns:Dsd_Orders" />
       <xs:field xpath="mstns:ID_OrderDSD" />
+    </xs:unique>
+    <xs:unique name="ReportLabelPalletKey1" msdata:PrimaryKey="true">
+      <xs:selector xpath=".//mstns:ReportLabelPallet" />
+      <xs:field xpath="mstns:CardCode" />
     </xs:unique>
   </xs:element>
 </xs:schema>

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using LimenawebApp.Controllers.API;
 using LimenawebApp.Controllers.Session;
 using LimenawebApp.Models;
+using LimenawebApp.Models.SalesOrders;
 using Newtonsoft.Json;
 
 namespace LimenawebApp.Controllers
@@ -17,7 +19,8 @@ namespace LimenawebApp.Controllers
         private dbComerciaEntities dbcmk = new dbComerciaEntities();
 
         private Cls_session cls_session = new Cls_session();
-
+        private Cls_SalesOrders cls_salesorders = new Cls_SalesOrders();
+        private Cls_BusinessPartners cls_businesspartners = new Cls_BusinessPartners();
         // GET: Main Dashboard_sales
         //CLASS GENERAL
         private clsGeneral generalClass = new clsGeneral();
@@ -529,6 +532,9 @@ namespace LimenawebApp.Controllers
                 ViewBag.lstRoles = JsonConvert.SerializeObject(r);
                 //NOTIFICATIONS
                 DateTime now = DateTime.Today;
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
                 //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
                 //ViewBag.notifications = lstAlerts;
                 ViewBag.activeuser = activeuser;
@@ -543,6 +549,133 @@ namespace LimenawebApp.Controllers
                     }
                     
                 }
+                List<SalesOrders_api> salesorders = new List<SalesOrders_api>();
+                GetBudget_api  budget = new GetBudget_api();
+                List<Budget_api> budgetfilter = new List<Budget_api>();
+                //finales
+                List<Budget_BP> customers = new List<Budget_BP>();
+                List<Budget_BP> ordenes = new List<Budget_BP>();
+                List<Budget_BP_extra> customers_extra = new List<Budget_BP_extra>();
+                string[] clientes;
+                if (activeuser.Roles.Contains("Sales Representative"))
+                {
+                   
+
+                    int idsap = Convert.ToInt32(activeuser.IDSAP);
+                    salesorders = cls_salesorders.GetSalesOrders("", 0, 0, sunday, saturday, idsap, false).data; //ordenes de la semana
+                    budget = cls_salesorders.GetBudget("", idsap, sunday, saturday, false); //budget general  semanal
+
+                    var weeklySales = salesorders.Sum(c => c.docTotal);
+                    var weeklySalesCustomers = salesorders.GroupBy(c => c.cardCode).Count();
+
+                    ViewBag.weeklysales = weeklySales;
+                    ViewBag.weeklySalesCustomers = weeklySalesCustomers;
+        
+                    //
+                    var weeklyBudget = budget.data.Sum(c => c.amount);
+                    var weeklyCustomers = budget.data.GroupBy(c => c.cardCode).Count();
+
+                    ViewBag.weeklyBudget = weeklyBudget;
+                    ViewBag.weeklyCustomers = weeklyCustomers;
+                    //
+
+                    if (salesorders != null) {
+                        if (salesorders.Count > 0) {
+                             ordenes = salesorders.Where(c=>c.docDate==now).GroupBy(c => c.cardCode).Select(c => new Budget_BP//ordenes del dia
+                             {
+                                cardCode = c.Key,
+                                time = c.Max(a => a.docTime.Value),
+                                Sales = c.Sum(a => a.docTotal),
+                                Budget = 0,
+                                cardName = "",
+                                Scope = 0,
+                                 SlpCode = 0,
+                                 SlpName = ""
+                             }).ToList();
+                             
+                        }
+                    }
+           
+                   
+
+                        clientes = budget.data.Where(c=>c.date==now).Select(c => c.cardCode).Distinct().ToArray(); //clientes unicos
+
+
+                        //budgetfilter = budget.data.Where(c => clientes.Contains(c.cardCode)).ToList(); //budget filtrado de general a especifico
+                        var clientesbudget = clientes;//budgetfilter.Select(c => c.cardCode).Distinct().ToArray();
+
+                        //Definimos clientes con budget y clientes sin budget
+
+                        //var clientesfinales = salesorders.data.Where(c => clientesbudget.Contains(c.cardCode)).ToList();
+                        var clientesfinalesExtra = ordenes.Where(c => !clientesbudget.Contains(c.cardCode)).ToList();
+
+                        if (budget.data.Where(c => c.date == now).Count() > 0)
+                        {
+                            foreach (var item in budget.data.Where(c => c.date == now))
+                            {
+                                Budget_BP newcustomer = new Budget_BP();
+                                newcustomer.cardCode = item.cardCode;
+                                newcustomer.cardName = cls_businesspartners.GetBusinessPartner(item.cardCode,0,0,false).data.FirstOrDefault().cardName;
+                                newcustomer.Budget = item.amount;
+                            newcustomer.SlpCode = 0;
+                            newcustomer.SlpName = "";
+                                if (ordenes.Where(c => c.cardCode == item.cardCode).Count() > 0)
+                                {
+                                    newcustomer.time = ordenes.Where(c => c.cardCode == item.cardCode).Select(c => c.time).FirstOrDefault();
+                                    newcustomer.Sales = ordenes.Where(c => c.cardCode == item.cardCode).Select(c => c.Sales).FirstOrDefault();
+                                    newcustomer.Scope = (ordenes.Where(c => c.cardCode == item.cardCode).Select(c => c.Sales).FirstOrDefault() / newcustomer.Budget) * 100;
+                                }
+                                else {
+                                    newcustomer.time = 0;
+                                    newcustomer.Sales = 0;
+                                    newcustomer.Scope = 0;
+                                }
+
+                          
+                                customers.Add(newcustomer);
+                            }
+                        }
+
+                        if (clientesfinalesExtra.Count > 0)
+                        {
+                
+
+
+                            foreach (var item in clientesfinalesExtra)
+                            {
+                                Budget_BP_extra newcustomerextra = new Budget_BP_extra();
+                                newcustomerextra.cardCode = item.cardCode;
+                                newcustomerextra.cardName = cls_businesspartners.GetBusinessPartner(item.cardCode, 0, 0, false).data.FirstOrDefault().cardName;
+                                newcustomerextra.time = item.time;
+                                newcustomerextra.Sales = item.Sales;
+                            newcustomerextra.SlpCode = 0;
+                            newcustomerextra.SlpName = "";
+                            var actualbudget = budget.data.Where(c=>c.cardCode==item.cardCode);
+                                if (actualbudget != null)
+                                {
+                                    if (actualbudget.Count() > 0)
+                                    {
+                                        newcustomerextra.VisitDay = actualbudget.FirstOrDefault().dayName;
+                                    }
+                                    else { newcustomerextra.VisitDay = "No day assigned"; }
+                                    
+                                }
+                                else {
+                                    newcustomerextra.VisitDay = "No day assigned";
+                                }
+                            
+                                customers_extra.Add(newcustomerextra);
+                            }
+                        }
+           
+                   
+                }
+                else {
+
+                }
+
+                ViewBag.customers = customers;
+                ViewBag.extracustomers = customers_extra;
 
                 return View();
 
@@ -560,6 +693,203 @@ namespace LimenawebApp.Controllers
           
 
         }
+
+
+        public ActionResult Dashboard_SP()
+        {
+            if (cls_session.checkSession())
+            {
+                Sys_Users activeuser = Session["activeUser"] as Sys_Users;
+
+                //HEADER
+                //ACTIVE PAGES
+                ViewData["Menu"] = "Main";
+                ViewData["Page"] = "Index";
+                List<string> s = new List<string>(activeuser.Departments.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstDepartments = JsonConvert.SerializeObject(s);
+                List<string> r = new List<string>(activeuser.Roles.Split(new string[] { "," }, StringSplitOptions.None));
+                ViewBag.lstRoles = JsonConvert.SerializeObject(r);
+                //NOTIFICATIONS
+                DateTime now = DateTime.Today;
+                ////filtros de fecha (SEMANAL)
+                var sunday = DateTime.Today.AddDays(-(int)DateTime.Today.DayOfWeek);
+                var saturday = sunday.AddDays(6).AddHours(23);
+                //List<Sys_Notifications> lstAlerts = (from a in db.Sys_Notifications where (a.ID_user == activeuser.ID_User && a.Active == true) select a).OrderByDescending(x => x.Date).Take(4).ToList();
+                //ViewBag.notifications = lstAlerts;
+                ViewBag.activeuser = activeuser;
+                //FIN HEADER
+                //FILTROS VARIABLES
+                ViewBag.showfreezermessage = "N";
+
+
+                List<SalesOrders_api> salesorders = new List<SalesOrders_api>();
+                GetBudget_api budget = new GetBudget_api();
+                List<Budget_api> budgetfilter = new List<Budget_api>();
+
+                List<RepsSalesReport> repsSurveys = new List<RepsSalesReport>();
+
+                List<int> TagIds = new List<int>();
+                var users = dblim.Sys_Users.Where(a => a.Roles.Contains("Sales Representative")).OrderBy(c => c.Name).ToList();
+
+                //finales
+                List<Budget_BP> customers = new List<Budget_BP>();
+                List<Budget_BP> ordenes = new List<Budget_BP>();
+                List<Budget_BP_extra> customers_extra = new List<Budget_BP_extra>();
+                string[] clientes;
+                string[] usids;
+
+                if (activeuser.Roles.Contains("Sales Supervisor"))
+                {
+
+                    TagIds = activeuser.prop02.Split(',').Select(int.Parse).ToList(); //sacamos vendedores asignados
+
+                    repsSurveys = users.Where(h => TagIds.Contains(h.ID_User) && h.IDSAP != "").Select(h => new RepsSalesReport { ID_User = h.ID_User, Name = h.Name + " " + h.Lastname, weeklySales = 0, weeklySalesCustomers = 0, weeklyBudget=0, weeklyCustomers=0, idSAP = h.IDSAP, extra = 0, idSAPint=0 }).ToList();
+                    //usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+                }
+                else
+                { //Gerencia
+                    repsSurveys = users.Where(h => h.IDSAP!="").Select(h => new RepsSalesReport { ID_User = h.ID_User, Name = h.Name + " " + h.Lastname, weeklySales = 0, weeklySalesCustomers = 0, weeklyBudget = 0, weeklyCustomers = 0, idSAP = h.IDSAP, extra = 0, idSAPint=0 }).ToList();
+                    //usids = repsSurveys.Select(c => c.idSAP.ToString()).ToArray();
+                }
+
+                foreach (var itemrep in repsSurveys) {
+                    int idsap = Convert.ToInt32(itemrep.idSAP);
+
+                    salesorders = cls_salesorders.GetSalesOrders("", 0, 0, sunday, saturday, idsap, false).data; //ordenes de la semana
+                    budget = cls_salesorders.GetBudget("", idsap, sunday, saturday, false); //budget general  semanal
+                    itemrep.idSAPint = idsap;
+                    //
+                    itemrep.weeklyBudget = budget.data.Sum(c => c.amount);
+                    itemrep.weeklyCustomers = budget.data.GroupBy(c => c.cardCode).Count();
+                    //
+
+                    if (salesorders != null)
+                    {
+                        if (salesorders.Count > 0)
+                        {
+
+                            itemrep.weeklySales = salesorders.Sum(c => c.docTotal);
+                            itemrep.weeklySalesCustomers = salesorders.GroupBy(c => c.cardCode).Count();
+                         
+
+                            ordenes = salesorders.Where(c => c.docDate == now).GroupBy(c => c.cardCode).Select(c => new Budget_BP//ordenes del dia
+                            {
+                                cardCode = c.Key,
+                                time = c.Max(a => a.docTime.Value),
+                                Sales = c.Sum(a => a.docTotal),
+                                Budget = 0,
+                                cardName = "",
+                                Scope = 0,
+                                SlpCode = idsap,
+                                SlpName = itemrep.Name
+                            }).ToList();
+
+                        }
+                    }
+
+
+
+                    clientes = budget.data.Where(c => c.date == now).Select(c => c.cardCode).Distinct().ToArray(); //clientes unicos
+
+
+                    //budgetfilter = budget.data.Where(c => clientes.Contains(c.cardCode)).ToList(); //budget filtrado de general a especifico
+                    var clientesbudget = clientes;//budgetfilter.Select(c => c.cardCode).Distinct().ToArray();
+
+                    //Definimos clientes con budget y clientes sin budget
+
+                    //var clientesfinales = salesorders.data.Where(c => clientesbudget.Contains(c.cardCode)).ToList();
+                    var clientesfinalesExtra = ordenes.Where(c => !clientesbudget.Contains(c.cardCode)).ToList();
+
+                    if (budget.data.Where(c => c.date == now).Count() > 0)
+                    {
+                        foreach (var item in budget.data.Where(c => c.date == now))
+                        {
+                            Budget_BP newcustomer = new Budget_BP();
+                            newcustomer.cardCode = item.cardCode;
+                            newcustomer.cardName = cls_businesspartners.GetBusinessPartner(item.cardCode, 0, 0, false).data.FirstOrDefault().cardName;
+                            newcustomer.Budget = item.amount;
+                            newcustomer.SlpName = itemrep.Name;
+                            newcustomer.SlpCode = idsap;
+                            if (ordenes.Where(c => c.cardCode == item.cardCode).Count() > 0)
+                            {
+                                newcustomer.time = ordenes.Where(c => c.cardCode == item.cardCode).Select(c => c.time).FirstOrDefault();
+                                newcustomer.Sales = ordenes.Where(c => c.cardCode == item.cardCode).Select(c => c.Sales).FirstOrDefault();
+                                newcustomer.Scope = (ordenes.Where(c => c.cardCode == item.cardCode).Select(c => c.Sales).FirstOrDefault() / newcustomer.Budget) * 100;
+                            }
+                            else
+                            {
+                                newcustomer.time = 0;
+                                newcustomer.Sales = 0;
+                                newcustomer.Scope = 0;
+                            }
+
+
+                            customers.Add(newcustomer);
+                        }
+                    }
+
+                    if (clientesfinalesExtra.Count > 0)
+                    {
+
+
+
+                        foreach (var item in clientesfinalesExtra)
+                        {
+                            Budget_BP_extra newcustomerextra = new Budget_BP_extra();
+                            newcustomerextra.cardCode = item.cardCode;
+                            newcustomerextra.cardName = cls_businesspartners.GetBusinessPartner(item.cardCode, 0, 0, false).data.FirstOrDefault().cardName;
+                            newcustomerextra.time = item.time;
+                            newcustomerextra.Sales = item.Sales;
+                            newcustomerextra.SlpName = itemrep.Name;
+                            newcustomerextra.SlpCode = idsap;
+                            var actualbudget = budget.data.Where(c => c.cardCode == item.cardCode);
+                            if (actualbudget != null)
+                            {
+                                if (actualbudget.Count() > 0)
+                                {
+                                    newcustomerextra.VisitDay = actualbudget.FirstOrDefault().dayName;
+                                }
+                                else { newcustomerextra.VisitDay = "No day assigned"; }
+
+                            }
+                            else
+                            {
+                                newcustomerextra.VisitDay = "No day assigned";
+                            }
+
+                            customers_extra.Add(newcustomerextra);
+                        }
+                    }
+
+                }
+
+               
+
+
+
+                
+             
+
+                ViewBag.customers = customers;
+                ViewBag.extracustomers = customers_extra;
+                ViewBag.salesrep = repsSurveys;
+                return View();
+
+
+
+            }
+            else
+            {
+
+                return RedirectToAction("Login", "Home", new { access = false });
+
+            }
+
+
+
+
+        }
+
 
 
     }

@@ -100,7 +100,7 @@
                                     </div>
                                     <div class="col-auto d-flex align-items-center">
                                         <i class="material-icons icon-muted icon-20pt mr-2">receipt</i>
-                                        <a style="text-decoration: none;cursor:default;" href="#" class="text-body">#@item.docEntryInv</a>
+                                        <a @*style="text-decoration: none;cursor:default;"*@ href="@Url.Action("Credits_flow","Warehouse", new { id=item.docEntryInv})" class="text-body">#@item.docEntryInv</a>
                                     </div>
                                     <div class="col-auto d-flex align-items-center">
                                         <i class="material-icons icon-muted icon-20pt mr-2">account_circle</i>

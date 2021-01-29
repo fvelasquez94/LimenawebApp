@@ -4,8 +4,25 @@
 }
 
 <!-- jQuery -->
-<script src="~/Content/assets/vendor/jquery.min.js"></script>
+
+@if (ViewBag.Title == "Credits flow")
+{
+
+
+    <!-- jQuery & jQuery UI are required -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
+    <script src="~/Content/assets/vendor/flowchart/jquery.flowchart.js"></script>
+}
+else
+{
+    <script src="~/Content/assets/vendor/jquery.min.js"></script>
+}
+
+
 <!-- Bootstrap -->
+
 <script src="~/Content/assets/vendor/popper.min.js"></script>
 <script src="~/Content/assets/vendor/bootstrap.min.js"></script>
 <!-- Simplebar -->
@@ -117,7 +134,25 @@
     <script src="~/Content/assets/vendor/dragula/dragula.min.js"></script>
     <script src="~/Content/assets/js/dragula.js"></script>
 }
-@if (ViewBag.Title == "Distribuidora Limeña - Planning order")
+@if (ViewBag.Title == "Distribuidora Limeña - Planning RoutesWMS")
+{
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script><!-- lazyload plugin -->
+    <script src="~/Content/assets/js/lazyloadWMS.config.js"></script>
+    <script src="~/Content/assets/js/lazyload.js"></script>
+    <script src="~/Content/assets/js/plugin.js"></script>
+    <!-- scrollreveal -->
+    <script src="~/Content/libs/scrollreveal/dist/scrollreveal.min.js"></script>
+    <!-- feathericon -->
+
+    <!-- theme -->
+    <script src="~/Content/assets/js/theme.js"></script>
+
+    <!-- Dragula -->
+    <script src="~/Content/assets/vendor/dragula/dragula.min.js"></script>
+    <script src="~/Content/assets/js/dragula.js"></script>
+}
+
+@if (ViewBag.Title == "Distribuidora Limeña - Planning order" || ViewBag.Title == "Distribuidora Limeña - Planning orderWMS")
 {
     @*<script src="https://cdn.datatables.net/r/bs-3.3.5/dt-1.10.9/datatables.min.js"></script>*@
     <script src="https://cdn.datatables.net/rowreorder/1.2.5/js/dataTables.rowReorder.min.js"></script>

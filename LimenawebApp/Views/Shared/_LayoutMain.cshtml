@@ -5,11 +5,13 @@
 
     <style>
         .swal2-input[type=number] {
-            max-width: 100% !important; 
+            max-width: 100% !important;
         }
+
         .dataTables_wrapper.no-footer .dataTables_scrollBody {
-        border-bottom:none !important;
+            border-bottom: none !important;
         }
+
         table.dataTable.no-footer {
             border-bottom: none !important;
         }
@@ -18,30 +20,98 @@
         span.treegrid-expander {
             display: none;
         }
+
         span[class="treegrid-expander treegrid-expander-collapsed"] {
             display: inline-block !important;
         }
+
         span[class="treegrid-expander treegrid-expander-expanded"] {
             display: inline-block !important;
         }
 
         span[class="treegrid-expander treegrid-expander-collapsed"]:after {
             content: 'Show Details';
-        } 
-            span[class="treegrid-expander treegrid-expander-expanded"]:after {
-                content: 'Hide Details';
-            }
+        }
 
+        span[class="treegrid-expander treegrid-expander-expanded"]:after {
+            content: 'Hide Details';
+        }
     </style>
 
+    <style>
+        .flowchart-example-container {
+            width: 1200px;
+            height: 800px;
+            background: white;
+            border: 1px solid #BBB;
+            margin-bottom: 10px;
+        }
+        .flowchart-operator-body {
+            font-size:12px
+        }
+        .flowchart-operator {
+        width:240px
+        }
 
+
+
+
+        /*dfdffdf*/
+
+        .table tbody tr.has-history > td:first-child {
+            position: relative;
+        }
+
+        .table tbody tr.has-history span.collapse-icon {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+            background: #f09d18;
+            border-radius: 5px 0 0 5px;
+            cursor: pointer;
+            font-size: 1.5em;
+            line-height: 1em;
+        }
+
+            .table tbody tr.has-history span.collapse-icon:before {
+                content: "+";
+            }
+
+        .table tbody tr.has-history.open span.collapse-icon {
+            background: #eee;
+            color: #000;
+            border: 1px solid #ccc;
+        }
+
+            .table tbody tr.has-history.open span.collapse-icon:before {
+                content: "-";
+            }
+
+        .table {
+            MARGIN-LEFT: 40px;
+        }
+    </style>
 
 
 
 
 </head>
 <body class="layout-fluid layout-sticky-subnav">
-    <div id="loader" class="preloader"><div class="form-group"><img src="~/Content/appcontent/assets/img/Logo-limeña-web-blanco-p-500x192.png" style="width:200px" /><br /><br /><br /><label style="color:white;font-size:15px;margin-left:80px">Loading..</label></div></div>
+
+    <div id="loader" class="preloader">
+        <div class="form-group">
+            <img src="~/Content/appcontent/assets/img/Logo-limeña-web-blanco-p-500x192.png" style="width:200px" /><br /><br /><br />@if (ViewBag.loadmessage != null || ViewBag.loadmessage != "")
+            {<label style="color:white;font-size:15px;margin-left:80px">Loading..</label> }
+            else
+            {<label style="color:white;font-size:15px;margin-left:80px">@ViewBag.loadmessage</label>}
+        </div>
+    </div>
+
     <div class="loading"></div>
     <!-- Header Layout -->
     <div class="mdk-header-layout js-mdk-header-layout">
@@ -150,6 +220,11 @@
         @Html.Partial("~/Views/Shared/New_design/Scripts/QualityControlmain_Script.cshtml")
 
     }
+    @if (ViewBag.Title == "Distribuidora Limeña - Open Invoices Routes")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/OpenInvoicesRoutes_Script.cshtml")
+
+    }
 
     <!-- / Quality Control-->
     <!--Freezers-->
@@ -170,17 +245,52 @@
         @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningRoutesScripts.cshtml")
 
     }
+    @if (ViewBag.Title == "Distribuidora Limeña - Planning RoutesWMS")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningRoutesWMSScripts.cshtml")
 
+    }
     <!--Planning Order-->
     @if (ViewBag.Title == "Distribuidora Limeña - Planning order")
     {
         @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningOrder_Scripts.cshtml")
     }
+    @if (ViewBag.Title == "Distribuidora Limeña - Planning orderWMS")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/PlanningOrderWMS_Scripts.cshtml")
+    }
     @if (ViewBag.Title == "Price Request History")
     {
         @Html.Partial("~/Views/Shared/New_design/Scripts/RequesthistoryScript.cshtml")
     }
+    @if (ViewBag.Title == "Price Request History2")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/RequesthistoryNOSRScript.cshtml")
+    }
+    @if (ViewBag.Title == "Credits flow")
+    {
+        @Html.Partial("~/Views/Shared/New_design/Scripts/Creditsflow_Script.cshtml")
+    }
+        
+    
+    @if (ViewBag.Title == "Dashboard SP Sales")
+    {
+       <script>
+           $(document).ready(function () {
+               $(".table tbody tr.has-history td:first-child").append('<span class="collapse-icon"></span>');
+               $(this).parents(".has-history").next().slideToggle();
+               $(this).parents(".has-history").next().next().slideToggle();
+           });
 
+           $(document).on("click", ".collapse-icon", function () {
+               $(this).parents(".has-history").next().slideToggle();
+               $(this).parents(".has-history").next().next().slideToggle();
+               $(this).parents(".has-history").toggleClass("open");
+            
+             
+           });
+       </script>
+    }
 
 
 
@@ -385,6 +495,7 @@
                 search = search.join('|');
                 table.column(6).search(search, true, false).draw();
             });
+
             $('#printFilter').on('change', function () {
                 var search = [];
 
@@ -395,7 +506,7 @@
                 search = search.join('|');
                 table.column(7).search(search, true, false).draw();
             });
-            //filters
+
 
 
             $('#chk_all').change(function () {
@@ -443,7 +554,6 @@
                                 global: false,
                                 success: function (result) {
 
-
                                     if (result == "success") {
 
                                         Swal.fire(
@@ -455,6 +565,7 @@
                                     } else {
                                         alert("Something went wrong..");
                                     }
+
 
 
 
@@ -474,7 +585,231 @@
 
                 } else {
 
-                    toastr.info("Select at least one activity");
+                    toastr.info("Select at least one sales order");
+                }
+
+            };
+        </script>
+
+
+
+
+    }
+
+    @if (ViewBag.Title == "Distribuidora Limeña - Invoices in Route")
+    {
+        <script>
+            $(".filterTable").select2({
+                multiple: true
+            });
+
+
+            var table = $('#data_tableEditor').DataTable({
+
+                initComplete: function () {
+                    this.api().columns([2]).every(function () {
+                        var column = this;
+                        var select = $("#numSOfilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([3]).every(function () {
+                        var column = this;
+                        var select = $("#dateFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([4]).every(function () {
+                        var column = this;
+                        var select = $("#customerFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([5]).every(function () {
+                        var column = this;
+                        var select = $("#routeFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([6]).every(function () {
+                        var column = this;
+                        var select = $("#salesFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    this.api().columns([7]).every(function () {
+                        var column = this;
+                        var select = $("#printFilter");
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                    //this.api().columns('.selectfilter').every(function () {
+                    //    var column = this;
+                    //    var select = $('<select><option value=""></option></select>')
+                    //        .appendTo($(column.header()))
+                    //        .on('change', function () {
+                    //            var val = $.fn.dataTable.util.escapeRegex(
+                    //                $(this).val()
+                    //            );
+
+                    //            column
+                    //                .search(val ? '^' + val + '$' : '', true, false)
+                    //                .draw();
+                    //        });
+
+                    //    column.data().unique().sort().each(function (d, j) {
+                    //        select.append('<option value="' + d + '">' + d + '</option>')
+                    //    });
+
+                    //});
+
+
+
+                }
+            });
+
+            table.on('order.dt search.dt', function () {
+                table.column(1, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+
+            //filters
+            $('#numSOfilter').on('change', function () {
+                var search = [];
+
+                $.each($('#numSOfilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(2).search(search, true, false).draw();
+            });
+            $('#dateFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#dateFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(3).search(search, true, false).draw();
+            });
+            $('#customerFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#customerFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(4).search(search, true, false).draw();
+            });
+            $('#routeFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#routeFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(5).search(search, true, false).draw();
+            });
+            $('#salesFilter').on('change', function () {
+                var search = [];
+
+                $.each($('#salesFilter option:selected'), function () {
+                    search.push($(this).val());
+                });
+
+                search = search.join('|');
+                table.column(6).search(search, true, false).draw();
+            });
+
+            //filters
+
+
+            $('#chk_all').change(function () {
+                if (this.checked) {
+                    $('input.selectchk').prop("checked", true);
+                } else {
+                    $('input.selectchk').prop("checked", false);
+                }
+
+            });
+
+            // Handle form submission event
+            function PrintResume() {
+                var objects = [];
+
+                $.each($('input.selectchk'), function () {
+
+                    if ($(this).prop('checked')) {
+                        objects.push({
+                            Docentry: $(this).attr('id')
+                        });
+                    }
+
+
+                });
+
+                if (objects.length > 0) {
+                    //console.log(objects);
+                    swal.fire({
+                        title: 'Are you sure to print this invoices?',
+                        text: "",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3dba6f',
+                        cancelButtonColor: '#aaa',
+                        confirmButtonText: 'Yes'
+                    }).then((result) => {
+                        if (result.value) {
+
+                            $.ajax({
+                                url: '/Invoices/Preview_InvoicesOI',
+                                type: 'POST',
+                                data: { 'objects': objects },
+                                cache: false,
+                                global: false,
+                                success: function (result) {
+
+
+                                             if (result == "success") {
+
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+
+                            }
+
+                            else {
+                                alert(result);
+
+                            }
+
+                                },
+                                error: function (request) {
+
+                                    alert("Something went wrong..");
+
+
+                                }
+                            });
+
+                        }
+                    })
+
+
+                } else {
+
+                    toastr.info("Select at least one invoice");
                 }
 
             };

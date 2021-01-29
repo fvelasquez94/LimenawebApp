@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Distribuidora Limeña - Credits Request";
+    LimenawebApp.Models.Sys_Users user = (LimenawebApp.Models.Sys_Users)ViewBag.activeuser;
 }
 
 <!--main content wrapper-->
@@ -198,13 +199,24 @@
 
 <script type="text/javascript">
     window.onload = function (e) {
+        var actuser = '@user.ID_User';
         //Returns Reasons
-        var dataReturns = @Html.Raw(ViewBag.lstReturnsR);
+          var dataReturns = @Html.Raw(ViewBag.lstReturnsR);
 
-        $('#returnReason').select2({
-            placeholder: "Select a return reason",
-            data: dataReturns
-        });
+
+        //if (actuser == '10' || actuser == '11' || actuser == '12' || actuser == '47' || actuser == '16' || actuser == '13' || actuser == '17' || actuser == '115')
+        //{
+
+        //}
+        //else {
+        //    $('#returnReason').select2({
+        //        placeholder: "Select a return reason",
+        //        data: dataReturns
+        //    });
+        //}
+
+      
+     
 
         //Customers
         var customers = @Html.Raw(ViewBag.customers);

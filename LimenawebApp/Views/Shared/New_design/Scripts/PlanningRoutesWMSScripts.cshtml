@@ -1,0 +1,2047 @@
+﻿
+@{
+    Layout = null;
+}
+<!-- .modal -->
+<div id="modal-right" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog modal-right w-xl">
+        <div class="modal-content  no-radius" style="height:100%; width:650px;overflow-y: auto;">
+            <div class="modal-header ">
+                <div class="modal-title text-md" id="nombreruta">Route's Name</div>
+
+                <button class="close" data-dismiss="modal">&times;</button>
+
+            </div>
+            <div class="alert alert-warning" role="alert" id="alert_routeclosed" style="display:none;">
+                <strong>Closed Route - </strong> The route has been closed or has products transfer
+            </div>
+            <div class="modal-body">
+                <div class="col-lg">
+                    <div class="z-0">
+                        <ul class="nav nav-tabs nav-tabs-custom" role="tablist">
+                            <li class="nav-item">
+                                <a href="#tab-21" id="tab1" class="nav-link active" data-toggle="tab" role="tab" aria-controls="tab-21" aria-selected="true">
+                                    <span class="nav-link__count">01</span>
+                                    Documents
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#tab-22" class="nav-link" data-toggle="tab" role="tab" aria-selected="false">
+                                    <span class="nav-link__count">02</span>
+                                    Details
+                                </a>
+                            </li>
+
+                        </ul>
+                        <div class="">
+                            <div class=" tab-content">
+                                <div class="tab-pane active show fade" id="tab-21">
+                                    <br /><br />
+                                    <a href="#" id="Sortbtn" class="btn btn-success mr-auto btn-sm" style="font-size:13px">Documents management</a>
+                                    <br /><br />
+
+                                    <div class="card-header card-header-tabs-basic nav" role="tablist">
+                                        <a href="#activity_purchases" class="active" data-toggle="tab" role="tab" aria-controls="activity_purchases" aria-selected="true">Sales Orders</a>
+                                        <a href="#activity_emails" data-toggle="tab" role="tab" aria-controls="activity_emails" aria-selected="false" class="">Invoices</a>
+
+                                    </div>
+                                    <div class="list-group tab-content list-group-flush">
+                                        <div class="tab-pane fade active show" id="activity_purchases">
+                                            <label>No data to show</label>
+
+                                        </div>
+                                        <div class="tab-pane" id="activity_emails">
+                                            <label>No data to show</label>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane " id="tab-22">
+                                    <br /><br />
+                                    <button style="font-size:13px" type="button" id="btneditr" class="btn btn-success mr-auto btn-sm">Edit Information</button>
+                                    <button style="font-size:13px" type="button" id="newExtra" class="btn btn-success mr-auto btn-sm">Add extra expenses</button>
+                                    <br /><br />
+                                          <div class="row card-group-row">
+                                              <div class="col-lg-4 col-md-6 card-group-row__col">
+                                                  <div class="card card-group-row__card card-body card-body-x-lg flex-row align-items-center">
+                                                      <div class="flex">
+                                                          <div class="card-header__title text-muted mb-2">Customers</div>
+                                                          <div class="text-amount" id="lblcustomers">0</div>
+                                                      </div>
+                                                      <div><i class="material-icons icon-muted icon-40pt ml-3">perm_identity</i></div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-lg-8 col-md-6 card-group-row__col">
+                                                  <div class="card card-group-row__card card-body card-body-x-lg flex-row align-items-center">
+                                                      <div class="flex">
+                                                          <div class="card-header__title text-muted mb-2">Total Amount</div>
+                                                          <div class="text-amount" id="amountdata">$0.00</div>
+                                                          <div class="text-stats text-muted" id="extradata">Extra: $0.00</div>
+                                                      </div>
+                                                      <div><i class="material-icons icon-muted icon-40pt ml-3">monetization_on</i></div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-lg-4 col-md-12 card-group-row__col">
+                                                  <div class="card card-group-row__card card-body card-body-x-lg flex-row align-items-center">
+                                                      <div class="flex">
+                                                          <div class="card-header__title text-muted mb-2">Sales Orders</div>
+                                                          <div class="text-amount" id="ordersdata">0</div>
+                                                      </div>
+                                                      <div><i class="material-icons icon-muted icon-40pt ml-3">description</i></div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-lg-4 col-md-12 card-group-row__col">
+                                                  <div class="card card-group-row__card card-body card-body-x-lg flex-row align-items-center">
+                                                      <div class="flex">
+                                                          <div class="card-header__title text-muted mb-2">Invoices</div>
+                                                          <div class="text-amount" id="invoicedata">0</div>
+                                                      </div>
+                                                      <div><i class="material-icons icon-muted icon-40pt ml-3">receipt</i></div>
+                                                  </div>
+                                              </div>
+                                              <div class="col-lg-4 col-md-12 card-group-row__col">
+                                                  <div class="card card-group-row__card card-body card-body-x-lg flex-row align-items-center">
+                                                      <div class="flex">
+                                                          <div class="card-header__title text-muted mb-2">Total Cases</div>
+                                                          <div class="text-amount" id="totalcasesdata">0</div>
+                                                      </div>
+                                                 
+                                                  </div>
+                                              </div>
+                                          </div>
+
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <td>Each</td>
+                                                <td>Case</td>
+                                                <td>Pack</td>
+                                                <td>LBS</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+
+                                                <th><label id="eachdata"></label></th>
+                                                <th><label id="casedata"></label></th>
+                                                <th><label id="packdata"></label></th>
+                                                <th><label id="lbsdata"></label></th>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" id="delso" onclick="deleteRoute()" class="btn btn-danger">Delete Route</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<!-- / .modal -->
+<!-- .modal -->
+<div id="modal-openso" class="modal fade" data-backdrop="true">
+    <div class="modal-dialog modal-left w-xl">
+        <div class="modal-content h-100 no-radius">
+            <div class="modal-header ">
+                <div class="modal-title text-md">Nueva tarea</div>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="p-4 text-center">
+                    <p>Agrega nuevas tareas que complementen tu actividad de <br /> <label style="font-weight:bold;" id="event-titleTareas"></label></p>
+                    <input type="hidden" id="idbitacsel2" />
+                </div>
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <label>Tarea</label>
+
+                    </div>
+                    <div class="form-group">
+                        <label>Comentarios</label>
+                        <textarea class="form-control" id="comentarios_crear"></textarea>
+                    </div>
+                    <hr />
+
+                    <label>Sales Orders</label>
+
+                    <div class="col-md">
+                        <div class="card shadow-none border bg-light">
+                            <div class="card-body">
+                                <div class="text-label mb-3">Orders in route</div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="btncrearTarea" class="btn btn-success" data-dismiss="modal">Crear tarea</button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+
+<!-- modal -->
+<div id="newEvent" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white">Detalles de actividad</h5>
+                <button class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input id="eventidt" type="text" class="form-control" hidden>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <input id="event-title" type="text" class="form-control" placeholder="Title" readonly>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-12">
+                        <input id="event-start-date" type="date" class="form-control" placeholder="Date" readonly>
+                    </div>
+
+                </div>
+                <div class="form-group row">
+                    <div class="col-sm-6">
+                        <input id="event-start-time" type="time" class="form-control" placeholder="Time" readonly>
+                    </div>
+                    <div class="col-sm-6">
+                        <input id="event-end-time" type="time" class="form-control" placeholder="Time" readonly>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+
+                    <div class="col-sm-12">
+                        <button type="button" id="btneliminarActividad" class="btn btn-warning">Eliminar actividad</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /.modal-content -->
+    </div>
+</div>
+<!-- / .modal -->
+
+<div id="createModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="modal-large-title" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="card card-form">
+                    <div class="row no-gutters">
+                        <div class="col-lg-4 card-body">
+                            <p><strong class="headings-color">New Route</strong></p>
+                            <p>
+                                Create a new Route and assign Sales Orders to Deliver.
+                            </p>
+                        </div>
+
+                        <div class="col-lg-8 card-form__body card-body">
+                            <label>Master Route:</label>
+                            <select name="lstMaster" id="lstMaster" class="form-control" style="width:100%">
+                                <option value="0" selected>SELECT..</option>
+                            </select>
+                            <p class="card-description">
+                                <h5 class="card-title">Name</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <input class="form-control" type="text" name="routeName" id="routeName" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+                            <p class="card-description">
+                                <h5 class="card-title">Driver</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstDriver" id="lstDriver" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Truck</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstTruck" id="lstTruck" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Route Leader</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstRLeader" id="lstRLeader" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Delivery Date</h5>
+                            </p>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="datetime-local" name="departure" id="departure" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="card-description">
+                                <h5 class="card-title">Preparation Date</h5>
+                            </p>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="datetime-local" name="preparationdate" id="preparationdate" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Product from another Warehouse</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstwarehouse" id="lstwarehouse" class="form-control" style="width:100%">
+                                                <option value="NO" selected>NO</option>
+                                                <option value="YES">YES</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- // END .modal-body -->
+            <div class="modal-footer">
+                <button type="button" onclick="saveRoute()" class="btn btn-success btn-lg">Save</button>
+                <button type="button" class="btn btn-light btn-lg" data-dismiss="modal">Cancel</button>
+            </div>
+        </div> <!-- // END .modal-content -->
+    </div> <!-- // END .modal-dialog -->
+</div> <!-- // END .modal -->
+<!--CREATE ROUTE DATA STARTS-->
+<!--CREATE ROUTE DATA ENDS-->
+<!--DELETE DATA STARTS-->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            @using (Html.BeginForm("DeleteRouteWMS", "Commercial", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-delete"></i> Delete Route Data</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-form-label">Are you sure you want to delete this Route?</label><br />
+                        <input type="text" id="ID_routeD" name="ID_routeD" hidden />
+
+                    </div>
+
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<!--EDIT DATA STARTS-->
+<!--EDIT DATA STARTS-->
+<div class="modal fade" id="editModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Edit Route</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <p class="card-description">
+                                <h5 class="card-title">Name</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <input class="form-control" type="text" name="routeName2" id="routeName2" required />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <input id="selectedRoute2" name="selectedRoute2" type="text" hidden />
+
+
+                            <p class="card-description">
+                                <h5 class="card-title">Driver</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstDriver2" id="lstDriver2" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Truck</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstTruck2" id="lstTruck2" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Route Leader</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstRLeader2" id="lstRLeader2" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Delivery Date</h5>
+                            </p>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="datetime-local" name="departure2" id="departure2" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <p class="card-description">
+                                <h5 class="card-title">Preparation Date</h5>
+                            </p>
+                            <div class="row">
+
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+                                            <input type="datetime-local" name="preparationdate2" id="preparationdate2" class="form-control">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Repeat</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+                                        <div class="col-sm-12">
+
+                                            <select name="cust22" class="form-control" disabled>
+                                                <option value="NA">Never</option>
+                                                <option value="FW">First week of every month</option>
+                                                <option value="OW">Once a week</option>
+                                                <option value="OTW">Once every two weeks</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="finisheditbtn">Save</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--CREATE USER DATA ENDS-->
+<!--EDIT DATA STARTS-->
+<div class="modal fade" id="editModal_KY" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Assign Driver and Truck</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12 grid-margin">
+                    <div class="card">
+                        <div class="card-body">
+
+                            <input id="selectedRouteOtraBodega" name="selectedRouteOtraBodega" type="text" hidden />
+
+
+                            <p class="card-description">
+                                <h5 class="card-title">Driver</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstDriverOtraBodega" id="lstDriverOtraBodega" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-description">
+                                <h5 class="card-title">Truck</h5>
+                            </p>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group row">
+
+                                        <div class="col-sm-12">
+                                            <select name="lstTruckOtraBodega" id="lstTruckOtraBodega" class="form-control" style="width:100%">
+                                                <option value="0" selected>SELECT..</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="assignbtn">Save</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--MODAL LOUISVILLE DATA ENDS-->
+<!--MODAL SALES ORDERS-->
+<div id="modal_SO" class="modal fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="myLargeModalLabel">Sales Orders</h5>
+
+
+                <div>
+                   
+                </div>
+            </div>
+
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6" id="divopenso">
+
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-primary">
+                                    <div class="custom-title">
+                                        Open Sales Orders
+                                        @*<small>        Sort by</small>*@
+                                        <ul class="nav nav-pills nav-pill-turquoise nav-pill-custom nav-pills-sm float-right " id="pills-tab" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-AZ" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">A-Z</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-ZA" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">Z-A</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-Date" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↓ Date</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-DateUp" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Date</a>
+                                            </li>
+
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-Price" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Price</a>
+
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" id="pills-PriceUp" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Price</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <input type="text" value="" id="selectedRoute" hidden />
+                                <input class="form-control" style="font-size:11px;" type="text" id="myInput" onkeyup="filterByCode()" placeholder="SEARCH BY ORDER NUMBER.." title="Type">
+                                <select id="officeFltr" class="form-control" onchange="myFunction()" style="width:100%; font-size:11px"></select>
+                                <select id="officeFltr2" class="form-control" onchange="myFunction2()" style="width:100%; font-size:11px"></select>
+                                <select id="officeFltr3" class="form-control" onchange="myFunction3()" style="width:100%; font-size:11px"></select>
+                                <ul id="sortable1" class="connectedSortable" style="height: 500px; overflow-y: auto; overflow-x:hidden"></ul>
+
+                            </div>
+
+
+                        </div>
+                        <div class="float-left">
+                            <span style="color:black !important" class="badge badge-warning text-light form-pill px-3 py-1">LIMENA</span>
+                            <span style="color:black !important" class="badge badge-info text-light form-pill px-3 py-1">BAR-S</span>
+
+                        </div>
+                    </div>
+
+                    <div class="col-md-6" id="divselos">
+                        <div class="card card-shadow mb-4">
+                            <div class="card-header border-0">
+                                <div class="custom-title-wrap bar-success">
+                                    <div class="custom-title" id="selectedOrdersTitle">
+                                        Selected Orders
+                                    </div>
+                                    <ul class="nav nav-pills nav-pill-turquoise nav-pill-custom nav-pills-sm float-right " id="pills-tab" role="tablist">
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-AZ2" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">A-Z</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-ZA2" data-toggle="pill" href="#" role="tab" aria-controls="pills-month" aria-selected="false">Z-A</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-Date2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↓ Date</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-DateUp2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Date</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-Price2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Price</a>
+
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-PriceUp2" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Price</a>
+                                        </li>
+
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-CC2u" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ Customer Code</a>
+
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-CC2d" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ Customer Code</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-SO2u" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="true">↓ SO Code</a>
+
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="pills-SO2d" data-toggle="pill" href="#" role="tab" aria-controls="pills-today" aria-selected="false">↑ SO Code</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="card-body">
+
+                                <ul id="sortable2" class="connectedSortable" style="height: 590px; overflow-y: auto; overflow-x:hidden"></ul>
+                              
+
+                                <div class="float-right" style="border-left:dashed; border-width:1px; margin-left:20px;margin-right:20px;">
+                                    <div style="margin-left:10px;">
+                                        <small id="Each">Each: </small><br />
+                                        <small id="Case">Case: </small><br />
+                                        <small id="Pack">Pack: </small><br />
+                                        <small id="LBS">LBS: </small><br />
+                                        <small id="totalEach">Total Cases: </small>
+                                    </div>
+
+
+
+                                </div>
+
+                                <div class="float-right">
+                                    <small id="totalAmountSO">Total Amount: </small><br />
+                                    <small id="totalSO">Total Sales Orders: </small><br />
+                                    <small id="totalCustomers">Total Customers: </small><br />
+                                    <small id="totalExtra">Total Extra: </small>
+
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+            </div>
+            <div class="modal-footer">
+                
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="savso" onclick="saveSalesOrders()" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--EXTRA DATA STARTS-->
+<div class="modal fade" id="extraModal" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+
+                <h5 class="modal-title" id="exampleModalLabel-4"><i class="mdi mdi-truck"></i> Extras</h5>
+
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span style="font-size: 40px" aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="col-12">
+
+                    <div class="row" style="border-style:none !important">
+                        <div class="col-8">
+                            <input type="text" id="addDescription" class="form-control" placeholder="Description">
+                        </div>
+                        <div class="col-3">
+
+                            <input type="text" id="addValue" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" class="form-control" placeholder="Value($)">
+                        </div>
+                        <div class="col-1">
+                            <button class="btn btn-info" id="addExtra">+</button>
+                        </div>
+                    </div>
+                    <br /><br />
+                    <div class="row">
+                        <table class="table table-striped" id="tbExtras">
+                            <thead>
+                                <tr>
+                                    <th>DESCRIPTION</th>
+                                    <th>VALUE($)</th>
+                                    <th>ACTIONS</th>
+
+                                </tr>
+                            </thead>
+                            <tbody id="tbBodyExtras"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" id="savExtras" onclick="saveExtrasDet()">Save</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal">Cancel</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!--EXTRA DATA ENDS-->
+<!--+++++++++-->
+<script type="text/javascript">
+
+    var eventsCalendar =@Html.Raw(ViewBag.calroutes);
+    var visibleInit = '@ViewBag.filtrofechastart';
+    var visibleEnd = '@ViewBag.filtrofechaend';
+    var warehousesel = "@ViewBag.warehousesel";
+
+</script>
+<script>
+    window.onload = function () {
+
+
+           $('#click_filterMain').click(function () {
+
+               var st = new Date($('#filter_date').data('daterangepicker').startDate);
+               var ed = new Date($('#filter_date').data('daterangepicker').endDate);
+
+
+               var today = st;
+               var dd = today.getDate();
+               var mm = today.getMonth() + 1; //January is 0!
+
+               var yyyy = today.getFullYear();
+               if (dd < 10) {
+                   dd = '0' + dd;
+               }
+               if (mm < 10) {
+                   mm = '0' + mm;
+               }
+               st = mm + '/' + dd + '/' + yyyy;
+
+               var today2 = ed;
+               var dd2 = today2.getDate();
+               var mm2 = today2.getMonth() + 1; //January is 0!
+
+               var yyyy2 = today2.getFullYear();
+               if (dd2 < 10) {
+                   dd2 = '0' + dd2;
+               }
+               if (mm2 < 10) {
+                   mm2 = '0' + mm2;
+               }
+               ed = mm2 + '/' + dd2 + '/' + yyyy2;
+
+
+
+
+               var tipo_actividad = $('#filter_type').val();
+               var prioridad = $('#filter_prioridad').val();
+
+        var url = '@Url.Action("PlanningRoutesWMS", "Invoices", new { fstartd = "START", fendd = "FINISH" })';
+
+
+            url = url.replace('START', st);
+               url = url.replace('FINISH', ed);
+        var newurl = url;
+
+        newurl = newurl.replace(/&amp;/g, "&");
+        window.location.href = newurl;
+
+        });
+
+            $(document).ready(function () {
+        var json = JSON.parse('@Html.Raw(ViewBag.drivers)')
+
+        var data = $.map(json, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+
+                var json2 = JSON.parse('@Html.Raw(ViewBag.driversOtros)')
+
+        var data2 = $.map(json2, function (obj) {
+            obj.id = obj.id; // replace pk with your identifier
+            obj.text = obj.text;
+            return obj;
+        });
+
+
+        $("#lstDriver").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+        $("#lstDriver2").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+
+        $("#lstDriverOtraBodega").select2({
+            placeholder: "Select...",
+            data: data
+        });
+
+
+        json = JSON.parse('@Html.Raw(ViewBag.routeleaders)')
+
+        data = $.map(json, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        $("#lstRLeader").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        $("#lstRLeader2").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        json = JSON.parse('@Html.Raw(ViewBag.trucks)');
+        data = $.map(json, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        var json4 = JSON.parse('@Html.Raw(ViewBag.trucksOtros)');
+        var data4 = $.map(json4, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+        $("#lstTruck").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        $("#lstTruck2").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        $("#lstTruckOtraBodega").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        json = JSON.parse('@Html.Raw(ViewBag.mainroutes)')
+        data = $.map(json, function (obj2) {
+            obj2.id = obj2.id; // replace pk with your identifier
+            obj2.text = obj2.text;
+            return obj2;
+        });
+
+        $("#lstMaster").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+        $("#lstMaster2").select2({
+            placeholder: "Select...",
+            data: data
+
+        });
+
+
+
+
+
+                document.getElementById("btneditr").addEventListener("click", editRoute, false);
+        document.getElementById("finisheditbtn").addEventListener("click", SaveEditRoute, false);
+        document.getElementById("assignbtn").addEventListener("click", SaveAssignRoute, false);
+        document.getElementById("newExtra").addEventListener("click", newExtra, false);
+        document.getElementById("addExtra").addEventListener("click", addExtra, false);
+
+        $('#tbExtras').on('click', '.delRow', function () {
+            $(this).closest("tr").remove();
+        });
+
+        function addExtra() {
+            var description = $('#addDescription').val();
+            var value = $('#addValue').val();
+
+            var tr2 = "<tr>";
+            tr2 += "<td>" + description + "</td>";
+            tr2 += "<td>" + value + "</td>";
+            tr2 += "<td>" + "<button class='btn btn-sm btn-outline-warning btn-pill delRow'>DEL</button>" + "</td>";
+            tr2 += "</tr>"
+            $("#tbExtras").append(tr2);
+
+            $('#addDescription').val("");
+            $('#addValue').val("");
+        }
+
+
+        function newExtra() {
+            var idroute = $("#selectedRoute").val();
+            $.ajax
+                ({
+                    url: '/Invoices/GetExtraData',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: idroute
+                    }),
+                    success: function (result) {
+
+                        $.each($.parseJSON(result), function (i, route) {
+                           // console.log(result);
+                            var tr2 = "<tr>";
+                            tr2 += "<td>" + route.Description + "</td>";
+                            tr2 += "<td>" + route.Value + "</td>";
+                            tr2 += "<td>" + "<button class='btn btn-sm btn-outline-warning btn-pill delRow'>DEL</button>" + "</td>";
+                            tr2 += "</tr>"
+                            $("#tbExtras").append(tr2);
+
+
+
+                        }); //END EACH
+                        setTimeout(function () { $('#extraModal').modal('show') }, 500);
+                        $('#modal_SO').modal('hide');
+
+
+
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+
+                    },
+                });
+
+
+
+        }
+
+
+
+
+        function editRoute() {
+            var idroute = $("#selectedRoute").val();
+            $.ajax
+                ({
+                    url: '/Invoices/GetRouteData',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: idroute
+                    }),
+                    success: function (result) {
+
+                        $.each($.parseJSON(result), function (i, route) {
+                            $("#routeName2").val(route.Route_name);
+                            $("#lstDriver2").val(route.ID_driver).trigger("change");
+                            $("#lstTruck2").val(route.ID_truck).trigger("change");
+                            $("#lstRLeader2").val(route.ID_routeleader).trigger("change");
+                            var nowDate = new Date(parseInt(route.Departure.substr(6)));
+                            nowDate.setHours(nowDate.getHours() + 6);
+                            var final = moment(nowDate).format();
+
+                            var nowDate2 = new Date(parseInt(route.DatetoInvoice.substr(6)));
+                            nowDate2.setHours(nowDate2.getHours() + 6);
+                            var final2 = moment(nowDate2).format();
+
+                            $('#departure2').val(final.substring(0, final.length - 6));
+                            $('#preparationdate2').val(final2.substring(0, final2.length - 6));
+
+
+                        }); //END EACH
+                        setTimeout(function () { $('#editModal').modal('show') }, 500);
+                        $('#modal_SO').modal('hide');
+
+
+
+                    },
+                    error: function () {
+                        alert("Whooaaa! Something went wrong..")
+
+                    },
+                });
+
+
+
+        }
+
+        function SaveEditRoute() {
+            var idroute = $("#selectedRoute2").val();
+            var routename = $("#routeName2").val();
+            var driverCode = $("#lstDriver2").val();
+            var driverName = $("#lstDriver2 option:selected").text();
+            var truckCode = $("#lstTruck2").val();
+            var truckName = $("#lstTruck2 option:selected").text();
+            var rleaderCode = $("#lstRLeader2").val();
+            var rleaderName = $("#lstRLeader2 option:selected").text();
+            var departure = $("#departure2").val();
+            var preparationdate = $("#preparationdate2").val();
+
+            document.getElementById("loader").style.display = "flex";
+            $.ajax
+                ({
+                    url: '/Invoices/EditRoute',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        routeName: routename,
+                        id: idroute,
+                        lstDriverCode: driverCode,
+                        lstDriverName: driverName,
+                        lstTruckCode: truckCode,
+                        lstTruckName: truckName,
+                        lstRLeaderCode: rleaderCode,
+                        lstRLeaderName: rleaderName,
+                        departure: departure,
+                        preparationdate: preparationdate,
+                    }),
+                    success: function (result) {
+                        if (result == "Success") {
+                            toastr.success("Route saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+        }
+
+        function SaveAssignRoute() {
+            var idroute = $("#selectedRouteOtraBodega").val();
+
+            var driverCode = $("#lstDriverOtraBodega").val();
+            var driverName = $("#lstDriverOtraBodega option:selected").text();
+            var truckCode = $("#lstTruckOtraBodega").val();
+            var truckName = $("#lstTruckOtraBodega option:selected").text();
+
+
+            document.getElementById("loader").style.display = "flex";
+            $.ajax
+                ({
+                    url: '/Invoices/AssignRoute',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        id: idroute,
+                        lstDriverCode: driverCode,
+                        lstDriverName: driverName,
+                        lstTruckCode: truckCode,
+                        lstTruckName: truckName
+
+                    }),
+                    success: function (result) {
+                        if (result == "Success") {
+                            toastr.success("Route saved successfully.", "Success");
+                            document.getElementById("loader").style.display = "none";
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong..", "Warning");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+                    },
+                    error: function () {
+
+                        toastr.warning("Something went wrong..", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    },
+                });
+
+        }
+
+
+        $('#pills-AZ').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
+
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-ZA').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-Date').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    return (new Date($(a).find("small.pilldate2").text()) > new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-DateUp').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    //return $(b).find("small.pilldate").text().toUpperCase().localeCompare($(a).find("small.pilldate").text().toUpperCase());
+                    return (new Date($(a).find("small.pilldate2").text()) < new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-Price').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount2").text()) > parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-PriceUp').click(function (e) {
+
+            $("#sortable1").html(
+
+                $("#sortable1").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount2").text()) < parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+
+        //SELECTED ORDERS SORT
+        $('#pills-AZ2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
+
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-ZA2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("label.pillCustomer2").text();
+                    var s2 = $(a).find("label.pillCustomer2").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-Date2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    return (new Date($(a).find("small.pilldate2").text()) > new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-DateUp2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    //return $(b).find("small.pilldate").text().toUpperCase().localeCompare($(a).find("small.pilldate").text().toUpperCase());
+                    return (new Date($(a).find("small.pilldate2").text()) < new Date($(b).find("small.pilldate2").text())) ? 1 : -1;
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-Price2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount2").text()) > parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-PriceUp2').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+
+                    //return $(a).find("small.pillAmount").text().toUpperCase().localeCompare($(b).find("small.pillAmount").text().toUpperCase());
+                    return (parseFloat($(a).find("small.pillAmount2").text()) < parseFloat($(b).find("small.pillAmount2").text())) ? 1 : -1;
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+
+        $('#pills-CC2u').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("span.pillcc2").text();
+                    var s2 = $(a).find("span.pillcc2").text();
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-CC2d').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("span.pillcc2").text();
+                    var s2 = $(a).find("span.pillcc2").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-SO2u').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("div.pillso").text();
+                    var s2 = $(a).find("div.pillso").text();
+
+                    return s2.toUpperCase().localeCompare(s1.toUpperCase());
+
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $('#pills-SO2d').click(function (e) {
+
+            $("#sortable2").html(
+
+                $("#sortable2").children("li").sort(function (a, b) {
+                    var s1 = $(b).find("div.pillso").text();
+                    var s2 = $(a).find("div.pillso").text();
+
+
+                    return s1.toUpperCase().localeCompare(s2.toUpperCase());
+
+                }) // End Sort
+
+            ); // End HTML
+
+            $("#sortable1, #sortable2").sortable({
+                connectWith: ".connectedSortable"
+            }).disableSelection();
+        });
+
+        $("#officeFltr3").select2();
+
+
+    });
+
+
+    };
+</script>
+
+<script>
+    /* ---------------------------------------------
+Configure tooltips globally
+--------------------------------------------- */
+    function deleteRoute() {
+        var idr = $("#selectedRoute").val();
+        swal.fire({
+            title: 'Are you sure to delete this route?',
+            text: "You won't be able to revert this",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3dba6f',
+            cancelButtonColor: '#aaa',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+                document.getElementById("loader").style.display = "flex";
+                $.ajax({
+                    url: '/Invoices/deleteRouteWMS',
+                    type: 'POST',
+                    data: { 'id_route': idr },
+                    cache: false,
+                    global: false,
+                    success: function (result) {
+                        console.log(result);
+                        if (result == "SUCCESS") {
+                            document.getElementById("loader").style.display = "none";
+                            Swal.fire(
+                                'Route deleted!',
+                                'The Route has been deleted.',
+                                'success'
+                            )
+                            window.location.reload(true);
+                        } else {
+                            alert("Something went wrong..");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+                    },
+                    error: function (request) {
+                        alert("Something went wrong..");
+                        document.getElementById("loader").style.display = "none";
+
+                    }
+                });
+
+            }
+        })
+    }
+
+    function filterByCode() {
+
+
+        $("#officeFltr2").val("0");
+
+        $("#officeFltr3").val("0");
+
+        $("#officeFltr").val("0");
+
+        var input, filter, ul, li, a, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        ul = document.getElementById("sortable1");
+        li = ul.getElementsByTagName("li");
+        for (i = 0; i < li.length; i++) {
+            a = li[i].getElementsByTagName("div")[1];
+            txtValue = a.textContent || a.innerText;
+            if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                li[i].style.display = "";
+            } else {
+                li[i].style.display = "none";
+            }
+        }
+
+    }
+
+    function myFunction() {
+        var input, filter, ul, li, a, i, txtValue;
+        $("#myInput").val("");
+        $("#officeFltr2").val("0");
+
+        $("#officeFltr3").val("0");
+
+        filter = $("#officeFltr option:selected").text();
+
+        if (filter == "SELECT ALL ROUTES...") {
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("small")[0];
+
+                txtValue = a.textContent || a.innerText;
+
+
+                li[i].style.display = "";
+
+            }
+        } else {
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("small")[0];
+
+                txtValue = a.textContent || a.innerText;
+                txtValue = "Route: " + txtValue;
+                if (txtValue.indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+
+    }
+
+    function myFunction2() {
+        var input, filter, ul, li, a, i, txtValue;
+        $("#myInput").val("");
+        $("#officeFltr").val("0");
+
+        $("#officeFltr3").val("0");
+
+        filter = $("#officeFltr2 option:selected").text();
+
+        if (filter == "SELECT ALL REPS...") {
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("small")[1];
+
+                txtValue = a.textContent || a.innerText;
+
+
+                li[i].style.display = "";
+
+            }
+        } else {
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("small")[1];
+
+                txtValue = a.textContent || a.innerText;
+                txtValue = "Sales Rep: " + txtValue;
+                if (txtValue.indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+
+    }
+
+    function myFunction3() {
+        var input, filter, ul, li, a, i, txtValue;
+        $("#myInput").val("");
+        $("#officeFltr2").val("0");
+
+        $("#officeFltr").val("0");
+
+        filter = $("#officeFltr3 option:selected").text();
+
+        if (filter == "SELECT ALL CUSTOMERS...") {
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("label")[0];
+
+                txtValue = a.textContent || a.innerText;
+
+
+                li[i].style.display = "";
+
+            }
+        } else {
+            filter = filter.substr(filter.indexOf("-") + 2);
+            console.log(filter);
+            ul = document.getElementById("sortable1");
+            li = ul.getElementsByTagName("li");
+            for (i = 0; i < li.length; i++) {
+                a = li[i].getElementsByTagName("label")[0];
+
+                txtValue = a.textContent || a.innerText;
+
+
+                if (txtValue.indexOf(filter) > -1) {
+                    li[i].style.display = "";
+                } else {
+                    li[i].style.display = "none";
+                }
+            }
+        }
+
+    }
+
+
+
+
+
+</script>
+<script>
+
+
+
+    function saveRoute() {
+
+        var routename = $("#routeName").val();
+        var mainrouteCode = $("#lstMaster").val();
+        var mainrouteName = $("#lstMaster option:selected").text();
+        var driverCode = $("#lstDriver").val();
+        var driverName = $("#lstDriver option:selected").text();
+        var truckCode = $("#lstTruck").val();
+        var truckName = $("#lstTruck option:selected").text();
+        var rleaderCode = $("#lstRLeader").val();
+        var rleaderName = $("#lstRLeader option:selected").text();
+        var departure = $("#departure").val();
+        var preparationdate = $("#preparationdate").val();
+
+        var otherwhs = $("#lstwarehouse").val();
+
+        if (mainrouteCode == 0) {
+            toastr.info("Select a valid Route");
+        } else {
+            document.getElementById("loader").style.display = "flex";
+            $.ajax
+                ({
+                    url: '/Invoices/CreateRoutePlanningWMS',
+                    type: 'POST',
+                    datatype: 'application/json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        routeName: routename,
+                        lstMasterCode: mainrouteCode,
+                        lstMasterName: mainrouteName,
+                        lstDriverCode: driverCode,
+                        lstDriverName: driverName,
+                        lstTruckCode: truckCode,
+                        lstTruckName: truckName,
+                        lstRLeaderCode: rleaderCode,
+                        lstRLeaderName: rleaderName,
+                        departure: departure,
+                        preparationdate: preparationdate,
+                        otherwhs: otherwhs
+                    }),
+                    success: function (result) {
+                        console.log(result);
+                        if (result == "success") {
+                            document.getElementById("loader").style.display = "none";
+                            toastr.success("Route created successfully.", "Success");
+                            window.location.reload(true);
+                        } else {
+                            toastr.warning("Something went wrong, try again.");
+                            document.getElementById("loader").style.display = "none";
+                        }
+
+
+
+                    },
+                    error: function () {
+                        document.getElementById("loader").style.display = "none";
+                        toastr.warning("Please, check all information", "Warning");
+
+                    },
+                });
+        }
+
+    }
+
+    function saveSalesOrders() {
+        var column1RelArray = [];
+        $('ul#sortable2 li').each(function () {
+            column1RelArray.push($(this).attr('id'));
+        });
+
+        var id_route = $("#selectedRoute").val();
+        document.getElementById("loader").style.display = "flex";
+        $.ajax
+            ({
+                url: '/Invoices/SaveSalesOrdersWMS',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    salesOrders: column1RelArray,
+                    id_route: id_route
+
+                }),
+                success: function (result) {
+
+                    if (result == "SUCCESS") {
+                        toastr.success("Sales Orders saved successfully.", "Success");
+                        //sortSalesOrders()
+                        document.getElementById("loader").style.display = "none";
+                        window.location.reload(true);
+                    } else if (result == "NO DATA") {
+                        toastr.warning("Please, choose at least one sales order to continue.", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    } else {
+                        toastr.info("Saving new changes..", "Warning");
+
+                        document.getElementById("loader").style.display = "none";
+                        saveSalesOrders();
+                    }
+
+
+                },
+                error: function () {
+
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+
+
+
+
+    }
+
+    function saveExtrasDet() {
+        var data;
+        data = Array();
+
+        $("#tbExtras tr").each(function (i, v) {
+            data[i] = Array();
+            $(this).children('td').each(function (ii, vv) {
+
+                data[i][ii] = $(this).text();
+
+
+
+            });
+        })
+
+
+
+        var objects = [];
+        for (var i = 0, len = data.length; i < len; i++) {
+            if (i != 0) {
+                objects.push({
+                    Description: data[i][0],
+                    Value: data[i][1].trim()
+                });
+            }
+
+        }
+
+
+        var id_route = $("#selectedRoute").val();
+        document.getElementById("loader").style.display = "flex";
+        $.ajax
+            ({
+                url: '/Invoices/SaveExtras',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    objects: objects,
+                    id: id_route
+
+                }),
+                success: function (result) {
+
+                    if (result == "SUCCESS") {
+                        toastr.success("Data saved successfully.", "Success");
+                        window.location.reload(true);
+                    } else if (result == "NO DATA") {
+                        toastr.warning("Please, add at least one item to continue.", "Warning");
+                        document.getElementById("loader").style.display = "none";
+                    } else {
+                        toastr.info("Saving new changes..", "Warning");
+                        window.location.reload(true);
+                        document.getElementById("loader").style.display = "none";
+
+                    }
+
+
+                },
+                error: function () {
+
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+
+
+
+
+    }
+
+    function sortSalesOrders() {
+        //swal.fire({
+        //    title: 'Are you sure to sort this route?',
+        //    text: "You won't be able to revert this",
+        //    type: 'warning',
+        //    showCancelButton: true,
+        //    confirmButtonColor: '#3dba6f',
+        //    cancelButtonColor: '#aaa',
+        //    confirmButtonText: 'Yes'
+        //}).then((result) => {
+        //    if (result.value) {
+
+        var column1RelArray = [];
+        $('ul#sortable2 li').each(function () {
+            column1RelArray.push($(this).attr('id'));
+        });
+
+        var id_route = $("#selectedRoute").val();
+        document.getElementById("loader").style.display = "flex";
+        $.ajax
+            ({
+                url: '/Invoices/SortSalesOrders',
+                type: 'POST',
+                datatype: 'application/json',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    salesOrders: column1RelArray,
+                    id_route: id_route
+
+                }),
+                success: function (result) {
+
+                    if (result == "SUCCESS") {
+                        toastr.success("Sales Orders sorted successfully.", "Success");
+                        document.getElementById("loader").style.display = "none";
+                        window.location.reload(true);
+                    } else if (result == "NO DATA") {
+                        //toastr.warning("Please, choose at least one sales order to continue.", "Warning");
+
+                        document.getElementById("loader").style.display = "none";
+                        window.location.reload(true);
+                    } else {
+                        toastr.info("Saving new changes..", "Warning");
+
+                        document.getElementById("loader").style.display = "none";
+                        //sortSalesOrders();
+                    }
+
+
+                },
+                error: function () {
+
+                    toastr.warning("Something went wrong..", "Warning");
+                    document.getElementById("loader").style.display = "none";
+                },
+            });
+        //    }
+        //});
+
+    }
+</script>
+
+@*<script>
+    //Make the DIV element draggagle:
+    dragElement(document.getElementById("mydiv"));
+
+    function dragElement(elmnt) {
+        var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+        if (document.getElementById(elmnt.id + "header")) {
+            /* if present, the header is where you move the DIV from:*/
+            document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+        } else {
+            /* otherwise, move the DIV from anywhere inside the DIV:*/
+            elmnt.onmousedown = dragMouseDown;
+        }
+
+        function dragMouseDown(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // get the mouse cursor position at startup:
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            document.onmouseup = closeDragElement;
+            // call a function whenever the cursor moves:
+            document.onmousemove = elementDrag;
+        }
+
+        function elementDrag(e) {
+            e = e || window.event;
+            e.preventDefault();
+            // calculate the new cursor position:
+            pos1 = pos3 - e.clientX;
+            pos2 = pos4 - e.clientY;
+            pos3 = e.clientX;
+            pos4 = e.clientY;
+            // set the element's new position:
+            elmnt.style.top = (elmnt.offsetTop - pos2) + "px";
+            elmnt.style.left = (elmnt.offsetLeft - pos1) + "px";
+        }
+
+        function closeDragElement() {
+            /* stop moving when mouse button is released:*/
+            document.onmouseup = null;
+            document.onmousemove = null;
+        }
+    }
+</script>*@

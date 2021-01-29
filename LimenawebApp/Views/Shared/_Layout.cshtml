@@ -5259,6 +5259,9 @@ Configure tooltips globally
 @if (ViewBag.Title == "Distribuidora Limeña - Credits Request")
 {
     <script type="text/javascript">
+        var actuser = '@ViewBag.activeuser.ID_User';
+
+
 
         (function ($) {
             'use strict';
@@ -5305,6 +5308,43 @@ Configure tooltips globally
                 } catch{
 
                 }
+
+                //if (actuser == '10' || actuser == '11' || actuser == '12' || actuser == '47' || actuser == '16' || actuser == '13' || actuser == '17' || actuser == '115') {
+                    try {
+                        $.ajax
+                            ({
+                                url: '/Commercial/GetReturnReasons',
+                                type: 'POST',
+                                datatype: 'application/json',
+                                contentType: 'application/json',
+                                data: JSON.stringify({
+                                    product: IDProd
+                                }),
+                                success: function (result) {
+                                    $("#returnReason").html("");
+                                    $("#returnReason").append($('<option></option>').val(0).html("Select a return Reason"));
+                                    $.each($.parseJSON(result), function (i, uomtype) {
+
+                                        $("#returnReason").append
+                                            ($('<option></option>').val(uomtype.id).html(uomtype.text));
+
+                                    });
+
+
+                                },
+                                error: function () {
+                                    var o = new Option(uom, uom); o.innerHTML = uom; document.getElementById('returnReason').appendChild(o);
+
+                                },
+                            });
+
+                    } catch{
+
+                    }
+                //} else {
+
+                //}
+
 
 
             })
@@ -6712,6 +6752,59 @@ Configure tooltips globally
             });
         }
 
+
+        function eliminarOrder() {
+                        swal.fire({
+                title: 'Exit Order',
+                text: "Do you want to cancel this order?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes, cancel this order',
+                cancelButtonText: 'No'
+            }).then(function (result) {
+                if (result.value) {
+
+                    var docnumi='@ViewBag.docnum';
+
+                        document.getElementById("loader").style.display = "block";
+                        $.ajax
+                            ({
+                                url: '/Commercial/CancelSO',
+                                type: 'POST',
+                                data: { 'docnum': docnumi },
+                                success: function (result) {
+
+                                    if (result == "SUCCESS") {
+                                        toastr.success("Data saved successfully.", "Success");
+                                        document.getElementById("loader").style.display = "none";
+                                        //window.location.reload(true);
+
+                                    var url = '@Url.Action("Prices_request", "Commercial", null)';
+                                        window.location.href = url;
+                                    } else {
+                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        document.getElementById("loader").style.display = "none";
+                                    }
+
+
+                                },
+                                error: function () {
+
+                                    toastr.warning("Something went wrong..", "Warning");
+                                    document.getElementById("loader").style.display = "none";
+                                },
+                            });
+
+                } else if (result.dismiss == 'cancel') {
+                           var url2 = '@Url.Action("Prices_request", "Commercial", null)';
+                                        window.location.href = url2;
+                }
+
+            });
+        }
+
         function openClosedOrder() {
                         swal.fire({
                 title: 'Open closed Order',
@@ -7038,7 +7131,7 @@ Configure tooltips globally
                         if (nuevoprecio > precioalto) {
                             flag = 1;
                             toastr.warning("Esta excediendo el limite del nuevo precio a colocar, por favor valide antes de continuar", "Warning");
-                            //$(this).val('0');
+                            $(this).val('0');
 
                             $(this).removeClass('border-success');
                             $(this).addClass('border-warning');
@@ -7972,7 +8065,7 @@ Configure tooltips globally
                                     var url = '@Url.Action("Prices_requestTemp", "Commercial", null)';
                                         window.location.href = url;
                                     } else {
-                                        toastr.warning("Something went wrong.." + result, "Warning");
+                                        toastr.warning("Something went wrong: " + result, "Warning");
                                         document.getElementById("loader").style.display = "none";
                                     }
 

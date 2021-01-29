@@ -36,7 +36,7 @@ namespace LimenawebApp.Models
         public string id_Vendor { get; set; }
         public Nullable<int> id_brand { get; set; }
         public Nullable<decimal> unitCost { get; set; }
-        public int MinPorcent { get; set; }
+        public Nullable<int> MinPorcent { get; set; }
         public Nullable<decimal> MinPrice { get; set; }
         public string item_name { get; set; }
         public string Vendor_Name { get; set; }
@@ -51,5 +51,6 @@ namespace LimenawebApp.Models
         public string UoMGroup { get; set; }
         public string InventoryItem { get; set; }
         public Nullable<decimal> UnitPrice { get; set; }
+        public string ReturnReasons { get; set; }
     }
 }

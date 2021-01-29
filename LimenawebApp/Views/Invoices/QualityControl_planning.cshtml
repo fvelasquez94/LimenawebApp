@@ -138,7 +138,10 @@ else if (ViewBag.company == "02")
     @if (so.isfinished == true && so.Invoiced == true)
     {
         <a href="#" onclick="PrintRoute(@so.ID_Route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Print</a>
+        <a href="#" onclick="PrintRouteTNWMS(@so.ID_Route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Preview</a>
+        <a href="#" onclick="PrintRouteTNWMSBarcode(@so.ID_Route)" class="btn btn-warning " style="font-size:12px !important;"><i class="fa fa-print"></i>Preview Barcode</a>
         <a href="@Url.Action("Print_DPCD", "Invoices", new { id_route = so.ID_Route })" target="_blank" class="btn btn-warning" style="font-size:12px !important;"><i class="fa fa-print"></i>Daily Payment CD</a>
+
         @*<a href="#" onclick="PrintDailyPayment(so.ID_Route)" class="btn btn-sm btn-outline-warning btn-sm form-pill"><i class="fa fa-print"></i>Daily Payment CD</a>*@
 
     }

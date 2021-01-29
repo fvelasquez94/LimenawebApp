@@ -1,0 +1,347 @@
+﻿
+@{
+    ViewBag.Title = "Dashboard SP Sales";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    LimenawebApp.Models.Sys_Users activeuser = (LimenawebApp.Models.Sys_Users)ViewBag.activeuser;
+    List<LimenawebApp.Models.SalesOrders.Budget_BP> lstcustomers = (List<LimenawebApp.Models.SalesOrders.Budget_BP>)ViewBag.customers;
+    List<LimenawebApp.Models.SalesOrders.Budget_BP_extra> lstcustomers_extra = (List<LimenawebApp.Models.SalesOrders.Budget_BP_extra>)ViewBag.extracustomers;
+    List<LimenawebApp.Models.RepsSalesReport> lstsalesreps = (List<LimenawebApp.Models.RepsSalesReport>)ViewBag.salesrep;
+}
+
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Main</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Sales Progress</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Sales Progress</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+
+
+<div class="page__header page__header-nav">
+
+    <div class="container-fluid page__container">
+
+
+    </div>
+</div>
+
+
+<div class="container-fluid page__container">
+    <div class="alert alert-soft-success d-flex align-items-center card-margin" role="alert">
+        <i class="material-icons mr-3">error_outline</i>
+        <div class="text-body"><strong>API gateways are now Online.</strong> If you want to stay up to date check our <a href="#">Status Page </a></div>
+    </div>
+ 
+
+        <div class="col-lg-12 py-3 px-0 bg-white border-left d-flex flex-column">
+
+            <div class="form-group px-3">
+
+                @*<div class="row card-group-row">
+                    <div class="col-lg-4 col-md-6 card-group-row__col">
+                        <div class="card card-group-row__card">
+                            <div class="card-body-x-lg card-body d-flex flex-row align-items-center">
+                                <div class="flex">
+
+                                    @if (((Convert.ToDecimal(ViewBag.weeklySalesCustomers) / Convert.ToDecimal(ViewBag.weeklyCustomers)) * 100) > 100)
+                                    {
+                                        <div class="card-header__title text-muted mb-2 d-flex">Customers<span class="badge badge-success ml-2">@(((Convert.ToDecimal(ViewBag.weeklySalesCustomers) / Convert.ToDecimal(ViewBag.weeklyCustomers)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="card-header__title text-muted mb-2 d-flex">Customers<span class="badge badge-warning ml-2">@(((Convert.ToDecimal(ViewBag.weeklySalesCustomers) / Convert.ToDecimal(ViewBag.weeklyCustomers)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+                                    }
+                                    <span class="h5 m-0"> @ViewBag.weeklyCustomers <small class="text-muted">(budget)</small> / @ViewBag.weeklySalesCustomers <small class="text-muted">(effective)</small> </span>
+                                </div>
+
+                            </div>
+                            <div class="progress" style="height: 3px;">
+                                @if (((Convert.ToDecimal(ViewBag.weeklySalesCustomers) / Convert.ToDecimal(ViewBag.weeklyCustomers)) * 100) > 100)
+                                {
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @(((Convert.ToDecimal(ViewBag.weeklySalesCustomers)/ Convert.ToDecimal(ViewBag.weeklyCustomers))*100).ToString("N2"))%;" aria-valuenow="@(((Convert.ToDecimal(ViewBag.weeklySalesCustomers)/ Convert.ToDecimal(ViewBag.weeklyCustomers))*100).ToString("N2"))" aria-valuemin="0" aria-valuemax="100"></div>
+                                }
+                                else
+                                {
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @(((Convert.ToDecimal(ViewBag.weeklySalesCustomers)/ Convert.ToDecimal(ViewBag.weeklyCustomers))*100).ToString("N2"))%;" aria-valuenow="@(((Convert.ToDecimal(ViewBag.weeklySalesCustomers)/ Convert.ToDecimal(ViewBag.weeklyCustomers))*100).ToString("N2"))" aria-valuemin="0" aria-valuemax="100"></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 card-group-row__col">
+                        <div class="card card-group-row__card">
+                            <div class="card-body-x-lg card-body d-flex flex-row align-items-center">
+                                <div class="flex">
+                                    @if (((Convert.ToDecimal(ViewBag.weeklysales) / Convert.ToDecimal(ViewBag.weeklyBudget)) * 100) > 100)
+                                    {
+                                        <div class="card-header__title text-muted mb-2 d-flex">Customers<span class="badge badge-success ml-2">@(((Convert.ToDecimal(ViewBag.weeklysales) / Convert.ToDecimal(ViewBag.weeklyBudget)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+                                    }
+                                    else
+                                    {
+                                        <div class="card-header__title text-muted mb-2 d-flex">Customers<span class="badge badge-warning ml-2">@(((Convert.ToDecimal(ViewBag.weeklysales) / Convert.ToDecimal(ViewBag.weeklyBudget)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+                                    }
+
+
+                                    <span class="h5 m-0">$@Convert.ToDecimal(ViewBag.weeklyBudget).ToString("N2") <small class="text-muted">(budget) </small>/ $@Convert.ToDecimal(ViewBag.weeklysales).ToString("N2") <small class="text-muted">  (sales)</small> </span>
+                                </div>
+
+                            </div>
+                            <div class="progress" style="height: 3px;">
+                                @if (((Convert.ToDecimal(ViewBag.weeklysales) / Convert.ToDecimal(ViewBag.weeklyBudget)) * 100) > 100)
+                                {
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: @(((Convert.ToDecimal(ViewBag.weeklysales)/ Convert.ToDecimal(ViewBag.weeklyBudget))*100).ToString("N2"))%;" aria-valuenow="@(((Convert.ToDecimal(ViewBag.weeklySalesCustomers)/ Convert.ToDecimal(ViewBag.weeklyCustomers))*100).ToString("N2"))" aria-valuemin="0" aria-valuemax="100"></div>
+                                }
+                                else
+                                {
+                                    <div class="progress-bar bg-warning" role="progressbar" style="width: @(((Convert.ToDecimal(ViewBag.weeklysales)/ Convert.ToDecimal(ViewBag.weeklyBudget))*100).ToString("N2"))%;" aria-valuenow="@(((Convert.ToDecimal(ViewBag.weeklySalesCustomers)/ Convert.ToDecimal(ViewBag.weeklyCustomers))*100).ToString("N2"))" aria-valuemin="0" aria-valuemax="100"></div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 card-group-row__col">
+                        <div class="card card-group-row__card">
+                            <div class="card-body-x-lg card-body d-flex flex-row align-items-center">
+                                <div class="flex">
+                                    <div class="card-header__title text-muted mb-2 d-flex">Extra Customers<small class="text-muted">  (daily)</small>  </div>
+                                    <span class="h5 m-0">$@lstcustomers_extra.Sum(c => c.Sales).ToString("N2")<small class="text-muted">  (sales)</small>   </span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>*@
+
+
+                <br /><br />
+                <label class="badge badge-primary">Details (daily)</label>
+                <div class="table-responsive">
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Sales Representative</th>
+                                <th>Customers</th>
+                                <th>%</th>
+                                <th>Budget</th>
+                                <th>%</th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            @foreach (var itemrep in lstsalesreps) {
+                            <tr class="has-history">
+                                <td><a href="#">@itemrep.Name</a></td>
+                                <td>
+                                    <span class=" m-0"> @itemrep.weeklyCustomers <small class="text-muted">(budget)</small> / @itemrep.weeklySalesCustomers <small class="text-muted">(effective)</small> </span>
+
+                                </td>
+                                <td>
+                                    @if (((Convert.ToDecimal(itemrep.weeklySalesCustomers) / Convert.ToDecimal(itemrep.weeklyCustomers)) * 100) > 100)
+        {
+                            <div class="card-header__title text-muted mb-2 d-flex"><span class="badge badge-success ml-2">@(((Convert.ToDecimal(itemrep.weeklySalesCustomers) / Convert.ToDecimal(itemrep.weeklyCustomers)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+}
+else
+{
+                            <div class="card-header__title text-muted mb-2 d-flex"><span class="badge badge-warning ml-2">@(((Convert.ToDecimal(itemrep.weeklySalesCustomers) / Convert.ToDecimal(itemrep.weeklyCustomers)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+}
+                                </td>
+                                <td>
+                                    <div class="flex">
+                                        <span class=" m-0">$@Convert.ToDecimal(itemrep.weeklyBudget).ToString("N2") <small class="text-muted">(budget) </small>/ $@Convert.ToDecimal(itemrep.weeklySales).ToString("N2") <small class="text-muted">  (sales)</small> </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    @if (((Convert.ToDecimal(itemrep.weeklySales) / Convert.ToDecimal(itemrep.weeklyBudget)) * 100) > 100)
+        {
+                            <div class="text-muted mb-2 d-flex"><span class="badge badge-success ml-2">@(((Convert.ToDecimal(itemrep.weeklySales) / Convert.ToDecimal(itemrep.weeklyBudget)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+}
+else
+{
+                            <div class=" text-muted mb-2 d-flex"><span class="badge badge-warning ml-2">@(((Convert.ToDecimal(itemrep.weeklySales) / Convert.ToDecimal(itemrep.weeklyBudget)) * 100).ToString("N2"))%  </span><small class="text-muted">  (weekly)</small></div>
+}
+                                </td>
+
+                            </tr>
+                                if (lstcustomers.Where(c => c.SlpCode == itemrep.idSAPint).Count() > 0)
+                                {
+                           <tr class="expanded" style="display:none;">
+                                <td colspan="5">
+                                    
+                    <table class="table">
+                        <thead>
+                            <tr style="font-size:12px;background-color:#308AF3;">
+                            
+                                <th style="color:white; font-weight:100">Customer Code</th>
+                                <th style="color:white; font-weight:100">Customer Name</th>
+                                <th style="color:white; font-weight:100">Time</th>
+                                <th style="color:white; font-weight:100">Budget</th>
+                                <th style="color:white; font-weight:100">Sales</th>
+                                <th style="color:white; font-weight:100">Scope</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (lstcustomers.Where(c => c.SlpCode == itemrep.idSAPint).Count() > 0)
+                            {
+                                foreach (var item in lstcustomers.Where(c => c.SlpCode == itemrep.idSAPint).OrderBy(c => c.time))
+                                {
+
+                                    <tr>
+                                     
+                                        <td>@item.cardCode</td>
+                                        <td>@item.cardName</td>
+
+
+                                        <td>
+                                            @{
+                                                try
+                                                {
+                                                    DateTime dt = DateTime.ParseExact(item.time.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                                    string timestring = dt.ToString("hh:mm tt");
+                                                    <label>@timestring</label>
+                                                }
+                                                catch
+                                                {
+
+                                                    <label>No valid Datetime</label>
+                                                }
+
+                                            }
+
+                                        </td>
+                                        <td>$@item.Budget.ToString("N2")</td>
+                                        <td>$@item.Sales.ToString("N2")</td>
+                                        <td>@item.Scope.ToString("N2")%</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td style="font-weight:bold">Total</td>
+                                    <td style="font-weight:bold">Customers: @lstcustomers.Where(c => c.SlpCode == itemrep.idSAPint).Count()</td>
+                                    <td></td>
+                                    <td style="font-weight:bold">$@lstcustomers.Where(c => c.SlpCode == itemrep.idSAPint).Sum(c => c.Budget).ToString("N2")</td>
+                                    <td style="font-weight:bold">$@lstcustomers.Where(c => c.SlpCode == itemrep.idSAPint).Sum(c => c.Sales).ToString("N2")</td>
+                                    <td></td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6">No data to show</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                                </td>
+                            </tr>
+                                                }
+                                                else {
+
+                                                }
+                                                if (lstcustomers_extra.Where(c => c.SlpCode == itemrep.idSAPint).Count() > 0)
+                                                {
+                                                        <tr  class="expanded" style="display:none;">
+                                                            
+                                                            <td colspan="5">
+                                                                                    <table class="table">
+                        <thead>
+                            <tr style="font-size:12px;background-color:#308AF3;">
+                                <th style="color:white; font-weight:100">Customer Code</th>
+                                <th style="color:white; font-weight:100">Customer Name</th>
+                                <th style="color:white; font-weight:100">Visit Day</th>
+                                <th style="color:white; font-weight:100">Time</th>
+                                <th style="color:white; font-weight:100">Sales</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (lstcustomers_extra.Where(c => c.SlpCode == itemrep.idSAPint).Count() > 0)
+                            {
+                                foreach (var item in lstcustomers_extra.Where(c => c.SlpCode == itemrep.idSAPint).OrderBy(c => c.time))
+                                {
+                                    <tr class="expanded">
+                                        <td>@item.cardCode</td>
+                                        <td>@item.cardName</td>
+                                        <td>@item.VisitDay</td>
+                                        <td>
+                                            @{
+                                                try
+                                                {
+                                                    DateTime dt = DateTime.ParseExact(item.time.ToString("0000"), "HHmm", System.Globalization.CultureInfo.InvariantCulture);
+                                                    string timestring = dt.ToString("hh:mm tt");
+                                                    <label>@timestring</label>
+                                                }
+                                                catch
+                                                {
+
+                                                    <label>No valid Datetime</label>
+                                                }
+
+                                            }
+
+                                        </td>
+                                        <td>$@item.Sales.ToString("N2")</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td style="font-weight:bold">Total</td>
+                                    <td style="font-weight:bold">Customers: @lstcustomers_extra.Where(c => c.SlpCode == itemrep.idSAPint).Count()</td>
+                                    <td style="font-weight:bold"></td>
+                                    <td style="font-weight:bold"></td>
+                                    <td style="font-weight:bold">$@lstcustomers_extra.Where(c => c.SlpCode == itemrep.idSAPint).Sum(c => c.Sales).ToString("N2")</td>
+                                </tr>
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="5">No data to show</td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                                                            </td>
+                                                        </tr>
+
+                                                    }
+                                                    else {
+
+                                                    }
+
+
+                                                }
+                      
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <hr />
+
+                <label class="badge badge-primary">Extra Customers (daily)</label>
+                <div class="table-responsive">
+
+                </div>
+                @*<div class="input-group input-group-merge input-group-rounded">
+                        <input type="text" class="form-control form-control-prepended" placeholder="Filter modules (coming soon)">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <span class="material-icons">filter_list</span>
+                            </div>
+                        </div>
+                    </div>*@
+            </div>
+
+        </div>
+        </div>
+    
+
+

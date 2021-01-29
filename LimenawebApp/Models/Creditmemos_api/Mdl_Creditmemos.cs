@@ -22,6 +22,7 @@ namespace LimenawebApp.Models.Creditmemos_api
         public int docEntry { get; set; }
         public int docNum { get; set; }
         public System.DateTime docDate { get; set; }
+        public int docTime { get; set; }
         public string cardCode { get; set; }
         public string cardName { get; set; }
         public decimal docTotal { get; set; }
@@ -97,6 +98,7 @@ namespace LimenawebApp.Models.Creditmemos_api
         public int uomEntry { get; set; }
         public string returnReasonCode { get; set; }
         public decimal price { get; set; }
+        public int? visOrder { get; set; }
 
     }
 

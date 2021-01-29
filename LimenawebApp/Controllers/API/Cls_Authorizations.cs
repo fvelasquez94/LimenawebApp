@@ -60,7 +60,44 @@ namespace LimenawebApp.Controllers.API
 
             return result;
         }
+        public GetAuthorizations_api GetAuthorizationsRoute(int DocentryInv, string Customer, string Route, string Iddriver)
+        {
 
+            var settings = clsapi.GetAPI();
+            //Si se necesitan DETALLES de las invoices,hay que activar FullMode=true
+
+            string bearerToken = settings.token;
+            var client = new RestClient(settings.IP);
+            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
+            var request = new RestRequest("/api/Authorizations", Method.GET);
+            //request.AddParameter("pageNumber", 1);
+            request.AddParameter("pageSize", 10);
+
+            if (DocentryInv != 0)
+            {
+                request.AddParameter("DocNum", DocentryInv);
+            }
+            if (Customer != "")
+            {
+                request.AddParameter("CardCode", Customer);
+            }
+            if (Route != "")
+            {
+                request.AddParameter("IdRoute", Route);
+            }
+            if (Iddriver != "")
+            {
+                request.AddParameter("IdDriver", Iddriver);
+            }
+
+            request.AddHeader("cache-control", "no-cache");
+
+
+            var result = client.Execute(request);
+            var jsonResponse = JsonConvert.DeserializeObject<GetAuthorizations_api>(result.Content);
+
+            return jsonResponse;
+        }
 
         public GetAuthorizations_api GetAuthorizations(int DocentryInv, string CardCode, string Iddriver, DateTime? fstart, DateTime? fend)
         {

@@ -329,6 +329,100 @@
             })
         }
 
+    //TN Nashville 11/27/2020
+    function PrintRouteTNWMS(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to preview this route?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/Print_routeTN_WHS',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+                                $("#loader").hide();
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                                $("#loader").hide();
+                            }
+
+                            else {
+                                alert(result);
+                                $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+                            $("#loader").hide();
+                        }
+                    });
+
+                }
+            })
+        }
+
+        function PrintRouteTNWMSBarcode(id_route) {
+
+            swal.fire({
+                title: 'Are you sure to preview this route?',
+                text: "",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3dba6f',
+                cancelButtonColor: '#aaa',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.value) {
+                    $("#loader").show();
+                    $.ajax({
+                        url: '/Invoices/Print_routeTN_barcode',
+                        type: 'POST',
+                        data: { 'id_route': id_route },
+                        cache: false,
+                        global: false,
+                        success: function (result) {
+
+                            if (result == "Success") {
+                                $("#loader").hide();
+                                window.open('@Url.Action("Route_WHSInvoices", "Invoices",new { activityname = "Route_WHSInvoices" })', '_blank');
+                            } else if (result == "CountError"){
+                                alert("No data found.");
+                                $("#loader").hide();
+                            }
+
+                            else {
+                                alert(result);
+                                $("#loader").hide();
+                            }
+
+
+                        },
+                        error: function (request) {
+                            alert("Error: something went wrong..");
+                            $("#loader").hide();
+                        }
+                    });
+
+                }
+            })
+        }
+
+    ////
         function PrintDailyPayment(id_route) {
 
             swal.fire({

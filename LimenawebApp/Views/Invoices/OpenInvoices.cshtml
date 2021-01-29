@@ -1,0 +1,260 @@
+﻿@model IEnumerable<LimenawebApp.Models.Invoices.Invoices_api>
+
+@{
+    ViewBag.Title = "Distribuidora Limeña - Invoices in Route";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+
+<div class="page__header">
+    <div class="container-fluid page__heading-container">
+        <div class="page__heading d-flex align-items-center">
+            <div class="flex">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-0">
+                        <li class="breadcrumb-item"><a href="#">Operations</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Invoices in Routes</li>
+                    </ol>
+                </nav>
+                <h1 class="m-0">Invoices in Routes</h1>
+            </div>
+
+        </div>
+    </div>
+</div> <!-- // END page__header -->
+<!--Page Header menu-->
+@Html.Partial("~/Views/Shared/New_design/Menus/Operations.cshtml")
+
+
+<div class="container-fluid page__container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header card-header-large bg-white d-flex align-items-center">
+                    <div class="form-group row col-md-6">
+                        <label class="col-sm-12 col-form-label">Filter by Date</label>
+                        <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px;margin-left: 14px; margin-right:15px; border: 1px solid #ccc; width: 100%">
+                            <i class="mdi mdi-calendar"></i>&nbsp;
+                            <span></span> <i class="fa fa-caret-down"></i>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="row 2">
+                    <div class="col-md-12">
+                        <a href="#" onclick="PrintResume()" class="btn btn-primary mr-2 ml-2">
+                            Preview Invoice
+                        </a>
+                        <a href="#" onclick="PrintResume2()" class="btn btn-primary">
+                            Preview Barcode
+                        </a>
+                        <a href="#" onclick="PrintResume3()" class="btn btn-primary">
+                            Preview Pallet
+                        </a>
+                    </div>
+                  
+                </div>
+                <div class="card-body pt-3 pb-4">
+                    <div class="row">
+                        <div class="col-md-3">
+                            SO:
+                            <select id="numSOfilter" class="filterTable form-control" style="width:100%"></select>
+                        </div>
+                        <div class="col-md-2">
+                            Date:
+                            <select id="dateFilter" class="filterTable form-control" style="width:100%"></select>
+                        </div>
+                        <div class="col-md-7">
+                            Customer:
+                            <select id="customerFilter" class="filterTable form-control" style="width:100%"></select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-5">
+                            Route:
+                            <select id="routeFilter" class="filterTable form-control" style="width:100%"></select>
+                        </div>
+                        <div class="col-md-5">
+                            Representative:
+                            <select id="salesFilter" class="filterTable form-control" style="width:100%"></select>
+                        </div>
+                        @*<div class="col-md-2">
+                    Print Status:
+                    <select id="printFilter" class="filterTable form-control" style="width:100%"></select>
+                </div>*@
+                    </div>
+
+
+
+
+
+                    <br /><hr />
+
+                    <div class="table-responsive">
+                        <table id="data_tableEditor" class="table table-bordered table-striped" cellspacing="0">
+                            <thead>
+                                <tr>
+
+                                    <th>
+                                        <label class="ui-check m-0 ">
+                                            <input type="checkbox" class="selectchkAll" id="chk_all" value="0">
+                                            <i></i>
+                                        </label>
+                                    </th>
+                                    <th>#</th>
+                                    <th class="selectfilter">NUM INVOICE</th>
+                                    <th class="selectfilter">DATE</th>
+                                    <th class="selectfilter">CUSTOMER</th>
+                                    <th class="selectfilter">DELIVERY ROUTE</th>
+                                    <th class="selectfilter">SALES REPRESENTATIVE</th>
+                                    <th class="selectfilter">TOTAL</th>
+                                    <th class="selectfilter">CREATED ON</th>
+
+
+                                </tr>
+                            </thead>
+                            <tfoot>
+                            </tfoot>
+                            <tbody>
+                                @foreach (var so in Model)
+                    {
+                        <tr>
+
+                            <td>
+
+                                <label class="ui-check m-0 ">
+                                    <input type="checkbox" class="selectchk" id="chk_@so.docEntry" value="0">
+                                    <i></i>
+                                </label>
+                            </td>
+                            <td></td>
+                            <td>@so.docNum</td>
+                            <td>@Convert.ToDateTime(so.deliveryDate).ToShortDateString()</td>
+                            <td>@so.cardCode - @so.cardName</td>
+                            <td>@so.deliveryRoute</td>
+                            <td>@so.slpName.ToUpper()</td>
+                            <td>$@so.docTotal.ToString("N3")</td>
+                            <td>@so.docDate.ToString("MM/dd/yyy")</td>
+
+
+                        </tr>
+        }
+
+                            </tbody>
+
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    window.onload = function () {
+
+
+
+
+
+
+
+
+        var flag = 0;
+       //DATETIMEPICKER
+ var t1 = "@ViewBag.filtrofechastart";
+        var t2 = "@ViewBag.filtrofechaend";
+
+        var start = moment(t1, "MM-DD-YYYY");
+        var end = moment(t2, "MM-DD-YYYY");
+
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            if (flag == 0) {
+                flag = 1;
+            } else {
+                filterSObydate();
+            }
+
+
+        }
+
+        $('#reportrange').daterangepicker({
+
+            startDate: start,
+            endDate: end,
+            autoApply: false,
+            ranges: {
+                'Today': [moment(), moment()],
+                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                'This Month': [moment().startOf('month'), moment().endOf('month')],
+                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end);
+
+
+        function filterSObydate() {
+            var st = new Date($('#reportrange').data('daterangepicker').startDate);
+            var ed = new Date($('#reportrange').data('daterangepicker').endDate);
+
+            var today = st;
+            var dd = today.getDate();
+            var mm = today.getMonth() + 1; //January is 0!
+
+            var yyyy = today.getFullYear();
+            if (dd < 10) {
+                dd = '0' + dd;
+            }
+            if (mm < 10) {
+                mm = '0' + mm;
+            }
+            st = mm + '/' + dd + '/' + yyyy;
+
+            var today2 = ed;
+            var dd2 = today2.getDate();
+            var mm2 = today2.getMonth() + 1; //January is 0!
+
+            var yyyy2 = today2.getFullYear();
+            if (dd2 < 10) {
+                dd2 = '0' + dd2;
+            }
+            if (mm2 < 10) {
+                mm2= '0' + mm2;
+            }
+            ed = mm2 + '/' + dd2 + '/' + yyyy2;
+
+
+            //console.log("before");
+            //console.log(st);
+            //console.log(ed);
+
+            //st = st.toLocaleDateString();
+            //ed = ed.toLocaleDateString();
+
+            //console.log(st);
+            //console.log(ed);
+
+            ///
+
+
+
+
+            //colocamos la url de la demo
+            var url = '@Url.Action("OpenInvoices", "Invoices", new { fstartd = "dad", fendd="tfe" })';
+            url = url.replace('dad', st);
+            var newurl = url;
+            newurl = newurl.replace('tfe', ed);
+
+            newurl = newurl.replace(/&amp;/g, "&");
+
+            window.location.href = newurl;
+        };
+    }
+
+</script>

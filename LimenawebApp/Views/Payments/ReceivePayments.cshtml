@@ -128,7 +128,7 @@
                                             @foreach (var item in Model)
                                             {
                                                 <tr>
-                                                    <td>@item.invoice.docNum</td>
+                                                    <td><a href="@Url.Action("Credits_flow","Warehouse", new { id=item.docEntryInv})">@item.invoice.docNum</a></td>
                                                     <td>@item.docDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
                                                     <td>
                                                         @item.createDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)

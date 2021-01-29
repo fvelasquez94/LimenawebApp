@@ -88,14 +88,13 @@ namespace LimenawebApp.Controllers.API
             var client = new RestClient(settings.IP);
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
             IRestResponse result;
- 
-                var request = new RestRequest("/api/CreditMemos/Draft/" + docentry, Method.PUT);
+                var request = new RestRequest("/api/CreditMemos/Draft/Row/Refuse/" + docentry + "/" + item.visOrder, Method.PUT);
 
-            List<PutDetailsCreditmemos_apiNOSHOW> lsttopost = new List<PutDetailsCreditmemos_apiNOSHOW>();
-            lsttopost.Add(item);
+            //List<PutDetailsCreditmemos_apiNOSHOW> lsttopost = new List<PutDetailsCreditmemos_apiNOSHOW>();
+            //lsttopost.Add(item);
 
-            request.RequestFormat = DataFormat.Json;
-            request.AddJsonBody(lsttopost);
+            //request.RequestFormat = DataFormat.Json;
+           // request.AddJsonBody(lsttopost);
 
 
 
@@ -119,7 +118,7 @@ namespace LimenawebApp.Controllers.API
             client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
             IRestResponse result;
  
-                var request = new RestRequest("/api/CreditMemos/Reconciliation", Method.PUT);
+                var request = new RestRequest("/api/CreditMemos/Reconciliation", Method.POST);
 
             request.RequestFormat = DataFormat.Json;
             request.AddJsonBody(creditmemo);
@@ -204,7 +203,47 @@ namespace LimenawebApp.Controllers.API
 
             return jsonResponse;
         }
+        public GetCreditmemos_api GetCreditMemosOriginal(int DocentryInv, string CardCode, DateTime? fstart, DateTime? fend, Boolean includeDetails = false)
+        {
 
+            var settings = clsapi.GetAPI();
+            //Si se necesitan DETALLES de las invoices,hay que activar FullMode=true
+
+            string bearerToken = settings.token;
+            var client = new RestClient(settings.IP);
+            client.Authenticator = new OAuth2AuthorizationRequestHeaderAuthenticator(bearerToken, "Bearer");
+            var request = new RestRequest("/api/CreditMemos", Method.GET);
+            //request.AddParameter("pageNumber", 1);
+            request.AddParameter("pageSize", 250);
+
+            if (DocentryInv != 0)
+            {
+                request.AddParameter("DocEntryInv", DocentryInv);
+            }
+            if (CardCode != "")
+            {
+                request.AddParameter("CardCode", CardCode);
+            }
+            if (fstart != null)
+            {
+                request.AddParameter("StartDate", fstart.Value.ToShortDateString());
+                request.AddParameter("EndDate", fend.Value.ToShortDateString());
+            }
+
+
+
+            if (includeDetails == true)
+            {
+                request.AddParameter("FullMode", includeDetails);
+            }
+            request.AddHeader("cache-control", "no-cache");
+
+
+            var result = client.Execute(request);
+            var jsonResponse = JsonConvert.DeserializeObject<GetCreditmemos_api>(result.Content);
+
+            return jsonResponse;
+        }
         public GetCreditmemos_api GetCreditMemo(int DocEntry, Boolean includeDetails = false)
         {
 

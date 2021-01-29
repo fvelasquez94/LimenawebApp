@@ -1,6 +1,7 @@
 ﻿@model IEnumerable<LimenawebApp.Models.Pedidos_precios>
 @{
     ViewBag.Title = "Distribuidora Limeña - Prices Request (Pedidos)";
+    LimenawebApp.Models.view_ordenesAbiertasDet detalle = (LimenawebApp.Models.view_ordenesAbiertasDet)ViewBag.ordenpedido;
 }
 
 <!--main content wrapper-->
@@ -12,6 +13,7 @@
                     @if (ViewBag.mostrarOrdenEditar == 1)
                     {
                     <a href="#" onclick="volverPriceRequest()" class="btn btn-sm btn-info mb-2">Back</a>
+                   
                     }
                     else if (ViewBag.mostrarOrdenEditar == 0) {
                         <a href="@Url.Action("Prices_request", "Commercial")" class="btn btn-sm btn-info mb-2">Back</a>
@@ -20,6 +22,10 @@
                         <a style="display:none;" id="btnAsk" href="#" onclick="volverPriceRequest()" class="btn btn-sm btn-info mb-2">Back</a>
                         <a id="btnbackno" href="@Url.Action("Prices_request", "Commercial")" class="btn btn-sm btn-info mb-2">Back</a>
                     } 
+
+
+
+
                         <div class="card card-shadow mb-4">
 
                             <div class="card-body">
@@ -46,10 +52,15 @@
                                                 <span class="input-group-text" style="font-size:14px;">Customer</span>
                                             </div>
                                             <input type="text" style="font-size:14px;width:130px;" value="@ViewBag.cliente" readonly class="form-control">
-                                            @if (ViewBag.isAdmin == 1 && ViewBag.mostrarOrdenEditar == 0)
+                                            @if (ViewBag.isAdmin == 1 && ViewBag.mostrarOrdenEditar == 0 && detalle.Printed == "N")
     {
-                                        <button  onclick="openClosedOrder()"  class="btn btn-warning">Open Order</button>
+                                        <button onclick="openClosedOrder()" class="btn btn-warning">Open Order</button>
 }
+                                            @if (detalle.Printed == "N")
+    {
+                                        <a href="#" onclick="eliminarOrder()" class="btn btn-sm btn-danger mb-2">Cancel Order</a>
+}
+
                                         </div>
 
 
